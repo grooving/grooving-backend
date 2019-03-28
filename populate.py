@@ -270,15 +270,15 @@ def save_data():
 
     # Artists
 
-    artist1 = Artist.objects.create(user=user1_artist1, portfolio=portfolio1, phone='600304999', photo='https://pixabay.com/es/photos/micr%C3%B3fono-ni%C3%B1o-estudio-gritar-1209816/')
+    artist1 = Artist.objects.create(user=user1_artist1, portfolio=portfolio1, phone='600304999', photo='https://cdn.pixabay.com/photo/2016/02/19/11/36/microphone-1209816_1280.jpg')
     artist1.save()
     artist2 = Artist.objects.create(user=user2_artist2, portfolio=portfolio2, phone='695099812', photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/20953179_10155798140312625_5517808811547907373_n.jpg?_nc_cat=108&_nc_ht=scontent-mad1-1.xx&oh=78561ec93ba4604a3c5a570cbe101b40&oe=5D4D1ED1')
     artist2.save()
-    artist3 = Artist.objects.create(user=user3_artist3, portfolio=portfolio3, phone='695990241', photo='https://pixabay.com/es/photos/micr%C3%B3fono-ni%C3%B1o-estudio-gritar-1209816/')
+    artist3 = Artist.objects.create(user=user3_artist3, portfolio=portfolio3, phone='695990241', photo='https://cdn.pixabay.com/photo/2016/02/19/11/36/microphone-1209816_1280.jpg')
     artist3.save()
-    artist4 = Artist.objects.create(user=user4_artist4, portfolio=portfolio4, phone='610750391', photo='https://pixabay.com/es/photos/micr%C3%B3fono-ni%C3%B1o-estudio-gritar-1209816/')
+    artist4 = Artist.objects.create(user=user4_artist4, portfolio=portfolio4, phone='610750391', photo='https://cdn.pixabay.com/photo/2016/02/19/11/36/microphone-1209816_1280.jpg')
     artist4.save()
-    artist5 = Artist.objects.create(user=user5_artist5, portfolio=portfolio5, phone='675181175', photo='https://pixabay.com/es/photos/micr%C3%B3fono-ni%C3%B1o-estudio-gritar-1209816/')
+    artist5 = Artist.objects.create(user=user5_artist5, portfolio=portfolio5, phone='675181175', photo='https://cdn.pixabay.com/photo/2016/02/19/11/36/microphone-1209816_1280.jpg')
     artist5.save()
     artist6 = Artist.objects.create(user=user6_artist6, portfolio=portfolio6, phone='673049277', photo='https://unplatillodesal.files.wordpress.com/2017/12/pablo-delgado_a-2.jpg')
     artist6.save()
