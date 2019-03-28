@@ -10,7 +10,10 @@ from rest_framework import generics
 from .serializers import EventLocationSerializer
 from rest_framework import status
 from django.http import Http404
+from rest_framework.permissions import IsAuthenticated
+
 # Create your views here.
+
 
 class EventLocationManager(generics.RetrieveUpdateDestroyAPIView):
 
@@ -51,4 +54,17 @@ class EventLocationManager(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+
+
+class CreateEventLocation(generics.CreateAPIView):
+    queryset = EventLocation.objects.all()
+    serializer_class = EventLocationSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = EventLocationSerializer(data=request.data, partial=True)
+        if serializer.validate(request):
+            eventLocation = serializer.save(request.user.id)
+            serialized = EventLocationSerializer(eventLocation)
+            return Response(serialized.data, status=status.HTTP_201_CREATED)
 

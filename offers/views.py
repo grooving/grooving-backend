@@ -6,26 +6,28 @@ from .serializers import ListOfferSerializer
 from rest_framework.response import Response
 
 
-class ListOffers(generics.RetrieveUpdateDestroyAPIView):
+class ListOffers(generics.ListAPIView):
 
     serializer_class = ListOfferSerializer
 
-    def get(self, name):
-        print(self.request.user)
+    def get_queryset(self):
 
         if self.request.user.is_authenticated and not self.request.user.is_staff:
             try:
                 artist = Artist.objects.get(user=self.request.user)
-                queryset = Offer.objects.get(paymentPackage__portfolio__artist=artist)
-                serializer = ListOfferSerializer(queryset)
-                return Response(serializer.data)
+                queryset = Offer.objects.filter(paymentPackage__portfolio__artist=artist)
+                serializer = ListOfferSerializer(queryset, many=True)
+                return queryset
             except ObjectDoesNotExist:
                 try:
                     customer = Customer.objects.get(user=self.request.user)
-                    queryset = Offer.objects.get(eventLocation__customer=customer)
-                    serializer = ListOfferSerializer(queryset)
-                    return Response(serializer.data)
+                    queryset = Offer.objects.filter(eventLocation__customer=customer)
+                    serializer = ListOfferSerializer(queryset, many=True)
+                    return queryset
                 except ObjectDoesNotExist:
-                    return Response("You have no offers")
+                    #There are no offers matching the users; therefore, they have no offers linked to them. An empty list is given
+                    queryset = ()
+                    serializer = ListOfferSerializer(queryset)
+                    return queryset
         else:
             raise PermissionDenied("No tienes autorización para entrar aquí")

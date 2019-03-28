@@ -49,7 +49,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
     class Meta:
 
         model = Portfolio
-        fields = ('artisticName', 'calendar_set', 'artisticGender', 'portfoliomodule_set', 'zone', 'paymentpackage_set')
+        fields = ('artisticName', 'banner', 'calendar_set', 'artisticGender', 'portfoliomodule_set', 'zone', 'paymentpackage_set')
 
 
 class ShortPortfolioSerializer(serializers.ModelSerializer):

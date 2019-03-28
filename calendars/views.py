@@ -55,3 +55,48 @@ class CalendarByArtist(generics.RetrieveUpdateDestroyAPIView):
         self.perform_update(serializer)
 
 
+class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = Calendar.objects.all()
+    serializer_class = CalendarSerializer
+
+    def get_object(self, pk):
+        try:
+            return Calendar.objects.get(pk=pk)
+        except Calendar.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        calendar = Calendar.objects.get(pk=pk)
+        serializer = CalendarSerializer(calendar)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+        calendar = self.get_object(pk=pk)
+        if len(request.data) == 1 and 'status' in request.data:
+            serializer = CalendarSerializer(calendar, data=request.data, partial=True)
+
+        else:
+            serializer = CalendarSerializer(calendar, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        calendar = self.get_object(pk=pk)
+        calendar.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CreateCalendar(generics.CreateAPIView):
+    queryset = Calendar.objects.all()
+    serializer_class = CalendarSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = CalendarSerializer(data=request.data, partial=True)
+        if serializer.validate(request.data):
+            serializer.is_valid()
+            calendar = serializer.save()
+            serialized = CalendarSerializer(calendar)
+            return Response(serialized.data, status=status.HTTP_201_CREATED)

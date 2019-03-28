@@ -39,7 +39,7 @@ class UserAbstract(Actor):
 
 class ArtisticGender(AbstractEntity):
     name = models.CharField(max_length=140)
-    parentGender = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE)
+    parentGender = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.name)
@@ -47,17 +47,17 @@ class ArtisticGender(AbstractEntity):
 
 class Zone(AbstractEntity):
     name = models.CharField(max_length=140)
-    parentZone = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE)
+    parentZone = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.name)
 
 
 class Portfolio(AbstractEntity):
+    banner = models.CharField(blank=True, null=True, max_length=140)
     artisticName = models.CharField(blank=True, null=True, max_length=140)
-    portfolioModules = models.ForeignKey('PortfolioModule', blank=True, null=True, on_delete=models.SET_NULL)
-    artisticGender = models.ManyToManyField(ArtisticGender)
-    zone = models.ManyToManyField(Zone)
+    artisticGender = models.ManyToManyField(ArtisticGender, blank=True)
+    zone = models.ManyToManyField(Zone, blank=True)
 
     def __str__(self):
         return str(self.artisticName)
@@ -89,7 +89,7 @@ class PortfolioModule(AbstractEntity):
     type = models.CharField(max_length=20, choices=ModuleTypeField)
     link = models.URLField(blank=True, null=True)
     description = models.TextField(max_length=255, blank=True, null=True)
-    portfolioModule = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.type) + ' - ' + str(self.description)
@@ -116,9 +116,9 @@ class PaymentPackage(AbstractEntity):
     description = models.TextField(blank=True, null=True)
     appliedVAT = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
     portfolio = models.ForeignKey(Portfolio, on_delete=models.PROTECT)
-    performance = models.OneToOneField(Performance, blank=True, null=True, on_delete=models.SET_NULL)
-    fare = models.OneToOneField(Fare, blank=True, null=True, on_delete=models.SET_NULL)
-    custom = models.OneToOneField(Custom, blank=True, null=True, on_delete=models.SET_NULL)
+    performance = models.OneToOneField(Performance, null=True, on_delete=models.SET_NULL)
+    fare = models.OneToOneField(Fare, null=True, on_delete=models.SET_NULL)
+    custom = models.OneToOneField(Custom, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return str(self.description) + ' - ' + str(self.appliedVAT)
@@ -140,24 +140,23 @@ class SystemConfiguration(AbstractEntity):
     privacyText = models.TextField(default='Privacy text', max_length=255)
 
 
+class Customer(UserAbstract):
+    holder = models.CharField(max_length=255)
+    expirationDate = models.DateField(default=datetime.now)
+    number = models.CharField(max_length=16)
+    cvv = models.CharField(max_length=3)
+
+
 class EventLocation(AbstractEntity):
     name = models.CharField(max_length=255, blank=True, null=True)
     address = models.CharField(max_length=255)
     equipment = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    customer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.SET_NULL)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
 
     def __str__(self):
         return str(self.name)
-
-
-class Customer(UserAbstract):
-    #creditcard
-    holder = models.CharField(max_length=255)
-    expirationDate = models.DateField(default=datetime.now)
-    number = models.CharField(max_length=16)
-    cvv = models.CharField(max_length=3)
-    eventLocation = models.ForeignKey(EventLocation, blank=True, null=True, on_delete=models.SET_NULL)
 
 
 OfferStatusField =(

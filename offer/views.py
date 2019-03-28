@@ -1,18 +1,18 @@
 from django.shortcuts import render
 from django.shortcuts import redirect, render
-from Grooving.models import Offer
+from Grooving.models import Offer,User,Customer
 from django.contrib import messages
 from django.db.utils import IntegrityError
 
+from django.core.exceptions import PermissionDenied
+from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
 from rest_framework.response import Response
-from django.shortcuts import render_to_response
 from rest_framework import generics
 from .serializers import OfferSerializer
 from rest_framework import status
 from django.http import Http404
-from django.core import serializers
 from rest_framework.permissions import IsAuthenticated
-
+from rest_framework.authtoken.models import Token
 
 class OfferManage(generics.RetrieveUpdateDestroyAPIView):
 
@@ -50,18 +50,35 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
         serializer = OfferSerializer(offer)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        offer = self.get_object(pk)
-        #if len(request.data) == 1 and 'status' in request.data:
-            #partial=True es muy importante, sin ello no funciona la actualización parcial de datos
-        serializer = OfferSerializer(offer, data=request.data, partial=True)
 
-        #else:
-        #    serializer = OfferSerializer(offer, data=request.data)
-        #if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-        #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, pk):
+
+        if len(request.data) == 0:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+
+            offer = self.get_object(pk)
+            articustomer = get_logged_user(request)
+            user_type = get_user_type(articustomer)
+            if user_type == "Artist":
+                if articustomer.user_id == offer.paymentPackage.portfolio.artist.user_id:
+                    serializer = OfferSerializer(offer, data=request.data, partial=True)
+                    serializer.save(pk)
+                    return Response(status=status.HTTP_200_OK)
+                else:
+                    raise PermissionDenied("The offer is not for yourself")
+            else:
+                if user_type == "Customer":
+                    event_location = offer.eventLocation
+                    customer_creator = Customer.objects.filter(eventLocation_id=event_location.id)
+
+                    if articustomer.user_id == customer_creator.user_id:
+                        serializer = OfferSerializer(offer, data=request.data, partial=True)
+                        serializer.save(pk)
+                        return Response(status=status.HTTP_200_OK)
+                    else:
+                        return Response(status=status.HTTP_400_BAD_REQUEST)
+
 
     def delete(self, request, pk, format=None):
         offer = self.get_object(pk)
@@ -74,48 +91,42 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-    """
-    def post(self, request):
-        serializer = CreateOfferRequest(data=request.data)
-        if serializer.is_valid():
-            serializer.data.status = 'PENDING'
-            if serializer.validated_data.paymentPackage.performance is not None:
-                serializer.validated_data.hours = serializer.validated_data.paymentPackage.performance.hours
-                serializer.validated_data.price = serializer.validated_data.paymentPackage.performance.price
-            elif serializer.validated_data.paymentPackage.fare is not None:
-                serializer.validated_data.price = serializer.validated_data.paymentPackage.fare.price * \
-                                                  serializer.validated_data.hours
-            serializer.validated_data.paymentCode = None
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    """
 
 
 class CreateOffer(generics.CreateAPIView):
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
+    #permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         serializer = OfferSerializer(data=request.data, partial=True)
-        if serializer.validate(request.data):
+        if serializer.validate(request):
             offer = serializer.save()
             serialized = OfferSerializer(offer)
             return Response(serialized.data, status=status.HTTP_201_CREATED)
 
-    """
-    def post(self, request, *args, **kwargs):
-        serializer = OfferSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.data.status = 'PENDING'
-            if serializer.validated_data.paymentPackage.performance is not None:
-                serializer.validated_data.hours = serializer.validated_data.paymentPackage.performance.hours
-                serializer.validated_data.price = serializer.validated_data.paymentPackage.performance.price
-            elif serializer.validated_data.paymentPackage.fare is not None:
-                serializer.validated_data.price = serializer.validated_data.paymentPackage.fare.price * \
-                                                  serializer.validated_data.hours
-            serializer.validated_data.paymentCode = None
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    """
+
+class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Offer.objects.all()
+    serializer_class = OfferSerializer
+
+    def get_object(self, pk):
+        try:
+            return Offer.objects.get(pk=pk)
+        except Offer.DoesNotExist:
+            raise Http404
+
+    def get(self, request, *args, **kwargs):
+        offer_id = request.GET.get("offer", None)
+        offer = self.get_object(offer_id)
+        serializer = OfferSerializer(offer)
+        code = serializer.data.get("paymentCode")
+        return Response({"paymentCode": str(code)}, status.HTTP_200_OK)
+
+    def put(self, request, *args, **kwargs):
+        paymentCode = request.data.get("paymentCode")
+        if not paymentCode:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        OfferSerializer.service_made_payment_artist(paymentCode)
+        return Response(status=status.HTTP_200_OK)
