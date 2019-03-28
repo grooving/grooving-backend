@@ -17,25 +17,6 @@ def _service_generate_unique_payment_code():
     return payment_code
 
 
-def delete_data():
-    SystemConfiguration.objects.all().delete()
-    Offer.objects.all().delete()
-    User.objects.all().delete()
-    Artist.objects.all().delete()
-    Customer.objects.all().delete()
-    EventLocation.objects.all().delete()
-    Performance.objects.all().delete()
-    Fare.objects.all().delete()
-    Custom.objects.all().delete()
-    PaymentPackage.objects.all().delete()
-    ArtisticGender.objects.all().delete()
-    Portfolio.objects.all().delete()
-    Artist.objects.all().delete()
-    Zone.objects.all().delete()
-    PortfolioModule.objects.all().delete()
-    Calendar.objects.all().delete()
-
-
 def save_data():
 
     # System configuration
@@ -579,7 +560,6 @@ def save_data():
 
     offer1_performance1 = Offer.objects.create(description='Oferta 1 to Carlos DJ by performance', status='PENDING',
                                                date='2019-04-25 12:00:00', hours=2.5, price='120', currency='EUR',
-                                               paymentCode=_service_generate_unique_payment_code(),
                                                paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location1)
     offer1_performance1.save()
@@ -600,7 +580,6 @@ def save_data():
 
     offer4_fare1 = Offer.objects.create(description='Oferta 4 to Carlos DJ by fare', status='PENDING',
                                                date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
-                                               paymentCode=_service_generate_unique_payment_code(),
                                                paymentPackage=paymentPackage2_fare1,
                                                eventLocation=event_location2)
     offer4_fare1.save()
@@ -614,17 +593,22 @@ def save_data():
 
     offer6_custom1 = Offer.objects.create(description='Oferta 6 to Carlos DJ by custom', status='REJECTED',
                                                date='2019-10-25 19:00:00', hours=1.5, price='100', currency='EUR',
-                                               paymentCode=_service_generate_unique_payment_code(),
                                                paymentPackage=paymentPackage3_custom1,
                                                eventLocation=event_location1)
     offer6_custom1.save()
 
     offer7_performance2 = Offer.objects.create(description='Oferta 7 to From the noise by performance', status='REJECTED',
                                                date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
-                                               paymentCode=_service_generate_unique_payment_code(),
                                                paymentPackage=paymentPackage4_performance2,
                                                eventLocation=event_location1)
     offer7_performance2.save()
+
+    offer8_performance2 = Offer.objects.create(description='Oferta 8 to From the noise by performance', status='CONTRACT_MADE',
+                                               date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
+                                               paymentCode=_service_generate_unique_payment_code(),
+                                               paymentPackage=paymentPackage4_performance2,
+                                               eventLocation=event_location1)
+    offer8_performance2.save()
 
     offer9_fare2 = Offer.objects.create(description='Oferta 9 to From the noise by fare', status='CANCELED',
                                                date='2019-03-27 00:00:00', hours=1.5, price='140', currency='EUR',
@@ -633,21 +617,21 @@ def save_data():
                                                eventLocation=event_location4)
     offer9_fare2.save()
 
-    offer10_fare2 = Offer.objects.create(description='Oferta 10 to From the noise by performance', status='CONTRACT_MADE',
+    offer10_fare2 = Offer.objects.create(description='Oferta 10 to From the noise by fare', status='CONTRACT_MADE',
                                                date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
                                                paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location4)
     offer10_fare2.save()
 
-    offer11_custom2 = Offer.objects.create(description='Oferta 11 to From the noise by performance', status='CONTRACT_MADE',
+    offer11_custom2 = Offer.objects.create(description='Oferta 11 to From the noise by fare', status='CONTRACT_MADE',
                                                date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
                                                paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location3)
     offer11_custom2.save()
 
-    offer12_custom2 = Offer.objects.create(description='Oferta 12 to From the noise by performance', status='CANCELED',
+    offer12_custom2 = Offer.objects.create(description='Oferta 12 to From the noise by fare', status='CANCELED',
                                                date='2017-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
                                                paymentPackage=paymentPackage5_fare2,
@@ -655,5 +639,5 @@ def save_data():
     offer12_custom2.save()
 
 
-delete_data()
+os.system("python3 manage.py flush --no-input")
 save_data()
