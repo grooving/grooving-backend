@@ -30,7 +30,7 @@ class OfferTestCase(TestCase):
                                                        customer=customer1)
         event_location1.save()
 
-        days = [True] * 366
+        days = ['2019-06-02', '2019-08-02']
 
         user2_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
                                             first_name='Bunny', last_name='Fufuu',
@@ -47,7 +47,7 @@ class OfferTestCase(TestCase):
         artist1 = Artist.objects.create(user=user2_artist1, portfolio=portfolio1, phone='600304999')
         artist1.save()
 
-        calendar1 = Calendar.objects.create(year=2019, days=days, portfolio=portfolio1)
+        calendar1 = Calendar.objects.create(days=days, portfolio=portfolio1)
         calendar1.save()
 
         performance1 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
@@ -84,8 +84,6 @@ class OfferTestCase(TestCase):
                                                        customer=customer2)
         event_location2.save()
 
-        days = [True] * 366
-
 
         user4_artist2 = User.objects.create(username='artist2', password=make_password('artist2'),
                                             first_name='Bunny', last_name='Fufuu',
@@ -99,7 +97,7 @@ class OfferTestCase(TestCase):
         artist2 = Artist.objects.create(user=user4_artist2, portfolio=portfolio2, phone='600304999')
         artist2.save()
 
-        calendar2 = Calendar.objects.create(year=2019, days=days, portfolio=portfolio2)
+        calendar2 = Calendar.objects.create(days=days, portfolio=portfolio2)
         calendar2.save()
 
         performance2 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
@@ -119,7 +117,7 @@ class OfferTestCase(TestCase):
 
         token_num = response.get('x-auth')
         token = Token.objects.all().filter(pk=token_num).first()
-        print(token.key)
+
         self.assertEqual(response.status_code, 200)
 
         response2 = self.client.get('/offers/', format='json', HTTP_AUTHORIZATION='Token '+token.key)
@@ -149,7 +147,7 @@ class OfferTestCase(TestCase):
                                                        customer=customer1)
         event_location1.save()
 
-        days = [True] * 366
+        days = ['2019-06-02', '2019-08-02']
 
         user2_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
                                             first_name='Bunny', last_name='Pato',
@@ -166,7 +164,7 @@ class OfferTestCase(TestCase):
         artist1 = Artist.objects.create(user=user2_artist1, portfolio=portfolio1, phone='600304999')
         artist1.save()
 
-        calendar1 = Calendar.objects.create(year=2019, days=days, portfolio=portfolio1)
+        calendar1 = Calendar.objects.create(days=days, portfolio=portfolio1)
         calendar1.save()
 
         performance1 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
@@ -203,7 +201,7 @@ class OfferTestCase(TestCase):
                                                        customer=customer2)
         event_location2.save()
 
-        days = [True] * 366
+
 
         user4_artist2 = User.objects.create(username='artist2', password=make_password('artist2'),
                                             first_name='Bunny', last_name='Fufuu',
@@ -217,7 +215,7 @@ class OfferTestCase(TestCase):
         artist2 = Artist.objects.create(user=user4_artist2, portfolio=portfolio2, phone='600304999')
         artist2.save()
 
-        calendar2 = Calendar.objects.create(year=2019, days=days, portfolio=portfolio2)
+        calendar2 = Calendar.objects.create(days=days, portfolio=portfolio2)
         calendar2.save()
 
         performance2 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
@@ -265,7 +263,7 @@ class OfferTestCase(TestCase):
                                                        customer=customer1)
         event_location1.save()
 
-        days = [True] * 366
+        days = ['2019-06-02', '2019-08-02']
 
         user2_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
                                             first_name='Bunny', last_name='Fufuu',
@@ -282,7 +280,7 @@ class OfferTestCase(TestCase):
         artist1 = Artist.objects.create(user=user2_artist1, portfolio=portfolio1, phone='600304999')
         artist1.save()
 
-        calendar1 = Calendar.objects.create(year=2019, days=days, portfolio=portfolio1)
+        calendar1 = Calendar.objects.create(days=days, portfolio=portfolio1)
         calendar1.save()
 
         performance1 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
@@ -299,16 +297,15 @@ class OfferTestCase(TestCase):
 
         token_num = response.get('x-auth')
         token = Token.objects.all().filter(pk=token_num).first()
-        print(token.key)
+
         self.assertEqual(response.status_code, 200)
 
         response2 = self.client.get('/offers/', format='json', HTTP_AUTHORIZATION='Token ' + token.key)
         self.assertEqual(response2.status_code, 200)
         item_dict = response2.json()
-        print(item_dict)
-        print(len(item_dict['results']))
+
         self.assertTrue(len(item_dict['results']) == 0)
-        print(response2)
+
 
     def test_list_anonymous(self):
 

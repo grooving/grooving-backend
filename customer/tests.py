@@ -33,19 +33,17 @@ class ShowCustomerInformation(TestCase):
 
         token_num = response.get('x-auth')
         token = Token.objects.all().filter(pk=token_num).first()
-        print(token.key)
         self.assertEqual(response.status_code, 200)
 
         response2 = self.client.get('/customer/personalInformation/', format='json',
                                     HTTP_AUTHORIZATION='Token ' + token.key)
         self.assertEqual(response.status_code, 200)
         result = response2.json()
-        print(len(result))
+
         item_dict = response2.json()
-        print(item_dict)
         #We check that only one user is retrieved
         self.assertTrue(len(item_dict) == 6)
-        print(response)
+
         self.client.logout()
 
     def test_show_personal_information_artist_forbidden(self):
@@ -69,7 +67,7 @@ class ShowCustomerInformation(TestCase):
 
         token_num = response.get('x-auth')
         token = Token.objects.all().filter(pk=token_num).first()
-        print(token.key)
+
         self.assertEqual(response.status_code, 200)
 
         response2 = self.client.get('/customer/personalInformation/', format='json',
@@ -84,14 +82,6 @@ class ShowCustomerInformation(TestCase):
                                             email='artist1@gmail.com')
         user1_artist1.save()
 
-        '''data1 = {"username": "artist1", "password": "artist1"}
-        response = self.client.post("/api/login/", data1, format='json')
-
-        token_num = response.get('x-auth')
-        token = Token.objects.all().filter(pk=token_num).first()
-#        print(token.key)
-        self.assertEqual(response.status_code, 200)
-        self.client.force_login()'''
         response2 = self.client.get('/customer/personalInformation/', format='json')
         self.assertEqual(response2.status_code, 403)
         self.client.logout()

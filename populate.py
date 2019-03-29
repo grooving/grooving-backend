@@ -222,25 +222,25 @@ def save_data():
     calendar1 = Calendar.objects.create(days=availableDays, portfolio=portfolio1)
     calendar1.save()
 
-    calendar2 = Calendar.objects.create(days=availableDays, portfolio=portfolio1)
+    calendar2 = Calendar.objects.create(days=availableDays, portfolio=portfolio2)
     calendar2.save()
 
-    calendar3 = Calendar.objects.create(days=availableDays, portfolio=portfolio2)
+    calendar3 = Calendar.objects.create(days=availableDays, portfolio=portfolio3)
     calendar3.save()
 
-    calendar4 = Calendar.objects.create(days=availableDays, portfolio=portfolio2)
+    calendar4 = Calendar.objects.create(days=availableDays, portfolio=portfolio4)
     calendar4.save()
 
-    calendar5 = Calendar.objects.create(days=availableDays, portfolio=portfolio3)
+    calendar5 = Calendar.objects.create(days=availableDays, portfolio=portfolio5)
     calendar5.save()
 
-    calendar6 = Calendar.objects.create(days=availableDays, portfolio=portfolio3)
+    calendar6 = Calendar.objects.create(days=availableDays, portfolio=portfolio6)
     calendar6.save()
 
-    calendar7 = Calendar.objects.create(days=availableDays, portfolio=portfolio4)
+    calendar7 = Calendar.objects.create(days=availableDays, portfolio=portfolio7)
     calendar7.save()
 
-    calendar8 = Calendar.objects.create(days=availableDays, portfolio=portfolio4)
+    calendar8 = Calendar.objects.create(days=availableDays, portfolio=portfolio8)
     calendar8.save()
 
     # Users...
@@ -650,7 +650,6 @@ def save_data():
                                                paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location3)
     offer12_custom2.save()
-
 
 delete_data()
 save_data()

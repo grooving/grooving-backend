@@ -1,90 +1,62 @@
-from django.test import TestCase
-
-from Grooving.models import Portfolio, PortfolioModule, ArtisticGender, MoneyField, Customer, CreditCardField, Artist, Portfolio, User, Calendar,PaymentPackage,EventLocation,Zone
-from datetime import datetime
+from Grooving.models import Offer,  Artist, Portfolio, User, Calendar, PaymentPackage, Customer
+from Grooving.models import EventLocation, Zone, Performance
+from django.contrib.auth.hashers import make_password
+from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
-# Create your tests here.
+import datetime
+import pytz
 
 
-class PortfolioTestCase(TestCase):
+class CalendarTestCase(APITestCase):
 
-    def test_show_portfolio(self):
+    def test_manage_calendar_artist(self):
 
-        credit_card1 = CreditCardField('Pedro Rodriguez', datetime.now(), '1234567890123456', '203')
-        user1 = User()
-        user1.username = "pedro"
-        user1.id = "42"
-        user1.email = "pedro@pedro.com"
-        user1.password = "pedro"
-        user1.save()
+        days = ['2019-06-02', '2019-08-02', '2019-10-15', '2019-11-02']
+        date = datetime.datetime(2020,2,7,8,49,56,81433, pytz.UTC)
 
-        days = [True] * 366
-        print(days)
-        calendar1 = Calendar(year=2019, days=days)
-        calendar1.id = "44"
-        calendar1.save()
+        user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
+                                            first_name='Cdds', last_name='Pedro',
+                                            email='artist1@gmail.com')
+        user1_artist1.save()
 
-        user2 = User()
-        user2.email = "juan@juan.com"
-        user2.username = "artist"
-        user2.password= "artist"
-        user2.id = "43"
-        user2.save()
+        user1_customer1 = User.objects.create(username='customer1', password=make_password('customer1customer1'),
+                                              first_name='Cdds', last_name='Pedro',
+                                              email='customer1@gmail.com')
+        user1_customer1.save()
 
-        artist1 = Artist()
-        artist1.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artist1.id ="56"
-        artist1.iban = "AD1400080001001234567890"
-        artist1.phone = "999999999"
-        artist1.paypalAccount = "user=artistpay,password=artistpay"
-        artist1.user_id = "43"
-
-        artisticGender1 = ArtisticGender()
-        artisticGender1.name = "Rock"
-        artisticGender1.save()
-
-        artisticGender2 = ArtisticGender()
-        artisticGender2.name = "Blues"
-        artisticGender2.parentGender = id
-        artisticGender2.save()
-
-        portfolio1 = Portfolio()
-        portfolio1.id = "24"
-        portfolio1.artisticName = "Juanartist"
-        portfolio1.save()
-
-        portfolioModule1 = PortfolioModule()
-        portfolioModule1.type = "PHOTO"
-        portfolioModule1.link = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        portfolioModule1.description = "Modulo Photo"
-        portfolioModule1.portfolio = "24"
-        portfolioModule1.save()
-
-        portfolioModule2 = PortfolioModule()
-        portfolioModule2.type = 'VIDEO'
-        portfolioModule2.link = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        portfolioModule2.description = "Modulo Video"
-        portfolioModule2.portfolio = "24"
-        portfolioModule2.save()
-
-
-        paymentPackage = PaymentPackage()
-        paymentPackage.id = "87"
-        paymentPackage.description = "paymentPackage description"
-        paymentPackage.appliedVAT = "0.07"
-        paymentPackage.portfolio = "24"
-        paymentPackage.save()
-
-        zone1 = Zone()
-        zone1.id = "50"
-        zone1.name = "Sevilla Sur"
+        zone1 = Zone.objects.create(name="Sevilla Sur")
         zone1.save()
 
-        artist1.portfolio = "24"
+        portfolio1 = Portfolio.objects.create(artisticName="Juanartist")
+        portfolio1.zone.add(zone1)
+        portfolio1.save()
+
+        artist1 = Artist.objects.create(user=user1_artist1, portfolio=portfolio1, phone='600304999')
         artist1.save()
 
-        self.client.login(username='artist', password='artist')
-        response = self.client.get('/portfolio/24', format='json')
-        '''self.assertEqual(response.status_code, 200)'''
-        print(response)
+        performance1 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance1.save()
+        payment_package1 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+                                                         portfolio=portfolio1, performance=performance1)
 
+        payment_package1.save()
+
+        calendar1 = Calendar.objects.create(days=days, portfolio=portfolio1)
+        calendar1.save()
+
+        data1 = {"username": "artist1", "password": "artist1artist1"}
+        response = self.client.post("/api/login/", data1, format='json')
+
+        token_num = response.get('x-auth')
+        token = Token.objects.all().filter(pk=token_num).first()
+        print(token.key)
+        self.assertEqual(response.status_code, 200)
+
+        data = {"days": ['2019-06-02', '2019-08-03', '2019-10-15', '2019-11-02']}
+
+        response1 = self.client.put('/calendar/{}/'.format(calendar1.id), data, format='json',
+                                    HTTP_AUTHORIZATION='Token '+token.key)
+        self.assertEqual(response1.status_code, 200)
+        print(response1)
+
+        print(Calendar.objects.filter(pk=calendar1.id).first().days)

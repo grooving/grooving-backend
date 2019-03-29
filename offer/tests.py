@@ -1,5 +1,4 @@
-from Grooving.models import Offer,  Artist, Portfolio, User, Calendar, PaymentPackage, Customer
-from Grooving.models import EventLocation, Zone, Performance
+from Grooving.models import Offer,  Artist, Portfolio, User, Calendar, PaymentPackage, Customer, EventLocation, Zone, Performance, Fare, Custom
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
@@ -10,6 +9,8 @@ import pytz
 class OfferTestCase(APITestCase):
 
     def test_manage_offer_artist(self):
+
+        print("TEST_MANAGE_OFFER_CUSTOMER\n")
 
         days = ['2019-06-02', '2019-08-02', '2019-10-15', '2019-11-02']
         date = datetime.datetime(2020,2,7,8,49,56,81433, pytz.UTC)
@@ -104,6 +105,8 @@ class OfferTestCase(APITestCase):
 
         response6 = self.client.get('/paymentCode/?offer={}'.format(offer1.id),
                                     HTTP_AUTHORIZATION='Token ' + token2.key)
+
+        print(response)
         self.assertEqual(response6.status_code, 200)
 
         offer1.status = "CANCELED"
@@ -128,4 +131,148 @@ class OfferTestCase(APITestCase):
         print(Offer.objects.filter(pk=offer1.id).first().status)
         self.assertEqual(response9.status_code, 200)
 
+        print("\n\nPASSED\n\n")
+
+    def test_create_offer_customer(self):
+        print("TEST_CREATE_OFFER_CUSTOMER\n")
+
+        # Populate database
+        print("Populating database...\n")
+
+        user1 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
+                                                  first_name='Cdds', last_name='Pedro',
+                                                  email='artist1@gmail.com')
+        user1.save()
+
+        user2 = User.objects.create(username='customer1', password=make_password('customer1customer1'),
+                                              first_name='Cdds', last_name='Pedro',
+                                              email='customer1@gmail.com')
+        user2.save()
+
+        date = datetime.datetime(2020, 2, 7, 8, 49, 56, 81433, pytz.UTC)
+
+        customer1 = Customer.objects.create(holder="customer1", expirationDate=date, user=user2,
+                                            number=9393393939393, cvv=203)
+        customer1.save()
+
+        zone1 = Zone.objects.create(name="Sevilla Sur")
+        zone1.save()
+
+        event_location = EventLocation.objects.create(name="Sala Rajoy", address="C/Madrid",
+                                                       equipment="Speakers and microphone",
+                                                       description="The best event location",
+                                                       zone=zone1, customer_id=customer1.id)
+        event_location.save()
+
+        portfolio1 = Portfolio.objects.create(artisticName="Juanartist")
+        portfolio1.zone.add(zone1)
+        portfolio1.save()
+
+        artist1 = Artist.objects.create(user=user1, portfolio=portfolio1, phone='600304999')
+        artist1.save()
+
+        performance = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance.save()
+        payment_package1 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+                                                         portfolio=portfolio1, performance=performance)
+
+        payment_package1.save()
+
+        fare= Fare.objects.create(priceHour=20.0, currency="EUR")
+        fare.save()
+        payment_package2 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+                                                         portfolio=portfolio1, fare=fare)
+
+        payment_package2.save()
+
+        custom = Custom.objects.create(minimumPrice=50.0, currency="EUR")
+        custom.save()
+        payment_package3 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+                                                         portfolio=portfolio1, custom=custom)
+
+        payment_package3.save()
+
+        # Start test
+        print("Launching test...\n")
+
+        loginBody = {"username": "customer1", "password": "customer1customer1"}
+        response = self.client.post("/api/login/", loginBody, format='json')
+        self.assertEqual(response.status_code, 200)
+
+        token_num = response.get('x-auth')
+        token = Token.objects.all().filter(pk=token_num).first()
+        print("--Token generated: " + token.key)
+
+        performanceOfferBody = {
+            "description": "This is a description",
+            "date": "2019-05-10T10:00:00",
+            "paymentPackage_id": payment_package1.id,
+            "eventLocation_id": event_location.id
+        }
+
+        performanceOfferResponse = self.client.post('/offer/', performanceOfferBody, format='json',
+                                    HTTP_AUTHORIZATION='Token '+token.key)
+        self.assertEqual(performanceOfferResponse.status_code, 201)
+        print("--Performance offer:\n" + str(performanceOfferResponse.content))
+
+        fareOfferBody = {
+            "description": "This is a description",
+            "date": "2019-05-10T10:00:00",
+            "hours": 2.5,
+            "paymentPackage_id": payment_package2.id,
+            "eventLocation_id": event_location.id
+        }
+
+        fareOfferResponse = self.client.post('/offer/', fareOfferBody, format='json',
+                                                    HTTP_AUTHORIZATION='Token ' + token.key)
+        self.assertEqual(fareOfferResponse.status_code, 201)
+        print("--Fare offer:\n" + str(fareOfferResponse.content))
+
+        customOfferBody = {
+            "description": "This is a description",
+            "date": "2019-05-10T10:00:00",
+            "hours": 2.5,
+            "price": 100.0,
+            "currency": "EUR",
+            "paymentPackage_id": payment_package3.id,
+            "eventLocation_id": event_location.id
+        }
+
+        customOfferResponse = self.client.post('/offer/', customOfferBody, format='json',
+                                             HTTP_AUTHORIZATION='Token ' + token.key)
+        self.assertEqual(customOfferResponse.status_code, 201)
+        print("--Custom offer:\n" + str(customOfferResponse.content))
+
+        badRequestBody = {
+            "description": "This is a description",
+            "date": "2019-05-10T10:00:00",
+            "hours": 2.5,
+            "price": 10.0,
+            "currency": "EUR",
+            "paymentPackage_id": payment_package3.id,
+            "eventLocation_id": event_location.id
+        }
+
+        badRequestResponse = self.client.post('/offer/', badRequestBody, format='json',
+                                              HTTP_AUTHORIZATION='Token ' + token.key)
+
+        self.assertEqual(badRequestResponse.status_code, 400)
+        print("--Bad request expected:\n" + str(badRequestResponse.content))
+
+        nonAuthenticatedBody = {
+            "description": "This is a description",
+            "date": "2019-05-10T10:00:00",
+            "hours": 2.5,
+            "price": 100.0,
+            "currency": "EUR",
+            "paymentPackage_id": payment_package3.id,
+            "eventLocation_id": event_location.id
+        }
+
+        nonAuthenticatedResponse = self.client.post('/offer/', nonAuthenticatedBody, format='json')
+
+        self.assertEqual(nonAuthenticatedResponse.status_code, 401)
+        print("--User non authenticated:\n" + str(nonAuthenticatedResponse.content))
+
+        print("\nPASSED\n")
 

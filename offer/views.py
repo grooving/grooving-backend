@@ -3,9 +3,10 @@ from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user,get_user_type
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import OfferSerializer
+from .serializers import OfferSerializer,OfferCodeSerializer
 from rest_framework import status
 from django.http import Http404
+from rest_framework.permissions import IsAuthenticated
 
 
 class OfferManage(generics.RetrieveUpdateDestroyAPIView):
@@ -13,13 +14,17 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
 
-    def get_object(self, pk):
+    def get_object(self, pk=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         try:
             return Offer.objects.get(pk=pk)
         except Offer.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
+    def get(self, request, pk=None, format=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         offer = self.get_object(pk)
         articustomer = get_logged_user(request)
         user_type = get_user_type(articustomer)
@@ -45,8 +50,9 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
             else:
                 raise PermissionDenied
 
-    def put(self, request, pk):
-
+    def put(self, request, pk=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         if len(request.data) == 0:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -73,12 +79,16 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
                     else:
                         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
+    def delete(self, request, pk=None, format=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         offer = self.get_object(pk)
         offer.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def update(self, request, pk, *args, **kwargs):
+    def update(self, request, pk=None, *args, **kwargs):
+        if pk is None:
+            pk = self.kwargs['pk']
         partial = kwargs.pop('partial', False)
         instance = self.get_object(pk)
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -89,6 +99,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
 class CreateOffer(generics.CreateAPIView):
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         serializer = OfferSerializer(data=request.data, partial=True)
@@ -100,31 +111,30 @@ class CreateOffer(generics.CreateAPIView):
 
 class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
     queryset = Offer.objects.all()
-    serializer_class = OfferSerializer
+    serializer_class = OfferCodeSerializer
 
-    def get_object(self, pk):
+    def pepe(self, cosa=None):
+        if cosa is None:
+            cosa = self.kwargs['pk']
         try:
-            return Offer.objects.get(pk=pk)
+            return Offer.objects.get(pk=cosa)
         except Offer.DoesNotExist:
             raise Http404
 
     def get(self, request, *args, **kwargs):
         user = get_logged_user(request)
         user_type = get_user_type(user)
-        print(user_type)
         if not user_type or user_type != "Customer":
-            print("Meh")
             raise PermissionDenied("Only customers can call this.")
         offer_id = request.GET.get("offer", None)
-        offer = self.get_object(offer_id)
+        offer = self.pepe(offer_id)
         if not offer.eventLocation.customer.id == user.id:
-            print("yeah")
             raise PermissionDenied("You are a customer, but you are not the owner of this offer")
-        serializer = OfferSerializer(offer)
+        serializer = OfferCodeSerializer(offer)
         code = serializer.data.get("paymentCode")
         return Response({"paymentCode": str(code)}, status.HTTP_200_OK)
 
-    def put(self, request, *args, **kwargs):
+    def put(self, request,pk, *args, **kwargs):
         payment_code = request.data.get("paymentCode")
         if not payment_code:
             return Response(status=status.HTTP_400_BAD_REQUEST)

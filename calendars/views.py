@@ -19,14 +19,18 @@ class CalendarByArtist(generics.RetrieveUpdateDestroyAPIView):
     queryset = Calendar.objects.all()
     serializer_class = CalendarSerializer
 
-    def get_object(self, pk):
+    def get_object(self, pk=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         try:
             portfolio = Artist.objects.get(id=pk).portfolio
             return Calendar.objects.get(portfolio=portfolio)
         except Calendar.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
+    def get(self, request, pk=None, format=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         portfolio = Artist.objects.get(id=pk).portfolio
         calendar = Calendar.objects.filter(portfolio=portfolio)
         serializer = CalendarSerializer(calendar, many=True)
@@ -38,19 +42,25 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
     queryset = Calendar.objects.all()
     serializer_class = CalendarSerializer
 
-    def get_object(self, pk):
+    def get_object(self, pk=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         try:
             return Calendar.objects.get(pk=pk)
         except Calendar.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
-        calendar = Calendar.objects.get(pk=pk)
+    def get(self, request, pk=None, format=None):
+        if pk is None:
+            pk = self.kwargs['pk']
+        calendar = self.get_object(pk)
         serializer = CalendarSerializer(calendar)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        calendar = self.get_object(pk=pk)
+    def put(self, request, pk=None):
+        if pk is None:
+            pk = self.kwargs['pk']
+        calendar = self.get_object(pk)
         loggedUser = get_logged_user(request)
         artist = Artist.objects.filter(portfolio=calendar.portfolio).first()
         if loggedUser is not None and loggedUser.id == artist.id:
@@ -64,8 +74,10 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
         else:
             raise PermissionDenied("The artisticGender is not for yourself")
 
-    def delete(self, request, pk, format=None):
-        calendar = self.get_object(pk=pk)
+    def delete(self, request, pk=None, format=None):
+        if pk is None:
+            pk = self.kwargs['pk']
+        calendar = self.get_object(pk)
         calendar.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

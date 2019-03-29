@@ -19,18 +19,24 @@ class ZoneManager(generics.RetrieveUpdateDestroyAPIView):
     queryset = Zone.objects.all()
     serializer_class = ZoneSerializer
 
-    def get_object(self, pk):
+    def get_object(self, pk=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         try:
             return Zone.objects.get(pk=pk)
         except Zone.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
+    def get(self, request, pk=None, format=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         zone = self.get_object(pk)
         serializer = ZoneSerializer(zone)
         return Response(serializer.data)
 
-    def put(self, request, pk):
+    def put(self, request, pk=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         zone = self.get_object(pk)
         loggedUser = get_logged_user(request)
         type = get_user_type(loggedUser)
@@ -45,17 +51,12 @@ class ZoneManager(generics.RetrieveUpdateDestroyAPIView):
         else:
             raise PermissionDenied("The artisticGender is not for yourself")
 
-    def delete(self, request, pk, format=None):
+    def delete(self, request, pk=None, format=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         zone = self.get_object(pk)
         zone.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def update(self, request, pk, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object(pk)
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
 
 
 class CreateZone(generics.CreateAPIView):

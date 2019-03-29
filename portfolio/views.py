@@ -13,18 +13,24 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
     queryset = Portfolio.objects.all()
     serializer_class = PortfolioSerializer
 
-    def get_object(self, pk):
+    def get_object(self, pk=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         try:
             return Portfolio.objects.get(pk=pk)
         except Portfolio.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
+    def get(self, request, pk=None, format=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         portfolio = self.get_object(pk)
         serializer = PortfolioSerializer(portfolio)
         return Response(serializer.data)
 
-    def put(self, request, pk):
+    def put(self, request, pk=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         portfolio = self.get_object(pk)
         loggedUser = get_logged_user(request)
         artist = Artist.objects.filter(portfolio=portfolio).first()
@@ -38,7 +44,9 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
         else:
             raise PermissionDenied("The portfolio is not yours")
 
-    def delete(self, request, pk, format=None):
+    def delete(self, request, pk=None, format=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         portfolio = self.get_object(pk)
         portfolio.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -24,6 +24,17 @@ class EventLocationSerializer(serializers.ModelSerializer):
         fields = ('id', 'address', 'equipment', 'description')
 
 
+
+
+
+class OfferCodeSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = Offer
+        fields = ('id', 'description', 'status', 'date', 'hours', 'price','paymentPackage',
+                  'paymentPackage_id', 'eventLocation', 'eventLocation_id','paymentCode')
+
 class OfferSerializer(serializers.ModelSerializer):
 
     paymentPackage = PaymentPackageSerializer(read_only=True)
@@ -86,16 +97,14 @@ class OfferSerializer(serializers.ModelSerializer):
             offer.price = offer.paymentPackage.performance.price
             offer.currency = offer.paymentPackage.performance.currency
         elif offer.paymentPackage.fare is not None:
-            offer.price = offer.paymentPackage.fare.priceHour * Decimal(json['hours'])
+            offer.hours = json.get('hours')
+            offer.price = offer.paymentPackage.fare.priceHour * Decimal(json.get('hours'))
             offer.currency = offer.paymentPackage.fare.currency
         elif offer.paymentPackage.custom is not None:
-            offer.price = json['price']
+            offer.hours = json.get('hours')
+            offer.price = json.get('price')
             offer.currency = offer.paymentPackage.custom.currency
         offer.save()
-        dateInDB = Offer.objects.filter(pk=offer.id).first().date
-        if dateInDB < timezone.now():
-            offer.delete()
-            assert_true(False, "Date must be in future.")
         return offer
 
     def _service_update(self, json: dict, offer_in_db: Offer, logged_user: User):
@@ -171,6 +180,8 @@ class OfferSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("description field not provided")
         if json.get("date") is None:
             raise serializers.ValidationError("date field not provided")
+        elif datetime.datetime.strptime(json.get('date'), '%Y-%m-%dT%H:%M:%S') < datetime.datetime.now():
+            raise serializers.ValidationError("date value is past")
         if json.get("paymentPackage_id") is None:
             raise serializers.ValidationError("paymentPackage_id field not provided")
         paymentPackage = PaymentPackage.objects.filter(pk=json.get("paymentPackage_id")).first()
@@ -182,12 +193,16 @@ class OfferSerializer(serializers.ModelSerializer):
         elif paymentPackage.custom is not None:
             if json.get("price") is None:
                 raise serializers.ValidationError("price field not provided")
+            elif Decimal(json.get("price")) < paymentPackage.custom.minimumPrice:
+                raise serializers.ValidationError("price entered it's below of minimum price")
+            if json.get("hours") is None:
+                raise serializers.ValidationError("hours field not provided")
         if json.get("eventLocation_id") is None:
             raise serializers.ValidationError("eventLocation_id field not provided")
         eventLocation = EventLocation.objects.filter(pk=request.data.get("eventLocation_id")).first()
         if eventLocation is None:
             raise serializers.ValidationError("eventLocation doesn't exist")
-        elif eventLocation.customer != customer:
+        elif eventLocation.customer.user != request.user:
             raise serializers.ValidationError("can't reference this eventLocation")
         return True
 

@@ -29,7 +29,7 @@ class ShowArtistInformation(TestCase):
 
         token_num = response.get('x-auth')
         token = Token.objects.all().filter(pk=token_num).first()
-        print(token.key)
+
         self.assertEqual(response.status_code, 200)
 
         response2 = self.client.get('/artist/personalInformation/', format='json', HTTP_AUTHORIZATION='Token ' + token.key)
@@ -37,7 +37,7 @@ class ShowArtistInformation(TestCase):
         result = response2.json()
         item_dict = response2.json()
         self.assertTrue(len(item_dict) == 6)
-        print(response2)
+
         self.client.logout()
 
     def test_show_personal_information_customer_forbidden(self):
@@ -65,7 +65,7 @@ class ShowArtistInformation(TestCase):
 
         token_num = response.get('x-auth')
         token = Token.objects.all().filter(pk=token_num).first()
-        print(token.key)
+
         self.assertEqual(response.status_code, 200)
 
         response2 = self.client.get('/artist/personalInformation/', format='json',
@@ -129,7 +129,7 @@ class ListArtistTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         item_dict = response.json()
         self.assertTrue(len(item_dict['results']) == 1)
-        print(response)
+
 
     def test_list_artists_filter_artistic_name(self):
 
@@ -195,7 +195,7 @@ class ListArtistTestCase(TestCase):
         item_dict = response.json()
         self.assertEqual(response.status_code, 200)
         self.assertTrue(len(item_dict['results']) == 1)
-        print(response)
+
 
     def test_list_artists_filter_artistic_gender(self):
         user = User()
@@ -276,7 +276,7 @@ class ListArtistTestCase(TestCase):
         item_dict = response.json()
         self.assertEqual(response.status_code, 200)
         self.assertTrue(len(item_dict['results']) == 1)
-        print(response)
+
 
     def test_list_artists_filter_artistic_gender_no_matches(self):
         user = User()
@@ -358,7 +358,7 @@ class ListArtistTestCase(TestCase):
         item_dict = response.json()
         self.assertEqual(response.status_code, 200)
         self.assertTrue(len(item_dict['results']) == 0)
-        print(response)
+
 
     def test_list_artists_filter_artistic_gender_parent_match(self):
         user = User()
@@ -444,6 +444,5 @@ class ListArtistTestCase(TestCase):
         response = self.client.get('/artists/?artisticGender=Musica', format='json')
         item_dict = response.json()
         self.assertEqual(response.status_code, 200)
-        print(item_dict)
+
         self.assertTrue(len(item_dict['results']) == 2)
-        print(response)
