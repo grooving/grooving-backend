@@ -10,6 +10,23 @@ from Grooving.models import ArtisticGender, Portfolio, Artist, Zone, PortfolioMo
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
+def delete_data():
+    SystemConfiguration.objects.all().delete()
+    Offer.objects.all().delete()
+    User.objects.all().delete()
+    Artist.objects.all().delete()
+    Customer.objects.all().delete()
+    EventLocation.objects.all().delete()
+    Performance.objects.all().delete()
+    Fare.objects.all().delete()
+    Custom.objects.all().delete()
+    PaymentPackage.objects.all().delete()
+    ArtisticGender.objects.all().delete()
+    Portfolio.objects.all().delete()
+    Artist.objects.all().delete()
+    Zone.objects.all().delete()
+    PortfolioModule.objects.all().delete()
+    Calendar.objects.all().delete()
 
 def _service_generate_unique_payment_code():
     random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
@@ -635,5 +652,5 @@ def save_data():
     offer12_custom2.save()
 
 
-os.system("python3 manage.py flush --no-input")
+delete_data()
 save_data()
