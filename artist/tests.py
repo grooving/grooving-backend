@@ -1,83 +1,89 @@
 from django.test import TestCase
-
+from rest_framework.authtoken.models import Token
 from Grooving.models import Portfolio, ArtisticGender, Customer, Artist, Portfolio, User, Calendar,PaymentPackage,EventLocation,Zone
 from datetime import datetime
+from django.contrib.auth.hashers import make_password
 
 
 class ShowArtistInformation(TestCase):
 
     def test_show_personal_information_artist(self):
 
-        user1 = User()
-        user1.username = "LuzMaria"
-        user1.id = "1"
-        user1.email = "luz@maria.com"
-        user1.password = "LuzMaría"
-        user1.save()
+        user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
+                                            first_name='Bunny', last_name='Fufuu',
+                                            email='artist1@gmail.com')
+        user1_artist1.save()
 
-        portfolio = Portfolio()
-        portfolio.id = "1"
-        portfolio.artisticName = "María de la Luz"
-        portfolio.save()
+        zone1 = Zone.objects.create(name="Sevilla Sur")
+        zone1.save()
 
-        artist1 = Artist()
-        artist1.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artist1.id = "1"
-        artist1.iban = "AD1400080001001234567890"
-        artist1.phone = "622334447"
-        artist1.paypalAccount = "user=payme,password=please"
-        artist1.user_id = "1"
-        artist1.portfolio = portfolio
+        portfolio1 = Portfolio.objects.create(artisticName="Juanartist")
+        portfolio1.zone.add(zone1)
+        portfolio1.save()
+
+        artist1 = Artist.objects.create(user=user1_artist1, portfolio=portfolio1, phone='600304999')
         artist1.save()
 
-        self.client.force_login(user1)
-        response = self.client.get('/artist/personalInformation/', format='json')
+        data1 = {"username": "artist1", "password": "artist1"}
+        response = self.client.post("/api/login/", data1, format='json')
+
+        token_num = response.get('x-auth')
+        token = Token.objects.all().filter(pk=token_num).first()
+        print(token.key)
         self.assertEqual(response.status_code, 200)
-        result = response.json()
-        item_dict = response.json()
+
+        response2 = self.client.get('/artist/personalInformation/', format='json', HTTP_AUTHORIZATION='Token ' + token.key)
+        self.assertEqual(response2.status_code, 200)
+        result = response2.json()
+        item_dict = response2.json()
         self.assertTrue(len(item_dict) == 6)
-        print(response)
+        print(response2)
         self.client.logout()
 
     def test_show_personal_information_customer_forbidden(self):
 
-        user1 = User()
-        user1.username = "LuzMaria"
-        user1.id = "1"
-        user1.email = "luz@maria.com"
-        user1.password = "LuzMaría"
-        user1.save()
+        user1_customer = User.objects.create(username='customer1', password=make_password('customer1'),
+                                             first_name='Bunny', last_name='Fufuu',
+                                             email='customer1@gmail.com')
+        user1_customer.save()
 
-        customer1 = Customer()
-        customer1.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        customer1.id = "1"
-        customer1.iban = "AD1400080001001234567890"
-        customer1.phone = "622334447"
-        customer1.paypalAccount = "user=payme,password=please"
-        customer1.user_id = "1"
-        customer1.holder = "Luz"
-        customer1.expirationDate = datetime.now()
-        customer1.cvv = 888
+        zone1 = Zone.objects.create(name="Sevilla Sur")
+        zone1.save()
+
+        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999', cvv=999,
+                                            expirationDate=datetime.now())
         customer1.save()
 
-        self.client.force_login(user1)
-        response = self.client.get('/artist/personalInformation/', format='json')
-        self.assertEqual(response.status_code, 403)
+        event_location1 = EventLocation.objects.create(name="Sala Rajoy", address="C/Madrid",
+                                                       equipment="Speakers and microphone",
+                                                       description="The best event location", zone=zone1,
+                                                       customer=customer1)
+        event_location1.save()
+
+        data1 = {"username": "customer1", "password": "customer1"}
+        response = self.client.post("/api/login/", data1, format='json')
+
+        token_num = response.get('x-auth')
+        token = Token.objects.all().filter(pk=token_num).first()
+        print(token.key)
+        self.assertEqual(response.status_code, 200)
+
+        response2 = self.client.get('/artist/personalInformation/', format='json',
+                                    HTTP_AUTHORIZATION='Token ' + token.key)
+        self.assertEqual(response2.status_code, 403)
         self.client.logout()
 
     def test_show_personal_information_admin_forbidden(self):
 
-        user1 = User()
-        user1.username = "LuzMaria"
-        user1.id = "1"
-        user1.email = "luz@maria.com"
-        user1.password = "LuzMaría"
-        user1.is_staff = True
-        user1.save()
+        user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
+                                            first_name='Bunny', last_name='Fufuu',
+                                            email='artist1@gmail.com', is_staff=True)
+        user1_artist1.save()
 
-        self.client.force_login(user1)
-        response = self.client.get('/artist/personalInformation/', format='json')
-        self.assertEqual(response.status_code, 403)
+        self.client.force_login(user1_artist1)
+
+        response2 = self.client.get('/artist/personalInformation/', format='json')
+        self.assertEqual(response2.status_code, 403)
         self.client.logout()
 
     def test_show_personal_information_anonymous_forbidden(self):

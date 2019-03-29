@@ -1,7 +1,10 @@
 from django.test import TestCase
 
-from Grooving.models import Offer, Customer, Artist, Portfolio, User, Calendar,PaymentPackage,EventLocation,Zone
+from Grooving.models import Offer, Customer, Artist, Portfolio, User, Calendar, PaymentPackage, EventLocation, Zone, Performance
 from datetime import datetime
+from rest_framework.authtoken.models import Token
+from django.utils import timezone
+from django.contrib.auth.hashers import make_password
 from rest_framework.test import APITestCase
 # Create your tests here.
 
@@ -9,397 +12,303 @@ from rest_framework.test import APITestCase
 class OfferTestCase(TestCase):
 
     def test_list_artist_offers(self):
+        user1_customer = User.objects.create(username='customer1', password=make_password('customer1'),
+                                             first_name='Bunny', last_name='Fufuu',
+                                             email='customer1@gmail.com')
+        user1_customer.save()
 
-        user1 = User()
-        user1.username = "Armando"
-        user1.id = "15"
-        user1.email = "fire@fire.com"
-        user1.password = "Armando"
-        user1.save()
-
-        customer1 = Customer()
-        customer1.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        customer1.id = "32"
-        customer1.phone = "957689091"
-        customer1.paypalAccount = "user=pay,password=you"
-        customer1.iban = "DE00 3645 1143 4432 2135 01"
-        customer1.user = user1
-        customer1.holder = 'Pedro Rodriguez'
-        customer1.expirationDate = datetime.now()
-        customer1.number = '1234567890123456'
-        customer1.cvv = '203'
-        customer1.save()
-
-        days = [True] * 366
-        calendar1 = Calendar(year=2019, days=days)
-        calendar1.id = "44"
-
-
-        user2 = User()
-        user2.email = "pepe@pepe.com"
-        user2.username = "user2"
-        user2.password = "user2"
-        user2.id = "16"
-        user2.save()
-
-
-        portfolio1 = Portfolio()
-        portfolio1.calendar = calendar1
-        portfolio1.artisticName = "No me pises"
-        portfolio1.id = "4"
-        portfolio1.save()
-
-        calendar1.portfolio = portfolio1
-        calendar1.save()
-
-        artist1 = Artist()
-        artist1.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artist1.id = "56"
-        artist1.iban = "AD1400080001011111111"
-        artist1.phone = "999995555"
-        artist1.paypalAccount = "user=artistpay,password=artistpay"
-        artist1.user = user2
-        artist1.portfolio = portfolio1
-        artist1.save()
-
-        paymentPackage = PaymentPackage()
-        paymentPackage.id = "87"
-        paymentPackage.description = "paymentPackage description"
-        paymentPackage.appliedVAT = "0.07"
-        paymentPackage.portfolio = portfolio1
-        paymentPackage.save()
-        zone1 = Zone()
-        zone1.id = "50"
-        zone1.name = "Sevilla Este"
+        zone1 = Zone.objects.create(name="Sevilla Sur")
         zone1.save()
 
-        eventLocation1 = EventLocation()
-        eventLocation1.name = "Sala Rajoy"
-        eventLocation1.address = "C/Madrid"
-        eventLocation1.equipment = "Speakers and microphone"
-        eventLocation1.description = "THe best event location"
-        eventLocation1.customer = customer1
-        eventLocation1.zone = zone1
-        eventLocation1.save()
+        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999', cvv=999,
+                                            expirationDate=datetime.now())
+        customer1.save()
 
-        eventLocation1.id = "45"
-        eventLocation1.save()
+        event_location1 = EventLocation.objects.create(name="Sala Rajoy", address="C/Madrid",
+                                                       equipment="Speakers and microphone",
+                                                       description="The best event location", zone=zone1,
+                                                       customer=customer1)
+        event_location1.save()
 
-        offer1 = Offer()
-        offer1.description = "Offer1"
-        offer1.status = 'PENDING'
-        offer1.date = datetime.now()
-        offer1.hours = 2
-        offer1.price = 3.4
-        offer1.paymentCode = 'Code'
-        offer1.paymentPackage = paymentPackage
-        offer1.eventLocation = eventLocation1
-        offer1.id = '40'
+        days = [True] * 366
+
+        user2_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
+                                            first_name='Bunny', last_name='Fufuu',
+                                            email='artist1@gmail.com')
+        user2_artist1.save()
+
+        zone1 = Zone.objects.create(name="Sevilla Sur")
+        zone1.save()
+
+        portfolio1 = Portfolio.objects.create(artisticName="Juanartist")
+        portfolio1.zone.add(zone1)
+        portfolio1.save()
+
+        artist1 = Artist.objects.create(user=user2_artist1, portfolio=portfolio1, phone='600304999')
+        artist1.save()
+
+        calendar1 = Calendar.objects.create(year=2019, days=days, portfolio=portfolio1)
+        calendar1.save()
+
+        performance1 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance1.save()
+        payment_package1 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+                                                         portfolio=portfolio1, performance=performance1)
+
+        payment_package1.save()
+
+        date = timezone.now()
+
+        offer1 = Offer.objects.create(description="DESCRIPTIONOFFER1", status='PENDING', date=date, price="200",
+                                      currency="EUR", hours=2,
+                                      paymentCode='EEE', eventLocation=event_location1, paymentPackage=payment_package1)
         offer1.save()
 
         #Second batch of data for the test
 
-        user3 = User()
-        user3.username = "Manuel"
-        user3.id = "17"
-        user3.email = "fire@fire.com"
-        user3.password = "Manuel"
-        user3.save()
+        user3_customer2 = User.objects.create(username='customer2', password=make_password('customer2'),
+                                             first_name='Bunny', last_name='Fufuu',
+                                             email='customer2@gmail.com')
+        user3_customer2.save()
 
-        customer2 = Customer()
-        customer2.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        customer2.id = "35"
-        customer2.phone = "957689091"
-        customer2.paypalAccount = "user=pay,password=you"
-        customer2.iban = "DE00 3645 1143 4432 2135 01"
-        customer2.user = user3
-        customer2.holder = 'Pedro Rodriguez'
-        customer2.expirationDate = datetime.now()
-        customer2.number = '1234567890123456'
-        customer2.cvv = '203'
-        customer2.save()
-
-        user4 = User()
-        user4.email = "pepe@pepe.com"
-        user4.username = "user4"
-        user4.password = "user4"
-        user4.id = "20"
-        user4.save()
-
-        portfolio2 = Portfolio()
-        portfolio2.calendar = calendar1
-        portfolio2.artisticName = "Married to college"
-        portfolio2.save()
-
-        calendar2 = Calendar(year=2019, days=days)
-        calendar2.id = "45"
-        calendar2.portfolio = portfolio2
-        calendar2.save()
-
-        artist2 = Artist()
-        artist2.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artist2.id = "57"
-        artist2.iban = "AD1400080001011111111"
-        artist2.phone = "999995555"
-        artist2.paypalAccount = "user=artistpay,password=artistpay"
-        artist2.user = user4
-        artist2.portfolio = portfolio2
-        artist2.save()
-
-        paymentPackage2 = PaymentPackage()
-        paymentPackage2.id = "88"
-        paymentPackage2.description = "paymentPackage description"
-        paymentPackage2.appliedVAT = "0.07"
-        paymentPackage2.portfolio = portfolio2
-        paymentPackage2.save()
-        zone2 = Zone()
-        zone2.id = "51"
-        zone2.name = "Sevilla Norte"
+        zone2 = Zone.objects.create(name="Sevilla Sur")
         zone2.save()
 
-        eventLocation2 = EventLocation()
-        eventLocation2.name = "Sala Rajoy"
-        eventLocation2.address = "C/Madrid"
-        eventLocation2.equipment = "Speakers and microphone"
-        eventLocation2.description = "THe best event location"
-        eventLocation2.customer = customer2
-        eventLocation2.zone = zone2
+        customer2 = Customer.objects.create(user=user3_customer2, holder="Juan", number='600304999', cvv=999,
+                                            expirationDate=datetime.now())
+        customer2.save()
 
-        eventLocation2.id = "46"
-        eventLocation2.save()
+        event_location2 = EventLocation.objects.create(name="Sala Rajoy", address="C/Madrid",
+                                                       equipment="Speakers and microphone",
+                                                       description="The best event location", zone=zone2,
+                                                       customer=customer2)
+        event_location2.save()
 
-        offer2 = Offer()
-        offer2.description = "Offer2"
-        offer2.status = 'PENDING'
-        offer2.date = datetime.now()
-        offer2.hours = 4
-        offer2.paymentCode = 'Code2'
-        offer2.paymentPackage = paymentPackage2
-        offer2.eventLocation = eventLocation2
-        offer2.id = '41'
-        offer2.price = 4.4
+        days = [True] * 366
+
+
+        user4_artist2 = User.objects.create(username='artist2', password=make_password('artist2'),
+                                            first_name='Bunny', last_name='Fufuu',
+                                            email='artist2@gmail.com')
+        user4_artist2.save()
+
+        portfolio2 = Portfolio.objects.create(artisticName="Juanartist")
+        portfolio2.zone.add(zone1)
+        portfolio2.save()
+
+        artist2 = Artist.objects.create(user=user4_artist2, portfolio=portfolio2, phone='600304999')
+        artist2.save()
+
+        calendar2 = Calendar.objects.create(year=2019, days=days, portfolio=portfolio2)
+        calendar2.save()
+
+        performance2 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance2.save()
+        payment_package2 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+                                                         portfolio=portfolio2, performance=performance2)
+
+        payment_package2.save()
+
+        offer2 = Offer.objects.create(description="DESCRIPTIONOFFER2", status='PENDING', date=date, price="200",
+                                      currency="EUR", hours=2,
+                                      paymentCode='YUJU', eventLocation=event_location2, paymentPackage=payment_package2)
         offer2.save()
 
-        self.client.force_login(user2)
-        response = self.client.get('/offers/', format='json')
+        data1 = {"username": "artist1", "password": "artist1"}
+        response = self.client.post("/api/login/", data1, format='json')
+
+        token_num = response.get('x-auth')
+        token = Token.objects.all().filter(pk=token_num).first()
+        print(token.key)
         self.assertEqual(response.status_code, 200)
-        result = response.json()
-        item_dict = response.json()
-        print(item_dict)
-        print(len(item_dict['results']))
+
+        response2 = self.client.get('/offers/', format='json', HTTP_AUTHORIZATION='Token '+token.key)
+        self.assertEqual(response2.status_code, 200)
+        item_dict = response2.json()
+
         self.assertTrue(len(item_dict['results']) == 1)
-        print(response)
         self.client.logout()
 
     def test_list_customer_offers(self):
 
-        user1 = User()
-        user1.username = "Armando"
-        user1.id = "15"
-        user1.email = "fire@fire.com"
-        user1.password = "Armando"
-        user1.save()
+        user1_customer = User.objects.create(username='customer1', password=make_password('customer1'),
+                                             first_name='Bunny', last_name='Fufuu',
+                                             email='customer1@gmail.com')
+        user1_customer.save()
 
-        customer1 = Customer()
-        customer1.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        customer1.id = "32"
-        customer1.phone = "957689091"
-        customer1.paypalAccount = "user=pay,password=you"
-        customer1.iban = "DE00 3645 1143 4432 2135 01"
-        customer1.user = user1
-        customer1.holder = 'Pedro Rodriguez'
-        customer1.expirationDate = datetime.now()
-        customer1.number = '1234567890123456'
-        customer1.cvv = '203'
-        customer1.save()
-
-        user2 = User()
-        user2.email = "pepe@pepe.com"
-        user2.username = "user2"
-        user2.password = "user2"
-        user2.id = "16"
-        user2.save()
-
-        portfolio1 = Portfolio()
-        portfolio1.artisticName = "No me pises"
-        portfolio1.id = "4"
-        portfolio1.save()
-
-        days = [True] * 366
-        calendar1 = Calendar(year=2019, days=days)
-        calendar1.id = "44"
-        calendar1.portfolio = portfolio1
-        calendar1.save()
-
-        artist1 = Artist()
-        artist1.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artist1.id = "56"
-        artist1.iban = "AD1400080001011111111"
-        artist1.phone = "999995555"
-        artist1.paypalAccount = "user=artistpay,password=artistpay"
-        artist1.user = user2
-        artist1.portfolio = portfolio1
-        artist1.save()
-
-        paymentPackage = PaymentPackage()
-        paymentPackage.id = "87"
-        paymentPackage.description = "paymentPackage description"
-        paymentPackage.appliedVAT = "0.07"
-        paymentPackage.portfolio = portfolio1
-        paymentPackage.save()
-        zone1 = Zone()
-        zone1.id = "50"
-        zone1.name = "Sevilla Este"
+        zone1 = Zone.objects.create(name="Sevilla Sur")
         zone1.save()
 
-        eventLocation1 = EventLocation()
-        eventLocation1.name = "Sala Rajoy"
-        eventLocation1.address = "C/Madrid"
-        eventLocation1.equipment = "Speakers and microphone"
-        eventLocation1.description = "THe best event location"
-        eventLocation1.zone = zone1
-        eventLocation1.customer = customer1
-        eventLocation1.save()
-
-        eventLocation1.id = "45"
-        eventLocation1.save()
-
-        customer1.eventLocation = eventLocation1
+        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999', cvv=999,
+                                            expirationDate=datetime.now())
         customer1.save()
 
-        offer1 = Offer()
-        offer1.description = "Offer1"
-        offer1.status = 'PENDING'
-        offer1.date = datetime.now()
-        offer1.hours = 2
-        offer1.price = 3.4
-        offer1.paymentCode = 'Code'
-        offer1.paymentPackage = paymentPackage
-        offer1.eventLocation = eventLocation1
-        offer1.id = '40'
+        event_location1 = EventLocation.objects.create(name="Sala Rajoy", address="C/Madrid",
+                                                       equipment="Speakers and microphone",
+                                                       description="The best event location", zone=zone1,
+                                                       customer=customer1)
+        event_location1.save()
+
+        days = [True] * 366
+
+        user2_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
+                                            first_name='Bunny', last_name='Pato',
+                                            email='artist1@gmail.com')
+        user2_artist1.save()
+
+        zone1 = Zone.objects.create(name="Sevilla Sur")
+        zone1.save()
+
+        portfolio1 = Portfolio.objects.create(artisticName="Juanartist")
+        portfolio1.zone.add(zone1)
+        portfolio1.save()
+
+        artist1 = Artist.objects.create(user=user2_artist1, portfolio=portfolio1, phone='600304999')
+        artist1.save()
+
+        calendar1 = Calendar.objects.create(year=2019, days=days, portfolio=portfolio1)
+        calendar1.save()
+
+        performance1 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance1.save()
+        payment_package1 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+                                                         portfolio=portfolio1, performance=performance1)
+
+        payment_package1.save()
+
+        date = timezone.now()
+
+        offer1 = Offer.objects.create(description="DESCRIPTIONOFFER1", status='PENDING', date=date, price="200",
+                                      currency="EUR", hours=2,
+                                      paymentCode='EEE', eventLocation=event_location1, paymentPackage=payment_package1)
         offer1.save()
 
-        #Second batch of data for the test
+        # Second batch of data for the test
 
-        user3 = User()
-        user3.username = "Manuel"
-        user3.id = "17"
-        user3.email = "fire@fire.com"
-        user3.password = "Manuel"
-        user3.save()
+        user3_customer2 = User.objects.create(username='customer2', password=make_password('customer2'),
+                                              first_name='Bunny', last_name='Fufuu',
+                                              email='customer2@gmail.com')
+        user3_customer2.save()
 
-        customer2 = Customer()
-        customer2.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        customer2.id = "35"
-        customer2.phone = "957689091"
-        customer2.paypalAccount = "user=pay,password=you"
-        customer2.iban = "DE00 3645 1143 4432 2135 01"
-        customer2.user = user3
-        customer2.holder = 'Pedro Rodriguez'
-        customer2.expirationDate = datetime.now()
-        customer2.number = '1234567890123456'
-        customer2.cvv = '203'
+        zone2 = Zone.objects.create(name="Sevilla Sur")
+        zone2.save()
+
+        customer2 = Customer.objects.create(user=user3_customer2, holder="Juan", number='600304999', cvv=999,
+                                            expirationDate=datetime.now())
         customer2.save()
 
-        user4 = User()
-        user4.email = "pepe@pepe.com"
-        user4.username = "user4"
-        user4.password = "user4"
-        user4.id = "20"
-        user4.save()
+        event_location2 = EventLocation.objects.create(name="Sala Rajoy", address="C/Madrid",
+                                                       equipment="Speakers and microphone",
+                                                       description="The best event location", zone=zone2,
+                                                       customer=customer2)
+        event_location2.save()
 
-        portfolio2 = Portfolio()
-        portfolio2.calendar = calendar1
-        portfolio2.artisticName = "Married to college"
+        days = [True] * 366
+
+        user4_artist2 = User.objects.create(username='artist2', password=make_password('artist2'),
+                                            first_name='Bunny', last_name='Fufuu',
+                                            email='artist2@gmail.com')
+        user4_artist2.save()
+
+        portfolio2 = Portfolio.objects.create(artisticName="Juanito")
+        portfolio2.zone.add(zone1)
         portfolio2.save()
 
-        calendar2 = Calendar(year=2019, days=days)
-        calendar2.id = "45"
-        calendar2.portfolio = portfolio2
-        calendar2.save()
-
-        artist2 = Artist()
-        artist2.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artist2.id = "57"
-        artist2.iban = "AD1400080001011111111"
-        artist2.phone = "999995555"
-        artist2.paypalAccount = "user=artistpay,password=artistpay"
-        artist2.user = user4
-        artist2.portfolio = portfolio2
+        artist2 = Artist.objects.create(user=user4_artist2, portfolio=portfolio2, phone='600304999')
         artist2.save()
 
-        paymentPackage2 = PaymentPackage()
-        paymentPackage2.id = "88"
-        paymentPackage2.description = "paymentPackage description"
-        paymentPackage2.appliedVAT = "0.07"
-        paymentPackage2.portfolio = portfolio2
-        paymentPackage2.save()
+        calendar2 = Calendar.objects.create(year=2019, days=days, portfolio=portfolio2)
+        calendar2.save()
 
-        offer2 = Offer()
-        offer2.description = "Offer2"
-        offer2.status = 'PENDING'
-        offer2.date = datetime.now()
-        offer2.hours = 4
-        offer2.paymentCode = 'Code2'
-        offer2.paymentPackage = paymentPackage2
-        offer2.eventLocation = eventLocation1
-        offer2.id = '41'
-        offer2.price = 4.4
+        performance2 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance2.save()
+        payment_package2 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+                                                         portfolio=portfolio2, performance=performance2)
+
+        payment_package2.save()
+
+        offer2 = Offer.objects.create(description="DESCRIPTIONOFFER2", status='PENDING', date=date, price="200",
+                                      currency="EUR", hours=2,
+                                      paymentCode='YUJU', eventLocation=event_location1,
+                                      paymentPackage=payment_package2)
         offer2.save()
 
-        self.client.force_login(user1)
-        response = self.client.get('/offers/', format='json')
+        data1 = {"username": "customer1", "password": "customer1"}
+        response = self.client.post("/api/login/", data1, format='json')
+
+        token_num = response.get('x-auth')
+        token = Token.objects.all().filter(pk=token_num).first()
         self.assertEqual(response.status_code, 200)
-        result = response.json()
-        print(len(result))
-        item_dict = response.json()
-        print(item_dict)
+
+        response2 = self.client.get('/offers/', format='json', HTTP_AUTHORIZATION='Token ' + token.key)
+        self.assertEqual(response2.status_code, 200)
+        item_dict = response2.json()
         self.assertTrue(len(item_dict['results']) == 2)
-        print(response)
         self.client.logout()
 
     def test_list_no_offers(self):
-        #admin user
-        user3 = User()
-        user3.username = "Manuel"
-        user3.id = "17"
-        user3.email = "fire@fire.com"
-        user3.password = "Manuel"
-        user3.is_staff = False
-        user3.save()
+        user1_customer = User.objects.create(username='customer1', password=make_password('customer1'),
+                                             first_name='Bunny', last_name='Fufuu',
+                                             email='customer1@gmail.com')
+        user1_customer.save()
 
-        portfolio2 = Portfolio()
-        portfolio2.artisticName = "Married to college"
-        portfolio2.save()
+        zone1 = Zone.objects.create(name="Sevilla Sur")
+        zone1.save()
 
-        artist2 = Artist()
-        artist2.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artist2.id = "57"
-        artist2.iban = "AD1400080001011111111"
-        artist2.phone = "999995555"
-        artist2.paypalAccount = "user=artistpay,password=artistpay"
-        artist2.user = user3
-        artist2.portfolio = portfolio2
-        artist2.save()
+        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999', cvv=999,
+                                            expirationDate=datetime.now())
+        customer1.save()
 
-        paymentPackage2 = PaymentPackage()
-        paymentPackage2.id = "88"
-        paymentPackage2.description = "paymentPackage description"
-        paymentPackage2.portfolio = portfolio2
-        paymentPackage2.appliedVAT = "0.07"
-        paymentPackage2.save()
+        event_location1 = EventLocation.objects.create(name="Sala Rajoy", address="C/Madrid",
+                                                       equipment="Speakers and microphone",
+                                                       description="The best event location", zone=zone1,
+                                                       customer=customer1)
+        event_location1.save()
 
-        self.client.force_login(user3)
-        response = self.client.get('/offers/', format='json')
+        days = [True] * 366
+
+        user2_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
+                                            first_name='Bunny', last_name='Fufuu',
+                                            email='artist1@gmail.com')
+        user2_artist1.save()
+
+        zone1 = Zone.objects.create(name="Sevilla Sur")
+        zone1.save()
+
+        portfolio1 = Portfolio.objects.create(artisticName="Juanartist")
+        portfolio1.zone.add(zone1)
+        portfolio1.save()
+
+        artist1 = Artist.objects.create(user=user2_artist1, portfolio=portfolio1, phone='600304999')
+        artist1.save()
+
+        calendar1 = Calendar.objects.create(year=2019, days=days, portfolio=portfolio1)
+        calendar1.save()
+
+        performance1 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance1.save()
+        payment_package1 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+                                                         portfolio=portfolio1, performance=performance1)
+
+        payment_package1.save()
+
+        date = timezone.now()
+
+        data1 = {"username": "artist1", "password": "artist1"}
+        response = self.client.post("/api/login/", data1, format='json')
+
+        token_num = response.get('x-auth')
+        token = Token.objects.all().filter(pk=token_num).first()
+        print(token.key)
         self.assertEqual(response.status_code, 200)
 
-        result = response.json()
-        print(len(result))
-        item_dict = response.json()
+        response2 = self.client.get('/offers/', format='json', HTTP_AUTHORIZATION='Token ' + token.key)
+        self.assertEqual(response2.status_code, 200)
+        item_dict = response2.json()
         print(item_dict)
+        print(len(item_dict['results']))
         self.assertTrue(len(item_dict['results']) == 0)
-        self.client.logout()
-
+        print(response2)
 
     def test_list_anonymous(self):
 

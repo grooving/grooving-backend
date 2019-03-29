@@ -10,6 +10,8 @@ from rest_framework import generics
 from .serializers import PaymentPackageSerializer
 from rest_framework import status
 from django.http import Http404
+from django.core.exceptions import PermissionDenied
+from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
 
 
 class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
@@ -30,25 +32,6 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
         serializer = PaymentPackageSerializer(paymentPackage, many=True)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        id_portfolio = Artist.objects.get(pk=pk).portfolio
-        paymentPackage = self.get_object(portfolio__exact=id_portfolio)
-        if len(request.data) == 1 and 'status' in request.data:
-            serializer = PaymentPackageSerializer(paymentPackage, data=request.data, partial=True)
-
-        else:
-            serializer = PaymentPackageSerializer(paymentPackage, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        id_portfolio = Artist.objects.get(pk=pk).portfolio
-        paymentPackage = self.get_object(portfolio__exact=id_portfolio)
-        paymentPackage.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
 
 class PaymentPackageManager(generics.RetrieveUpdateDestroyAPIView):
 
@@ -68,15 +51,16 @@ class PaymentPackageManager(generics.RetrieveUpdateDestroyAPIView):
 
     def put(self, request, pk):
         paymentPackage = self.get_object(pk=pk)
-        if len(request.data) == 1 and 'status' in request.data:
+        loggedUser = get_logged_user(request)
+        artist = Artist.objects.filter(portfolio=paymentPackage.portfolio).first()
+        if loggedUser is not None and loggedUser.id == artist.id:
             serializer = PaymentPackageSerializer(paymentPackage, data=request.data, partial=True)
-
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            serializer = PaymentPackageSerializer(paymentPackage, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            raise PermissionDenied("The artisticGender is not for yourself")
 
     def delete(self, request, pk, format=None):
         paymentPackage = self.get_object(pk=pk)
@@ -89,10 +73,17 @@ class CreatePaymentPackage(generics.CreateAPIView):
     serializer_class = PaymentPackageSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = PaymentPackageSerializer(data=request.data, partial=True)
-        if serializer.validate(request.data):
-            serializer.is_valid()
-            paymentPackage = serializer.save()
-            serialized = PaymentPackageSerializer(paymentPackage)
-            return Response(serialized.data, status=status.HTTP_201_CREATED)
-
+        loggedUser = get_logged_user(request)
+        type = get_user_type(loggedUser)
+        if loggedUser is not None and type == "Artist":
+            serializer = PaymentPackageSerializer(data=request.data, partial=True)
+            if serializer.validate(request.data):
+                serializer.is_valid()
+                if request.data["portfolio_id"] == loggedUser.portfolio_id:
+                    paymentPackage = serializer.save()
+                    serialized = PaymentPackageSerializer(paymentPackage)
+                    return Response(serialized.data, status=status.HTTP_201_CREATED)
+                else:
+                    raise PermissionDenied("The artisticGender is not for yourself")
+        else:
+            raise PermissionDenied("The artisticGender is not for yourself")

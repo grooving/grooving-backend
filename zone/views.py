@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect, render
-from Grooving.models import Zone
+from Grooving.models import Zone, Artist
 from django.contrib import messages
 from django.db.utils import IntegrityError
 
@@ -10,6 +10,8 @@ from rest_framework import generics
 from .serializers import ZoneSerializer
 from rest_framework import status
 from django.http import Http404
+from django.core.exceptions import PermissionDenied
+from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
 
 
 class ZoneManager(generics.RetrieveUpdateDestroyAPIView):
@@ -30,13 +32,18 @@ class ZoneManager(generics.RetrieveUpdateDestroyAPIView):
 
     def put(self, request, pk):
         zone = self.get_object(pk)
+        loggedUser = get_logged_user(request)
+        type = get_user_type(loggedUser)
+        if loggedUser is not None and type == "Artist":
+            serializer = ZoneSerializer(zone, data=request.data, partial=True)
 
-        serializer = ZoneSerializer(zone, data=request.data, partial=True)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            raise PermissionDenied("The artisticGender is not for yourself")
 
     def delete(self, request, pk, format=None):
         zone = self.get_object(pk)
@@ -56,9 +63,14 @@ class CreateZone(generics.CreateAPIView):
     serializer_class = ZoneSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = ZoneSerializer(data=request.data, partial=True)
-        if serializer.validate(request.data):
-            serializer.is_valid()
-            zone = serializer.save()
-            serialized = ZoneSerializer(zone)
-            return Response(serialized.data, status=status.HTTP_201_CREATED)
+        loggedUser = get_logged_user(request)
+        type = get_user_type(loggedUser)
+        if loggedUser is not None and type == "Artist":
+            serializer = ZoneSerializer(data=request.data, partial=True)
+            if serializer.validate(request.data):
+                serializer.is_valid()
+                zone = serializer.save()
+                serialized = ZoneSerializer(zone)
+                return Response(serialized.data, status=status.HTTP_201_CREATED)
+        else:
+            raise PermissionDenied("The artisticGender is not for yourself")

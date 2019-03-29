@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from Grooving.models import Portfolio, PortfolioModule, ArtisticGender, MoneyField, Customer, CreditCardField, Artist, Portfolio, User, Calendar,PaymentPackage,EventLocation,Zone
+from Grooving.models import Portfolio, PortfolioModule, ArtisticGender,   Artist, Portfolio, User, Calendar,PaymentPackage,EventLocation,Zone
 from datetime import datetime
 from rest_framework.test import APITestCase
 # Create your tests here.
@@ -10,7 +10,6 @@ class PortfolioTestCase(TestCase):
 
     def test_show_portfolio(self):
 
-        credit_card1 = CreditCardField('Pedro Rodriguez', datetime.now(), '1234567890123456', '203')
         user1 = User()
         user1.username = "pedro"
         user1.id = "42"

@@ -4,9 +4,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.postgres.fields import ArrayField
-
+from django.utils import timezone
 
 # Create your models here.
+
 
 class AbstractEntity(models.Model):
     creationMoment = models.DateTimeField(auto_now_add=True)
@@ -64,12 +65,8 @@ class Portfolio(AbstractEntity):
 
 
 class Calendar(AbstractEntity):
-    year = models.IntegerField(validators=[MinValueValidator(2019), MaxValueValidator(3000)])
-    days = ArrayField(models.BooleanField(default=False), size=366)
+    days = ArrayField(models.CharField(max_length=10))
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.year)
 
 
 class Artist(UserAbstract):
@@ -125,7 +122,8 @@ class PaymentPackage(AbstractEntity):
 
 
 class SystemConfiguration(AbstractEntity):
-    minimumPrice = models.DecimalField(default=0.0, max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
+    minimumPrice = models.DecimalField(default=0.0, max_digits=20, decimal_places=2,
+                                       validators=[MinValueValidator(Decimal('0.0'))])
     currency = models.CharField(default='EUR', max_length=3)
     paypalTax = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
     creditCardTax = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
@@ -159,7 +157,7 @@ class EventLocation(AbstractEntity):
         return str(self.name)
 
 
-OfferStatusField =(
+OfferStatusField = (
     ('PENDING', "PENDING"),
     ('NEGOTIATION', "NEGOTIATION"),
     ('CONTRACT_MADE', "CONTRACT_MADE"),
@@ -172,8 +170,9 @@ OfferStatusField =(
 class Offer(AbstractEntity):
     description = models.TextField(default='Description', max_length=255)
     status = models.CharField(max_length=20, choices=OfferStatusField)
-    date = models.DateTimeField(default=datetime.now)
-    hours = models.DecimalField(blank=True, null=True, max_digits=3, decimal_places=2, validators=[MinValueValidator(Decimal('0.5'))])
+    date = models.DateTimeField(default=timezone.now)
+    hours = models.DecimalField(blank=True, null=True, max_digits=3, decimal_places=2,
+                                validators=[MinValueValidator(Decimal('0.5'))])
     price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
     currency = models.CharField(default='EUR', max_length=3)
     paymentCode = models.CharField(max_length=140, unique=True, null=True, blank=True)

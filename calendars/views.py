@@ -10,6 +10,8 @@ from rest_framework import generics
 from .serializers import CalendarSerializer
 from rest_framework import status
 from django.http import Http404
+from django.core.exceptions import PermissionDenied
+from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
 
 
 class CalendarByArtist(generics.RetrieveUpdateDestroyAPIView):
@@ -30,30 +32,6 @@ class CalendarByArtist(generics.RetrieveUpdateDestroyAPIView):
         serializer = CalendarSerializer(calendar, many=True)
         return Response(serializer.data)
 
-    def put(self, request, pk):
-        portfolio = self.get_object(pk)
-        if len(request.data) == 1 and 'status' in request.data:
-            serializer = CalendarSerializer(portfolio, data=request.data, partial=True)
-
-        else:
-            serializer = CalendarSerializer(portfolio, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        portfolio = self.get_object(pk)
-        portfolio.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def update(self, request, pk, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object(pk)
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
 
 class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
 
@@ -73,15 +51,18 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
 
     def put(self, request, pk):
         calendar = self.get_object(pk=pk)
-        if len(request.data) == 1 and 'status' in request.data:
+        loggedUser = get_logged_user(request)
+        artist = Artist.objects.filter(portfolio=calendar.portfolio).first()
+        if loggedUser is not None and loggedUser.id == artist.id:
             serializer = CalendarSerializer(calendar, data=request.data, partial=True)
 
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            serializer = CalendarSerializer(calendar, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            raise PermissionDenied("The artisticGender is not for yourself")
 
     def delete(self, request, pk, format=None):
         calendar = self.get_object(pk=pk)
@@ -94,9 +75,18 @@ class CreateCalendar(generics.CreateAPIView):
     serializer_class = CalendarSerializer
 
     def post(self, request, *args, **kwargs):
-        serializer = CalendarSerializer(data=request.data, partial=True)
-        if serializer.validate(request.data):
-            serializer.is_valid()
-            calendar = serializer.save()
-            serialized = CalendarSerializer(calendar)
-            return Response(serialized.data, status=status.HTTP_201_CREATED)
+        loggedUser = get_logged_user(request)
+        type = get_user_type(loggedUser)
+        if loggedUser is not None and type == "Artist":
+            serializer = CalendarSerializer(data=request.data, partial=True)
+            if serializer.validate(request.data):
+                serializer.is_valid()
+                if request.data["portfolio"] == loggedUser.portfolio_id:
+                    calendar = serializer.save()
+                    serialized = CalendarSerializer(calendar)
+                    return Response(serialized.data, status=status.HTTP_201_CREATED)
+                else:
+                    raise PermissionDenied("The artisticGender is not for yourself")
+
+        else:
+            raise PermissionDenied("The artisticGender is not for yourself")

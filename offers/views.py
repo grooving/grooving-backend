@@ -1,9 +1,8 @@
 from Grooving.models import Offer, Artist, Customer
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
-from django.http import HttpResponseForbidden
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from rest_framework import generics
 from .serializers import ListOfferSerializer
-from rest_framework.response import Response
+from utils.authentication_utils import get_user_type, get_logged_user
 
 
 class ListOffers(generics.ListAPIView):
@@ -12,22 +11,27 @@ class ListOffers(generics.ListAPIView):
 
     def get_queryset(self):
 
-        if self.request.user.is_authenticated and not self.request.user.is_staff:
+        user = get_logged_user(self.request)
+        user_type = get_user_type(user)
+
+        if user_type == 'Artist':
             try:
-                artist = Artist.objects.get(user=self.request.user)
+                artist = Artist.objects.get(user_id=user.user_id)
                 queryset = Offer.objects.filter(paymentPackage__portfolio__artist=artist)
-                serializer = ListOfferSerializer(queryset, many=True)
                 return queryset
             except ObjectDoesNotExist:
                 try:
-                    customer = Customer.objects.get(user=self.request.user)
+                    customer = Customer.objects.get(user_id=user.user_id)
                     queryset = Offer.objects.filter(eventLocation__customer=customer)
-                    serializer = ListOfferSerializer(queryset, many=True)
                     return queryset
                 except ObjectDoesNotExist:
-                    #There are no offers matching the users; therefore, they have no offers linked to them. An empty list is given
-                    queryset = ()
-                    serializer = ListOfferSerializer(queryset)
-                    return queryset
+                    raise PermissionDenied("No tienes autorización para entrar aquí")
         else:
-            raise PermissionDenied("No tienes autorización para entrar aquí")
+            if user_type == 'Customer':
+                customer = Customer.objects.get(user_id=user.user_id)
+                queryset = Offer.objects.filter(eventLocation__customer=customer)
+#                serializer = ListOfferSerializer(queryset, many=True)
+                return queryset
+            else:
+                # There are no offers matching the users; therefore, they have no offers linked to them. An empty list is given
+                raise PermissionDenied("No tienes autorización para entrar aquí")

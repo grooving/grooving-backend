@@ -24,7 +24,7 @@ class ArtistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artist
-        fields = ('id', 'photo', 'phone', 'iban', 'paypalAccount', 'portfolio', 'user')
+        fields = ('id', 'photo', 'phone', 'portfolio', 'user')
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -33,8 +33,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ('id', 'photo', 'phone', 'iban', 'paypalAccount', 'holder', 'expirationDate',
-                  'number', 'cvv', 'user')
+        fields = ('id', 'photo', 'phone', 'user')
 
 
 class LoginSerializer(serializers.Serializer):

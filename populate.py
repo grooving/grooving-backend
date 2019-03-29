@@ -200,34 +200,30 @@ def save_data():
 
     # Calendar
 
-    availableDays = [False]*365
-    availableDays[50] = True
-    availableDays[51] = True
-    availableDays[52] = True
-    availableDays[53] = True
+    availableDays = ['2019-06-02', '2019-08-02', '2019-10-15', '2019-11-02']
 
-    calendar1 = Calendar.objects.create(year=2018, days=availableDays, portfolio=portfolio1)
+    calendar1 = Calendar.objects.create(days=availableDays, portfolio=portfolio1)
     calendar1.save()
 
-    calendar2 = Calendar.objects.create(year=2019, days=availableDays, portfolio=portfolio1)
+    calendar2 = Calendar.objects.create(days=availableDays, portfolio=portfolio1)
     calendar2.save()
 
-    calendar3 = Calendar.objects.create(year=2018, days=availableDays, portfolio=portfolio2)
+    calendar3 = Calendar.objects.create(days=availableDays, portfolio=portfolio2)
     calendar3.save()
 
-    calendar4 = Calendar.objects.create(year=2019, days=availableDays, portfolio=portfolio2)
+    calendar4 = Calendar.objects.create(days=availableDays, portfolio=portfolio2)
     calendar4.save()
 
-    calendar5 = Calendar.objects.create(year=2018, days=availableDays, portfolio=portfolio3)
+    calendar5 = Calendar.objects.create(days=availableDays, portfolio=portfolio3)
     calendar5.save()
 
-    calendar6 = Calendar.objects.create(year=2019, days=availableDays, portfolio=portfolio3)
+    calendar6 = Calendar.objects.create(days=availableDays, portfolio=portfolio3)
     calendar6.save()
 
-    calendar7 = Calendar.objects.create(year=2018, days=availableDays, portfolio=portfolio4)
+    calendar7 = Calendar.objects.create(days=availableDays, portfolio=portfolio4)
     calendar7.save()
 
-    calendar8 = Calendar.objects.create(year=2019, days=availableDays, portfolio=portfolio4)
+    calendar8 = Calendar.objects.create(days=availableDays, portfolio=portfolio4)
     calendar8.save()
 
     # Users...

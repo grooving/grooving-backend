@@ -22,4 +22,3 @@ class ArtistSerializer(serializers.HyperlinkedModelSerializer):
         model = Artist
         depth = 1
         fields = ('url', 'photo', 'portfolio')
-

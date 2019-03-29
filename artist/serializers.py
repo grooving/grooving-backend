@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from Grooving.models import Artist
+from Grooving.models import Artist, Portfolio
 from user.serializers import UserSerializer
-from portfolio.serializers import ShortPortfolioSerializer
+from portfolio.serializers import ArtisticGenderSerializer
 
 
 class ArtistInfoSerializer(serializers.HyperlinkedModelSerializer):
@@ -13,6 +13,16 @@ class ArtistInfoSerializer(serializers.HyperlinkedModelSerializer):
         depth = 1
         model = Artist
         fields = ('id', 'user', 'photo', 'phone', 'iban', 'paypalAccount')
+
+
+class ShortPortfolioSerializer(serializers.ModelSerializer):
+    artisticGender = ArtisticGenderSerializer(read_only=True, many=True)
+
+    class Meta:
+
+        model = Portfolio
+        fields = ('id', 'artisticName', 'artisticGender')
+        search_fields = ['artisticName', 'artisticGender__name']
 
 
 class ListArtistSerializer(serializers.HyperlinkedModelSerializer):
