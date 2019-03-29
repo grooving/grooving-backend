@@ -99,7 +99,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
 class CreateOffer(generics.CreateAPIView):
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
         serializer = OfferSerializer(data=request.data, partial=True)
@@ -113,11 +113,13 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
     queryset = Offer.objects.all()
     serializer_class = OfferCodeSerializer
 
-    def pepe(self, cosa=None):
-        if cosa is None:
-            cosa = self.kwargs['pk']
+    def get_object(self):
+        queryset=self.filter_queryset(self.get_queryset())
         try:
-            return Offer.objects.get(pk=cosa)
+            obj=queryset.get(pk=self.request.user.offer_id)
+            self.check_object_permissions(self.request,obj)
+            return obj
+
         except Offer.DoesNotExist:
             raise Http404
 
@@ -134,10 +136,16 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
         code = serializer.data.get("paymentCode")
         return Response({"paymentCode": str(code)}, status.HTTP_200_OK)
 
-    def put(self, request,pk, *args, **kwargs):
-        payment_code = request.data.get("paymentCode")
-        if not payment_code:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, pk=None, *args, **kwargs):
+        if pk is None:
+            pk = self.kwargs['pk']
+        try:
+            offer1 = Offer.objects.filter(paymentCode=pk).first()
+            offer1.status = "PAYMENT_MADE"
+            offer1.save()
 
-        OfferSerializer.service_made_payment_artist(payment_code, get_logged_user(request))
+        except:
+            raise PermissionDenied()
+
+        #OfferSerializer.service_made_payment_artist(, get_logged_user(request))
         return Response(status=status.HTTP_200_OK)
