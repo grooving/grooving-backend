@@ -12,3 +12,5 @@ grooving-server/Server/env/
 \.idea/
 
 *.pyc
+
+Grooving/migrations/
