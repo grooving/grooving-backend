@@ -24,7 +24,7 @@ from customer.views import GetPersonalInformationOfCustomer, GetPublicInformatio
 from offer.views import OfferManage, CreateOffer, PaymentCode
 from portfolioModule.views import PortfolioModuleManager, CreatePortfolioModule
 from artist.views import ListArtist
-from offers.views import ListOffers
+from offers.views import ListArtistOffers, ListCustomerOffers
 from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage
 from calendars.views import CalendarByArtist, CalendarManager, CreateCalendar
 from artistGender.views import ArtisticGenderManager, CreateArtisticGender
@@ -58,7 +58,8 @@ urlpatterns = [
     url(r'^zone/$', CreateZone.as_view()),
     url(r'^zone/(?P<pk>[0-9]+)/$', ZoneManager.as_view()),
     path('api/login/', LoginManager.as_view(), name='login'),
-    url(r'^offers/$', ListOffers.as_view()),
+    url(r'^artist/offers/$', ListArtistOffers.as_view()),
+    url(r'^customer/offers/$', ListCustomerOffers.as_view()),
     url(r'^paymentCode/$', PaymentCode.as_view())
 
 

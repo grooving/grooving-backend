@@ -120,7 +120,7 @@ class OfferTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        response2 = self.client.get('/offers/', format='json', HTTP_AUTHORIZATION='Token '+token.key)
+        response2 = self.client.get('/artist/offers/', format='json', HTTP_AUTHORIZATION='Token '+token.key)
         self.assertEqual(response2.status_code, 200)
         item_dict = response2.json()
 
@@ -238,7 +238,7 @@ class OfferTestCase(TestCase):
         token = Token.objects.all().filter(pk=token_num).first()
         self.assertEqual(response.status_code, 200)
 
-        response2 = self.client.get('/offers/', format='json', HTTP_AUTHORIZATION='Token ' + token.key)
+        response2 = self.client.get('/customer/offers/', format='json', HTTP_AUTHORIZATION='Token ' + token.key)
         self.assertEqual(response2.status_code, 200)
         item_dict = response2.json()
         self.assertTrue(len(item_dict['results']) == 2)
@@ -300,7 +300,7 @@ class OfferTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        response2 = self.client.get('/offers/', format='json', HTTP_AUTHORIZATION='Token ' + token.key)
+        response2 = self.client.get('/artist/offers/', format='json', HTTP_AUTHORIZATION='Token ' + token.key)
         self.assertEqual(response2.status_code, 200)
         item_dict = response2.json()
 
@@ -309,7 +309,7 @@ class OfferTestCase(TestCase):
 
     def test_list_anonymous(self):
 
-        response = self.client.get('/offers/', format='json')
+        response = self.client.get('/customer/offers/', format='json')
         self.assertEqual(response.status_code, 403)
 
     def test_list_admin(self):
@@ -323,6 +323,6 @@ class OfferTestCase(TestCase):
         user3.save()
 
         self.client.force_login(user3)
-        response = self.client.get('/offers/', format='json')
+        response = self.client.get('/customer/offers/', format='json')
         self.assertEqual(response.status_code, 403)
         self.client.logout()
