@@ -6,7 +6,7 @@ from rest_framework import generics
 from .serializers import OfferSerializer,OfferCodeSerializer
 from rest_framework import status
 from django.http import Http404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class OfferManage(generics.RetrieveUpdateDestroyAPIView):
@@ -99,7 +99,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
 class CreateOffer(generics.CreateAPIView):
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
         serializer = OfferSerializer(data=request.data, partial=True)
