@@ -43,7 +43,7 @@ script:
 before_deploy:
   - git config --local user.name $USER_TRAVIS
   - git config --local user.email $EMAIL_TRAVIS
-  - export GIT_TAG=v1.0.$TRAVIS_BUILD_NUMBER-Backend
+  - export GIT_TAG=v1.0.$TRAVIS_BUILD_NUMBER-backend
   - git tag -a $GIT_TAG -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
 
 deploy:
