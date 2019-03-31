@@ -8,3 +8,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         depth = 1
         model = User
         fields = ('first_name', 'last_name', 'username', 'email')
+
+
+class ShortUserSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        depth = 1
+        model = User
+        fields = ('first_name', 'last_name', 'username')

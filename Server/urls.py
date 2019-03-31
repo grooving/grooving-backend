@@ -20,7 +20,7 @@ from django.conf.urls import url, include
 from login.views import LoginManager
 from portfolio.views import PortfolioManager
 from artist.views import GetPersonalInformationOfArtist
-from customer.views import GetPersonalInformationOfCustomer
+from customer.views import GetPersonalInformationOfCustomer, GetPublicInformationOfCustomer
 from offer.views import OfferManage, CreateOffer, PaymentCode
 from portfolioModule.views import PortfolioModuleManager, CreatePortfolioModule
 from artist.views import ListArtist
@@ -50,6 +50,7 @@ urlpatterns = [
     url(r'^artists/$', ListArtist.as_view()),
     url(r'^artist/personalInformation/$', GetPersonalInformationOfArtist.as_view()),
     url(r'^customer/personalInformation/$', GetPersonalInformationOfCustomer.as_view()),
+    url(r'^customer/publicInformation/(?P<pk>[0-9]+)/$', GetPublicInformationOfCustomer.as_view()),
     url(r'^calendar/(?P<pk>[0-9]+)/$', CalendarManager.as_view()),
     url(r'^calendar/$', CreateCalendar.as_view()),
     url(r'^artisticGender/$', CreateArtisticGender.as_view()),

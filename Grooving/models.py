@@ -150,7 +150,7 @@ class EventLocation(AbstractEntity):
     address = models.CharField(max_length=255)
     equipment = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    customer = models.ForeignKey(Customer, null=True, blank=True, on_delete=models.SET_NULL)
+    customer = models.ForeignKey(Customer, null=True, related_name="eventLocations", blank=True, on_delete=models.SET_NULL)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
 
     def __str__(self):
