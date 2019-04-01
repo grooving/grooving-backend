@@ -29,7 +29,6 @@ class EventLocationSerializer(serializers.ModelSerializer):
 
 class OfferCodeSerializer(serializers.ModelSerializer):
 
-
     class Meta:
         model = Offer
         fields = ('id', 'description', 'status', 'date', 'hours', 'price','paymentPackage',
