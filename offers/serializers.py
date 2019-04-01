@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from Grooving.models import Offer, PaymentPackage, Customer,Zone, EventLocation, UserAbstract
+from Grooving.models import Offer, PaymentPackage, Customer,Zone, EventLocation, Artist, Portfolio
 from eventLocation.serializers import ZoneSerializer
+from paymentPackage.serializers import PaymentPackageSerializer
+from portfolio.serializers import PortfolioSerializer, ArtistSerializer
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -11,15 +13,25 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('first_name', 'last_name')
 
 
-class CustomerSerializer(serializers.ModelSerializer):
+class CustomerSerializer(serializers.HyperlinkedModelSerializer):
     user = UserSerializer(read_only=True)
+
     class Meta:
         depth = 1
         model = Customer
-        fields = ('user', 'holder', 'photo')
+        fields = ('id', 'user', 'photo')
 
 
-class EventLocationSerializer(serializers.ModelSerializer):
+class ArtistOfferSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        depth = 4
+        model = Artist
+        fields = ('id', 'user', 'photo')
+
+
+class EventLocationSerializer(serializers.HyperlinkedModelSerializer):
     zone = ZoneSerializer(read_only=True)
     zone_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Zone.objects.all(),
                                                            source='zone')
@@ -30,10 +42,39 @@ class EventLocationSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'address', 'equipment', 'description', 'zone', 'zone_id', 'customer')
 
 
-class ListOfferSerializer(serializers.HyperlinkedModelSerializer):
+class ListArtistOffersSerializer(serializers.HyperlinkedModelSerializer):
 
     eventLocation = EventLocationSerializer(read_only=True, many=False)
 
     class Meta:
         model = Offer
         fields = ('id', 'description', 'status', 'price', 'date', 'hours', 'eventLocation')
+
+
+class OfferPaymentPackageSerializer(serializers.HyperlinkedModelSerializer):
+
+    portfolio = PortfolioSerializer(read_only=True)
+
+    class Meta:
+        model = PaymentPackage
+        fields = ('portfolio',)
+
+
+class PortfolioOfferSerializer(serializers.HyperlinkedModelSerializer):
+
+    artist = ListArtistOffersSerializer(read_only=True)
+
+    class Meta:
+        model = Portfolio
+        fields = ('artist',)
+
+
+class ListCustomerOffersSerializer(serializers.HyperlinkedModelSerializer):
+
+    eventLocation = EventLocationSerializer(read_only=True, many=False)
+    paymentPackage = OfferPaymentPackageSerializer(read_only=True, source='paymentPackage.portfolio.artist')
+
+    class Meta:
+        depth = 4
+        model = Offer
+        fields = ('id', 'description', 'status', 'price', 'date', 'hours', 'paymentPackage', 'eventLocation')
