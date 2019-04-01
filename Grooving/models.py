@@ -111,7 +111,7 @@ class Custom(AbstractEntity):
 
 class PaymentPackage(AbstractEntity):
     description = models.TextField(blank=True, null=True)
-    appliedVAT = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
+    # appliedVAT = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
     portfolio = models.ForeignKey(Portfolio, on_delete=models.PROTECT)
     performance = models.OneToOneField(Performance, null=True, on_delete=models.SET_NULL)
     fare = models.OneToOneField(Fare, null=True, on_delete=models.SET_NULL)
@@ -163,8 +163,21 @@ OfferStatusField = (
     ('CONTRACT_MADE', "CONTRACT_MADE"),
     ('WITHDRAWN', "WITHDRAWN"),
     ('REJECTED', "REJECTED"),
-    ('CANCELED', "CANCELED"),
+    ('CANCELLED_ARTIST', 'CANCELLED_ARTIST'),                               # Added
+    ('CANCELLED_CUSTOMER', 'CANCELLED_CUSTOMER'),                           # Added
+    # ('CANCELLED', "CANCELLED"),                                           # Removed
     ('PAYMENT_MADE', "PAYMENT_MADE"))
+
+
+class Transaction(AbstractEntity):                                          # Added
+    holder = models.CharField(max_length=255)
+    expirationDate = models.DateField(default=datetime.now)
+    number = models.CharField(max_length=16)
+    cvv = models.CharField(max_length=3)
+    ibanCustomer = models.CharField(max_length=34, blank=True, null=True)
+    paypalCustomer = models.EmailField(blank=True, null=True)
+    ibanArtist = models.CharField(max_length=34, blank=True, null=True)
+    paypalArtist = models.EmailField(blank=True, null=True)
 
 
 class Offer(AbstractEntity):
@@ -179,5 +192,14 @@ class Offer(AbstractEntity):
     paymentPackage = models.ForeignKey(PaymentPackage, on_delete=models.PROTECT)
     eventLocation = models.ForeignKey(EventLocation, on_delete=models.PROTECT)
 
+    reason = models.TextField(blank=True, null=True)                                                                 # Added
+    appliedVAT = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))]) # Added
+    transaction = models.OneToOneField(Transaction, on_delete=models.SET_NULL, null=True, blank=True)                # Added
+
     def __str__(self):
         return str(self.description)
+
+
+class EmailNotification(AbstractEntity):                                    # Added
+    subject = models.CharField(max_length=60)
+    body = models.TextField(blank=False, null=False)
