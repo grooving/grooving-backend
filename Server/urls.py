@@ -29,6 +29,7 @@ from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, 
 from calendars.views import CalendarByArtist, CalendarManager, CreateCalendar
 from artistGender.views import ArtisticGenderManager, CreateArtisticGender
 from zone.views import ZoneManager, CreateZone
+from user.views import ArtistRegister,CustomerRegister
 from eventLocation.views import EventLocationManager, CreateEventLocation
 from rest_framework.authtoken.views import obtain_auth_token
 
@@ -58,7 +59,9 @@ urlpatterns = [
     url(r'^zone/(?P<pk>[0-9]+)/$', ZoneManager.as_view()),
     path('api/login/', LoginManager.as_view(), name='login'),
     url(r'^offers/$', ListOffers.as_view()),
-    url(r'^paymentCode/$', PaymentCode.as_view())
+    url(r'^paymentCode/$', PaymentCode.as_view()),
+    path('signupArtist/', ArtistRegister.as_view()),
+    path('signupCustomer/', CustomerRegister.as_view())
 
 
 ]

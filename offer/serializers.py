@@ -24,16 +24,13 @@ class EventLocationSerializer(serializers.ModelSerializer):
         fields = ('id', 'address', 'equipment', 'description')
 
 
-
-
-
 class OfferCodeSerializer(serializers.ModelSerializer):
-
 
     class Meta:
         model = Offer
-        fields = ('id', 'description', 'status', 'date', 'hours', 'price','paymentPackage',
-                  'paymentPackage_id', 'eventLocation', 'eventLocation_id','paymentCode')
+        fields = ('id', 'description', 'status', 'date', 'hours', 'price', 'paymentPackage',
+                  'paymentPackage_id', 'eventLocation', 'eventLocation_id', 'paymentCode')
+
 
 class OfferSerializer(serializers.ModelSerializer):
 
@@ -46,7 +43,7 @@ class OfferSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Offer
-        fields = ('id', 'description', 'status', 'date', 'hours', 'price','paymentPackage',
+        fields = ('id', 'description', 'status', 'date', 'hours', 'price', 'paymentPackage',
                   'paymentPackage_id', 'eventLocation', 'eventLocation_id')
 
     # Esto sobrescribe una función heredada del serializer.
