@@ -55,7 +55,7 @@ class Zone(AbstractEntity):
 
 
 class Portfolio(AbstractEntity):
-    banner = models.CharField(blank=True, null=True, max_length=140)
+    banner = models.CharField(blank=True, null=True, max_length=300)
     artisticName = models.CharField(blank=True, null=True, max_length=140)
     artisticGender = models.ManyToManyField(ArtisticGender, blank=True)
     zone = models.ManyToManyField(Zone, blank=True)
