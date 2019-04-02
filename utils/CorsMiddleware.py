@@ -10,5 +10,4 @@ class CorsMiddleware:
         response['Access-Control-Expose-Headers'] = 'x-auth'
         response['Access-Control-Allow-Headers'] = "Authorization,access-control-allow-origin, access-control-allow-headers, access-control-allow-methods, content-type, access-control-allow-credentials"
         response['Access-Control-Allow-Credentials'] = "true"
-        response['JoseAntonio'] = 'true'
         return response
