@@ -455,7 +455,7 @@ def save_data():
     performance1_paymentPackage1.save()
 
     paymentPackage1_performance1 = PaymentPackage.objects.create(id=1, description='Performance Payment Package Type from Carlos DJ',
-                                                                appliedVAT=21, portfolio=portfolio1,
+                                                                portfolio=portfolio1,
                                                                 performance=performance1_paymentPackage1)
     paymentPackage1_performance1.save()
 
@@ -463,7 +463,7 @@ def save_data():
     fare1_paymentPackage2.save()
 
     paymentPackage2_fare1 = PaymentPackage.objects.create(id=2, description='Fare Payment Package Type from Carlos DJ',
-                                                                appliedVAT=21, portfolio=portfolio1,
+                                                                portfolio=portfolio1,
                                                                 fare=fare1_paymentPackage2)
     paymentPackage2_fare1.save()
 
@@ -471,7 +471,7 @@ def save_data():
     custom1_paymentPackage3.save()
 
     paymentPackage3_custom1 = PaymentPackage.objects.create(id=3, description='Custom Payment Package Type from Carlos DJ',
-                                                          appliedVAT=21, portfolio=portfolio1,
+                                                          portfolio=portfolio1,
                                                           custom=custom1_paymentPackage3)
     paymentPackage3_custom1.save()
 
@@ -482,7 +482,7 @@ def save_data():
     performance2_paymentPackage4.save()
 
     paymentPackage4_performance2 = PaymentPackage.objects.create(id=4, description='Performance Payment Package Type from From the noise',
-                                                                appliedVAT=21, portfolio=portfolio2,
+                                                                portfolio=portfolio2,
                                                                 performance=performance2_paymentPackage4)
     paymentPackage4_performance2.save()
 
@@ -490,7 +490,7 @@ def save_data():
     fare2_paymentPackage5.save()
 
     paymentPackage5_fare2 = PaymentPackage.objects.create(id=5, description='Fare Payment Package Type from From the noise',
-                                                                appliedVAT=21, portfolio=portfolio2,
+                                                                portfolio=portfolio2,
                                                                 fare=fare2_paymentPackage5)
     paymentPackage5_fare2.save()
 
@@ -498,7 +498,7 @@ def save_data():
     custom2_paymentPackage6.save()
 
     paymentPackage6_custom2 = PaymentPackage.objects.create(id=6, description='Custom Payment Package Type from From the noise',
-                                                          appliedVAT=21, portfolio=portfolio2,
+                                                          portfolio=portfolio2,
                                                           custom=custom2_paymentPackage6)
     paymentPackage6_custom2.save()
 
@@ -509,7 +509,7 @@ def save_data():
     performance3_paymentPackage7.save()
 
     paymentPackage7_performance3 = PaymentPackage.objects.create(id=7, description='Performance Payment Package Type from Los saraos',
-                                                                appliedVAT=21, portfolio=portfolio3,
+                                                                portfolio=portfolio3,
                                                                 performance=performance3_paymentPackage7)
     paymentPackage7_performance3.save()
 
@@ -517,7 +517,7 @@ def save_data():
     fare3_paymentPackage8.save()
 
     paymentPackage8_fare3 = PaymentPackage.objects.create(id=8, description='Fare Payment Package Type from Los saraos',
-                                                                appliedVAT=21, portfolio=portfolio3,
+                                                                portfolio=portfolio3,
                                                                 fare=fare3_paymentPackage8)
     paymentPackage8_fare3.save()
 
@@ -525,7 +525,7 @@ def save_data():
     custom3_paymentPackage9.save()
 
     paymentPackage9_custom3 = PaymentPackage.objects.create(id=9, description='Custom Payment Package Type from Los saraos',
-                                                          appliedVAT=21, portfolio=portfolio3,
+                                                          portfolio=portfolio3,
                                                           custom=custom3_paymentPackage9)
     paymentPackage9_custom3.save()
 
@@ -536,7 +536,7 @@ def save_data():
     performance4_paymentPackage10.save()
 
     paymentPackage10_performance4 = PaymentPackage.objects.create(id=10, description='Performance Payment Package Type from Ana DJ',
-                                                                appliedVAT=21, portfolio=portfolio4,
+                                                                portfolio=portfolio4,
                                                                 performance=performance4_paymentPackage10)
     paymentPackage10_performance4.save()
 
@@ -544,7 +544,7 @@ def save_data():
     fare4_paymentPackage11.save()
 
     paymentPackage11_fare3 = PaymentPackage.objects.create(id=11, description='Fare Payment Package Type from Ana DJ',
-                                                                appliedVAT=21, portfolio=portfolio4,
+                                                                portfolio=portfolio4,
                                                                 fare=fare4_paymentPackage11)
     paymentPackage11_fare3.save()
 
@@ -552,7 +552,7 @@ def save_data():
     custom4_paymentPackage12.save()
 
     paymentPackage12_custom4 = PaymentPackage.objects.create(id=12, description='Custom Payment Package Type from Ana DJ',
-                                                          appliedVAT=21, portfolio=portfolio4,
+                                                          portfolio=portfolio4,
                                                           custom=custom4_paymentPackage12)
     paymentPackage12_custom4.save()
 
@@ -563,7 +563,7 @@ def save_data():
     performance5_paymentPackage13.save()
 
     paymentPackage13_performance5 = PaymentPackage.objects.create(id=13, description='Performance Payment Package Type from Pasando olimpicamente',
-                                                                appliedVAT=21, portfolio=portfolio5,
+                                                                portfolio=portfolio5,
                                                                 performance=performance5_paymentPackage13)
     paymentPackage13_performance5.save()
 
@@ -571,7 +571,7 @@ def save_data():
     fare5_paymentPackage14.save()
 
     paymentPackage14_fare5 = PaymentPackage.objects.create(id=14, description='Fare Payment Package Type from Pasando olimpicamente',
-                                                                appliedVAT=21, portfolio=portfolio5,
+                                                                portfolio=portfolio5,
                                                                 fare=fare5_paymentPackage14)
     paymentPackage14_fare5.save()
 
@@ -579,7 +579,7 @@ def save_data():
     custom5_paymentPackage15.save()
 
     paymentPackage15_custom5 = PaymentPackage.objects.create(id=15, description='Custom Payment Package Type from Pasando olimpicamente',
-                                                          appliedVAT=21, portfolio=portfolio5,
+                                                          portfolio=portfolio5,
                                                           custom=custom5_paymentPackage15)
     paymentPackage15_custom5.save()
 
@@ -590,7 +590,7 @@ def save_data():
     performance6_paymentPackage16.save()
 
     paymentPackage16_performance6 = PaymentPackage.objects.create(id=16, description='Performance Payment Package Type from Una chirigota con clase',
-                                                                appliedVAT=21, portfolio=portfolio6,
+                                                                portfolio=portfolio6,
                                                                 performance=performance6_paymentPackage16)
     paymentPackage16_performance6.save()
 
@@ -598,7 +598,7 @@ def save_data():
     fare6_paymentPackage17.save()
 
     paymentPackage17_fare6 = PaymentPackage.objects.create(id=17, description='Fare Payment Package Type from Una chirigota con clase',
-                                                                appliedVAT=21, portfolio=portfolio6,
+                                                                portfolio=portfolio6,
                                                                 fare=fare6_paymentPackage17)
     paymentPackage17_fare6.save()
 
@@ -606,7 +606,7 @@ def save_data():
     custom6_paymentPackage18.save()
 
     paymentPackage18_custom6 = PaymentPackage.objects.create(id=18, description='Custom Payment Package Type from Una chirigota con clase',
-                                                          appliedVAT=21, portfolio=portfolio6,
+                                                          portfolio=portfolio6,
                                                           custom=custom6_paymentPackage18)
     paymentPackage18_custom6.save()
 
@@ -617,7 +617,7 @@ def save_data():
     performance7_paymentPackage19.save()
 
     paymentPackage19_performance7 = PaymentPackage.objects.create(id=19, description='Performance Payment Package Type from Batracio',
-                                                                appliedVAT=21, portfolio=portfolio7,
+                                                                portfolio=portfolio7,
                                                                 performance=performance7_paymentPackage19)
     paymentPackage19_performance7.save()
 
@@ -625,7 +625,7 @@ def save_data():
     fare7_paymentPackage20.save()
 
     paymentPackage20_fare7 = PaymentPackage.objects.create(id=20, description='Fare Payment Package Type from Batracio',
-                                                                appliedVAT=21, portfolio=portfolio7,
+                                                                portfolio=portfolio7,
                                                                 fare=fare7_paymentPackage20)
     paymentPackage20_fare7.save()
 
@@ -633,7 +633,7 @@ def save_data():
     custom7_paymentPackage21.save()
 
     paymentPackage21_custom7 = PaymentPackage.objects.create(id=21, description='Custom Payment Package Type from Batracio',
-                                                          appliedVAT=21, portfolio=portfolio7,
+                                                          portfolio=portfolio7,
                                                           custom=custom7_paymentPackage21)
     paymentPackage21_custom7.save()
 
@@ -644,7 +644,7 @@ def save_data():
     performance8_paymentPackage22.save()
 
     paymentPackage22_performance8 = PaymentPackage.objects.create(id=22, description='Performance Payment Package Type from Medictum',
-                                                                appliedVAT=21, portfolio=portfolio8,
+                                                                portfolio=portfolio8,
                                                                 performance=performance8_paymentPackage22)
     paymentPackage22_performance8.save()
 
@@ -652,7 +652,7 @@ def save_data():
     fare8_paymentPackage23.save()
 
     paymentPackage23_fare8 = PaymentPackage.objects.create(id=23, description='Fare Payment Package Type from Medictum',
-                                                                appliedVAT=21, portfolio=portfolio8,
+                                                                portfolio=portfolio8,
                                                                 fare=fare8_paymentPackage23)
     paymentPackage23_fare8.save()
 
@@ -660,7 +660,7 @@ def save_data():
     custom8_paymentPackage24.save()
 
     paymentPackage24_custom8 = PaymentPackage.objects.create(id=24, description='Custom Payment Package Type from Medictum',
-                                                          appliedVAT=21, portfolio=portfolio8,
+                                                          portfolio=portfolio8,
                                                           custom=custom8_paymentPackage24)
     paymentPackage24_custom8.save()
 
@@ -671,7 +671,7 @@ def save_data():
     performance9_paymentPackage25.save()
 
     paymentPackage25_performance9 = PaymentPackage.objects.create(id=25, description='Performance Payment Package Type from Waterdogs',
-                                                                appliedVAT=21, portfolio=portfolio9,
+                                                                portfolio=portfolio9,
                                                                 performance=performance9_paymentPackage25)
     paymentPackage25_performance9.save()
 
@@ -679,7 +679,7 @@ def save_data():
     fare9_paymentPackage26.save()
 
     paymentPackage26_fare9 = PaymentPackage.objects.create(id=26, description='Fare Payment Package Type from Waterdogs',
-                                                                appliedVAT=21, portfolio=portfolio9,
+                                                                portfolio=portfolio9,
                                                                 fare=fare9_paymentPackage26)
     paymentPackage26_fare9.save()
 
@@ -687,7 +687,7 @@ def save_data():
     custom9_paymentPackage27.save()
 
     paymentPackage27_custom9 = PaymentPackage.objects.create(id=27, description='Custom Payment Package Type from Waterdogs',
-                                                          appliedVAT=21, portfolio=portfolio9,
+                                                          portfolio=portfolio9,
                                                           custom=custom9_paymentPackage27)
     paymentPackage27_custom9.save()
 
@@ -696,81 +696,81 @@ def save_data():
 
     offer1_performance1 = Offer.objects.create(id=1, description='Oferta 1 to Carlos DJ by performance', status='PENDING',
                                                date='2019-04-25 12:00:00', hours=2.5, price='120', currency='EUR',
-                                               paymentPackage=paymentPackage1_performance1,
+                                               appliedVAT=21, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location1)
     offer1_performance1.save()
 
     offer2_performance1 = Offer.objects.create(id=2, description='Oferta 2 to Carlos DJ by performance', status='CONTRACT_MADE',
                                                date='2019-07-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               paymentPackage=paymentPackage1_performance1,
+                                               appliedVAT=21, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location1)
     offer2_performance1.save()
 
     offer3_performance1 = Offer.objects.create(id=3, description='Oferta 3 to Carlos DJ by performance', status='CANCELED',
                                                date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               paymentPackage=paymentPackage1_performance1,
+                                               appliedVAT=21, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location2)
     offer3_performance1.save()
 
     offer4_fare1 = Offer.objects.create(id=4, description='Oferta 4 to Carlos DJ by fare', status='PENDING',
                                                date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
-                                               paymentPackage=paymentPackage2_fare1,
+                                               appliedVAT=21, paymentPackage=paymentPackage2_fare1,
                                                eventLocation=event_location2)
     offer4_fare1.save()
 
     offer5_custom1 = Offer.objects.create(id=5, description='Oferta 5 to Carlos DJ by custom', status='CONTRACT_MADE',
                                                date='2019-8-25 12:00:00', hours=1.5, price='115', currency='EUR',
-                                               paymentCode=_service_generate_unique_payment_code(),
+                                               appliedVAT=21, paymentCode=_service_generate_unique_payment_code(),
                                                paymentPackage=paymentPackage3_custom1,
                                                eventLocation=event_location1)
     offer5_custom1.save()
 
     offer6_custom1 = Offer.objects.create(id=6, description='Oferta 6 to Carlos DJ by custom', status='REJECTED',
                                                date='2019-10-25 19:00:00', hours=1.5, price='100', currency='EUR',
-                                               paymentPackage=paymentPackage3_custom1,
+                                               appliedVAT=21, paymentPackage=paymentPackage3_custom1,
                                                eventLocation=event_location1)
     offer6_custom1.save()
 
     offer7_performance2 = Offer.objects.create(id=7, description='Oferta 7 to From the noise by performance', status='REJECTED',
                                                date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
-                                               paymentPackage=paymentPackage4_performance2,
+                                               appliedVAT=21, paymentPackage=paymentPackage4_performance2,
                                                eventLocation=event_location1)
     offer7_performance2.save()
 
     offer8_performance2 = Offer.objects.create(id=8, description='Oferta 8 to From the noise by performance', status='CONTRACT_MADE',
                                                date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               paymentPackage=paymentPackage4_performance2,
+                                               appliedVAT=21, paymentPackage=paymentPackage4_performance2,
                                                eventLocation=event_location1)
     offer8_performance2.save()
 
     offer9_fare2 = Offer.objects.create(id=9, description='Oferta 9 to From the noise by fare', status='CANCELED',
                                                date='2019-03-27 00:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               paymentPackage=paymentPackage5_fare2,
+                                               appliedVAT=21, paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location4)
     offer9_fare2.save()
 
     offer10_fare2 = Offer.objects.create(id=10, description='Oferta 10 to From the noise by fare', status='CONTRACT_MADE',
                                                date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               paymentPackage=paymentPackage5_fare2,
+                                               appliedVAT=21, paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location4)
     offer10_fare2.save()
 
     offer11_custom2 = Offer.objects.create(id=11, description='Oferta 11 to From the noise by fare', status='CONTRACT_MADE',
                                                date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               paymentPackage=paymentPackage5_fare2,
+                                               appliedVAT=21, paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location3)
     offer11_custom2.save()
 
     offer12_custom2 = Offer.objects.create(id=12, description='Oferta 12 to From the noise by fare', status='CANCELED',
                                                date='2017-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               paymentPackage=paymentPackage5_fare2,
+                                               appliedVAT=21, paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location3)
     offer12_custom2.save()
 
