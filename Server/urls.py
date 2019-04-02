@@ -27,7 +27,7 @@ from artist.views import ListArtist
 from offers.views import ListArtistOffers, ListCustomerOffers
 from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage
 from calendars.views import CalendarByArtist, CalendarManager, CreateCalendar
-from artistGender.views import ArtisticGenderManager, CreateArtisticGender
+from artistGender.views import ArtisticGenderManager, CreateArtisticGender, ListArtisticGenders
 from zone.views import ZoneManager, CreateZone
 from eventLocation.views import EventLocationManager, CreateEventLocation
 from rest_framework.authtoken.views import obtain_auth_token
@@ -55,6 +55,7 @@ urlpatterns = [
     url(r'^calendar/(?P<pk>[0-9]+)/$', CalendarManager.as_view()),
     url(r'^calendar/$', CreateCalendar.as_view()),
     url(r'^artisticGender/$', CreateArtisticGender.as_view()),
+    url(r'^artisticGenders/$', ListArtisticGenders.as_view()),
     url(r'^artisticGender/(?P<pk>[0-9]+)/ ', ArtisticGenderManager.as_view()),
     url(r'^zone/$', CreateZone.as_view()),
     url(r'^zone/(?P<pk>[0-9]+)/$', ZoneManager.as_view()),
