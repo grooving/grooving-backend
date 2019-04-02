@@ -56,6 +56,7 @@ class Zone(AbstractEntity):
 
 class Portfolio(AbstractEntity):
     banner = models.CharField(blank=True, null=True, max_length=300)
+    biography = models.TextField(blank=True, null=True)
     artisticName = models.CharField(blank=True, null=True, max_length=140)
     artisticGender = models.ManyToManyField(ArtisticGender, blank=True)
     zone = models.ManyToManyField(Zone, blank=True)
@@ -75,7 +76,6 @@ class Artist(UserAbstract):
 
 ModuleTypeField = (
     ('PHOTO', 'PHOTO'),
-    ('DESCRIPTION', 'DESCRIPTION'),
     ('VIDEO', 'VIDEO'),
     ('AUDIO', 'AUDIO'),
     ('SOCIAL', 'SOCIAL'),
