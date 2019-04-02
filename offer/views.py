@@ -1,9 +1,9 @@
 from Grooving.models import Offer, Customer
 from django.core.exceptions import PermissionDenied
-from utils.authentication_utils import get_logged_user,get_user_type
+from utils.authentication_utils import get_logged_user, get_user_type
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import OfferSerializer,OfferCodeSerializer
+from .serializers import OfferSerializer, OfferCodeSerializer
 from rest_framework import status
 from django.http import Http404
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -117,7 +117,7 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
         queryset=self.filter_queryset(self.get_queryset())
         try:
             obj=queryset.get(pk=self.request.user.offer_id)
-            self.check_object_permissions(self.request,obj)
+            self.check_object_permissions(self.request, obj)
             return obj
 
         except Offer.DoesNotExist:
