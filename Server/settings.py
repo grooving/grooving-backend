@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -65,12 +66,12 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
-    'utils.Error500Middelware.Erro500Middleware',
+    #'utils.Error500Middelware.Erro500Middleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    #'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'utils.CorsMiddleware.CorsMiddleware',
@@ -78,7 +79,7 @@ MIDDLEWARE = [
     #whitenoise middleware for static files. #http://sayhelloworld.co/using-white-noise-to-server-django-static-files-on-heroku/
     #https://stackoverflow.com/questions/43271275/django-restrict-static-folder-access-to-non-logged-in-users
 ]
-
+DEBUG = True
 ROOT_URLCONF = 'Server.urls'
 
 TEMPLATES = [

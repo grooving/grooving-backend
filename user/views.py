@@ -12,10 +12,12 @@ class ArtistRegister(generics.CreateAPIView):
     serializer_class = ArtistSerializer
 
     def post(self, request, *args, **kwargs):
-
-        user = get_logged_user(request)
-        user_type = get_user_type(user)
-
+        user_type = None
+        try:
+            user = get_logged_user(request)
+            user_type = get_user_type(user)
+        except:
+            pass
         if not user_type:
             serializer = ArtistSerializer(data=request.data, partial=True)
             if serializer.validate_artist(request):

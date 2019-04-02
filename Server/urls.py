@@ -31,7 +31,6 @@ from artistGender.views import ArtisticGenderManager, CreateArtisticGender
 from zone.views import ZoneManager, CreateZone
 from user.views import ArtistRegister,CustomerRegister
 from eventLocation.views import EventLocationManager, CreateEventLocation
-from rest_framework.authtoken.views import obtain_auth_token
 
 router = routers.DefaultRouter()
 
@@ -60,7 +59,7 @@ urlpatterns = [
     path('api/login/', LoginManager.as_view(), name='login'),
     url(r'^offers/$', ListOffers.as_view()),
     url(r'^paymentCode/$', PaymentCode.as_view()),
-    path('signupArtist/', ArtistRegister.as_view()),
+    url(r'^signupArtist/$', ArtistRegister.as_view()),
     path('signupCustomer/', CustomerRegister.as_view())
 
 

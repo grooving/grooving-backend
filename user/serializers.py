@@ -14,10 +14,12 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserRegisterSerializer(serializers.HyperlinkedModelSerializer):
+    confirm_password = serializers.CharField()
+
     class Meta:
         depth = 1
         model = User
-        fields = ('first_name', 'last_name', 'username', 'email', 'phone', 'photo', 'password')
+        fields = ('first_name', 'last_name', 'username', 'email', 'phone', 'photo', 'password','confirm_password')
 
 
 class CustomerSerializer(serializers.HyperlinkedModelSerializer):
@@ -30,12 +32,12 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ArtistSerializer(serializers.HyperlinkedModelSerializer):
-
+    artisticName = serializers.CharField()
     class Meta:
         depth = 2
         model = Artist
         user = UserRegisterSerializer()
-        fields = ('confirm_password','artisticName','user')
+        fields = ('artisticName','user')
 
     def save(self):
         artist = Artist()
