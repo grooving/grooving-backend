@@ -30,6 +30,7 @@ from calendars.views import CalendarByArtist, CalendarManager, CreateCalendar
 from artistGender.views import ArtisticGenderManager, CreateArtisticGender
 from zone.views import ZoneManager, CreateZone
 from eventLocation.views import EventLocationManager, CreateEventLocation
+from rating.views import GetRatings, PostRating
 from rest_framework.authtoken.views import obtain_auth_token
 
 router = routers.DefaultRouter()
@@ -61,7 +62,8 @@ urlpatterns = [
     path('api/login/', LoginManager.as_view(), name='login'),
     url(r'^artist/offers/$', ListArtistOffers.as_view()),
     url(r'^customer/offers/$', ListCustomerOffers.as_view()),
+    url(r'^artist/ratings/(?P<pk>[0-9]+)/$', GetRatings.as_view()),
+    url(r'^customer/rating/(?P<pk>[0-9]+)/$', PostRating.as_view()),
     url(r'^paymentCode/$', PaymentCode.as_view())
-
 
 ]
