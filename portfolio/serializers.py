@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from Grooving.models import Portfolio, Calendar, ArtisticGender, PortfolioModule, Zone, PaymentPackage, Artist
+from utils.Assertions import assert_true
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -57,17 +58,144 @@ class PortfolioModuleSerializer(serializers.ModelSerializer):
 
 class PortfolioSerializer(serializers.ModelSerializer):
 
-    calendar_set = CalendarSerializer(read_only=True, many=True)
-    artisticGender = ArtisticGenderSerializer(many=True, read_only=True)
-    portfoliomodule_set = PortfolioModuleSerializer(many=True, read_only=True)
-    zone = ZoneSerializer(read_only=True, many=True)
-    paymentpackage_set = PaymentPackageSerializer(read_only=True, many=True)
-    artist = ArtistSerializer(read_only=True)
+    artisticName = serializers.CharField(read_only=True)
+    biography = serializers.CharField(read_only=True)
+    banner = serializers.CharField(read_only=True)
+    images = serializers.SerializerMethodField('list_images')
+    videos = serializers.SerializerMethodField('list_videos')
+    main_photo = serializers.SerializerMethodField('list_photo')
+    artisticGenders = serializers.SerializerMethodField('list_genders')
 
     class Meta:
-
         model = Portfolio
-        fields = ('artisticName', 'banner', 'calendar_set', 'artisticGender', 'portfoliomodule_set', 'zone', 'paymentpackage_set', 'artist')
+        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGenders')
+
+    @staticmethod
+    def list_images(self):
+
+        modules = PortfolioModule.objects.filter(type='PHOTO', portfolio=self)
+        images = []
+        for image in modules:
+            images.append(image.link)
+
+        return images
+
+    @staticmethod
+    def list_videos(self):
+
+        modules = PortfolioModule.objects.filter(type='VIDEO', portfolio=self)
+        videos = []
+        for video in modules:
+            videos.append(video.link)
+
+        return videos
+
+    @staticmethod
+    def list_photo(self):
+
+        artist = Artist.objects.filter(portfolio=self).first()
+        photo = ""
+        if artist.photo:
+            photo = artist.photo
+
+        return photo
+
+    @staticmethod
+    def list_genders(self):
+
+        genders = ArtisticGender.objects.filter(portfolio=self)
+        genderlist = []
+        for gender in genders:
+            genderlist.append(gender.name)
+        return genderlist
+
+    def save(self):
+
+        print("Clave primaria:" + str(self.initial_data.get('id')))
+        portfolio = Portfolio.objects.get(pk=self.initial_data.get('id'))
+        portfolio = self._service_update(self.initial_data, portfolio)
+        portfolio.save()
+        return portfolio
+
+    @staticmethod
+    def _service_update(json: dict, portfolio_in_db):
+
+        assert_true(portfolio_in_db, "No existe un artista con esa id")
+
+        if json['artisticName'] is not None:
+            portfolio_in_db.artisticName = json.get('artisticName')
+
+        if json['banner'] is not None:
+            portfolio_in_db.banner = json.get('banner')
+
+        if json['biography'] is not None:
+            portfolio_in_db.banner = json.get('biography')
+
+        if json['images'] is not None:
+            for image_db in PortfolioModule.objects.filter(type='PHOTO', portfolio=portfolio_in_db):
+                aux = True
+                for image in json['images']:
+                    if image_db.link == image:
+                        aux = False
+                if aux:
+                    image_db.delete()
+
+            for image in json['images']:
+                aux = True
+                for image_db in PortfolioModule.objects.filter(type='PHOTO', portfolio=portfolio_in_db):
+                    if image_db.link == image:
+                        aux = False
+                if aux:
+                    module = PortfolioModule()
+                    module.type = 'PHOTO'
+                    module.link = image
+                    module.portfolio = portfolio_in_db
+                    module.save()
+
+        if json['videos'] is not None:
+            for video_db in PortfolioModule.objects.filter(type='VIDEO', portfolio=portfolio_in_db):
+                aux = True
+                for video in json['videos']:
+                    if video_db.link == video:
+                        aux = False
+                if aux:
+                    video_db.delete()
+
+            for video in json['videos']:
+                aux = True
+                for video_db in PortfolioModule.objects.filter(type='VIDEO', portfolio=portfolio_in_db):
+                    if video_db.link == video:
+                        aux = False
+                if aux:
+                    module = PortfolioModule()
+                    module.type = 'VIDEO'
+                    module.link = video
+                    module.portfolio = portfolio_in_db
+                    module.save()
+
+        if json['artisticGenders'] is not None:
+
+            for genre in portfolio_in_db.artisticGender.all():
+                if genre.name in json['artisticGenders']:
+                    None
+                else:
+                    portfolio_in_db.artisticGender_set.remove(genre)
+
+            for genre in json['artisticGenders']:
+                genre_db = ArtisticGender.objects.get(name=genre)
+                if portfolio_in_db.id in genre_db.portfolio_set.all():
+                    None
+                else:
+                    portfolio_in_db.artisticGender.add(portfolio_in_db.id)
+
+
+
+        if json['main_photo'] is not None:
+            artist = Artist.objects.get(portfolio=portfolio_in_db)
+            artist.photo = json['main_photo']
+            artist.save()
+
+        return portfolio_in_db
 
 
 class ShortPortfolioSerializer(serializers.ModelSerializer):
