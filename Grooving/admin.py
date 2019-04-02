@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Artist, Portfolio, PortfolioModule, ArtisticGender, Customer, Offer, EventLocation, SystemConfiguration, Custom, Fare, Performance, PaymentPackage, Zone, Calendar
+from .models import Artist, Portfolio, PortfolioModule, ArtisticGender, Customer, Offer, EventLocation, SystemConfiguration, Custom, Fare, Performance, PaymentPackage, Zone, Calendar, EmailNotification, Rating, Transaction
 
 admin.site.register(Artist)
 admin.site.register(Portfolio)
@@ -15,3 +15,6 @@ admin.site.register(Performance)
 admin.site.register(PaymentPackage)
 admin.site.register(Zone)
 admin.site.register(Calendar)
+admin.site.register(Rating)
+admin.site.register(Transaction)
+admin.site.register(EmailNotification)

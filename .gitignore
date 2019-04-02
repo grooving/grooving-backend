@@ -1,15 +1,12 @@
 
-grooving-server/Server/\.idea/
-
-grooving-server/Server/venv/
 
 **/__pycache__
 
-grooving-server/Server/Grooving/migrations/
-venv/
-grooving-server/Server/env/
 
-\.idea/
+venv/
+env/
+
+.idea/
 
 *.pyc
 
