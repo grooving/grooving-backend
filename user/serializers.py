@@ -11,8 +11,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('first_name', 'last_name', 'username', 'email')
 
-
-
 class UserRegisterSerializer(serializers.HyperlinkedModelSerializer):
     confirm_password = serializers.CharField()
 
@@ -22,22 +20,13 @@ class UserRegisterSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('first_name', 'last_name', 'username', 'email', 'phone', 'photo', 'password','confirm_password')
 
 
-class CustomerSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        depth = 2
-        model = Artist
-        user = UserRegisterSerializer()
-        fields = ('confirm_password', 'user')
-
-
 class ArtistSerializer(serializers.HyperlinkedModelSerializer):
     artisticName = serializers.CharField()
     class Meta:
         depth = 2
         model = Artist
         user = UserRegisterSerializer()
-        fields = ('artisticName','user')
+        fields = ('artisticName', 'user')
 
     def save(self):
         artist = Artist()
@@ -62,11 +51,17 @@ class ArtistSerializer(serializers.HyperlinkedModelSerializer):
 
     def validate_artist(self, request):
 
+        user_names = User.objects.values_list('username', flat=True)
+
         password = request.data.get("password")
         username = request.data.get("username")
+
         email = request.data.get("email")
         first_name = request.data.get("first_name")
         last_name = request.data.get("last_name")
+
+        if username in user_names:
+            raise serializers.ValidationError("Username already used in the system")
         if username is None:
             raise serializers.ValidationError("Username field not provided")
         if password is None:
@@ -100,8 +95,9 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         depth = 2
-        model = Artist
-        fields = ('first_name', 'last_name', 'password', 'confirm_password', 'username', 'email', 'photo', 'phone')
+        user = UserRegisterSerializer()
+        model = Customer
+        fields = ('user',)
 
     def save(self):
         customer = Customer()
@@ -121,17 +117,20 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         customer.photo = json.get('photo')
         customer.phone = json.get('phone')
         customer.save()
-        customer.save()
 
         return customer
 
     def validate_customer(self, request):
 
+        user_names = User.objects.values_list('username', flat=True)
         password = request.data.get("password")
         username = request.data.get("username")
         email = request.data.get("email")
         first_name = request.data.get("first_name")
         last_name = request.data.get("last_name")
+
+        if username in user_names:
+            raise serializers.ValidationError("Username already used in the system")
         if username is None:
             raise serializers.ValidationError("Username field not provided")
         if password is None:

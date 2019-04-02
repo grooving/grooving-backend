@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'rw&&q!#o4d3pdrwaqp#(!7c7-9&y8p@nr9lduvslgc(oq$@75l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -79,7 +79,7 @@ MIDDLEWARE = [
     #whitenoise middleware for static files. #http://sayhelloworld.co/using-white-noise-to-server-django-static-files-on-heroku/
     #https://stackoverflow.com/questions/43271275/django-restrict-static-folder-access-to-non-logged-in-users
 ]
-DEBUG = True
+
 ROOT_URLCONF = 'Server.urls'
 
 TEMPLATES = [

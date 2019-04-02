@@ -30,18 +30,21 @@ class ArtistRegister(generics.CreateAPIView):
 
 class CustomerRegister(generics.CreateAPIView):
 
-    serializer_class = ArtistSerializer
+    serializer_class = CustomerSerializer
 
     def post(self, request, *args, **kwargs):
-
-        user = get_logged_user(request)
-        user_type = get_user_type(user)
-
+        user_type = None
+        try:
+            user = get_logged_user(request)
+            user_type = get_user_type(user)
+        except:
+            pass
         if not user_type:
             serializer = CustomerSerializer(data=request.data, partial=True)
             if serializer.validate_customer(request):
                 serializer.save()
                 return Response(status=status.HTTP_201_CREATED)
+
         else:
-            raise PermissionDenied("You must be unlogged to do this action")
+                raise PermissionDenied("You must be unlogged to do this action")
 

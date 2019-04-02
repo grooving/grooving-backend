@@ -60,7 +60,7 @@ urlpatterns = [
     url(r'^offers/$', ListOffers.as_view()),
     url(r'^paymentCode/$', PaymentCode.as_view()),
     url(r'^signupArtist/$', ArtistRegister.as_view()),
-    path('signupCustomer/', CustomerRegister.as_view())
+    url(r'^signupCustomer/$', CustomerRegister.as_view())
 
 
 ]
