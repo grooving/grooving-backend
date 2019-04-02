@@ -71,6 +71,8 @@ class Calendar(AbstractEntity):
 
 
 class Artist(UserAbstract):
+    rating = models.DecimalField(max_digits=2, decimal_places=1, default=0.0,
+                                 validators=[MinValueValidator(Decimal('0.0')), MaxValueValidator(Decimal('5.0'))])
     portfolio = models.OneToOneField(Portfolio, on_delete=models.CASCADE)
 
 
@@ -96,46 +98,23 @@ class Performance(AbstractEntity):
     info = models.TextField(max_length=255)
     hours = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.5'))])
     price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
-    currency = models.CharField(default='EUR', max_length=3)
 
 
 class Fare(AbstractEntity):
     priceHour = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
-    currency = models.CharField(default='EUR', max_length=3)
 
 
 class Custom(AbstractEntity):
     minimumPrice = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
-    currency = models.CharField(default='EUR', max_length=3)
 
 
 class PaymentPackage(AbstractEntity):
     description = models.TextField(blank=True, null=True)
-    appliedVAT = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
+    currency = models.CharField(default='EUR', max_length=3)
     portfolio = models.ForeignKey(Portfolio, on_delete=models.PROTECT)
     performance = models.OneToOneField(Performance, null=True, on_delete=models.SET_NULL)
     fare = models.OneToOneField(Fare, null=True, on_delete=models.SET_NULL)
     custom = models.OneToOneField(Custom, null=True, on_delete=models.SET_NULL)
-
-    def __str__(self):
-        return str(self.description) + ' - ' + str(self.appliedVAT)
-
-
-class SystemConfiguration(AbstractEntity):
-    minimumPrice = models.DecimalField(default=0.0, max_digits=20, decimal_places=2,
-                                       validators=[MinValueValidator(Decimal('0.0'))])
-    currency = models.CharField(default='EUR', max_length=3)
-    paypalTax = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
-    creditCardTax = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
-    vat = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
-    profit = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
-    corporateEmail = models.EmailField(default='info@grooving.com')
-    reportEmail = models.EmailField(default='report@grooving.com')
-    logo = models.CharField(max_length=255)
-    appName = models.CharField(max_length=255)
-    slogan = models.CharField(max_length=255, blank=True, null=True)
-    termsText = models.TextField(default='Terms text', max_length=255)
-    privacyText = models.TextField(default='Privacy text', max_length=255)
 
 
 class Customer(UserAbstract):
@@ -163,15 +142,32 @@ OfferStatusField = (
     ('CONTRACT_MADE', "CONTRACT_MADE"),
     ('WITHDRAWN', "WITHDRAWN"),
     ('REJECTED', "REJECTED"),
-    ('CANCELED', "CANCELED"),
+    ('CANCELLED_ARTIST', 'CANCELLED_ARTIST'),
+    ('CANCELLED_CUSTOMER', 'CANCELLED_CUSTOMER'),
     ('PAYMENT_MADE', "PAYMENT_MADE"))
+
+
+class Transaction(AbstractEntity):
+    holder = models.CharField(blank=True, null=True, max_length=255)
+    expirationDate = models.DateField(blank=True, null=True, default=datetime.now)
+    number = models.CharField(blank=True, null=True, max_length=16)
+    cvv = models.CharField(blank=True, null=True, max_length=3)
+    ibanCustomer = models.CharField(blank=True, null=True, max_length=34)
+    paypalCustomer = models.EmailField(blank=True, null=True)
+    ibanArtist = models.CharField(max_length=34, blank=True, null=True)
+    paypalArtist = models.EmailField(blank=True, null=True)
+
+
+class Rating(AbstractEntity):
+    score = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    comment = models.TextField(blank=True, null=True)
 
 
 class Offer(AbstractEntity):
     description = models.TextField(default='Description', max_length=255)
-    status = models.CharField(max_length=20, choices=OfferStatusField)
+    status = models.CharField(max_length=20, choices=OfferStatusField, default='PENDING')
     date = models.DateTimeField(default=timezone.now)
-    hours = models.DecimalField(blank=True, null=True, max_digits=3, decimal_places=2,
+    hours = models.DecimalField(blank=True, null=True, max_digits=3, decimal_places=1,
                                 validators=[MinValueValidator(Decimal('0.5'))])
     price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
     currency = models.CharField(default='EUR', max_length=3)
@@ -179,5 +175,36 @@ class Offer(AbstractEntity):
     paymentPackage = models.ForeignKey(PaymentPackage, on_delete=models.PROTECT)
     eventLocation = models.ForeignKey(EventLocation, on_delete=models.PROTECT)
 
+    reason = models.TextField(blank=True, null=True)
+    appliedVAT = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
+    transaction = models.OneToOneField(Transaction, on_delete=models.SET_NULL, null=True, blank=True)
+    rating = models.OneToOneField(Rating, on_delete=models.SET_NULL, null=True, blank=True)
+
     def __str__(self):
         return str(self.description)
+
+
+class SystemConfiguration(AbstractEntity):
+    minimumPrice = models.DecimalField(default=0.0, max_digits=20, decimal_places=2,
+                                       validators=[MinValueValidator(Decimal('0.0'))])
+    currency = models.CharField(default='EUR', max_length=3)
+    paypalTax = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
+    creditCardTax = models.DecimalField(max_digits=3, decimal_places=1,
+                                        validators=[MinValueValidator(Decimal('0.0'))])
+    vat = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
+    profit = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
+    corporateEmail = models.EmailField(default='info@grooving.com')
+    reportEmail = models.EmailField(default='report@grooving.com')
+    logo = models.CharField(max_length=255)
+    appName = models.CharField(max_length=255)
+    slogan = models.CharField(max_length=255, blank=True, null=True)
+    termsText = models.TextField(default='Terms text', max_length=255)
+    privacyText = models.TextField(default='Privacy text', max_length=255)
+
+
+class EmailNotification(AbstractEntity):
+    subject = models.CharField(max_length=255)
+    body = models.TextField
+
+    def __str__(self):
+        return str(self.subject)
