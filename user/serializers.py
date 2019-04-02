@@ -11,6 +11,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('first_name', 'last_name', 'username', 'email')
 
+
 class UserRegisterSerializer(serializers.HyperlinkedModelSerializer):
     confirm_password = serializers.CharField()
 
@@ -22,6 +23,7 @@ class UserRegisterSerializer(serializers.HyperlinkedModelSerializer):
 
 class ArtistSerializer(serializers.HyperlinkedModelSerializer):
     artisticName = serializers.CharField()
+
     class Meta:
         depth = 2
         model = Artist
@@ -91,6 +93,7 @@ class ArtistSerializer(serializers.HyperlinkedModelSerializer):
             raise serializers.ValidationError("Password length is too short")
         return True
 
+
 class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -159,3 +162,11 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         if len(password) < 8:
             raise serializers.ValidationError("Password length is too short")
         return True
+
+
+class ShortUserSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        depth = 1
+        model = User
+        fields = ('first_name', 'last_name', 'username')

@@ -20,14 +20,14 @@ from django.conf.urls import url, include
 from login.views import LoginManager
 from portfolio.views import PortfolioManager
 from artist.views import GetPersonalInformationOfArtist
-from customer.views import GetPersonalInformationOfCustomer
+from customer.views import GetPersonalInformationOfCustomer, GetPublicInformationOfCustomer
 from offer.views import OfferManage, CreateOffer, PaymentCode
 from portfolioModule.views import PortfolioModuleManager, CreatePortfolioModule
 from artist.views import ListArtist
-from offers.views import ListOffers
+from offers.views import ListArtistOffers, ListCustomerOffers
 from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage
 from calendars.views import CalendarByArtist, CalendarManager, CreateCalendar
-from artistGender.views import ArtisticGenderManager, CreateArtisticGender
+from artistGender.views import ArtisticGenderManager, CreateArtisticGender, ListArtisticGenders
 from zone.views import ZoneManager, CreateZone
 from user.views import ArtistRegister,CustomerRegister
 from eventLocation.views import EventLocationManager, CreateEventLocation
@@ -35,6 +35,7 @@ from eventLocation.views import EventLocationManager, CreateEventLocation
 router = routers.DefaultRouter()
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('', include(router.urls)),
     url(r'^offer/$', CreateOffer.as_view()),
     url(r'^offer/(?P<pk>[0-9]+)/$', OfferManage.as_view()),
@@ -50,17 +51,21 @@ urlpatterns = [
     url(r'^artists/$', ListArtist.as_view()),
     url(r'^artist/personalInformation/$', GetPersonalInformationOfArtist.as_view()),
     url(r'^customer/personalInformation/$', GetPersonalInformationOfCustomer.as_view()),
+    url(r'^customer/publicInformation/(?P<pk>[0-9]+)/$', GetPublicInformationOfCustomer.as_view()),
     url(r'^calendar/(?P<pk>[0-9]+)/$', CalendarManager.as_view()),
     url(r'^calendar/$', CreateCalendar.as_view()),
     url(r'^artisticGender/$', CreateArtisticGender.as_view()),
+    url(r'^artisticGenders/$', ListArtisticGenders.as_view()),
     url(r'^artisticGender/(?P<pk>[0-9]+)/ ', ArtisticGenderManager.as_view()),
     url(r'^zone/$', CreateZone.as_view()),
     url(r'^zone/(?P<pk>[0-9]+)/$', ZoneManager.as_view()),
     path('api/login/', LoginManager.as_view(), name='login'),
-    url(r'^offers/$', ListOffers.as_view()),
     url(r'^paymentCode/$', PaymentCode.as_view()),
     url(r'^signupArtist/$', ArtistRegister.as_view()),
-    url(r'^signupCustomer/$', CustomerRegister.as_view())
+    url(r'^signupCustomer/$', CustomerRegister.as_view()),
+    url(r'^artist/offers/$', ListArtistOffers.as_view()),
+    url(r'^customer/offers/$', ListCustomerOffers.as_view()),
+    url(r'^paymentCode/$', PaymentCode.as_view()),
 
 
 ]

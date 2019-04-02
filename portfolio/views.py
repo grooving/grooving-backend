@@ -25,7 +25,7 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         portfolio = self.get_object(pk)
-        serializer = PortfolioSerializer(portfolio)
+        serializer = PortfolioSerializer(portfolio, partial=True)
         return Response(serializer.data)
 
     def put(self, request, pk=None):

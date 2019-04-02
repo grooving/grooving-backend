@@ -10,7 +10,7 @@ from utils.authentication_utils import get_logged_user,get_user_type,is_user_aut
 from rest_framework.response import Response
 from django.shortcuts import render_to_response
 from rest_framework import generics
-from .serializers import ArtisticGenderSerializer
+from .serializers import ArtisticGenderSerializer, ShortArtisticGenderSerializer
 from rest_framework import status
 from django.http import Http404
 
@@ -75,3 +75,23 @@ class CreateArtisticGender(generics.CreateAPIView):
                 return Response(serialized.data, status=status.HTTP_201_CREATED)
         else:
             raise PermissionDenied("The artisticGender is not for yourself")
+
+
+class ListArtisticGenders(generics.RetrieveUpdateDestroyAPIView):
+
+    queryset = ArtisticGender.objects.all()
+    serializer_class = ArtisticGenderSerializer
+
+    def get_object(self, pk=None):
+        if pk is None:
+            pk = self.kwargs['pk']
+        try:
+            return ArtisticGender.objects.get(pk=pk)
+        except ArtisticGender.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk=None, format=None):
+
+        artisticGenders = ArtisticGender.objects.all()
+        serializer = ShortArtisticGenderSerializer(artisticGenders, many=True)
+        return Response(serializer.data)

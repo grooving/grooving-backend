@@ -11,6 +11,14 @@ class ZoneSerializer(serializers.ModelSerializer):
         fields = ('name', 'parentZone')
 
 
+class ShortEventLocationSerializer(serializers.ModelSerializer):
+    zone = ZoneSerializer(read_only=True)
+
+    class Meta:
+        model = EventLocation
+        fields = ('id', 'zone', 'customer_id')
+
+
 class EventLocationSerializer(serializers.ModelSerializer):
     zone = ZoneSerializer(read_only=True)
     zone_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Zone.objects.all(),
