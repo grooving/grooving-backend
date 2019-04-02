@@ -5,7 +5,7 @@ import string
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'Server.settings')
 django.setup()
 from Grooving.models import ArtisticGender, Portfolio, Artist, Zone, PortfolioModule, Calendar, PaymentPackage, \
-    Performance, Fare, Custom, Offer, Customer, EventLocation, SystemConfiguration
+    Performance, Fare, Custom, Offer, Customer, EventLocation, SystemConfiguration, Rating, Transaction
 
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
@@ -14,6 +14,8 @@ from django.contrib.auth.hashers import make_password
 def delete_data():
     SystemConfiguration.objects.all().delete()
     Offer.objects.all().delete()
+    Rating.objects.all().delete()
+    Transaction.objects.all().delete()
     User.objects.all().delete()
     Artist.objects.all().delete()
     Customer.objects.all().delete()
@@ -28,7 +30,6 @@ def delete_data():
     Zone.objects.all().delete()
     PortfolioModule.objects.all().delete()
     Calendar.objects.all().delete()
-
 
 def _service_generate_unique_payment_code():
     random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
@@ -691,6 +692,29 @@ def save_data():
                                                           custom=custom9_paymentPackage27)
     paymentPackage27_custom9.save()
 
+    # Transactions
+    transaction_offer2 = Transaction.objects.create(id=1,holder="Visa",expirationDate='2020-02-01',number='1111222233334444',cvv='111', ibanArtist='ES6621000418401234567891')
+    transaction_offer2.save()
+
+    transaction_offer3 = Transaction.objects.create(id=2,holder="Visa",expirationDate='2024-04-01',number='1111222233334444',cvv='111', ibanArtist='ES9420805801101234567891')
+    transaction_offer3.save()
+
+    transaction_offer9 = Transaction.objects.create(id=3,holder="Visa",expirationDate='2026-06-01',number='1111222233334444',cvv='111', ibanArtist='ES6000491500051234567892')
+    transaction_offer9.save()
+
+    transaction_offer6 = Transaction.objects.create(id=4,holder="Visa",expirationDate='2028-08-01',number='1111222233334444',cvv='111', ibanArtist='ES9000246912501234567891')
+    transaction_offer6.save()
+
+    transaction_offer11 = Transaction.objects.create(id=5,holder="Visa",expirationDate='2020-02-01',number='1111222233334444',cvv='111', ibanArtist='ES7100302053091234567895')
+    transaction_offer11.save()
+
+    transaction_offer12 = Transaction.objects.create(id=6,holder="Visa",expirationDate='2020-02-01',number='1111222233334444',cvv='111', ibanArtist='ES1000492352082414205416')
+    transaction_offer12.save()
+
+
+    # Rating
+    rating_offer2 = Rating.objects.create(id=1, score= 5, comment="Lo ha hecho explendido")
+    rating_offer3 = Rating.objects.create(id=2, score= 4, comment="Lo ha hecho muy bien")
 
     # Offers
 
@@ -700,79 +724,88 @@ def save_data():
                                                eventLocation=event_location1)
     offer1_performance1.save()
 
-    offer2_performance1 = Offer.objects.create(id=2, description='Oferta 2 to Carlos DJ by performance', status='CONTRACT_MADE',
+    offer2_performance1 = Offer.objects.create(id=2, description='Oferta 2 to Carlos DJ by performance', status='PAYMENT_MADE',
                                                date='2019-07-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
                                                appliedVAT=21, paymentPackage=paymentPackage1_performance1,
-                                               eventLocation=event_location1)
+                                               eventLocation=event_location1,transaction=transaction_offer2, rating=rating_offer2)
     offer2_performance1.save()
 
-    offer3_performance1 = Offer.objects.create(id=3, description='Oferta 3 to Carlos DJ by performance', status='CANCELED',
+    offer3_performance1 = Offer.objects.create(id=3, description='Oferta 3 to Carlos DJ by performance', status='PAYMENT_MADE',
+                                               date='2019-08-25 12:00:00', hours=1.5, price='120', currency='EUR',
+                                               paymentCode=_service_generate_unique_payment_code(),
+                                               appliedVAT=21, paymentPackage=paymentPackage1_performance1,
+                                               eventLocation=event_location1,transaction=transaction_offer3,rating=rating_offer3)
+    offer3_performance1.save()
+
+    offer4_performance1 = Offer.objects.create(id=4, description='Oferta 3 to Carlos DJ by performance', status='CANCELED',
                                                date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
                                                appliedVAT=21, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location2)
-    offer3_performance1.save()
+    offer4_performance1.save()
 
-    offer4_fare1 = Offer.objects.create(id=4, description='Oferta 4 to Carlos DJ by fare', status='PENDING',
+    offer5_fare1 = Offer.objects.create(id=5, description='Oferta 4 to Carlos DJ by fare', status='PENDING',
                                                date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                appliedVAT=21, paymentPackage=paymentPackage2_fare1,
                                                eventLocation=event_location2)
-    offer4_fare1.save()
+    offer5_fare1.save()
 
-    offer5_custom1 = Offer.objects.create(id=5, description='Oferta 5 to Carlos DJ by custom', status='CONTRACT_MADE',
+    offer6_custom1 = Offer.objects.create(id=6, description='Oferta 5 to Carlos DJ by custom', status='CONTRACT_MADE',
                                                date='2019-8-25 12:00:00', hours=1.5, price='115', currency='EUR',
                                                appliedVAT=21, paymentCode=_service_generate_unique_payment_code(),
                                                paymentPackage=paymentPackage3_custom1,
-                                               eventLocation=event_location1)
-    offer5_custom1.save()
+                                               eventLocation=event_location1,transaction=transaction_offer6)
+    offer6_custom1.save()
 
-    offer6_custom1 = Offer.objects.create(id=6, description='Oferta 6 to Carlos DJ by custom', status='REJECTED',
+    offer7_custom1 = Offer.objects.create(id=7, description='Oferta 6 to Carlos DJ by custom', status='REJECTED',
                                                date='2019-10-25 19:00:00', hours=1.5, price='100', currency='EUR',
                                                appliedVAT=21, paymentPackage=paymentPackage3_custom1,
                                                eventLocation=event_location1)
-    offer6_custom1.save()
+    offer7_custom1.save()
 
-    offer7_performance2 = Offer.objects.create(id=7, description='Oferta 7 to From the noise by performance', status='REJECTED',
+    offer8_performance2 = Offer.objects.create(id=8, description='Oferta 7 to From the noise by performance', status='REJECTED',
                                                date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
-                                               appliedVAT=21, paymentPackage=paymentPackage4_performance2,
-                                               eventLocation=event_location1)
-    offer7_performance2.save()
-
-    offer8_performance2 = Offer.objects.create(id=8, description='Oferta 8 to From the noise by performance', status='CONTRACT_MADE',
-                                               date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
-                                               paymentCode=_service_generate_unique_payment_code(),
                                                appliedVAT=21, paymentPackage=paymentPackage4_performance2,
                                                eventLocation=event_location1)
     offer8_performance2.save()
 
-    offer9_fare2 = Offer.objects.create(id=9, description='Oferta 9 to From the noise by fare', status='CANCELED',
-                                               date='2019-03-27 00:00:00', hours=1.5, price='140', currency='EUR',
+    offer9_performance2 = Offer.objects.create(id=9, description='Oferta 8 to From the noise by performance', status='CONTRACT_MADE',
+                                               date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               appliedVAT=21, paymentPackage=paymentPackage5_fare2,
-                                               eventLocation=event_location4)
-    offer9_fare2.save()
+                                               appliedVAT=21, paymentPackage=paymentPackage4_performance2,
+                                               eventLocation=event_location1,transaction=transaction_offer9)
+    offer9_performance2.save()
 
-    offer10_fare2 = Offer.objects.create(id=10, description='Oferta 10 to From the noise by fare', status='CONTRACT_MADE',
-                                               date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
+    offer10_fare2 = Offer.objects.create(id=10, description='Oferta 9 to From the noise by fare', status='CANCELED',
+                                               date='2019-03-27 00:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
                                                appliedVAT=21, paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location4)
     offer10_fare2.save()
 
-    offer11_custom2 = Offer.objects.create(id=11, description='Oferta 11 to From the noise by fare', status='CONTRACT_MADE',
+    offer11_fare2 = Offer.objects.create(id=11, description='Oferta 10 to From the noise by fare', status='CONTRACT_MADE',
                                                date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
                                                appliedVAT=21, paymentPackage=paymentPackage5_fare2,
-                                               eventLocation=event_location3)
-    offer11_custom2.save()
+                                               eventLocation=event_location4, transaction=transaction_offer11)
+    offer11_fare2.save()
 
-    offer12_custom2 = Offer.objects.create(id=12, description='Oferta 12 to From the noise by fare', status='CANCELED',
+    offer12_custom2 = Offer.objects.create(id=12, description='Oferta 11 to From the noise by fare', status='CONTRACT_MADE',
+                                               date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
+                                               paymentCode=_service_generate_unique_payment_code(),
+                                               appliedVAT=21, paymentPackage=paymentPackage5_fare2,
+                                               eventLocation=event_location3, transaction=transaction_offer12)
+    offer12_custom2.save()
+
+    offer13_custom2 = Offer.objects.create(id=13, description='Oferta 12 to From the noise by fare', status='CANCELED',
                                                date='2017-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
                                                appliedVAT=21, paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location3)
-    offer12_custom2.save()
+    offer13_custom2.save()
+
+
 
 
 delete_data()
