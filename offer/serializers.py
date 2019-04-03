@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.core.exceptions import PermissionDenied
-from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist
+from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist, Rating
 from utils.Assertions import assert_true
 from django.db import IntegrityError
 from decimal import Decimal
@@ -10,6 +10,7 @@ import string
 import datetime
 from django.utils import timezone
 from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
+from rating.serializers import ListRatingSerializer
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -24,16 +25,13 @@ class EventLocationSerializer(serializers.ModelSerializer):
         fields = ('id', 'address', 'equipment', 'description')
 
 
-
-
-
 class OfferCodeSerializer(serializers.ModelSerializer):
-
 
     class Meta:
         model = Offer
         fields = ('id', 'description', 'status', 'date', 'hours', 'price','paymentPackage',
                   'paymentPackage_id', 'eventLocation', 'eventLocation_id','paymentCode')
+
 
 class OfferSerializer(serializers.ModelSerializer):
 

@@ -4,23 +4,38 @@ from portfolio.serializers import UserSerializer
 from utils.authentication_utils import get_logged_user, get_user_type
 from utils.Assertions import assert_true
 from django.http import Http404
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import ValidationError
 
 
 class ListRatingSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Rating
-        fields = ('score', 'comment')
+        fields = ('id', 'score', 'comment')
 
 
 class CustomerRatingSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Rating
-        fields = ('score', 'comment')
+        fields = ('id', 'score', 'comment')
 
-    def validate(self, request, pk):
+    @staticmethod
+    def _service_create(json: dict, rating: Rating):
+        rating.score = json.get('score')
+        if rating.score < 1 or rating.score > 5:
+            raise ValidationError("The rating can't be less than 1 or more than 5 points.")
+        rating.save()
+        return rating
+
+    def save(self, pk=None, logged_user=None):
+        if self.initial_data.get('id') is None and pk is None:
+            # creation
+            rating = Rating()
+            rating = self._service_create(self.initial_data, rating)
+        return rating
+
+    def validate(self, request, pk): #  Aquí habia un pk
         # Primero, se mira si el que intenta realizar la acción es un customer.
 
         user = get_logged_user(request)

@@ -713,8 +713,9 @@ def save_data():
 
 
     # Rating
-    rating_offer2 = Rating.objects.create(id=1, score= 5, comment="Lo ha hecho explendido")
-    rating_offer3 = Rating.objects.create(id=2, score= 4, comment="Lo ha hecho muy bien")
+    rating_offer2 = Rating.objects.create(score= 5, comment="Lo ha hecho explendido")
+    rating_offer3 = Rating.objects.create(score= 4, comment="Lo ha hecho muy bien")
+    rating_offer4 = Rating.objects.create(score= 1)
 
     # Offers
 
@@ -767,7 +768,7 @@ def save_data():
     offer8_performance2 = Offer.objects.create(id=8, description='Oferta 7 to From the noise by performance', status='REJECTED',
                                                date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
                                                appliedVAT=21, paymentPackage=paymentPackage4_performance2,
-                                               eventLocation=event_location1)
+                                               eventLocation=event_location1, rating=rating_offer4)
     offer8_performance2.save()
 
     offer9_performance2 = Offer.objects.create(id=9, description='Oferta 8 to From the noise by performance', status='CONTRACT_MADE',
@@ -804,6 +805,13 @@ def save_data():
                                                appliedVAT=21, paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location3)
     offer13_custom2.save()
+
+    offer14_custom3 = Offer.objects.create(id=14, description='Oferta 13 to From the noise by fare', status='PAYMENT_MADE',
+                                               date='2019-03-30 10:00:00', hours=2, price='200', currency='EUR',
+                                               paymentCode=_service_generate_unique_payment_code(),
+                                               appliedVAT=21, paymentPackage=paymentPackage5_fare2,
+                                               eventLocation=event_location1)
+    offer14_custom3.save()
 
 
 

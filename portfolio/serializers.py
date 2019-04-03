@@ -65,10 +65,11 @@ class PortfolioSerializer(serializers.ModelSerializer):
     videos = serializers.SerializerMethodField('list_videos')
     main_photo = serializers.SerializerMethodField('list_photo')
     artisticGenders = serializers.SerializerMethodField('list_genders')
+    artist = ArtistSerializer(read_only=True)
 
     class Meta:
         model = Portfolio
-        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGenders')
+        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artist', 'artisticGenders')
 
     @staticmethod
     def list_images(self):

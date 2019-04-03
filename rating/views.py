@@ -1,18 +1,17 @@
 from Grooving.models import Rating, Artist, Offer
 from utils.authentication_utils import get_logged_user,get_user_type
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework import generics, status, serializers
 from django.http import Http404
 from rating.serializers import CustomerRatingSerializer, ListRatingSerializer
 from utils.Assertions import assert_true
-from rest_framework import status
 
 
 class GetRatings(generics.ListAPIView):
 
     model = Rating
     serializer_class = ListRatingSerializer
-
+    authentication_classes = []
     """
     def get_object(self, pk=None):
 
@@ -56,8 +55,14 @@ class PostRating(generics.CreateAPIView):
         pk = self.kwargs['pk']
 
         serializer = CustomerRatingSerializer(data=request.data)
-        assert_true(serializer.validate(request, pk), "Some of the conditions to do this action aren't fulfilled.")
-        rating = serializer.save()
-        ratingChecked = CustomerRatingSerializer(rating)
+        if serializer.validate(request, pk): #  "Some of the conditions to do this action aren't fulfilled.")
 
-        return Response(ratingChecked.data, status=status.HTTP_201_CREATED)
+            #serializer.is_valid(request, pk)
+            rating = serializer.save()
+            ratingChecked = CustomerRatingSerializer(rating)
+            offer = Offer.objects.get(id=pk)
+            offer.rating = rating
+            offer.save()
+            return Response(ratingChecked.data, status=status.HTTP_201_CREATED)
+        else:
+            raise serializers.ValidationError("Invalid data")
