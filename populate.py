@@ -54,29 +54,62 @@ def save_data():
     artistic_gender8 = ArtisticGender.objects.create(name='Carnival')
     artistic_gender8.save()
 
+    artistic_gender9 = ArtisticGender.objects.create(name='Clowns')
+    artistic_gender9.save()
+
+    artistic_gender10 = ArtisticGender.objects.create(name='Drag Queen')
+    artistic_gender10.save()
+
+    artistic_gender11 = ArtisticGender.objects.create(name='Mariachis', parentGender=artistic_gender1)
+    artistic_gender11.save()
 
     # Zones
 
-    zone1 = Zone.objects.create(name='Sevilla')
+    zone1 = Zone.objects.create(name='Andalucía')
     zone1.save()
 
-    zone2 = Zone.objects.create(name='Mairena del Aljarafe', parentZone=zone1)
+    zone2 = Zone.objects.create(name='Sevilla', parentZone=zone1)
     zone2.save()
 
-    zone3 = Zone.objects.create(name='Ecija', parentZone=zone1)
+    zone3 = Zone.objects.create(name='Ecija', parentZone=zone2)
     zone3.save()
 
-    zone4 = Zone.objects.create(name='Madrid')
+    zone4 = Zone.objects.create(name='Mairena del Aljarafe', parentZone=zone2)
     zone4.save()
+
+    zone5 = Zone.objects.create(name='Huelva', parentZone=zone1)
+    zone5.save()
+
+    zone6 = Zone.objects.create(name='Cádiz', parentZone=zone1)
+    zone6.save()
+
+    zone7 = Zone.objects.create(name='Málaga', parentZone=zone1)
+    zone7.save()
+
+    zone8 = Zone.objects.create(name='Córdoba', parentZone=zone1)
+    zone8.save()
+
+    zone9 = Zone.objects.create(name='Granada', parentZone=zone1)
+    zone9.save()
+
+    zone10 = Zone.objects.create(name='Almería', parentZone=zone1)
+    zone10.save()
+
+    zone11 = Zone.objects.create(name='Jaén', parentZone=zone1)
+    zone11.save()
+
+    zone12 = Zone.objects.create(name='Sanlucar de Barrameda', parentZone=zone2)
+    zone12.save()
 
     # Portfolios with his modules
 
-    portfolio1 = Portfolio.objects.create(artisticName='Carlos DJ', banner='https://c.pxhere.com/photos/52/a5/mixer_sound_board_sound_studio_broadcasting_radio_djs_music-1371930.jpg!d')
+    portfolio1 = Portfolio.objects.create(artisticName='Carlos DJ', banner='https://c.pxhere.com/photos/52/a5/mixer_sound_board_sound_studio_broadcasting_radio_djs_music-1371930.jpg!d',
+                                          biography='Musician, producer, DJ, pianist, promoter, and electronic music enthusiast alike, David Michael hails out of Dayton, Ohio.  When not performing, he spends his time in the studio creating his own music… aided by over a decade of piano lessons and an upbringing in a very musically-influenced home.  Having spent many years playing at all of the major local night clubs (alongside local hard-hitters and national acts alike), holding multiple residencies, DJing special events and promoting his own shows, David has had a lot of time to develop his sound.  For him, it’s all about mood and a deep, hypnotic groove… playing those tracks that get you tapping your feet and nodding your head without you realizing it, regardless of genre, tempo, style, or release date. Don’t be surprised when you suddenly find yourself dancing')
     portfolio1.artisticGender.add(artistic_gender2)
-    portfolio1.zone.add(zone1)
+    portfolio1.zone.add(zone2)
     portfolio1.save()
 
-    portfolio1_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio1, description='It was a great festival', link='') # todo
+    portfolio1_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio1, description='It was a great festival', link='https://www.youtube.com/watch?v=xAzWJCwZY6w')
     portfolio1_module1.save()
 
     portfolio1_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio1, description='Video with Kill Clown', link='https://www.youtube.com/watch?v=BDhUtaS4GT8')
@@ -84,9 +117,10 @@ def save_data():
 
     # ----
 
-    portfolio2 = Portfolio.objects.create(artisticName='From the noise', banner='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/1377395_756950037692403_4684275136466205538_n.jpg?_nc_cat=107&_nc_ht=scontent-mad1-1.xx&oh=452afbe02d9696047bad6af696ed1276&oe=5D47A9C6')
+    portfolio2 = Portfolio.objects.create(artisticName='From the noise', banner='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/1377395_756950037692403_4684275136466205538_n.jpg?_nc_cat=107&_nc_ht=scontent-mad1-1.xx&oh=452afbe02d9696047bad6af696ed1276&oe=5D47A9C6',
+                                          biography='Somos un grupo de Sevilla, formado el 2010, somos 6 componentes y tocamos un estilo muy alternativo que mezcla hip hop con rock, electrónica y metal. Tenemos melodías y letras contudentes. Estamos bastante bien aceptados en nuestro entorno y nos gustaría expandirnos más. Queremos tocar allí donde sea posible y que nos ayude a darnos a conocer.')
     portfolio2.artisticGender.add(artistic_gender4)
-    portfolio2.zone.add(zone1)
+    portfolio2.zone.add(zone2)
     portfolio2.save()
 
     portfolio2_module1 = PortfolioModule.objects.create(type='SOCIAL', portfolio=portfolio2, link='https://www.facebook.com/fromthenoise/')
@@ -103,9 +137,10 @@ def save_data():
 
     # ----
 
-    portfolio3 = Portfolio.objects.create(artisticName='Los saraos', banner='https://c.pxhere.com/photos/9e/08/musicians_concert_flamenco_scene_music_art_scenario-1329878.jpg!d')
+    portfolio3 = Portfolio.objects.create(artisticName='Los saraos', banner='https://c.pxhere.com/photos/9e/08/musicians_concert_flamenco_scene_music_art_scenario-1329878.jpg!d',
+                                          biography='Considerados una de las principales figuras del flamenco actual, se le atribuye la responsabilidad de la reforma que llevó este arte a la escena musical internacional gracias a la inclusión de nuevos ritmos desde el jazz, la bossa nova y la música clásica. De este modo destacan sus colaboraciones con artistas internacionales como Carlos Santana, Al Di Meola o John McLaughlin, pero también con otras figuras del flamenco como Camarón de la Isla o Tomatito, con quienes modernizó el concepto de flamenco clásico.')
     portfolio3.artisticGender.add(artistic_gender5)
-    portfolio3.zone.add(zone1)
+    portfolio3.zone.add(zone2)
     portfolio3.save()
 
     portfolio3_module1 = PortfolioModule.objects.create(type='SOCIAL', portfolio=portfolio3, description='Canal de Youtube',
@@ -122,8 +157,9 @@ def save_data():
 
     # ----
 
-    portfolio4 = Portfolio.objects.create(artisticName='Ana DJ', banner='https://c.pxhere.com/photos/52/a5/mixer_sound_board_sound_studio_broadcasting_radio_djs_music-1371930.jpg!d')
-    portfolio4.zone.add(zone2)
+    portfolio4 = Portfolio.objects.create(artisticName='Ana DJ', banner='https://c.pxhere.com/photos/52/a5/mixer_sound_board_sound_studio_broadcasting_radio_djs_music-1371930.jpg!d',
+                                          biography='She may have been ‘born to be a DJ’, but sheer hard work and dedication are what’s brought ANNA success. In São Paulo, the traffic jams can stretch over a hundred miles on a bad day. Trapped under scorching sun or torrential rain, the air chewy and warm regardless, cars trudge along its roads and raised highways. Trees and shrubbery bring colour to the worn-out streets, sand-coloured and mirrored tower blocks looming large over the city. Beneath a concrete underpass in the north of the city, ANNA, aka DJ Ana Miranda, is making an emphatic return to the city that shaped her.')
+    portfolio4.zone.add(zone4)
     portfolio4.artisticGender.add(artistic_gender2)
     portfolio4.save()
 
@@ -137,9 +173,10 @@ def save_data():
 
     # ----
 
-    portfolio5 = Portfolio.objects.create(artisticName='Pasando olimpicamente', banner='https://c.pxhere.com/images/69/7e/d027d7ad8538be4686b3c4dc30ef-1457547.jpg!d')
+    portfolio5 = Portfolio.objects.create(artisticName='Pasando olimpicamente', banner='https://c.pxhere.com/images/69/7e/d027d7ad8538be4686b3c4dc30ef-1457547.jpg!d',
+                                          biography='En 1989 monta la chirigota Los sanmolontropos con una música y una letra muy extraña que llama la atención hasta el punto que entran en la Final, de manera inesperada, sorprendiendo a propios y extraños. Siguiendo con esa línea de locura y surrealismo, al año siguiente saca la chirigota Carnaval 2036 Piconeros Galácticos. Se pregunta si pueden salir los 18 amigos en el Falla y decide hacer dos chirigotas. Le supuso un grandísimo esfuerzo y crea Ballet zum zum malacatum y El que la lleva la entiende (Los borrachos), en las que lleva la misma línea de surrealismo, pero pide por favor que fuera una chirigota interpretada porque le gusta mucho hacerse el borracho.')
     portfolio5.artisticGender.add(artistic_gender8)
-    portfolio5.zone.add(zone2)
+    portfolio5.zone.add(zone4)
     portfolio5.save()
 
     portfolio5_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio5, description='ANNA Live from DJ Mag HQ',
@@ -148,9 +185,10 @@ def save_data():
 
     # ----
 
-    portfolio6 = Portfolio.objects.create(artisticName='Una chirigota sin clase', banner='https://c.pxhere.com/images/69/7e/d027d7ad8538be4686b3c4dc30ef-1457547.jpg!d')
+    portfolio6 = Portfolio.objects.create(artisticName='Una chirigota sin clase', banner='https://c.pxhere.com/images/69/7e/d027d7ad8538be4686b3c4dc30ef-1457547.jpg!d',
+                                          biography='En 1989 monta la chirigota Los sanmolontropos con una música y una letra muy extraña que llama la atención hasta el punto que entran en la Final, de manera inesperada, sorprendiendo a propios y extraños. Siguiendo con esa línea de locura y surrealismo, al año siguiente saca la chirigota Carnaval 2036 Piconeros Galácticos. Se pregunta si pueden salir los 18 amigos en el Falla y decide hacer dos chirigotas. Le supuso un grandísimo esfuerzo y crea Ballet zum zum malacatum y El que la lleva la entiende (Los borrachos), en las que lleva la misma línea de surrealismo, pero pide por favor que fuera una chirigota interpretada porque le gusta mucho hacerse el borracho.')
     portfolio6.artisticGender.add(artistic_gender8)
-    portfolio6.zone.add(zone1)
+    portfolio6.zone.add(zone2)
     portfolio6.save()
 
     portfolio6_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio6, description='Una chirigota sin clase - Preliminares',
@@ -167,10 +205,11 @@ def save_data():
 
     # ----
 
-    portfolio7 = Portfolio.objects.create(artisticName='Batracio', banner='https://yt3.ggpht.com/IER5btMSGSaLEXOs8QTppGpgNCAs_yboMZCiPfLazmHoIPgSYuHqoIsJ61gEo-l-xQZOjNiRpg=w2560-fcrop64=1,00005a57ffffa5a8-nd-c0xffffffff-rj-k-no')
+    portfolio7 = Portfolio.objects.create(artisticName='Batracio', banner='https://yt3.ggpht.com/IER5btMSGSaLEXOs8QTppGpgNCAs_yboMZCiPfLazmHoIPgSYuHqoIsJ61gEo-l-xQZOjNiRpg=w2560-fcrop64=1,00005a57ffffa5a8-nd-c0xffffffff-rj-k-no',
+                                          biography='Batracio nace en 2015, fruto de una reunión entre viejos amigos, Febes (voz) y José Alberto (guitarra) cansados de hacer en anteriores formaciones ḿúsica más genérica. De ahí no sólo nació una banda, sino que surgieron dos de sus temas más emblemáticos. La Charca y Pulgadas. Esto motivó a seguir adelante y continuar con un proyecto al que luego se sumarían Juan Bidegain (bajo), José Manuel Rodríguez “Negro” (teclado) y Javier Galliza (batería). Tras añadirse Domingo Muñoz (trombón) a la formación, sucedió el increíble debut en una mítica sala FunClub totalmente abarrotada. A partir de ese momento, las composiciones giraron hacia el Ska-funk característico de la banda. En 2016 la banda volvía al estudio para darle vida a Famelia y Souciedad.')
     portfolio7.artisticGender.add(artistic_gender3)
     portfolio7.artisticGender.add(artistic_gender4)
-    portfolio7.zone.add(zone1)
+    portfolio7.zone.add(zone2)
     portfolio7.save()
 
     portfolio7_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio7, description='Group photo',
@@ -218,10 +257,11 @@ def save_data():
     # ----
 
     portfolio8 = Portfolio.objects.create(artisticName='Medictum',
-                                          banner='https://yt3.ggpht.com/IHxxu82dBWN8emRrLgn81-pjIdB6Q1qHW575Gmyk6zoAGxHEIHgXEwpZSaKLFH1KI_WlaEzX=w2560-fcrop64=1,00005a57ffffa5a8-nd-c0xffffffff-rj-k-no')
+                                          banner='https://yt3.ggpht.com/IHxxu82dBWN8emRrLgn81-pjIdB6Q1qHW575Gmyk6zoAGxHEIHgXEwpZSaKLFH1KI_WlaEzX=w2560-fcrop64=1,00005a57ffffa5a8-nd-c0xffffffff-rj-k-no',
+                                          biography='MedictuM es una banda que surge en 2012 de la mano de los hermanos Antonio y Manuel Medina en su pueblo natal, Morón de la Frontera. Tras el paso de ambos por grupos locales, deciden crear su propio proyecto con toques de thrash metal, heavy metal clásico, pinceladas de hard rock y otros estilos.')
     portfolio8.artisticGender.add(artistic_gender3)
     portfolio8.artisticGender.add(artistic_gender4)
-    portfolio8.zone.add(zone1)
+    portfolio8.zone.add(zone2)
     portfolio8.save()
 
     portfolio8_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio8, description='New disc!!!',
@@ -263,10 +303,11 @@ def save_data():
     # ----
 
     portfolio9 = Portfolio.objects.create(artisticName='Waterdogs',
-                                          banner='https://cdn.pixabay.com/photo/2016/02/15/12/54/banner-1201119_1280.jpg')
+                                          banner='https://cdn.pixabay.com/photo/2016/02/15/12/54/banner-1201119_1280.jpg',
+                                          biography='It all began in 1997 when Martin Ekelund met Patrik Berglin and started to discuss music. They soon found out that they share the same taste in music. And what was more obvious then to start the best rockband in the world? Excactly…nothing! They found the drummer P-O Borg and started to write songs and rehearse. After a while P-O dropped the band and Martin and Patrik stood without a drummer. One warm and shiny day when the sky was blue and the world, for once, was a friendly and peacefull place, Martin came up with the brilliant idea of asking an old childhood friend to join the band. Hard hitting Daniel Persson united their forces and Waterdog was a fact.')
     portfolio9.artisticGender.add(artistic_gender3)
     portfolio9.artisticGender.add(artistic_gender4)
-    portfolio9.zone.add(zone2)
+    portfolio9.zone.add(zone4)
     portfolio9.save()
 
     portfolio9_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio9, description='Van Hallen - Dirty Water dog',
@@ -421,13 +462,13 @@ def save_data():
 
     # Event location
 
-    event_location1 = EventLocation.objects.create(name='Event 1 - Festival Rockupo', address='Universidad Pablo de Olavide', equipment='Yes', zone=zone1, customer=customer1)
+    event_location1 = EventLocation.objects.create(name='Event 1 - Festival Rockupo', address='Universidad Pablo de Olavide', equipment='Yes', zone=zone2, customer=customer1)
     event_location1.save()
-    event_location2 = EventLocation.objects.create(name='Event 2 - La Posada Sevilla', address='C/Astronomía, 42, 41015', equipment='Yes', zone=zone1, customer=customer2)
+    event_location2 = EventLocation.objects.create(name='Event 2 - La Posada Sevilla', address='C/Astronomía, 42, 41015', equipment='Yes', zone=zone2, customer=customer2)
     event_location2.save()
-    event_location3 = EventLocation.objects.create(name='Event 3 - Rosalia en vivo', address='C/Sol, 45, 41652', equipment='Yes', zone=zone1, customer=customer3)
+    event_location3 = EventLocation.objects.create(name='Event 3 - Rosalia en vivo', address='C/Sol, 45, 41652', equipment='Yes', zone=zone2, customer=customer3)
     event_location3.save()
-    event_location4 = EventLocation.objects.create(name='Event 4 - Charlie XCX', address='C/Amalgama, 2, 41609', equipment='Yes', zone=zone2, customer=customer4)
+    event_location4 = EventLocation.objects.create(name='Event 4 - Charlie XCX', address='C/Amalgama, 2, 41609', equipment='Yes', zone=zone4, customer=customer4)
     event_location4.save()
 
     # Payment packages with Payment types
@@ -701,115 +742,115 @@ def save_data():
 
     offer1_performance1 = Offer.objects.create(description='Oferta 1 to Carlos DJ by performance', status='PENDING',
                                                date='2019-04-25 12:00:00', hours=2.5, price='120', currency='EUR',
-                                               appliedVAT=21, paymentPackage=paymentPackage1_performance1,
+                                               appliedVAT=7, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location1)
     offer1_performance1.save()
 
     offer2_performance1 = Offer.objects.create(description='Oferta 2 to Carlos DJ by performance', status='PAYMENT_MADE',
                                                date='2019-07-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               appliedVAT=21, paymentPackage=paymentPackage1_performance1,
+                                               appliedVAT=7, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location1,transaction=transaction_offer2, rating=rating_offer2)
     offer2_performance1.save()
 
     offer3_performance1 = Offer.objects.create(description='Oferta 3 to Carlos DJ by performance', status='PAYMENT_MADE',
                                                date='2019-08-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               appliedVAT=21, paymentPackage=paymentPackage1_performance1,
+                                               appliedVAT=7, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location1,transaction=transaction_offer3,rating=rating_offer3)
     offer3_performance1.save()
 
     offer4_performance1 = Offer.objects.create(description='Oferta 4 to Carlos DJ by performance', status='CANCELLED_ARTIST',
                                                date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               appliedVAT=21, paymentPackage=paymentPackage1_performance1,
+                                               appliedVAT=7, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location2)
     offer4_performance1.save()
 
     offer5_fare1 = Offer.objects.create(description='Oferta 5 to Carlos DJ by fare', status='PENDING',
                                                date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
-                                               appliedVAT=21, paymentPackage=paymentPackage2_fare1,
+                                               appliedVAT=7, paymentPackage=paymentPackage2_fare1,
                                                eventLocation=event_location2)
     offer5_fare1.save()
 
     offer6_custom1 = Offer.objects.create(description='Oferta 6 to Carlos DJ by custom', status='CONTRACT_MADE',
                                                date='2019-8-25 12:00:00', hours=1.5, price='115', currency='EUR',
-                                               appliedVAT=21, paymentCode=_service_generate_unique_payment_code(),
+                                               appliedVAT=7, paymentCode=_service_generate_unique_payment_code(),
                                                paymentPackage=paymentPackage3_custom1,
                                                eventLocation=event_location1,transaction=transaction_offer6)
     offer6_custom1.save()
 
     offer7_custom1 = Offer.objects.create(description='Oferta 7 to Carlos DJ by custom', status='REJECTED',
                                                date='2019-10-25 19:00:00', hours=1.5, price='100', currency='EUR',
-                                               appliedVAT=21, paymentPackage=paymentPackage3_custom1,
+                                               appliedVAT=7, paymentPackage=paymentPackage3_custom1,
                                                eventLocation=event_location1)
     offer7_custom1.save()
 
     offer8_performance2 = Offer.objects.create(description='Oferta 8 to From the noise by performance', status='REJECTED',
                                                date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
-                                               appliedVAT=21, paymentPackage=paymentPackage4_performance2,
+                                               appliedVAT=7, paymentPackage=paymentPackage4_performance2,
                                                eventLocation=event_location1)
     offer8_performance2.save()
 
     offer9_performance2 = Offer.objects.create(description='Oferta 9 to From the noise by performance', status='CONTRACT_MADE',
                                                date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               appliedVAT=21, paymentPackage=paymentPackage4_performance2,
+                                               appliedVAT=7, paymentPackage=paymentPackage4_performance2,
                                                eventLocation=event_location1,transaction=transaction_offer9)
     offer9_performance2.save()
 
     offer10_fare2 = Offer.objects.create(description='Oferta 10 to From the noise by fare', status='CANCELLED_ARTIST',
                                                date='2019-03-27 00:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               appliedVAT=21, paymentPackage=paymentPackage5_fare2,
+                                               appliedVAT=7, paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location4)
     offer10_fare2.save()
 
     offer11_fare2 = Offer.objects.create(description='Oferta 11 to From the noise by fare', status='CONTRACT_MADE',
                                                date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               appliedVAT=21, paymentPackage=paymentPackage5_fare2,
+                                               appliedVAT=7, paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location4, transaction=transaction_offer11)
     offer11_fare2.save()
 
     offer12_custom2 = Offer.objects.create(description='Oferta 12 to From the noise by fare', status='CONTRACT_MADE',
                                                date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               appliedVAT=21, paymentPackage=paymentPackage5_fare2,
+                                               appliedVAT=7, paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location3, transaction=transaction_offer12)
     offer12_custom2.save()
 
     offer13_custom2 = Offer.objects.create(description='Oferta 13 to From the noise by fare', status='CANCELLED_CUSTOMER',
                                                date='2017-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               appliedVAT=21, paymentPackage=paymentPackage5_fare2,
+                                               appliedVAT=7, paymentPackage=paymentPackage5_fare2,
                                                eventLocation=event_location3)
     offer13_custom2.save()
 
     offer14_performance2 = Offer.objects.create(description='Oferta 14 to From the noise by performance', status='PENDING',
                                                 date='2019-07-07 15:00:00', hours=2.5, price='115', currency='EUR',
-                                                appliedVAT=21, paymentPackage=paymentPackage4_performance2,
+                                                appliedVAT=7, paymentPackage=paymentPackage4_performance2,
                                                 eventLocation=event_location1)
 
     offer14_performance2.save()
 
     offer15_performance2 = Offer.objects.create(description='Oferta 15 to From the noise by performance', status='PENDING',
                                                 date='2019-07-11 15:00:00', hours=1.5, price='80', currency='EUR',
-                                                appliedVAT=21, paymentPackage=paymentPackage4_performance2,
+                                                appliedVAT=7, paymentPackage=paymentPackage4_performance2,
                                                 eventLocation=event_location2)
 
     offer15_performance2.save()
 
     offer15_performance1 = Offer.objects.create(description='Oferta 16 to Carlos DJ by performance', status='PENDING',
                                                 date='2019-07-11 15:00:00', hours=2.5, price='160', currency='EUR',
-                                                appliedVAT=21, paymentPackage=paymentPackage1_performance1,
+                                                appliedVAT=7, paymentPackage=paymentPackage1_performance1,
                                                 eventLocation=event_location1)
 
     offer15_performance1.save()
 
     offer16_performance1 = Offer.objects.create(description='Oferta 17 to Carlos DJ by performance', status='PENDING',
                                                 date='2019-07-14 08:00:00', hours=1.5, price='800', currency='EUR',
-                                                appliedVAT=21, paymentPackage=paymentPackage1_performance1,
+                                                appliedVAT=7, paymentPackage=paymentPackage1_performance1,
                                                 eventLocation=event_location2)
 
     offer16_performance1.save()
