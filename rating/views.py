@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import generics, status, serializers
 from django.http import Http404
 from rating.serializers import CustomerRatingSerializer, ListRatingSerializer
-from utils.Assertions import assert_true
+from django.db.models import Count, Sum
 
 
 class GetRatings(generics.ListAPIView):
@@ -63,6 +63,24 @@ class PostRating(generics.CreateAPIView):
             offer = Offer.objects.get(id=pk)
             offer.rating = rating
             offer.save()
+            artist = offer.paymentPackage.portfolio.artist
+
+            offersWithArtist = Offer.objects.filter(paymentPackage__portfolio__artist=artist)
+
+            numRaters = Count(list(offersWithArtist))
+            totalRating = offersWithArtist.annotate(Sum('rating'))
+
+#           Se comprueba que no sean 0 votos. No podemos dividir entre 0, o el universo explotará y los gatitos kawaiis de internet morirán
+
+            if(numRaters == 0):
+
+                artist.rating = rating.score
+                artist.save()
+
+            else:
+
+                artist.rating = (artist.rating*(numRaters-1)+rating.score)/numRaters
+
             return Response(ratingChecked.data, status=status.HTTP_201_CREATED)
         else:
             raise serializers.ValidationError("Invalid data")
