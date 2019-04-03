@@ -814,6 +814,13 @@ def save_data():
 
     offer16_performance1.save()
 
+    offer17_performance1 = Offer.objects.create(description='Oferta 18 to From the noise by performance', status='PAYMENT_MADE',
+                                                date='2019-03-14 08:00:00', hours=3, price='1000', currency='EUR',
+                                                appliedVAT=21, paymentPackage=paymentPackage4_performance2,
+                                                eventLocation=event_location1)
+
+    offer17_performance1.save()
+
 
 os.system('python3 manage.py sqlflush | python3 manage.py dbshell')
 save_data()

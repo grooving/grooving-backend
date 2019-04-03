@@ -25,6 +25,7 @@ class CustomerRatingSerializer(serializers.HyperlinkedModelSerializer):
         rating.score = json.get('score')
         if rating.score < 1 or rating.score > 5:
             raise ValidationError("The rating can't be less than 1 or more than 5 points.")
+        rating.comment = json.get('comment')
         rating.save()
         return rating
 
