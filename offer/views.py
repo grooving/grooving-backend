@@ -75,7 +75,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
 
                     if articustomer.user_id == customer_creator.user_id:
                         serializer = OfferSerializer(offer, data=request.data, partial=True)
-                        serializer.save(pk,logged_user=articustomer)
+                        serializer.save(pk, logged_user=articustomer)
                         return Response(status=status.HTTP_200_OK)
                     else:
                         return Response(status=status.HTTP_400_BAD_REQUEST)

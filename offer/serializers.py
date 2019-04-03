@@ -42,7 +42,7 @@ class OfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = Offer
         fields = ('id', 'description', 'status', 'date', 'hours', 'price', 'paymentPackage',
-                  'paymentPackage_id', 'eventLocation', 'eventLocation_id')
+                  'paymentPackage_id', 'eventLocation', 'eventLocation_id','reason')
 
     # Esto sobrescribe una función heredada del serializer.
     def save(self, pk=None, logged_user=None):
@@ -126,8 +126,7 @@ class OfferSerializer(serializers.ModelSerializer):
                                                  'CONTRACT_MADE': 'CANCELLED_CUSTOMER'}
 
             artistReceiver = Artist.objects.filter(pk=offer_in_db.paymentPackage.portfolio.artist.id).first()
-            print(artistReceiver)
-            print(logged_user)
+
             if get_user_type(logged_user) == 'Artist' and artistReceiver == logged_user:
                 normal_transitions = {'PENDING': 'CONTRACT_MADE'}
                 artist_flowstop_transitions = {'PENDING': 'REJECTED',
@@ -149,7 +148,7 @@ class OfferSerializer(serializers.ModelSerializer):
 
             if json_status == "CONTRACT_MADE":
                 while True:
-                    # noinspection PyBroadException
+
                     try:
                         offer_in_db.paymentCode = self._service_generate_unique_payment_code()
                         offer_in_db.save()
@@ -159,6 +158,9 @@ class OfferSerializer(serializers.ModelSerializer):
 
             print("ESTADO DB ANTES:" + offer_in_db.status)
             offer_in_db.status = json_status
+            offer_in_db.reason = json.get('reason')
+            if json_status == "CONTRACT_MADE" or json_status == "PAYMENT_MADE":
+                offer_in_db.reason = None
             offer_in_db.save()
             print("ESTADO DB DESPUES:" + offer_in_db.status)
             return offer_in_db
