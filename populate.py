@@ -11,6 +11,7 @@ from Grooving.models import ArtisticGender, Portfolio, Artist, Zone, PortfolioMo
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
+
 def _service_generate_unique_payment_code():
     random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
     payment_code = random_alphanumeric
@@ -813,5 +814,6 @@ def save_data():
 
     offer16_performance1.save()
 
-os.system('python3 manage.py sqlflush')
+
+os.system('python3 manage.py sqlflush | python3 manage.py dbshell')
 save_data()
