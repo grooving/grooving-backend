@@ -3,11 +3,13 @@ from django.core.exceptions import PermissionDenied
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import status
-from utils.authentication_utils import get_user_type,get_logged_user
+from django.http import Http404
+from utils.authentication_utils import get_user_type, get_logged_user
 from .serializers import CustomerSerializer, ArtistSerializer
+from utils.Assertions import Assertions
 
 
-class ArtistRegister(generics.CreateAPIView):
+class ArtistManager(generics.CreateAPIView):
 
     serializer_class = ArtistSerializer
 
@@ -27,11 +29,12 @@ class ArtistRegister(generics.CreateAPIView):
         else:
                 raise PermissionDenied("You must be unlogged to do this action")
 
-
-class CustomerRegister(generics.CreateAPIView):
+   
+class CustomerManager(generics.CreateAPIView):
 
     serializer_class = CustomerSerializer
 
+    
     def post(self, request, *args, **kwargs):
         user_type = None
         try:
@@ -47,4 +50,3 @@ class CustomerRegister(generics.CreateAPIView):
 
         else:
                 raise PermissionDenied("You must be unlogged to do this action")
-
