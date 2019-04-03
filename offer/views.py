@@ -130,5 +130,9 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
         return Response({"paymentCode": str(offer.paymentCode)}, status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
-        OfferSerializer.service_made_payment_artist(request.data.get("paymentCode"), get_artist(request))
-        return Response(status=status.HTTP_200_OK)
+        offer = OfferSerializer.service_made_payment_artist(request.data.get("paymentCode"), get_artist(request))
+        price = offer.price
+        customer = offer.eventLocation.customer
+        photo = customer.photo
+        name = customer.user.first_name + " " + customer.user.last_name
+        return Response({"offerId": offer.id, "price": price, "photo": photo, "name": name}, status=status.HTTP_200_OK)
