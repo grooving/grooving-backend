@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.core.exceptions import PermissionDenied
 from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist
-from utils.Assertions import assert_true
+from utils.Assertions import assert_true, Assertions
 from django.db import IntegrityError
 from decimal import Decimal
 import random
@@ -15,7 +15,7 @@ from utils.authentication_utils import get_logged_user,get_user_type,is_user_aut
 class PaymentPackageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentPackage
-        fields = ('id', 'description', 'appliedVAT', 'portfolio_id', 'performance_id', 'fare_id', 'custom_id')
+        fields = ('id', 'description', 'portfolio_id', 'performance_id', 'fare_id', 'custom_id')
 
 
 class EventLocationSerializer(serializers.ModelSerializer):
@@ -23,14 +23,10 @@ class EventLocationSerializer(serializers.ModelSerializer):
         model = EventLocation
         fields = ('id', 'address', 'equipment', 'description')
 
-
-class OfferCodeSerializer(serializers.ModelSerializer):
-
+class CodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Offer
-        fields = ('id', 'description', 'status', 'date', 'hours', 'price', 'paymentPackage',
-                  'paymentPackage_id', 'eventLocation', 'eventLocation_id', 'paymentCode')
-
+        fields = ('paymentCode',)
 
 class OfferSerializer(serializers.ModelSerializer):
 
@@ -62,16 +58,15 @@ class OfferSerializer(serializers.ModelSerializer):
         return offer
 
     @staticmethod
-    def service_made_payment_artist(paymentCode,user_logged):
-        user_type = get_user_type(user_logged)
-        if not None and user_type != "Artist":
-            raise PermissionDenied("Only an artist can get the payment")
+    def service_made_payment_artist(paymentCode, user_logged):
+        Assertions.assert_true_raise403(user_logged is not None)
+        Assertions.assert_true_raise400(paymentCode is not None, {"paymentCode": "null payment code"})
 
         offer = Offer.objects.filter(paymentCode=paymentCode).first()
-        assert_true(offer, 'La oferta no existe')
-        if offer.paymentPackage.portfolio.artist.id != user_logged.id:
-            raise PermissionDenied("You are not the artist who was hired.")
-        assert_true(offer.status == 'CONTRACT_MADE', 'Posiblemente el pago ya se ha hecho o no se puede realizar ya')
+        Assertions.assert_true_raise404(offer is not None)
+        Assertions.assert_true_raise403(offer.paymentPackage.portfolio.artist.id == user_logged.id)
+        Assertions.assert_true_raise400(offer.status == 'CONTRACT_MADE',
+                                        {"status": 'El pago ya se ha hecho o no se puede realizar ya'})
         
         offer.status = 'PAYMENT_MADE'
         #try:
