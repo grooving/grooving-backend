@@ -9,26 +9,9 @@ from .serializers import CustomerSerializer, ArtistSerializer
 from utils.Assertions import Assertions
 
 
-class ArtistManager(generics.RetrieveUpdateDestroyAPIView):
+class ArtistManager(generics.CreateAPIView):
 
     serializer_class = ArtistSerializer
-
-    def get_object(self, pk=None):
-        if pk is None:
-            pk = self.kwargs['pk']
-        try:
-            return Artist.objects.get(pk=pk)
-        except Artist.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk=None, format=None):
-        if pk is None:
-            pk = self.kwargs['pk']
-        artist = self.get_object(pk)
-        logged_artist = get_logged_user(request)
-        Assertions.assert_true_raise403(logged_artist.user_id == artist.user.id)
-        serializer = ArtistSerializer(artist)
-        return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         user_type = None
@@ -46,37 +29,12 @@ class ArtistManager(generics.RetrieveUpdateDestroyAPIView):
         else:
                 raise PermissionDenied("You must be unlogged to do this action")
 
-    def update(self, request, pk=None, *args, **kwargs):
-        if pk is None:
-            pk = self.kwargs['pk']
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object(pk)
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-
-
-class CustomerManager(generics.RetrieveUpdateDestroyAPIView):
+   
+class CustomerManager(generics.CreateAPIView):
 
     serializer_class = CustomerSerializer
 
-    def get_object(self, pk=None):
-        if pk is None:
-            pk = self.kwargs['pk']
-        try:
-            return Customer.objects.get(pk=pk)
-        except Customer.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk=None, format=None):
-        if pk is None:
-            pk = self.kwargs['pk']
-        customer = self.get_object(pk)
-        logged_customer = get_logged_user(request)
-        Assertions.assert_true_raise403(logged_customer.id == customer.id)
-        serializer = CustomerSerializer(customer)
-        return Response(serializer.data)
-
+    
     def post(self, request, *args, **kwargs):
         user_type = None
         try:
@@ -92,12 +50,3 @@ class CustomerManager(generics.RetrieveUpdateDestroyAPIView):
 
         else:
                 raise PermissionDenied("You must be unlogged to do this action")
-
-    def update(self, request, pk=None, *args, **kwargs):
-        if pk is None:
-            pk = self.kwargs['pk']
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object(pk)
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
