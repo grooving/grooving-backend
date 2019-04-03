@@ -21,7 +21,7 @@ def _service_generate_unique_payment_code():
 def save_data():
 
     # System configuration
-    system_configuration1 = SystemConfiguration.objects.create( minimumPrice='20', currency='EUR', paypalTax='2.9', creditCardTax='1.9',
+    system_configuration1 = SystemConfiguration.objects.create(minimumPrice='20', currency='EUR', paypalTax='2.9', creditCardTax='1.9',
                                                                vat='21', profit='7', corporateEmail='info@grooving.com',
                                                                reportEmail='report@grooving.com', appName='Grooving',
                                                                slogan='Connecting artist with you', termsText='Terms & conditions',
@@ -451,13 +451,13 @@ def save_data():
 
     # Customers with credit card
 
-    customer1 = Customer.objects.create(user=user10_customer1, phone='639154189', holder='Rafael Esquivias Ramírez', expirationDate='2020-10-01', number='4651001401188232', cvv='797')
+    customer1 = Customer.objects.create(user=user10_customer1, phone='639154189', holder='Rafael Esquivias Ramírez', expirationDate='2020-10-01', number='4651001401188232')
     customer1.save()
-    customer2 = Customer.objects.create(user=user11_customer2, phone='664656659', holder='Jorge Jiménez del Corral', expirationDate='2027-03-01', number='4934521448108546', cvv='675')
+    customer2 = Customer.objects.create(user=user11_customer2, phone='664656659', holder='Jorge Jiménez del Corral', expirationDate='2027-03-01', number='4934521448108546')
     customer2.save()
-    customer3 = Customer.objects.create(user=user12_customer3, phone='678415820', holder='Juan Manuel Fernández', expirationDate='2025-10-01', number='4656508395720981', cvv='103')
+    customer3 = Customer.objects.create(user=user12_customer3, phone='678415820', holder='Juan Manuel Fernández', expirationDate='2025-10-01', number='4656508395720981')
     customer3.save()
-    customer4 = Customer.objects.create(user=user13_customer4, phone='627322721', holder='Miguel Romero Gutierrez', expirationDate='2027-03-01', number='4826704855401486', cvv='616')
+    customer4 = Customer.objects.create(user=user13_customer4, phone='627322721', holder='Miguel Romero Gutierrez', expirationDate='2027-03-01', number='4826704855401486')
     customer4.save()
 
     # Event location

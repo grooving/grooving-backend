@@ -121,7 +121,6 @@ class Customer(UserAbstract):
     holder = models.CharField(blank=True, null=True, max_length=255)
     expirationDate = models.DateField(blank=True, null=True, default=datetime.now)
     number = models.CharField(blank=True, null=True, max_length=16)
-    cvv = models.CharField(blank=True, null=True, max_length=3)
 
 
 class EventLocation(AbstractEntity):
