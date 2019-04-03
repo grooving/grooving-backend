@@ -43,6 +43,18 @@ def get_media():
     return 2.5
 
 def gender_to_string(portfolio):
+    genders = portfolio.artisticGender.all()
+    childGenders=genders.artisticGender_set.all()
+    numberOfChilds=len(childGenders)
+    if(numberOfChilds!=0):
+        while numberOfChilds!=0:
 
 
+def get
+def array_toString(array):
+    result = ""
+    for a in array:
+        result = result + str(a.name) + " "
+
+    return result
 
