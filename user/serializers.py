@@ -21,14 +21,14 @@ class UserRegisterSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('first_name', 'last_name', 'username', 'email', 'phone', 'photo', 'password','confirm_password')
 
 
-class ArtistSerializer(serializers.HyperlinkedModelSerializer):
+class ArtistSerializer(serializers.ModelSerializer):
     artisticName = serializers.CharField()
 
     class Meta:
         depth = 2
         model = Artist
         user = UserRegisterSerializer()
-        fields = ('artisticName', 'user')
+        fields = ('user','artisticName')
 
     def save(self):
         artist = Artist()
@@ -43,12 +43,10 @@ class ArtistSerializer(serializers.HyperlinkedModelSerializer):
                                    last_name=json.get('last_name'), email=json.get('email'))
 
         portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'))
-        artist.user = user
 
-        artist.photo = json.get('photo')
-        artist.phone = json.get('phone')
-        artist.portfolio = portfolio1
-        artist.save()
+
+        artist = Artist.objects.create(photo='photo',phone='phone',portfolio=portfolio1,user=user)
+
         return artist
 
     def validate_artist(self, request):

@@ -3,7 +3,7 @@ from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user, get_user_type, get_customer, get_artist
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import OfferSerializer, CodeSerializer
+from .serializers import OfferSerializer
 from rest_framework import status
 from django.http import Http404
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -75,7 +75,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
 
                     if articustomer.user_id == customer_creator.user_id:
                         serializer = OfferSerializer(offer, data=request.data, partial=True)
-                        serializer.save(pk,logged_user=articustomer)
+                        serializer.save(pk, logged_user=articustomer)
                         return Response(status=status.HTTP_200_OK)
                     else:
                         return Response(status=status.HTTP_400_BAD_REQUEST)
