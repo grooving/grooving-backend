@@ -80,6 +80,7 @@ class OfferSerializer(serializers.ModelSerializer):
         #except:
             #offer.status == 'CONTRACT_MADE'
         offer.save()
+        return offer
 
     # Se pondrá service delante de nuestros métodos para no sobrescribir por error métodos del serializer
     @staticmethod
