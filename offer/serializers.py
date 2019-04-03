@@ -43,8 +43,9 @@ class OfferSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Offer
-        fields = ('id', 'description', 'status', 'date', 'hours', 'price', 'paymentPackage',
-                  'paymentPackage_id', 'eventLocation', 'eventLocation_id')
+        fields = ('id', 'reason', 'appliedVAT', 'description', 'status', 'date', 'hours', 'price', 'currency',
+                  'paymentCode', 'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id',
+                  'transaction', 'transaction_id', 'rating', 'rating_id')
 
     # Esto sobrescribe una función heredada del serializer.
     def save(self, pk=None, logged_user=None):
@@ -92,15 +93,15 @@ class OfferSerializer(serializers.ModelSerializer):
         if offer.paymentPackage.performance is not None:
             offer.hours = offer.paymentPackage.performance.hours
             offer.price = offer.paymentPackage.performance.price
-            offer.currency = offer.paymentPackage.performance.currency
+            offer.currency = offer.paymentPackage.currency
         elif offer.paymentPackage.fare is not None:
             offer.hours = json.get('hours')
             offer.price = offer.paymentPackage.fare.priceHour * Decimal(json.get('hours'))
-            offer.currency = offer.paymentPackage.fare.currency
+            offer.currency = offer.paymentPackage.currency
         elif offer.paymentPackage.custom is not None:
             offer.hours = json.get('hours')
             offer.price = json.get('price')
-            offer.currency = offer.paymentPackage.custom.currency
+            offer.currency = offer.paymentPackage.currency
         offer.save()
         return offer
 
@@ -169,38 +170,61 @@ class OfferSerializer(serializers.ModelSerializer):
         return payment_code
 
     def validate(self, request):
+
+        # Customer validation
+
         customer = Customer.objects.filter(user_id=request.user.id).first()
+
         if customer is None:
             raise serializers.ValidationError("user isn't authorized")
+
+        # Body request validation
+
         json = request.data
+
         if json.get("description") is None:
             raise serializers.ValidationError("description field not provided")
         if json.get("date") is None:
             raise serializers.ValidationError("date field not provided")
+
+            # Past date value validation
+
         elif datetime.datetime.strptime(json.get('date'), '%Y-%m-%dT%H:%M:%S') < datetime.datetime.now():
             raise serializers.ValidationError("date value is past")
+
         if json.get("paymentPackage_id") is None:
             raise serializers.ValidationError("paymentPackage_id field not provided")
-        paymentPackage = PaymentPackage.objects.filter(pk=json.get("paymentPackage_id")).first()
-        if paymentPackage is None:
-            raise serializers.ValidationError("paymentPackage doesn't exist")
-        elif paymentPackage.fare is not None:
-            if json.get("hours") is None:
-                raise serializers.ValidationError("hours field not provided")
-        elif paymentPackage.custom is not None:
-            if json.get("price") is None:
-                raise serializers.ValidationError("price field not provided")
-            elif Decimal(json.get("price")) < paymentPackage.custom.minimumPrice:
-                raise serializers.ValidationError("price entered it's below of minimum price")
-            if json.get("hours") is None:
-                raise serializers.ValidationError("hours field not provided")
+        else:
+            paymentPackage = PaymentPackage.objects.filter(pk=json.get("paymentPackage_id")).first()
+
+            if paymentPackage is None:
+                raise serializers.ValidationError("paymentPackage doesn't exist")
+
+            # Custom offer properties for each paymentPackage type
+
+            elif paymentPackage.fare is not None:
+                if json.get("hours") is None:
+                    raise serializers.ValidationError("hours field not provided")
+
+            elif paymentPackage.custom is not None:
+                if json.get("price") is None:
+                    raise serializers.ValidationError("price field not provided")
+                elif Decimal(json.get("price")) < paymentPackage.custom.minimumPrice:
+                    raise serializers.ValidationError("price entered it's below of minimum price")
+                if json.get("hours") is None:
+                    raise serializers.ValidationError("hours field not provided")
+
         if json.get("eventLocation_id") is None:
             raise serializers.ValidationError("eventLocation_id field not provided")
         eventLocation = EventLocation.objects.filter(pk=request.data.get("eventLocation_id")).first()
         if eventLocation is None:
             raise serializers.ValidationError("eventLocation doesn't exist")
+
+        # User owner validation
+
         elif eventLocation.customer.user != request.user:
             raise serializers.ValidationError("can't reference this eventLocation")
+
         return True
 
 
