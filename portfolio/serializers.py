@@ -64,11 +64,12 @@ class PortfolioSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField('list_images')
     videos = serializers.SerializerMethodField('list_videos')
     main_photo = serializers.SerializerMethodField('list_photo')
+    artistId = serializers.SerializerMethodField('list_artist')
     artisticGenders = serializers.SerializerMethodField('list_genders')
 
     class Meta:
         model = Portfolio
-        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGenders')
+        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGenders', 'artistId')
 
     @staticmethod
     def list_images(self):
@@ -108,6 +109,14 @@ class PortfolioSerializer(serializers.ModelSerializer):
         for gender in genders:
             genderlist.append(gender.name)
         return genderlist
+
+    @staticmethod
+    def list_artist(self):
+
+        artist = Artist.objects.filter(portfolio=self).first()
+        artistId = artist.id
+
+        return artistId
 
     def save(self):
 
