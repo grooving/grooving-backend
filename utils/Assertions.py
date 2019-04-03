@@ -25,7 +25,7 @@ class Assertions:
         if not assertion:
             print(code)
             print(details)
-            exception = APIException(code=code, details=details)
+            exception = APIException(code=code, detail=details)
             exception.status_code = http_error
             raise exception
 

@@ -1,9 +1,9 @@
 from Grooving.models import Offer, Customer
 from django.core.exceptions import PermissionDenied
-from utils.authentication_utils import get_logged_user,get_user_type, get_customer, get_artist
+from utils.authentication_utils import get_logged_user, get_user_type, get_customer, get_artist
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import OfferSerializer
+from .serializers import OfferSerializer, CodeSerializer
 from rest_framework import status
 from django.http import Http404
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -114,20 +114,21 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
 
-    def get_queryset(self):
+    def get_object(self):
         offer_queryset = Offer.objects.filter(pk=self.request.query_params.get("offer", None))
         return offer_queryset
 
     def get(self, request, *args, **kwargs):
-        customer = get_customer()
+        customer = get_customer(request)
         Assertions.assert_true_raise403(customer is not None)
-        offer = self.get_queryset().first()
+        offer = self.get_object().first()
         Assertions.assert_true_raise404(offer is not None)
         Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id)
-        #serializer = OfferCodeSerializer(offer)
+
+        #serializer = CodeSerializer(offer)
         #code = serializer.data.get("paymentCode")
         return Response({"paymentCode": str(offer.paymentCode)}, status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
-        OfferSerializer.service_made_payment_artist(request.data.get("paymentCode"), get_artist)
+        OfferSerializer.service_made_payment_artist(request.data.get("paymentCode"), get_artist(request))
         return Response(status=status.HTTP_200_OK)

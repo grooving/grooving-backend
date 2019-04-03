@@ -15,7 +15,7 @@ from utils.authentication_utils import get_logged_user,get_user_type,is_user_aut
 class PaymentPackageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentPackage
-        fields = ('id', 'description', 'appliedVAT', 'portfolio_id', 'performance_id', 'fare_id', 'custom_id')
+        fields = ('id', 'description', 'portfolio_id', 'performance_id', 'fare_id', 'custom_id')
 
 
 class EventLocationSerializer(serializers.ModelSerializer):
@@ -23,6 +23,10 @@ class EventLocationSerializer(serializers.ModelSerializer):
         model = EventLocation
         fields = ('id', 'address', 'equipment', 'description')
 
+class CodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Offer
+        fields = ('paymentCode',)
 
 class OfferSerializer(serializers.ModelSerializer):
 
