@@ -30,13 +30,19 @@ def index_all():
             biography = portfolio.biography
             artisticGender = portfolio.artisticGender # TODO: añadir hijos.
             zone = portfolio.zone # TODO: añadir hijos.
+            rating= get_media()
 
             writer.add_document(id=id, artisticName=artisticName, biography=biography,
                                 artisticGender=artisticGender, zone=zone)
+
         portfolios = paginator.page(portfolios.next_page_number())
     writer.commit()
 
 
+def get_media():
+    return 2.5
+
+def gender_to_string(portfolio):
 
 
 
