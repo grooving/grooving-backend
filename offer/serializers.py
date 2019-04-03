@@ -9,7 +9,7 @@ import random
 import string
 import datetime
 from django.utils import timezone
-from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
+from utils.authentication_utils import get_logged_user,get_user_type
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -23,10 +23,12 @@ class EventLocationSerializer(serializers.ModelSerializer):
         model = EventLocation
         fields = ('id', 'address', 'equipment', 'description')
 
+
 class CodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Offer
         fields = ('paymentCode',)
+
 
 class OfferSerializer(serializers.ModelSerializer):
 
@@ -121,7 +123,7 @@ class OfferSerializer(serializers.ModelSerializer):
             creator = Customer.objects.filter(pk=offer_in_db.eventLocation.customer.id).first()
             if get_user_type(logged_user) == 'Customer' and creator == logged_user:
                 customer_flowstop_transitions = {'PENDING': 'WITHDRAWN',
-                                                 'CONTRACT_MADE': 'CANCELED'}
+                                                 'CONTRACT_MADE': 'CANCELLED_CUSTOMER'}
 
             artistReceiver = Artist.objects.filter(pk=offer_in_db.paymentPackage.portfolio.artist.id).first()
             print(artistReceiver)
@@ -129,7 +131,10 @@ class OfferSerializer(serializers.ModelSerializer):
             if get_user_type(logged_user) == 'Artist' and artistReceiver == logged_user:
                 normal_transitions = {'PENDING': 'CONTRACT_MADE'}
                 artist_flowstop_transitions = {'PENDING': 'REJECTED',
-                                               'CONTRACT_MADE': 'CANCELED'}
+                                               'CONTRACT_MADE': 'CANCELLED_ARTIST'}
+                if json_status == 'CONTRACT_MADE':
+                    Assertions.assert_true_raise400(logged_user.iban is not None,
+                                                    {"ERROR_CODE:""You must introduce your bank account before"})
 
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
@@ -140,6 +145,7 @@ class OfferSerializer(serializers.ModelSerializer):
 
             assert_true(allowed_transition, "Not allowed status transition: " + status_in_db + " to "
                         + json_status + ".")
+
 
             if json_status == "CONTRACT_MADE":
                 while True:
