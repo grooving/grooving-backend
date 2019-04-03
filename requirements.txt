@@ -21,3 +21,4 @@ uritemplate==3.0.0
 urllib3==1.24.1
 gunicorn
 django_heroku
+Whoosh == 2.7.4
