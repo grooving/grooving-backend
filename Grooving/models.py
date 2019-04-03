@@ -67,7 +67,7 @@ class Portfolio(AbstractEntity):
 
 class Calendar(AbstractEntity):
     days = ArrayField(models.CharField(max_length=10))
-    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
+    portfolio = models.OneToOneField(Portfolio, on_delete=models.CASCADE)
 
 
 class Artist(UserAbstract):
@@ -174,7 +174,6 @@ class Offer(AbstractEntity):
     paymentCode = models.CharField(max_length=140, unique=True, null=True, blank=True)
     paymentPackage = models.ForeignKey(PaymentPackage, on_delete=models.PROTECT)
     eventLocation = models.ForeignKey(EventLocation, on_delete=models.PROTECT)
-
     reason = models.TextField(blank=True, null=True)
     appliedVAT = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
     transaction = models.OneToOneField(Transaction, on_delete=models.SET_NULL, null=True, blank=True)
