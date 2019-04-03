@@ -48,7 +48,7 @@ class ListArtistOffersSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Offer
-        fields = ('id', 'description', 'status', 'price', 'date', 'hours', 'eventLocation')
+        fields = ('id', 'description', 'status', 'price', 'date', 'hours', 'eventLocation', 'reason')
 
 
 class OfferPaymentPackageSerializer(serializers.HyperlinkedModelSerializer):
@@ -78,4 +78,4 @@ class ListCustomerOffersSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         depth = 4
         model = Offer
-        fields = ('id', 'description', 'status', 'price', 'date', 'hours', 'paymentPackage', 'eventLocation', 'rating')
+        fields = ('id', 'description', 'status', 'price', 'date', 'hours', 'paymentPackage', 'eventLocation', 'rating', 'reason')
