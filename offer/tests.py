@@ -10,7 +10,7 @@ class OfferTestCase(APITestCase):
 
     def test_manage_offer_artist(self):
 
-        print("TEST_MANAGE_OFFER_CUSTOMER\n")
+        print("TEST_MANAGE_OFFER_ARTIST\n")
 
         days = ['2019-06-02', '2019-08-02', '2019-10-15', '2019-11-02']
         date = datetime.datetime(2020,2,7,8,49,56,81433, pytz.UTC)
@@ -43,9 +43,9 @@ class OfferTestCase(APITestCase):
         artist1 = Artist.objects.create(user=user1_artist1, portfolio=portfolio1, phone='600304999')
         artist1.save()
 
-        performance1 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance1 = Performance.objects.create(info="info", hours=3, price=200.0)
         performance1.save()
-        payment_package1 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+        payment_package1 = PaymentPackage.objects.create(description="Paymentcription",
                                                          portfolio=portfolio1, performance=performance1)
 
         payment_package1.save()
@@ -54,8 +54,8 @@ class OfferTestCase(APITestCase):
         calendar1.save()
 
         offer1 = Offer.objects.create(description="DESCRIPTIONOFFER1", status='PENDING', date=date, price="200",
-                                      currency="EUR", hours=2, paymentCode='EEE', eventLocation=event_location1,
-                                      paymentPackage=payment_package1)
+                                      hours=2, paymentCode='EEE', eventLocation=event_location1,
+                                      paymentPackage=payment_package1, appliedVAT="0.35")
         offer1.save()
 
         data1 = {"username": "artist1", "password": "artist1artist1"}
@@ -171,23 +171,23 @@ class OfferTestCase(APITestCase):
         artist1 = Artist.objects.create(user=user1, portfolio=portfolio1, phone='600304999')
         artist1.save()
 
-        performance = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance = Performance.objects.create(info="info", hours=3, price=200.0)
         performance.save()
-        payment_package1 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+        payment_package1 = PaymentPackage.objects.create(description="Paymentcription",
                                                          portfolio=portfolio1, performance=performance)
 
         payment_package1.save()
 
-        fare= Fare.objects.create(priceHour=20.0, currency="EUR")
+        fare= Fare.objects.create(priceHour=20.0)
         fare.save()
-        payment_package2 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+        payment_package2 = PaymentPackage.objects.create(description="Paymentcription",
                                                          portfolio=portfolio1, fare=fare)
 
         payment_package2.save()
 
-        custom = Custom.objects.create(minimumPrice=50.0, currency="EUR")
+        custom = Custom.objects.create(minimumPrice=50.0)
         custom.save()
-        payment_package3 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+        payment_package3 = PaymentPackage.objects.create(description="Paymentcription",
                                                          portfolio=portfolio1, custom=custom)
 
         payment_package3.save()
@@ -233,7 +233,6 @@ class OfferTestCase(APITestCase):
             "date": "2019-05-10T10:00:00",
             "hours": 2.5,
             "price": 100.0,
-            "currency": "EUR",
             "paymentPackage_id": payment_package3.id,
             "eventLocation_id": event_location.id
         }
@@ -248,7 +247,6 @@ class OfferTestCase(APITestCase):
             "date": "2019-05-10T10:00:00",
             "hours": 2.5,
             "price": 10.0,
-            "currency": "EUR",
             "paymentPackage_id": payment_package3.id,
             "eventLocation_id": event_location.id
         }
@@ -264,7 +262,6 @@ class OfferTestCase(APITestCase):
             "date": "2019-05-10T10:00:00",
             "hours": 2.5,
             "price": 100.0,
-            "currency": "EUR",
             "paymentPackage_id": payment_package3.id,
             "eventLocation_id": event_location.id
         }

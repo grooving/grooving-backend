@@ -1,12 +1,13 @@
 from Grooving.models import Offer, Customer
 from django.core.exceptions import PermissionDenied
-from utils.authentication_utils import get_logged_user,get_user_type
+from utils.authentication_utils import get_logged_user, get_user_type, get_customer, get_artist
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import OfferSerializer,OfferCodeSerializer
+from .serializers import OfferSerializer
 from rest_framework import status
 from django.http import Http404
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from utils.Assertions import Assertions
 
 
 class OfferManage(generics.RetrieveUpdateDestroyAPIView):
@@ -74,7 +75,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
 
                     if articustomer.user_id == customer_creator.user_id:
                         serializer = OfferSerializer(offer, data=request.data, partial=True)
-                        serializer.save(pk,logged_user=articustomer)
+                        serializer.save(pk, logged_user=articustomer)
                         return Response(status=status.HTTP_200_OK)
                     else:
                         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -111,41 +112,23 @@ class CreateOffer(generics.CreateAPIView):
 
 class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
     queryset = Offer.objects.all()
-    serializer_class = OfferCodeSerializer
+    serializer_class = OfferSerializer
 
     def get_object(self):
-        queryset=self.filter_queryset(self.get_queryset())
-        try:
-            obj=queryset.get(pk=self.request.user.offer_id)
-            self.check_object_permissions(self.request,obj)
-            return obj
-
-        except Offer.DoesNotExist:
-            raise Http404
+        offer_queryset = Offer.objects.filter(pk=self.request.query_params.get("offer", None))
+        return offer_queryset
 
     def get(self, request, *args, **kwargs):
-        user = get_logged_user(request)
-        user_type = get_user_type(user)
-        if not user_type or user_type != "Customer":
-            raise PermissionDenied("Only customers can call this.")
-        offer_id = request.GET.get("offer", None)
-        offer = self.pepe(offer_id)
-        if not offer.eventLocation.customer.id == user.id:
-            raise PermissionDenied("You are a customer, but you are not the owner of this offer")
-        serializer = OfferCodeSerializer(offer)
-        code = serializer.data.get("paymentCode")
-        return Response({"paymentCode": str(code)}, status.HTTP_200_OK)
+        customer = get_customer(request)
+        Assertions.assert_true_raise403(customer is not None)
+        offer = self.get_object().first()
+        Assertions.assert_true_raise404(offer is not None)
+        Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id)
 
-    def put(self, request, pk=None, *args, **kwargs):
-        if pk is None:
-            pk = self.kwargs['pk']
-        try:
-            offer1 = Offer.objects.filter(paymentCode=pk).first()
-            offer1.status = "PAYMENT_MADE"
-            offer1.save()
+        #serializer = CodeSerializer(offer)
+        #code = serializer.data.get("paymentCode")
+        return Response({"paymentCode": str(offer.paymentCode)}, status.HTTP_200_OK)
 
-        except:
-            raise PermissionDenied()
-
-        #OfferSerializer.service_made_payment_artist(, get_logged_user(request))
+    def put(self, request, *args, **kwargs):
+        OfferSerializer.service_made_payment_artist(request.data.get("paymentCode"), get_artist(request))
         return Response(status=status.HTTP_200_OK)

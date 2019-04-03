@@ -2,20 +2,20 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.core.exceptions import PermissionDenied
 from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist
-from utils.Assertions import assert_true
+from utils.Assertions import assert_true, Assertions
 from django.db import IntegrityError
 from decimal import Decimal
 import random
 import string
 import datetime
 from django.utils import timezone
-from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
+from utils.authentication_utils import get_logged_user,get_user_type
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentPackage
-        fields = ('id', 'description', 'appliedVAT', 'portfolio_id', 'performance_id', 'fare_id', 'custom_id')
+        fields = ('id', 'description', 'portfolio_id', 'performance_id', 'fare_id', 'custom_id')
 
 
 class EventLocationSerializer(serializers.ModelSerializer):
@@ -24,16 +24,11 @@ class EventLocationSerializer(serializers.ModelSerializer):
         fields = ('id', 'address', 'equipment', 'description')
 
 
-
-
-
-class OfferCodeSerializer(serializers.ModelSerializer):
-
-
+class CodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Offer
-        fields = ('id', 'description', 'status', 'date', 'hours', 'price','paymentPackage',
-                  'paymentPackage_id', 'eventLocation', 'eventLocation_id','paymentCode')
+        fields = ('paymentCode',)
+
 
 class OfferSerializer(serializers.ModelSerializer):
 
@@ -46,8 +41,8 @@ class OfferSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Offer
-        fields = ('id', 'description', 'status', 'date', 'hours', 'price','paymentPackage',
-                  'paymentPackage_id', 'eventLocation', 'eventLocation_id')
+        fields = ('id', 'description', 'status', 'date', 'hours', 'price', 'paymentPackage',
+                  'paymentPackage_id', 'eventLocation', 'eventLocation_id','reason')
 
     # Esto sobrescribe una función heredada del serializer.
     def save(self, pk=None, logged_user=None):
@@ -65,16 +60,15 @@ class OfferSerializer(serializers.ModelSerializer):
         return offer
 
     @staticmethod
-    def service_made_payment_artist(paymentCode,user_logged):
-        user_type = get_user_type(user_logged)
-        if not None and user_type != "Artist":
-            raise PermissionDenied("Only an artist can get the payment")
+    def service_made_payment_artist(paymentCode, user_logged):
+        Assertions.assert_true_raise403(user_logged is not None)
+        Assertions.assert_true_raise400(paymentCode is not None, {"paymentCode": "null payment code"})
 
         offer = Offer.objects.filter(paymentCode=paymentCode).first()
-        assert_true(offer, 'La oferta no existe')
-        if offer.paymentPackage.portfolio.artist.id != user_logged.id:
-            raise PermissionDenied("You are not the artist who was hired.")
-        assert_true(offer.status == 'CONTRACT_MADE', 'Posiblemente el pago ya se ha hecho o no se puede realizar ya')
+        Assertions.assert_true_raise404(offer is not None)
+        Assertions.assert_true_raise403(offer.paymentPackage.portfolio.artist.id == user_logged.id)
+        Assertions.assert_true_raise400(offer.status == 'CONTRACT_MADE',
+                                        {"status": 'El pago ya se ha hecho o no se puede realizar ya'})
         
         offer.status = 'PAYMENT_MADE'
         #try:
@@ -129,15 +123,17 @@ class OfferSerializer(serializers.ModelSerializer):
             creator = Customer.objects.filter(pk=offer_in_db.eventLocation.customer.id).first()
             if get_user_type(logged_user) == 'Customer' and creator == logged_user:
                 customer_flowstop_transitions = {'PENDING': 'WITHDRAWN',
-                                                 'CONTRACT_MADE': 'CANCELED'}
+                                                 'CONTRACT_MADE': 'CANCELLED_CUSTOMER'}
 
             artistReceiver = Artist.objects.filter(pk=offer_in_db.paymentPackage.portfolio.artist.id).first()
-            print(artistReceiver)
-            print(logged_user)
+
             if get_user_type(logged_user) == 'Artist' and artistReceiver == logged_user:
                 normal_transitions = {'PENDING': 'CONTRACT_MADE'}
                 artist_flowstop_transitions = {'PENDING': 'REJECTED',
-                                               'CONTRACT_MADE': 'CANCELED'}
+                                               'CONTRACT_MADE': 'CANCELLED_ARTIST'}
+                if json_status == 'CONTRACT_MADE':
+                    Assertions.assert_true_raise400(logged_user.iban is not None,
+                                                    {"ERROR_CODE:""You must introduce your bank account before"})
 
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
@@ -149,9 +145,10 @@ class OfferSerializer(serializers.ModelSerializer):
             assert_true(allowed_transition, "Not allowed status transition: " + status_in_db + " to "
                         + json_status + ".")
 
+
             if json_status == "CONTRACT_MADE":
                 while True:
-                    # noinspection PyBroadException
+
                     try:
                         offer_in_db.paymentCode = self._service_generate_unique_payment_code()
                         offer_in_db.save()
@@ -161,6 +158,9 @@ class OfferSerializer(serializers.ModelSerializer):
 
             print("ESTADO DB ANTES:" + offer_in_db.status)
             offer_in_db.status = json_status
+            offer_in_db.reason = json.get('reason')
+            if json_status == "CONTRACT_MADE" or json_status == "PAYMENT_MADE":
+                offer_in_db.reason = None
             offer_in_db.save()
             print("ESTADO DB DESPUES:" + offer_in_db.status)
             return offer_in_db

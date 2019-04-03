@@ -27,10 +27,10 @@ from artist.views import ListArtist
 from offers.views import ListArtistOffers, ListCustomerOffers
 from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage
 from calendars.views import CalendarByArtist, CalendarManager, CreateCalendar
-from artistGender.views import ArtisticGenderManager, CreateArtisticGender
+from artistGender.views import ArtisticGenderManager, CreateArtisticGender, ListArtisticGenders
 from zone.views import ZoneManager, CreateZone
+from user.views import ArtistManager,CustomerManager
 from eventLocation.views import EventLocationManager, CreateEventLocation
-from rest_framework.authtoken.views import obtain_auth_token
 
 router = routers.DefaultRouter()
 
@@ -55,13 +55,18 @@ urlpatterns = [
     url(r'^calendar/(?P<pk>[0-9]+)/$', CalendarManager.as_view()),
     url(r'^calendar/$', CreateCalendar.as_view()),
     url(r'^artisticGender/$', CreateArtisticGender.as_view()),
+    url(r'^artisticGenders/$', ListArtisticGenders.as_view()),
     url(r'^artisticGender/(?P<pk>[0-9]+)/ ', ArtisticGenderManager.as_view()),
     url(r'^zone/$', CreateZone.as_view()),
     url(r'^zone/(?P<pk>[0-9]+)/$', ZoneManager.as_view()),
     path('api/login/', LoginManager.as_view(), name='login'),
+    url(r'^paymentCode/$', PaymentCode.as_view()),
+    url(r'^signupArtist/$', ArtistManager.as_view()),
+    url(r'^signupCustomer/$', CustomerManager.as_view()),
     url(r'^artist/offers/$', ListArtistOffers.as_view()),
     url(r'^customer/offers/$', ListCustomerOffers.as_view()),
-    url(r'^paymentCode/$', PaymentCode.as_view())
+    url(r'^artist/(?P<pk>[0-9]+)/$', ArtistManager.as_view()),
+    url(r'^customer/(?P<pk>[0-9]+)/$', CustomerManager.as_view()),
 
 
 ]
