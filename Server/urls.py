@@ -64,8 +64,7 @@ urlpatterns = [
     url(r'^signupArtist/$', ArtistRegister.as_view()),
     url(r'^signupCustomer/$', CustomerRegister.as_view()),
     url(r'^artist/offers/$', ListArtistOffers.as_view()),
-    url(r'^customer/offers/$', ListCustomerOffers.as_view()),
-    url(r'^paymentCode/$', PaymentCode.as_view()),
+    url(r'^customer/offers/$', ListCustomerOffers.as_view())
 
 
 ]
