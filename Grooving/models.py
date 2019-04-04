@@ -1,5 +1,4 @@
 from decimal import Decimal
-from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -118,10 +117,9 @@ class PaymentPackage(AbstractEntity):
 
 
 class Customer(UserAbstract):
-    holder = models.CharField(max_length=255)
-    expirationDate = models.DateField(default=datetime.now)
-    number = models.CharField(max_length=16)
-    cvv = models.CharField(max_length=3)
+    holder = models.CharField(blank=True, null=True, max_length=255)
+    expirationDate = models.DateField(blank=True, null=True)
+    number = models.CharField(blank=True, null=True, max_length=16)
 
 
 class EventLocation(AbstractEntity):
@@ -149,7 +147,7 @@ OfferStatusField = (
 
 class Transaction(AbstractEntity):
     holder = models.CharField(blank=True, null=True, max_length=255)
-    expirationDate = models.DateField(blank=True, null=True, default=datetime.now)
+    expirationDate = models.DateField(blank=True, null=True)
     number = models.CharField(blank=True, null=True, max_length=16)
     cvv = models.CharField(blank=True, null=True, max_length=3)
     ibanCustomer = models.CharField(blank=True, null=True, max_length=34)
@@ -167,8 +165,7 @@ class Offer(AbstractEntity):
     description = models.TextField(default='Description', max_length=255)
     status = models.CharField(max_length=20, choices=OfferStatusField, default='PENDING')
     date = models.DateTimeField(default=timezone.now)
-    hours = models.DecimalField(blank=True, null=True, max_digits=3, decimal_places=1,
-                                validators=[MinValueValidator(Decimal('0.5'))])
+    hours = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.5'))])
     price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
     currency = models.CharField(default='EUR', max_length=3)
     paymentCode = models.CharField(max_length=140, unique=True, null=True, blank=True)

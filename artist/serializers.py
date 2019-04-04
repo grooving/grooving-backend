@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from Grooving.models import Artist, Portfolio
 from user.serializers import UserSerializer
@@ -19,7 +19,6 @@ class ArtistInfoSerializer(serializers.HyperlinkedModelSerializer):
 
 class ShortPortfolioSerializer(serializers.ModelSerializer):
     artisticGender = ArtisticGenderSerializer(read_only=True, many=True)
-
     class Meta:
 
         model = Portfolio
@@ -125,3 +124,4 @@ class ArtistSerializer(serializers.ModelSerializer):
         if len(password) < 8:
             raise serializers.ValidationError("Password length is too short")
         return True
+        fields = ('id', 'rating', 'photo', 'portfolio')
