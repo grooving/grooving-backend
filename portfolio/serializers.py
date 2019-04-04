@@ -121,14 +121,16 @@ class PortfolioSerializer(serializers.ModelSerializer):
 
     def save(self, loggedUser):
 
-        portfolio = Portfolio.objects.get(pk=self.initial_data.get('id'))
-        if loggedUser.portfolio.id == portfolio.id:
-            portfolio = self._service_update(self.initial_data, portfolio)
-            portfolio.save()
-            return portfolio
+        if Portfolio.objects.filter(pk=self.initial_data.get('id')).first():
+            portfolio = Portfolio.objects.filter(pk=self.initial_data.get('id')).first()
+            if loggedUser.portfolio.id == portfolio.id:
+                portfolio = self._service_update(self.initial_data, portfolio)
+                portfolio.save()
+                return portfolio
+            else:
+                return Assertions.assert_true_raise403(False, self.initial_data)
         else:
-            return Assertions.assert_true_raise403(False, self.initial_data)
-
+            return Assertions.assert_true_raise404(False)
 
     @staticmethod
     def _service_update(json: dict, portfolio_in_db):
