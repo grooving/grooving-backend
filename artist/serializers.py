@@ -82,7 +82,7 @@ class ArtistSerializer(serializers.ModelSerializer):
 
         portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'))
 
-        artist = Artist.objects.create(photo='photo', phone='phone',portfolio=portfolio1,user=user)
+        artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'),portfolio=portfolio1,user=user)
 
         return artist
 
