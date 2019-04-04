@@ -65,7 +65,6 @@ class ArtistSerializer(serializers.ModelSerializer):
         user_names = User.objects.values_list('username', flat=True)
         if json.get('username') != user.username:
             Assertions.assert_true_raise400('username' not in user_names, {"Username already in the system"})
-
         user.first_name = json.get('first_name')
         Assertions.assert_true_raise400(user.first_name, {"First name can't be null"})
         user.last_name = json.get('last_name')
@@ -92,7 +91,7 @@ class ArtistSerializer(serializers.ModelSerializer):
     def validate_artist(request):
 
         user_names = User.objects.values_list('username', flat=True)
-
+        emails = User.objects.values_list('email', flat=True)
         password = request.data.get("password")
         username = request.data.get("username")
 
@@ -102,6 +101,8 @@ class ArtistSerializer(serializers.ModelSerializer):
 
         if username in user_names:
             raise serializers.ValidationError("Username already used in the system")
+        if email in emails:
+            raise serializers.ValidationError("Email already used in the system")
         if username is None:
             raise serializers.ValidationError("Username field not provided")
         if password is None:
@@ -130,4 +131,3 @@ class ArtistSerializer(serializers.ModelSerializer):
         if len(password) < 8:
             raise serializers.ValidationError("Password length is too short")
         return True
-

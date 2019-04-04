@@ -82,12 +82,15 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
     def validate_customer(self, request):
 
         user_names = User.objects.values_list('username', flat=True)
+        emails = User.objects.values_list('email', flat=True)
         password = request.data.get("password")
         username = request.data.get("username")
         email = request.data.get("email")
         first_name = request.data.get("first_name")
         last_name = request.data.get("last_name")
 
+        if email in emails:
+            raise serializers.ValidationError("Email already used in the system")
         if username in user_names:
             raise serializers.ValidationError("Username already used in the system")
         if username is None:
