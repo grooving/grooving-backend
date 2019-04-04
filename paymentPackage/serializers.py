@@ -5,21 +5,34 @@ from decimal import Decimal
 from utils.Assertions import assert_true
 
 
-class CustomSerializer(serializers.ModelSerializer):
+class CurrencySerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = PaymentPackage
+        fields = ('currency',)
+
+
+class CustomSerializer(serializers.HyperlinkedModelSerializer):
+
+    currency = CurrencySerializer(read_only=True)
 
     class Meta:
         model = Custom
         fields = ('id', 'minimumPrice', 'currency')
 
 
-class FareSerializer(serializers.ModelSerializer):
+class FareSerializer(serializers.HyperlinkedModelSerializer):
+
+    currency = CurrencySerializer(read_only=True)
 
     class Meta:
         model = Fare
         fields = ('id', 'priceHour', 'currency')
 
 
-class PerformanceSerializer(serializers.ModelSerializer):
+class PerformanceSerializer(serializers.HyperlinkedModelSerializer):
+
+    currency = CurrencySerializer(read_only=True)
 
     class Meta:
         model = Performance
@@ -27,15 +40,26 @@ class PerformanceSerializer(serializers.ModelSerializer):
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
-
     custom = CustomSerializer(read_only=True)
     fare = FareSerializer(read_only=True)
     performance = PerformanceSerializer(read_only=True)
-    appliedVAT = serializers.DecimalField(max_digits=5, decimal_places=2, coerce_to_string=True)
 
     class Meta:
         model = PaymentPackage
-        fields = ('id', 'description', 'appliedVAT', 'custom', 'custom_id', 'fare', 'fare_id', 'performance', 'performance_id')
+        fields = ('id', 'description', 'custom', 'custom_id', 'fare', 'fare_id', 'performance', 'performance_id')
+
+    @staticmethod
+    def list_payment(self):
+
+        paymentPackage = PaymentPackage.objects.get(pk=self.id)
+        package = ""
+        if paymentPackage.performance is not None:
+            package = package + "{type: Performance,"
+        elif paymentPackage.custom is not None:
+            package = "Custom"
+        elif paymentPackage.fare is not None:
+            package = "Fare"
+        return package
 
     def save(self):
         if self.initial_data.get('id') is None:
@@ -106,3 +130,31 @@ class PaymentPackageSerializer(serializers.ModelSerializer):
             custom.save()
 
         return paymentPackage_in_db
+
+
+class PaymentPackageSerializerShort(serializers.ModelSerializer):
+
+    paymentPackage = serializers.SerializerMethodField('list_payment')
+
+    class Meta:
+        model = PaymentPackage
+        fields = ('id', 'description', 'currency', 'paymentPackage')
+
+    @staticmethod
+    def list_payment(self):
+
+        paymentPackage = PaymentPackage.objects.get(pk=self.id)
+        package = {}
+        if paymentPackage.performance is not None:
+            package['type'] = "Performance"
+            package['info'] = paymentPackage.performance.info
+            package['hours'] = paymentPackage.performance.hours
+            package['price'] = paymentPackage.performance.price
+        elif paymentPackage.custom is not None:
+            package['type'] = "Custom"
+            package['priceHour'] = paymentPackage.performance.priceHour
+        elif paymentPackage.fare is not None:
+            package['type'] = "Fare"
+            package['minimumPrice'] = paymentPackage.performance.minimumPrice
+
+        return package

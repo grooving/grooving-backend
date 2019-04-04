@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from Grooving.models import Portfolio, Calendar, ArtisticGender, PortfolioModule, Zone, PaymentPackage, Artist
-from utils.Assertions import assert_true
+from utils.Assertions import Assertions
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -119,18 +119,23 @@ class PortfolioSerializer(serializers.ModelSerializer):
 
         return artistId
 
-    def save(self):
+    def save(self, loggedUser):
 
-        print("Clave primaria:" + str(self.initial_data.get('id')))
-        portfolio = Portfolio.objects.get(pk=self.initial_data.get('id'))
-        portfolio = self._service_update(self.initial_data, portfolio)
-        portfolio.save()
-        return portfolio
+        if Portfolio.objects.filter(pk=self.initial_data.get('id')).first():
+            portfolio = Portfolio.objects.filter(pk=self.initial_data.get('id')).first()
+            if loggedUser.portfolio.id == portfolio.id:
+                portfolio = self._service_update(self.initial_data, portfolio)
+                portfolio.save()
+                return portfolio
+            else:
+                return Assertions.assert_true_raise403(False, self.initial_data)
+        else:
+            return Assertions.assert_true_raise404(False)
 
     @staticmethod
     def _service_update(json: dict, portfolio_in_db):
 
-        assert_true(portfolio_in_db, "No existe un artista con esa id")
+        Assertions.assert_true_raise400(portfolio_in_db, json)
 
         if json['artisticName'] is not None:
             portfolio_in_db.artisticName = json.get('artisticName')
@@ -156,11 +161,14 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     if image_db.link == image:
                         aux = False
                 if aux:
-                    module = PortfolioModule()
-                    module.type = 'PHOTO'
-                    module.link = image
-                    module.portfolio = portfolio_in_db
-                    module.save()
+                    if image.endswith(".png") or image.endswith(".gif") or image.endswith(".jpg") or image.endswith(".jpeg"):
+                        module = PortfolioModule()
+                        module.type = 'PHOTO'
+                        module.link = image
+                        module.portfolio = portfolio_in_db
+                        module.save()
+                    else:
+                        return Assertions.assert_true_raise400(False, json)
 
         if json['videos'] is not None:
             for video_db in PortfolioModule.objects.filter(type='VIDEO', portfolio=portfolio_in_db):
@@ -177,11 +185,14 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     if video_db.link == video:
                         aux = False
                 if aux:
-                    module = PortfolioModule()
-                    module.type = 'VIDEO'
-                    module.link = video
-                    module.portfolio = portfolio_in_db
-                    module.save()
+                    if video.startswith("https://www.youtube.com/") or video.startswith("http://www.youtube.com/"):
+                        module = PortfolioModule()
+                        module.type = 'VIDEO'
+                        module.link = video
+                        module.portfolio = portfolio_in_db
+                        module.save()
+                    else:
+                        return Assertions.assert_true_raise400(False, json)
 
         if json['artisticGenders'] is not None:
 
@@ -192,7 +203,10 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     portfolio_in_db.artisticGender.remove(genre.id)
 
             for genre in json['artisticGenders']:
-                genre_db = ArtisticGender.objects.get(name=genre)
+                try:
+                    genre_db = ArtisticGender.objects.get(name=genre)
+                except:
+                    return Assertions.assert_true_raise400(False, json)
                 if portfolio_in_db.id in genre_db.portfolio_set.all():
                     None
                 else:

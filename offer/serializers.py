@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import FieldError
 from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist, Transaction, Rating, \
     SystemConfiguration
 from utils.Assertions import assert_true, Assertions
@@ -9,6 +9,7 @@ from decimal import Decimal
 import random
 import string
 import datetime
+import pycard
 from django.utils import timezone
 from utils.authentication_utils import get_logged_user, get_user_type
 
@@ -251,6 +252,12 @@ class OfferSerializer(serializers.ModelSerializer):
 
         # Past date value validation
 
+        try:    
+            datetime.datetime.strptime(json.get('date'), '%Y-%m-%dT%H:%M:%S')
+        except ValueError:
+            badFormat = True
+            Assertions.assert_true_raise400(badFormat is not True, {'error': 'The format is not correct. It should be YYYY-MM-DDTHH:mm:ss'})
+
         Assertions.assert_true_raise400(datetime.datetime.strptime(json.get('date'),
                                                                    '%Y-%m-%dT%H:%M:%S') > datetime.datetime.now(),
                                         {'error': 'date value is past'})
@@ -272,7 +279,7 @@ class OfferSerializer(serializers.ModelSerializer):
                                             {'error': 'price field not provided'})
             Assertions.assert_true_raise400(Decimal(json.get("price")) > paymentPackage.custom.minimumPrice,
                                             {'error': 'price entered it\'s below of minimum price'})
-            Assertions.assert_true_raise400(json.get("hours") is not None,
+            Assertions.assert_true_raise400(json.get('hours') is not None,
                                             {'error': 'hours field not provided'})
 
         Assertions.assert_true_raise400(json.get("eventLocation_id") is not None,
@@ -287,6 +294,25 @@ class OfferSerializer(serializers.ModelSerializer):
 
         Assertions.assert_true_raise400(eventLocation.customer.user.id == attrs.user.id,
                                         {'error': 'can\'t reference this eventLocation'})
+
+        # Credit Card validation
+
+        try:
+            number = json['transaction']['number']
+            cvc = json['transaction']['cvv']
+
+            month = int(json['transaction']['expirationDate'][:2])
+            year = json['transaction']['expirationDate'][2:]
+            year = '20' + year
+            year = int(year)
+            card = pycard.Card(number=number, month=month, year=year,
+                           cvc=cvc)
+
+        except FieldError:
+
+            raise FieldError('Invalid credit card.')
+
+        Assertions.assert_true_raise400(card.is_valid, {'error' : 'The credit card is not valid.'})
 
         return True
 
