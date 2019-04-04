@@ -58,18 +58,19 @@ class PortfolioModuleSerializer(serializers.ModelSerializer):
 
 class PortfolioSerializer(serializers.ModelSerializer):
 
-    artisticName = serializers.CharField(read_only=True)
-    biography = serializers.CharField(read_only=True)
-    banner = serializers.CharField(read_only=True)
+    artisticName = serializers.CharField()
+    biography = serializers.CharField()
+    banner = serializers.CharField()
     images = serializers.SerializerMethodField('list_images')
     videos = serializers.SerializerMethodField('list_videos')
     main_photo = serializers.SerializerMethodField('list_photo')
-    artistId = serializers.SerializerMethodField('list_artist')
     artisticGenders = serializers.SerializerMethodField('list_genders')
+    artist = ArtistSerializer(read_only=True)
 
     class Meta:
         model = Portfolio
-        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGenders', 'artistId')
+
+        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGenders', 'artist')
 
     @staticmethod
     def list_images(self):
@@ -138,7 +139,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
             portfolio_in_db.banner = json.get('banner')
 
         if json['biography'] is not None:
-            portfolio_in_db.banner = json.get('biography')
+            portfolio_in_db.biography = json.get('biography')
 
         if json['images'] is not None:
             for image_db in PortfolioModule.objects.filter(type='PHOTO', portfolio=portfolio_in_db):
@@ -188,16 +189,14 @@ class PortfolioSerializer(serializers.ModelSerializer):
                 if genre.name in json['artisticGenders']:
                     None
                 else:
-                    portfolio_in_db.artisticGender_set.remove(genre)
+                    portfolio_in_db.artisticGender.remove(genre.id)
 
             for genre in json['artisticGenders']:
                 genre_db = ArtisticGender.objects.get(name=genre)
                 if portfolio_in_db.id in genre_db.portfolio_set.all():
                     None
                 else:
-                    portfolio_in_db.artisticGender.add(portfolio_in_db.id)
-
-
+                    portfolio_in_db.artisticGender.add(genre_db.id)
 
         if json['main_photo'] is not None:
             artist = Artist.objects.get(portfolio=portfolio_in_db)
