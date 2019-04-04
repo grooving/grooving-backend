@@ -37,7 +37,7 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
         if loggedUser is not None and loggedUser.id == artist.id:
             serializer = PortfolioSerializer(portfolio, data=request.data, partial=True)
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(loggedUser)
                 return Response(serializer.data)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
