@@ -75,7 +75,7 @@ class OfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = Offer
         fields = ('id', 'reason', 'appliedVAT', 'description', 'status', 'date', 'hours', 'price', 'currency',
-                  'paymentCode', 'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id',
+                  'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id',
                   'transaction', 'rating')
 
     # Esto sobrescribe una función heredada del serializer.
