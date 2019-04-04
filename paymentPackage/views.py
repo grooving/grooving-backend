@@ -7,7 +7,7 @@ from django.db.utils import IntegrityError
 from rest_framework.response import Response
 from django.shortcuts import render_to_response
 from rest_framework import generics
-from .serializers import PaymentPackageSerializer
+from .serializers import PaymentPackageSerializer, PaymentPackageSerializerShort
 from rest_framework import status
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
@@ -54,7 +54,7 @@ class PaymentPackageManager(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         paymentPackage = PaymentPackage.objects.get(pk=pk)
-        serializer = PaymentPackageSerializer(paymentPackage)
+        serializer = PaymentPackageSerializerShort(paymentPackage)
         return Response(serializer.data)
 
     def put(self, request, pk=None):
