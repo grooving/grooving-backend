@@ -122,8 +122,6 @@ class PortfolioSerializer(serializers.ModelSerializer):
     def save(self, loggedUser):
 
         portfolio = Portfolio.objects.get(pk=self.initial_data.get('id'))
-        print(loggedUser.portfolio.id)
-        print(portfolio.id)
         if loggedUser.portfolio.id == portfolio.id:
             portfolio = self._service_update(self.initial_data, portfolio)
             portfolio.save()
@@ -161,11 +159,14 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     if image_db.link == image:
                         aux = False
                 if aux:
-                    module = PortfolioModule()
-                    module.type = 'PHOTO'
-                    module.link = image
-                    module.portfolio = portfolio_in_db
-                    module.save()
+                    if image.endswith(".png") or image.endswith(".gif"):
+                        module = PortfolioModule()
+                        module.type = 'PHOTO'
+                        module.link = image
+                        module.portfolio = portfolio_in_db
+                        module.save()
+                    else:
+                        return Assertions.assert_true_raise400(False, json)
 
         if json['videos'] is not None:
             for video_db in PortfolioModule.objects.filter(type='VIDEO', portfolio=portfolio_in_db):
@@ -182,11 +183,14 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     if video_db.link == video:
                         aux = False
                 if aux:
-                    module = PortfolioModule()
-                    module.type = 'VIDEO'
-                    module.link = video
-                    module.portfolio = portfolio_in_db
-                    module.save()
+                    if video.startswith("https://www.youtube.com/"):
+                        module = PortfolioModule()
+                        module.type = 'VIDEO'
+                        module.link = video
+                        module.portfolio = portfolio_in_db
+                        module.save()
+                    else:
+                        return Assertions.assert_true_raise400(False, json)
 
         if json['artisticGenders'] is not None:
 
