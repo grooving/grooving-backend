@@ -251,6 +251,12 @@ class OfferSerializer(serializers.ModelSerializer):
 
         # Past date value validation
 
+        try:    
+            datetime.datetime.strptime(json.get('date'), '%Y-%m-%dT%H:%M:%S')
+        except ValueError:
+            badFormat = True
+            Assertions.assert_true_raise400(badFormat is not True, {'error': 'The format is not correct. It should be YYYY-MM-DDTHH:mm:ss'})
+
         Assertions.assert_true_raise400(datetime.datetime.strptime(json.get('date'),
                                                                    '%Y-%m-%dT%H:%M:%S') > datetime.datetime.now(),
                                         {'error': 'date value is past'})
@@ -272,7 +278,7 @@ class OfferSerializer(serializers.ModelSerializer):
                                             {'error': 'price field not provided'})
             Assertions.assert_true_raise400(Decimal(json.get("price")) > paymentPackage.custom.minimumPrice,
                                             {'error': 'price entered it\'s below of minimum price'})
-            Assertions.assert_true_raise400(json.get("hours") is not None,
+            Assertions.assert_true_raise400(json.get('hours') is not None,
                                             {'error': 'hours field not provided'})
 
         Assertions.assert_true_raise400(json.get("eventLocation_id") is not None,
