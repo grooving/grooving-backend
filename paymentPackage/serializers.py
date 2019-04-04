@@ -5,21 +5,34 @@ from decimal import Decimal
 from utils.Assertions import assert_true
 
 
-class CustomSerializer(serializers.ModelSerializer):
+class CurrencySerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = PaymentPackage
+        fields = ('currency',)
+
+
+class CustomSerializer(serializers.HyperlinkedModelSerializer):
+
+    currency = CurrencySerializer(read_only=True)
 
     class Meta:
         model = Custom
         fields = ('id', 'minimumPrice', 'currency')
 
 
-class FareSerializer(serializers.ModelSerializer):
+class FareSerializer(serializers.HyperlinkedModelSerializer):
+
+    currency = CurrencySerializer(read_only=True)
 
     class Meta:
         model = Fare
         fields = ('id', 'priceHour', 'currency')
 
 
-class PerformanceSerializer(serializers.ModelSerializer):
+class PerformanceSerializer(serializers.HyperlinkedModelSerializer):
+
+    currency = CurrencySerializer(read_only=True)
 
     class Meta:
         model = Performance
@@ -31,11 +44,10 @@ class PaymentPackageSerializer(serializers.ModelSerializer):
     custom = CustomSerializer(read_only=True)
     fare = FareSerializer(read_only=True)
     performance = PerformanceSerializer(read_only=True)
-    appliedVAT = serializers.DecimalField(max_digits=5, decimal_places=2, coerce_to_string=True)
 
     class Meta:
         model = PaymentPackage
-        fields = ('id', 'description', 'appliedVAT', 'custom', 'custom_id', 'fare', 'fare_id', 'performance', 'performance_id')
+        fields = ('id', 'description', 'custom', 'custom_id', 'fare', 'fare_id', 'performance', 'performance_id')
 
     def save(self):
         if self.initial_data.get('id') is None:
