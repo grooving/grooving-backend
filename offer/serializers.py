@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.core.exceptions import PermissionDenied
+from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist, Rating
+from utils.Assertions import assert_true
 from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist
 from utils.Assertions import assert_true, Assertions
 from django.db import IntegrityError
@@ -9,6 +11,7 @@ import random
 import string
 import datetime
 from django.utils import timezone
+from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
 from utils.authentication_utils import get_logged_user,get_user_type
 
 
@@ -28,6 +31,7 @@ class CodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Offer
         fields = ('paymentCode',)
+
 
 
 class OfferSerializer(serializers.ModelSerializer):
@@ -76,6 +80,7 @@ class OfferSerializer(serializers.ModelSerializer):
         #except:
             #offer.status == 'CONTRACT_MADE'
         offer.save()
+        return offer
 
     # Se pondrá service delante de nuestros métodos para no sobrescribir por error métodos del serializer
     @staticmethod
