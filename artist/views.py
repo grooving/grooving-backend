@@ -4,7 +4,7 @@ from .serializers import ArtistInfoSerializer
 from django.core.exceptions import PermissionDenied
 from Grooving.models import Artist, ArtisticGender
 from utils.authentication_utils import get_user_type, get_logged_user
-from .serializers import ListArtistSerializer,ArtistSerializer
+from .serializers import ListArtistSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from utils.Assertions import Assertions
@@ -79,14 +79,6 @@ class ArtistRegister(generics.CreateAPIView):
 
     serializer_class = ArtistSerializer
 
-    def get_object(self, pk=None):
-        if pk is None:
-            pk = self.kwargs['pk']
-        try:
-            return Artist.objects.get(pk=pk)
-        except Artist.DoesNotExist:
-            raise Http404
-
     def post(self, request, *args, **kwargs):
         user_type = None
         try:
@@ -101,7 +93,7 @@ class ArtistRegister(generics.CreateAPIView):
                 return Response(status=status.HTTP_201_CREATED)
 
         else:
-                raise PermissionDenied("You must be unlogged to do this action")
+            raise PermissionDenied("You must be unlogged to do this action")
 
     def put(self, request, pk=None):
         if pk is None:
@@ -109,7 +101,7 @@ class ArtistRegister(generics.CreateAPIView):
         if len(request.data) == 0:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
-            artist = self.get_object(pk)
+            artist = Artist.objects.get(pk=pk)
             articustomer = get_logged_user(request)
 
             Assertions.assert_true_raise403(articustomer.id == artist.id, "You can only change your personal info")
@@ -119,3 +111,4 @@ class ArtistRegister(generics.CreateAPIView):
 
             artist.save()
             return Response(status=status.HTTP_200_OK)
+

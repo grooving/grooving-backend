@@ -65,16 +65,14 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         return customer
 
     @staticmethod
-    def _service_create_customer(json: dict, customer: Customer):
+    def _service_create_customer(json: dict):
         user1 = User.objects.create(username=json.get('username'),
                                     password=make_password(json.get('password')),
                                     first_name=json.get('first_name'),
                                     last_name=json.get('last_name'),
                                     email=json.get('email'))
 
-        customer.user = user1
-        customer.photo = json.get('photo')
-        customer.phone = json.get('phone')
+        customer = Customer.objects.create(photo=json.get('photo'),phone = json.get('phone'),user = user1)
         customer.save()
 
         return customer
