@@ -53,7 +53,14 @@ class GetPublicInformationOfCustomer(generics.ListAPIView):
 
 class CustomerRegister(generics.CreateAPIView):
 
+    queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+
+    def get_object(self, pk=None):
+        try:
+            return Customer.objects.get(pk=pk)
+        except Customer.DoesNotExist:
+            raise Http404
 
     def post(self, request, *args, **kwargs):
         user_type = None
