@@ -105,7 +105,7 @@ class CreateOffer(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = OfferSerializer(data=request.data, partial=True)
         if serializer.validate(request):
-            offer = serializer.save()
+            offer = serializer.save(logged_user=request.user)
             serialized = OfferSerializer(offer)
             return Response(serialized.data, status=status.HTTP_201_CREATED)
 
