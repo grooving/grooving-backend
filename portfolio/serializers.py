@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from Grooving.models import Portfolio, Calendar, ArtisticGender, PortfolioModule, Zone, PaymentPackage, Artist
-from utils.Assertions import assert_true
+from utils.Assertions import Assertions
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -118,18 +118,23 @@ class PortfolioSerializer(serializers.ModelSerializer):
 
         return artistId
 
-    def save(self):
+    def save(self, loggedUser):
 
-        print("Clave primaria:" + str(self.initial_data.get('id')))
         portfolio = Portfolio.objects.get(pk=self.initial_data.get('id'))
-        portfolio = self._service_update(self.initial_data, portfolio)
-        portfolio.save()
-        return portfolio
+        print(loggedUser.portfolio.id)
+        print(portfolio.id)
+        if loggedUser.portfolio.id == portfolio.id:
+            portfolio = self._service_update(self.initial_data, portfolio)
+            portfolio.save()
+            return portfolio
+        else:
+            return Assertions.assert_true_raise403(False, self.initial_data)
+
 
     @staticmethod
     def _service_update(json: dict, portfolio_in_db):
 
-        assert_true(portfolio_in_db, "No existe un artista con esa id")
+        Assertions.assert_true_raise400(portfolio_in_db, json)
 
         if json['artisticName'] is not None:
             portfolio_in_db.artisticName = json.get('artisticName')
@@ -191,11 +196,15 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     portfolio_in_db.artisticGender.remove(genre.id)
 
             for genre in json['artisticGenders']:
-                genre_db = ArtisticGender.objects.get(name=genre)
+                try:
+                    genre_db = ArtisticGender.objects.get(name=genre)
+                except:
+                    return Assertions.assert_true_raise400(False, json)
                 if portfolio_in_db.id in genre_db.portfolio_set.all():
                     None
                 else:
                     portfolio_in_db.artisticGender.add(genre_db.id)
+
 
         if json['main_photo'] is not None:
             artist = Artist.objects.get(portfolio=portfolio_in_db)
