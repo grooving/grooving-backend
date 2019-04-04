@@ -159,7 +159,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     if image_db.link == image:
                         aux = False
                 if aux:
-                    if image.endswith(".png") or image.endswith(".gif"):
+                    if image.endswith(".png") or image.endswith(".gif") or image.endswith(".jpg") or image.endswith(".jpeg"):
                         module = PortfolioModule()
                         module.type = 'PHOTO'
                         module.link = image
@@ -209,7 +209,6 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     None
                 else:
                     portfolio_in_db.artisticGender.add(genre_db.id)
-
 
         if json['main_photo'] is not None:
             artist = Artist.objects.get(portfolio=portfolio_in_db)
