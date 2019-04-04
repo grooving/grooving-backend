@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import FieldError
 from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist, Transaction, Rating, \
     SystemConfiguration
 from utils.Assertions import assert_true, Assertions
@@ -9,6 +9,7 @@ from decimal import Decimal
 import random
 import string
 import datetime
+import pycard
 from django.utils import timezone
 from utils.authentication_utils import get_logged_user, get_user_type
 
@@ -293,6 +294,25 @@ class OfferSerializer(serializers.ModelSerializer):
 
         Assertions.assert_true_raise400(eventLocation.customer.user.id == attrs.user.id,
                                         {'error': 'can\'t reference this eventLocation'})
+
+        # Credit Card validation
+
+        try:
+            number = json['transaction']['number']
+            cvc = json['transaction']['cvv']
+
+            month = int(json['transaction']['expirationDate'][:2])
+            year = json['transaction']['expirationDate'][2:]
+            year = '20' + year
+            year = int(year)
+            card = pycard.Card(number=number, month=month, year=year,
+                           cvc=cvc)
+
+        except FieldError:
+
+            raise FieldError('Invalid credit card.')
+
+        Assertions.assert_true_raise400(card.is_valid, {'error' : 'The credit card is not valid.'})
 
         return True
 

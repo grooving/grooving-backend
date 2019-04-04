@@ -38,6 +38,9 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
             serializer = PortfolioSerializer(portfolio, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save(loggedUser)
+                portfolio = self.get_object(pk)
+                serializer = PortfolioSerializer(portfolio, data=serializer.data, partial=True)
+                serializer.is_valid()
                 return Response(serializer.data)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

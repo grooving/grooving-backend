@@ -40,7 +40,6 @@ class PerformanceSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
-
     custom = CustomSerializer(read_only=True)
     fare = FareSerializer(read_only=True)
     performance = PerformanceSerializer(read_only=True)
@@ -48,6 +47,19 @@ class PaymentPackageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentPackage
         fields = ('id', 'description', 'custom', 'custom_id', 'fare', 'fare_id', 'performance', 'performance_id')
+
+    @staticmethod
+    def list_payment(self):
+
+        paymentPackage = PaymentPackage.objects.get(pk=self.id)
+        package = ""
+        if paymentPackage.performance is not None:
+            package = package + "{type: Performance,"
+        elif paymentPackage.custom is not None:
+            package = "Custom"
+        elif paymentPackage.fare is not None:
+            package = "Fare"
+        return package
 
     def save(self):
         if self.initial_data.get('id') is None:
@@ -118,3 +130,31 @@ class PaymentPackageSerializer(serializers.ModelSerializer):
             custom.save()
 
         return paymentPackage_in_db
+
+
+class PaymentPackageSerializerShort(serializers.ModelSerializer):
+
+    paymentPackage = serializers.SerializerMethodField('list_payment')
+
+    class Meta:
+        model = PaymentPackage
+        fields = ('id', 'description', 'currency', 'paymentPackage')
+
+    @staticmethod
+    def list_payment(self):
+
+        paymentPackage = PaymentPackage.objects.get(pk=self.id)
+        package = {}
+        if paymentPackage.performance is not None:
+            package['type'] = "Performance"
+            package['info'] = paymentPackage.performance.info
+            package['hours'] = paymentPackage.performance.hours
+            package['price'] = paymentPackage.performance.price
+        elif paymentPackage.custom is not None:
+            package['type'] = "Custom"
+            package['priceHour'] = paymentPackage.performance.priceHour
+        elif paymentPackage.fare is not None:
+            package['type'] = "Fare"
+            package['minimumPrice'] = paymentPackage.performance.minimumPrice
+
+        return package
