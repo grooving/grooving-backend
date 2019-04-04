@@ -185,7 +185,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     if video_db.link == video:
                         aux = False
                 if aux:
-                    if video.startswith("https://www.youtube.com/"):
+                    if video.startswith("https://www.youtube.com/") or video.startswith("http://www.youtube.com/"):
                         module = PortfolioModule()
                         module.type = 'VIDEO'
                         module.link = video
