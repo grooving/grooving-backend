@@ -5,6 +5,7 @@ from user.serializers import UserSerializer
 from portfolio.serializers import ArtisticGenderSerializer
 from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
+from utils.Assertions import Assertions
 
 
 class ArtistInfoSerializer(serializers.HyperlinkedModelSerializer):
@@ -43,47 +44,52 @@ class ArtistSerializer(serializers.ModelSerializer):
         depth = 2
         model = Artist
         user = UserRegisterSerializer()
-        fields = ('user','artisticName', 'phone', 'photo',)
+        fields = ('user', 'artisticName', 'phone', 'photo',)
 
     def save(self):
-        artist = Artist()
-        artist = self._service_create_artist(self.initial_data, artist)
+
+        artist = self._service_create_artist(self.initial_data)
         return artist
 
     def update(self, pk):
-        artist = Artist()
-        artist = self._service_update_artist(self.initial_data,artist,pk)
+
+        artist = self._service_update_artist(self.initial_data,pk)
         return artist
 
     @staticmethod
-    def _service_update_artist(json: dict, artist: Artist,pk):
+    def _service_update_artist(json: dict, pk):
 
         artist = Artist.objects.get(pk=pk)
         artist.phone = json.get('phone')
-        artist.photo = json.get('photo')
-        artist.user.email = json.get('email')
         user = artist.user
-        user.username = json.get('username')
+        user_names = User.objects.values_list('username', flat=True)
+        if json.get('username') != user.username:
+            Assertions.assert_true_raise400('username' not in user_names, {"Username already in the system"})
+
         user.first_name = json.get('first_name')
+        Assertions.assert_true_raise400(user.first_name, {"First name can't be null"})
         user.last_name = json.get('last_name')
+        Assertions.assert_true_raise400(user.last_name, {"Last name can't be null"})
+
         user.save()
         artist.user = user
         return artist
-    @staticmethod
-    def _service_create_artist(json: dict, artist: Artist):
 
-        user = User.objects.create(username =json.get('username'),
+    @staticmethod
+    def _service_create_artist(json: dict):
+
+        user = User.objects.create(username=json.get('username'),
                                    password=make_password(json.get('password')), first_name=json.get('first_name'),
                                    last_name=json.get('last_name'), email=json.get('email'))
 
         portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'))
 
-
-        artist = Artist.objects.create(photo='photo',phone='phone',portfolio=portfolio1,user=user)
+        artist = Artist.objects.create(photo='photo', phone='phone',portfolio=portfolio1,user=user)
 
         return artist
 
-    def validate_artist(self, request):
+    @staticmethod
+    def validate_artist(request):
 
         user_names = User.objects.values_list('username', flat=True)
 
@@ -124,4 +130,4 @@ class ArtistSerializer(serializers.ModelSerializer):
         if len(password) < 8:
             raise serializers.ValidationError("Password length is too short")
         return True
-        fields = ('id', 'rating', 'photo', 'portfolio')
+

@@ -5,6 +5,7 @@ from user.serializers import UserSerializer, ShortUserSerializer
 from eventLocation.serializers import EventLocationSerializer, ShortEventLocationSerializer
 from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
+from utils.Assertions import Assertions
 
 
 class CustomerInfoSerializer(serializers.HyperlinkedModelSerializer):
@@ -38,26 +39,27 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('user', 'phone', 'photo',)
 
     def save(self):
-        customer = Customer()
-        customer = self._service_create_customer(self.initial_data, customer)
+
+        customer = self._service_create_customer(self.initial_data)
         return customer
 
     def update(self, pk):
-        customer = Customer()
-        customer = self._service_update_customer(self.initial_data, customer, pk)
+        customer = self._service_update_customer(self.initial_data, pk)
         return customer
 
     @staticmethod
-    def _service_update_customer(json: dict, customer: Customer, pk):
+    def _service_update_customer(json: dict, pk):
 
         customer = Customer.objects.get(pk=pk)
         customer.phone = json.get('phone')
         customer.photo = json.get('photo')
-        customer.user.email = json.get('email')
         user = customer.user
-        user.username = json.get('username')
+
         user.first_name = json.get('first_name')
+        Assertions.assert_true_raise400(user.first_name, {"First name can't be null"})
         user.last_name = json.get('last_name')
+        Assertions.assert_true_raise400(user.last_name, {"Last name can't be null"})
+
         user.save()
         customer.user = user
         return customer
@@ -71,7 +73,6 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
                                     email=json.get('email'))
 
         customer.user = user1
-
         customer.photo = json.get('photo')
         customer.phone = json.get('phone')
         customer.save()
