@@ -55,14 +55,6 @@ class CustomerRegister(generics.CreateAPIView):
 
     serializer_class = CustomerSerializer
 
-    def get_object(self, pk=None):
-        if pk is None:
-            pk = self.kwargs['pk']
-        try:
-            return Customer.objects.get(pk=pk)
-        except Customer.DoesNotExist:
-            raise Http404
-
     def post(self, request, *args, **kwargs):
         user_type = None
         try:
@@ -84,7 +76,7 @@ class CustomerRegister(generics.CreateAPIView):
         if len(request.data) == 0:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
-            customer = self.get_object(pk)
+            customer = Customer.objects.get(pk=pk)
             articustomer = get_logged_user(request)
 
             Assertions.assert_true_raise403(articustomer.id == customer.id, "You can only change your personal info")
