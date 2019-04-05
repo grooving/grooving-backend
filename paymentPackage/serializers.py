@@ -3,8 +3,10 @@ from rest_framework import serializers
 from Grooving.models import PaymentPackage, Custom, Fare, Performance
 from decimal import Decimal
 from utils.Assertions import assert_true
+from django.core.exceptions import PermissionDenied
+from utils.Assertions import Assertions
 
-
+from decimal import Decimal
 class CurrencySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -12,13 +14,13 @@ class CurrencySerializer(serializers.HyperlinkedModelSerializer):
         fields = ('currency',)
 
 
-class CustomSerializer(serializers.HyperlinkedModelSerializer):
+#class CustomSerializer(serializers.HyperlinkedModelSerializer):
 
-    currency = CurrencySerializer(read_only=True)
+   # currency = CurrencySerializer(read_only=True)
 
-    class Meta:
-        model = Custom
-        fields = ('id', 'minimumPrice', 'currency')
+   # class Meta:
+    #    model = Custom
+    #    fields = ('minimumPrice', 'currency')
 
 
 class FareSerializer(serializers.HyperlinkedModelSerializer):
@@ -27,7 +29,7 @@ class FareSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Fare
-        fields = ('id', 'priceHour', 'currency')
+        fields = ('priceHour')
 
 
 class PerformanceSerializer(serializers.HyperlinkedModelSerializer):
@@ -36,18 +38,15 @@ class PerformanceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Performance
-        fields = ('id', 'info', 'hours', 'price', 'currency')
+        fields = ('info', 'hours', 'price')
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
-    custom = CustomSerializer(read_only=True)
-    fare = FareSerializer(read_only=True)
-    performance = PerformanceSerializer(read_only=True)
 
     class Meta:
         model = PaymentPackage
-        fields = ('id', 'description', 'custom', 'custom_id', 'fare', 'fare_id', 'performance', 'performance_id')
-
+        fields = ('description', 'custom', 'fare', 'performance')
+'''
     @staticmethod
     def list_payment(self):
 
@@ -130,6 +129,82 @@ class PaymentPackageSerializer(serializers.ModelSerializer):
             custom.save()
 
         return paymentPackage_in_db
+'''
+
+
+class FareSerializer(serializers.ModelSerializer):
+
+    paymentPackage = PaymentPackageSerializer()
+
+    class Meta:
+        model = Fare
+        fields = ('description', 'fare', 'priceHour')
+
+    def save(self, pk=None, logged_user=None):
+
+        fare = self._service_create_package(self.initial_data,logged_user)
+
+        return fare
+
+    @staticmethod
+    def _service_create_package(json: dict, logged_user):
+
+        portfolio_id = logged_user.portfolio.id
+        fare = Fare.objects.create(priceHour=json.get('priceHour'))
+        PaymentPackage.objects.create(description=json.get('description'),
+                                      portfolio_id=portfolio_id, fare=fare)
+
+        return fare
+
+
+class CustomSerializer(serializers.ModelSerializer):
+
+    paymentPackage = PaymentPackageSerializer()
+    portfolio_id = serializers.CharField
+
+    class Meta:
+        model = Custom
+        fields = ('description', 'minimumPrice', 'portfolio_id','paymentPackage')
+
+    def save(self, pk=None, logged_user=None):
+
+        custom = self._service_create_package(self.initial_data,logged_user)
+
+        return custom
+
+    @staticmethod
+    def _service_create_package(json: dict, logged_user):
+
+        portfolio_id = logged_user.portfolio.id
+        custom = Custom.objects.create(minimumPrice=json.get('minimumPrice'))
+        PaymentPackage.objects.create(description=json.get('description'),
+                                      portfolio_id=portfolio_id, custom=custom)
+
+        return custom
+
+
+class PerformanceSerializer(serializers.ModelSerializer):
+
+    paymentPackage = PaymentPackageSerializer()
+
+    class Meta:
+        model = Performance
+        fields = ('description', 'performance', 'info', 'hours', 'price')
+
+    def save(self, pk=None, logged_user=None):
+        performance = self._service_create_package(self.initial_data, logged_user)
+
+        return performance
+
+    @staticmethod
+    def _service_create_package(json: dict, logged_user):
+        portfolio_id = logged_user.portfolio.id
+        performance = Performance.objects.create(hours=json.get('hours'),info=json.get('info'),price=json.get('price'))
+        PaymentPackage.objects.create(description=json.get('description'),
+                                      portfolio_id=portfolio_id, performance=performance)
+
+        return performance
+
 
 
 class PaymentPackageSerializerShort(serializers.ModelSerializer):
@@ -138,7 +213,7 @@ class PaymentPackageSerializerShort(serializers.ModelSerializer):
 
     class Meta:
         model = PaymentPackage
-        fields = ('id', 'description', 'currency', 'paymentPackage')
+        fields = ('id', 'description', 'paymentPackage')
 
     @staticmethod
     def list_payment(self):
