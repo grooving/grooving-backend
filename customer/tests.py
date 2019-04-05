@@ -18,7 +18,7 @@ class ShowCustomerInformation(TestCase):
         zone1 = Zone.objects.create(name="Sevilla Sur")
         zone1.save()
 
-        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999', cvv=999,
+        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999',
                                             expirationDate=datetime.now())
         customer1.save()
 
@@ -42,7 +42,35 @@ class ShowCustomerInformation(TestCase):
 
         item_dict = response2.json()
         #We check that only one user is retrieved
-        self.assertTrue(len(item_dict) == 6)
+        self.assertTrue(len(item_dict) == 7)
+
+        self.client.logout()
+
+    def test_show_public_information_customer(self):
+        user1_customer = User.objects.create(username='customer1', password=make_password('customer1'),
+                                            first_name='Bunny', last_name='Fufuu',
+                                            email='customer1@gmail.com')
+        user1_customer.save()
+
+        zone1 = Zone.objects.create(name="Sevilla Sur")
+        zone1.save()
+
+        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999',
+                                            expirationDate=datetime.now())
+        customer1.save()
+
+        event_location1 = EventLocation.objects.create(name="Sala Rajoy", address="C/Madrid",
+                                                       equipment="Speakers and microphone",
+                                                       description="The best event location", zone=zone1,
+                                                       customer=customer1)
+        event_location1.save()
+
+        response2 = self.client.get('/customer/publicInformation/'+str(customer1.id)+'/', format='json')
+        self.assertEqual(response2.status_code, 200)
+
+        item_dict = response2.json()
+        #We check that only one user is retrieved
+        self.assertTrue(len(item_dict) == 4)
 
         self.client.logout()
 

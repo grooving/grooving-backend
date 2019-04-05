@@ -3,14 +3,14 @@ from django.shortcuts import redirect, render
 from Grooving.models import PaymentPackage,Artist,Custom,Performance,Fare
 from django.contrib import messages
 from django.db.utils import IntegrityError
-
+from utils.Assertions import Assertions
 from rest_framework.response import Response
 from django.shortcuts import render_to_response
 from rest_framework import generics
 from .serializers import PaymentPackageSerializer,PaymentPackageListSerializer, PaymentPackageSerializerShort,FareSerializer,CustomSerializer,PerformanceSerializer
 from rest_framework import status
 from django.http import Http404
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
 
 
@@ -25,17 +25,23 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
         try:
             portfolio = Artist.objects.get(id=pk).portfolio
             return PaymentPackage.objects.filter(portfolio=portfolio)
-        except PaymentPackage.DoesNotExist:
+        except Artist.DoesNotExist:
             raise Http404
 
     def get(self, request, pk=None, format = None):
         if pk is None:
             pk = self.kwargs['pk']
-        portfolio = Artist.objects.get(id=pk).portfolio
-        paymentPackage = PaymentPackage.objects.filter(portfolio=portfolio)
-        serializer = PaymentPackageListSerializer(paymentPackage, many=True)
-        return Response(serializer.data)
-
+        user = get_logged_user(request)
+        user_type = get_user_type(user)
+        Assertions.assert_true_raise401((user_type == 'Customer' or user.id == pk), {'error': 'You are not a customer or the owner, and therefore '
+                                                                           'you can\'t do this action.'})
+        try:
+            portfolio = Artist.objects.get(id=pk).portfolio
+            paymentPackage = PaymentPackage.objects.filter(portfolio=portfolio)
+            serializer = PaymentPackageListSerializer(paymentPackage, many=True)
+            return Response(serializer.data)
+        except Artist.DoesNotExist:
+            raise Http404
 
 class PaymentPackageManager(generics.RetrieveUpdateDestroyAPIView):
 
