@@ -33,7 +33,8 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
             pk = self.kwargs['pk']
         user = get_logged_user(request)
         user_type = get_user_type(user)
-        Assertions.assert_true_raise401((user_type == 'Customer' or user.id == pk), {'error': 'You are not a customer or the owner, and therefore '
+        artist = Artist.objects.get(pk=pk)
+        Assertions.assert_true_raise401((user_type == 'Customer' or user.user_id == artist.user_id), {'error': 'You are not a customer or the owner, and therefore '
                                                                            'you can\'t do this action.'})
         try:
             portfolio = Artist.objects.get(id=pk).portfolio

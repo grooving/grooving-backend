@@ -80,14 +80,17 @@ class TransactionSerializer(serializers.ModelSerializer):
                 year = attrs['expirationDate'][2:]
                 year = '20' + year
                 year = int(year)
+                Assertions.assert_true_raise400( month >= 1 and  month<=12,
+                    {'error':  'bad month number'}
+                )
                 card = pycard.Card(number=number, month=month, year=year,
                                    cvc=cvc)
+                Assertions.assert_true_raise400(card.is_valid, {'error': 'The credit card is not valid.'})
 
             except FieldError:
 
                 raise FieldError('Invalid credit card.')
 
-            Assertions.assert_true_raise400(card.is_valid, {'error': 'The credit card is not valid.'})
 
         else:
 
