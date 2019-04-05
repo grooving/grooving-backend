@@ -35,7 +35,7 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'parentGender')
 
 
-class ZoneSerializer(serializers.ModelSerializer):
+class ZoneSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Zone
@@ -66,11 +66,13 @@ class PortfolioSerializer(serializers.ModelSerializer):
     main_photo = serializers.SerializerMethodField('list_photo')
     artisticGenders = serializers.SerializerMethodField('list_genders')
     artist = ArtistSerializer(read_only=True)
+    zone = ZoneSerializer(read_only=True)
 
     class Meta:
         model = Portfolio
 
-        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGenders', 'artist')
+        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGenders',
+                  'artist', 'zone')
 
     @staticmethod
     def list_images(self):

@@ -25,7 +25,7 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
         try:
             portfolio = Artist.objects.get(id=pk).portfolio
             return PaymentPackage.objects.filter(portfolio=portfolio)
-        except PaymentPackage.DoesNotExist:
+        except Artist.DoesNotExist:
             raise Http404
 
     def get(self, request, pk=None, format = None):
@@ -41,7 +41,7 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
             paymentPackage = PaymentPackage.objects.filter(portfolio=portfolio)
             serializer = PaymentPackageSerializer(paymentPackage, many=True)
             return Response(serializer.data)
-        except ObjectDoesNotExist:
+        except Artist.DoesNotExist:
             raise Http404
 
 

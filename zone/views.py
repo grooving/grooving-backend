@@ -3,11 +3,11 @@ from django.shortcuts import redirect, render
 from Grooving.models import Zone, Artist, Portfolio
 from django.contrib import messages
 from django.db.utils import IntegrityError
-
+from utils.whooshSearcher.indexing import get_childs_zone
 from rest_framework.response import Response
 from django.shortcuts import render_to_response
 from rest_framework import generics
-from .serializers import ZoneSerializer
+from .serializers import ZoneSerializer, SearchZoneSerializer
 from rest_framework import status
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
@@ -79,30 +79,16 @@ class CreateZone(generics.CreateAPIView):
 
 class ListZones(generics.ListAPIView):
 
-    serializer_class = ZoneSerializer
+    serializer_class = SearchZoneSerializer
 
     def get_queryset(self):
 
-        try:
-            zones = Zone.objects.all()
-            return zones
-        except Zone.DoesNotExist:
-            raise Http404
+    #   Pillamos al padre de todos los padres (o a aquellos que ya no tengan padre)
 
+        zones = Zone.objects.all()
 
-class PortfolioZones(generics.ListAPIView):
+        listTree = []
 
-    serializer_class = ZoneSerializer
+        get_childs_zone(zones, listTree)
 
-    def get_queryset(self, request, pk=None, format=None):
-
-        if pk is None:
-            pk = self.kwargs['pk']
-
-        try:
-            portfolio = Portfolio.objects.get(id=pk)
-            zones = portfolio.zone
-            return zones
-        except Portfolio.DoesNotExist:
-
-            raise Http404
+        return listTree
