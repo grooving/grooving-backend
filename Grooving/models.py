@@ -1,5 +1,4 @@
 from decimal import Decimal
-from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -119,7 +118,7 @@ class PaymentPackage(AbstractEntity):
 
 class Customer(UserAbstract):
     holder = models.CharField(blank=True, null=True, max_length=255)
-    expirationDate = models.DateField(blank=True, null=True, default=datetime.now)
+    expirationDate = models.DateField(blank=True, null=True)
     number = models.CharField(blank=True, null=True, max_length=16)
 
 
@@ -148,7 +147,7 @@ OfferStatusField = (
 
 class Transaction(AbstractEntity):
     holder = models.CharField(blank=True, null=True, max_length=255)
-    expirationDate = models.DateField(blank=True, null=True, default=datetime.now)
+    expirationDate = models.DateField(blank=True, null=True)
     number = models.CharField(blank=True, null=True, max_length=16)
     cvv = models.CharField(blank=True, null=True, max_length=3)
     ibanCustomer = models.CharField(blank=True, null=True, max_length=34)

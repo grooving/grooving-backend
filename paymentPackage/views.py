@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from django.shortcuts import redirect, render
-from Grooving.models import PaymentPackage,Artist
+from Grooving.models import PaymentPackage,Artist,Custom,Performance,Fare
 from django.contrib import messages
 from django.db.utils import IntegrityError
 
 from rest_framework.response import Response
 from django.shortcuts import render_to_response
 from rest_framework import generics
-from .serializers import PaymentPackageSerializer
+from .serializers import PaymentPackageSerializer, PaymentPackageSerializerShort,FareSerializer,CustomSerializer,PerformanceSerializer
 from rest_framework import status
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
@@ -54,7 +54,7 @@ class PaymentPackageManager(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         paymentPackage = PaymentPackage.objects.get(pk=pk)
-        serializer = PaymentPackageSerializer(paymentPackage)
+        serializer = PaymentPackageSerializerShort(paymentPackage)
         return Response(serializer.data)
 
     def put(self, request, pk=None):
@@ -99,3 +99,87 @@ class CreatePaymentPackage(generics.CreateAPIView):
                     raise PermissionDenied("The artisticGender is not for yourself")
         else:
             raise PermissionDenied("The artisticGender is not for yourself")
+
+
+class CreateCustomPackage(generics.CreateAPIView):
+    queryset = Custom.objects.all()
+    serializer_class = CustomSerializer
+
+    def get_object(self, pk=None):
+        try:
+            return Custom.objects.get(pk=pk)
+        except Custom.DoesNotExist:
+            raise Http404
+
+    def post(self, request,pk=None):
+        user_type = None
+
+        try:
+            logged_user = get_logged_user(request)
+            user_type = get_user_type(logged_user)
+        except:
+            pass
+        if user_type == "Artist":
+            serializer = CustomSerializer(data=request.data,partial=True)
+            if serializer.is_valid:
+                serializer.save(pk,logged_user=logged_user)
+                return Response(status=status.HTTP_201_CREATED)
+
+        else:
+            raise PermissionDenied("You have no permissions to do this action")
+
+
+class CreatePerformancePackage(generics.CreateAPIView):
+    queryset = Performance.objects.all()
+    serializer_class = PerformanceSerializer
+
+    def get_object(self, pk=None):
+        try:
+            return Performance.objects.get(pk=pk)
+        except Performance.DoesNotExist:
+            raise Http404
+
+    def post(self, request,pk=None):
+        user_type = None
+        try:
+            logged_user = get_logged_user(request)
+            user_type = get_user_type(logged_user)
+        except:
+            pass
+        if user_type == "Artist":
+            serializer = PerformanceSerializer(data=request.data, partial=True)
+            if serializer.is_valid:
+                serializer.save(pk,logged_user=logged_user)
+                return Response(status=status.HTTP_201_CREATED)
+
+        else:
+            raise PermissionDenied("You have no permissions to do this action")
+
+
+class CreateFarePackage(generics.CreateAPIView):
+    queryset = Fare.objects.all()
+    serializer_class = FareSerializer
+
+    def get_object(self, pk=None):
+        try:
+            return Fare.objects.get(pk=pk)
+        except Fare.DoesNotExist:
+            raise Http404
+
+    def post(self, request, pk=None):
+        user_type = None
+        try:
+            logged_user = get_logged_user(request)
+            user_type = get_user_type(logged_user)
+        except:
+            pass
+        if user_type == "Artist":
+            serializer = FareSerializer(data=request.data, partial=True)
+            if serializer.is_valid:
+                serializer.save(pk, logged_user=logged_user)
+                return Response(status=status.HTTP_201_CREATED)
+
+        else:
+            raise PermissionDenied("You have no permissions to do this action")
+
+
