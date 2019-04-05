@@ -10,7 +10,7 @@ from Grooving.models import Portfolio, Artist
 
 def search(busqueda="", categoria="", zone="", order=""):
 
-    ix = index.open_dir("index")
+    ix = index.open_dir("utils/whooshSearcher/index")
     lista = []
     with ix.searcher() as searcher:
         query = None
