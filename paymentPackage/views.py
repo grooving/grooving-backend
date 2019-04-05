@@ -7,7 +7,7 @@ from django.db.utils import IntegrityError
 from rest_framework.response import Response
 from django.shortcuts import render_to_response
 from rest_framework import generics
-from .serializers import PaymentPackageSerializer, PaymentPackageSerializerShort,FareSerializer,CustomSerializer,PerformanceSerializer
+from .serializers import PaymentPackageSerializer,PaymentPackageListSerializer, PaymentPackageSerializerShort,FareSerializer,CustomSerializer,PerformanceSerializer
 from rest_framework import status
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
@@ -17,7 +17,7 @@ from utils.authentication_utils import get_logged_user,get_user_type,is_user_aut
 class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = PaymentPackage.objects.all()
-    serializer_class = PaymentPackageSerializer
+    serializer_class = PaymentPackageListSerializer
 
     def get_object(self, pk=None):
         if pk is None:
@@ -33,7 +33,7 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
             pk = self.kwargs['pk']
         portfolio = Artist.objects.get(id=pk).portfolio
         paymentPackage = PaymentPackage.objects.filter(portfolio=portfolio)
-        serializer = PaymentPackageSerializer(paymentPackage, many=True)
+        serializer = PaymentPackageListSerializer(paymentPackage, many=True)
         return Response(serializer.data)
 
 
