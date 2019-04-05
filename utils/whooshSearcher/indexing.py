@@ -1,4 +1,3 @@
-
 from _decimal import Decimal
 
 from django.core.paginator import Paginator
@@ -17,31 +16,33 @@ def index_all():
 
     portfolios = Portfolio.objects.all().order_by("id")
 
-    paginator = Paginator(portfolios, 20)
+    for portfolio in portfolios:
+        id = portfolio.id
+        artisticName = portfolio.artisticName.lower()
+        biography = portfolio.biography.lower()
+        artisticGender = gender_to_string(portfolio)
+        zone = zone_to_string(portfolio)
+        rating= portfolio.artist.rating
 
-    portfolios = paginator.page(1)
+        writer.add_document(id=id, artisticName=artisticName, biography=biography,
+                            artisticGender=artisticGender, zone=zone, rating=rating)
 
-    while True:
-        for portfolio in portfolios:
-            id = portfolio.id
-            artisticName = portfolio.artisticName
-            biography = portfolio.biography
-            artisticGender = gender_to_string(portfolio)
-            zone = zone_to_string(portfolio)
-            rating= portfolio.artist.rating
-
-            writer.add_document(id=id, artisticName=artisticName, biography=biography,
-                                artisticGender=artisticGender, zone=zone)
-        if portfolios.has_next():
-            portfolios = paginator.page(portfolios.next_page_number())
-        else:
-            break
 
     writer.commit()
 
 
-def get_media():
-    return 2.5
+def add_update_index(portfolio):
+    ix = index.open_dir("index")
+    writer = ix.writer()
+    id = portfolio.id
+    artisticName = portfolio.artisticName.lower()
+    biography = portfolio.biography.lower()
+    artisticGender = gender_to_string(portfolio)
+    zone = zone_to_string(portfolio)
+    rating = portfolio.artist.rating
+    writer.update_document(id=id, artisticName=artisticName, biography=biography,
+                        artisticGender=artisticGender, zone=zone, rating=rating)
+    writer.commit()
 
 
 def gender_to_string(portfolio):
@@ -94,7 +95,7 @@ def get_childs_zone(queryset, total=[]):
 def array_to_string(array):
     result = ""
     for a in array:
-        result = result + str(a.name) + " "
+        result = result + " " +str(a.name.replace(" ", "#").lower())
 
     return result
 

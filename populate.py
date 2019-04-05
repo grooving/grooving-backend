@@ -874,3 +874,4 @@ def save_data():
 
 os.system('python3 manage.py sqlflush | python3 manage.py dbshell')
 save_data()
+index_all()

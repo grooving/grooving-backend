@@ -10,7 +10,7 @@ from rest_framework import status
 from utils.Assertions import Assertions
 from artist.serializers import ArtistSerializer
 from django.http import Http404
-
+from utils.whooshSearcher.searcher import search
 class GetPersonalInformationOfArtist(generics.ListAPIView):
 
     serializer_class = ArtistInfoSerializer
@@ -35,6 +35,9 @@ class ListArtist(generics.ListAPIView):
 
         artisticname = self.request.query_params.get('artisticName')
         artisticgender = self.request.query_params.get('artisticGender')
+        zone = self.request.query_params.get('zone')
+        order = self.request.query_params.get('order')
+        """
         if artisticname or artisticgender:
             if artisticname:
                 queryset = Artist.objects.filter(portfolio__artisticName__icontains=artisticname)
@@ -71,7 +74,11 @@ class ListArtist(generics.ListAPIView):
                     queryset = queryset.filter(portfolio__artisticName__icontains=artisticname)
         else:
             queryset = Artist.objects.all()
+        """
+        queryset = search(busqueda=artisticname, categoria=artisticgender, zone=zone, order=order)
         return queryset
+
+
 
 
 class ArtistRegister(generics.CreateAPIView):
