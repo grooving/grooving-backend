@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect, render
-from Grooving.models import Zone, Artist
+from Grooving.models import Zone, Artist, Portfolio
 from django.contrib import messages
 from django.db.utils import IntegrityError
 
@@ -75,3 +75,34 @@ class CreateZone(generics.CreateAPIView):
                 return Response(serialized.data, status=status.HTTP_201_CREATED)
         else:
             raise PermissionDenied("The artisticGender is not for yourself")
+
+
+class ListZones(generics.ListAPIView):
+
+    serializer_class = ZoneSerializer
+
+    def get_queryset(self):
+
+        try:
+            zones = Zone.objects.all()
+            return zones
+        except Zone.DoesNotExist:
+            raise Http404
+
+
+class PortfolioZones(generics.ListAPIView):
+
+    serializer_class = ZoneSerializer
+
+    def get_queryset(self, request, pk=None, format=None):
+
+        if pk is None:
+            pk = self.kwargs['pk']
+
+        try:
+            portfolio = Portfolio.objects.get(id=pk)
+            zones = portfolio.zone
+            return zones
+        except Portfolio.DoesNotExist:
+
+            raise Http404

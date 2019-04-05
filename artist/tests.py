@@ -1,6 +1,6 @@
 from django.test import TestCase
 from rest_framework.authtoken.models import Token
-from Grooving.models import Portfolio, ArtisticGender, Customer, Artist, Portfolio, User, Calendar,PaymentPackage,EventLocation,Zone
+from Grooving.models import Performance, ArtisticGender, Customer, Artist, Portfolio, User, Calendar,PaymentPackage,EventLocation,Zone
 from datetime import datetime
 from django.contrib.auth.hashers import make_password
 
@@ -50,7 +50,7 @@ class ShowArtistInformation(TestCase):
         zone1 = Zone.objects.create(name="Sevilla Sur")
         zone1.save()
 
-        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999', cvv=999,
+        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999',
                                             expirationDate=datetime.now())
         customer1.save()
 
@@ -96,40 +96,30 @@ class ListArtistTestCase(TestCase):
 
     def test_list_artists(self):
 
-        user = User()
-        user.email = "juan@juan.com"
-        user.username = "artist"
-        user.password = "artist"
-        user.id = "43"
-        user.save()
+        user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
+                                            first_name='Bunny', last_name='Fufuu',
+                                            email='artist1@gmail.com')
+        user1_artist1.save()
 
-        portfolio1 = Portfolio()
-        portfolio1.id = "2"
-        portfolio1.artisticName = "Jose"
+        zone1 = Zone.objects.create(name="Sevilla Sur")
+        zone1.save()
+
+        portfolio1 = Portfolio.objects.create(artisticName="BunnyFuFuu")
+        portfolio1.zone.add(zone1)
         portfolio1.save()
 
-        paymentPackage = PaymentPackage()
-        paymentPackage.id = "87"
-        paymentPackage.description = "paymentPackage description"
-        paymentPackage.appliedVAT = "0.07"
-        paymentPackage.portfolio = portfolio1
-        paymentPackage.save()
+        performance1 = Performance.objects.create(info='Information', hours='2.5', price=300)
 
-        artista = Artist()
-        artista.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artista.id = "56"
-        artista.iban = "AD1400080001001234567890"
-        artista.phone = "999999999"
-        artista.paypalAccount = "user=artist,password=artist"
-        artista.user_id = "43"
-        artista.portfolio = portfolio1
-        artista.save()
+        paymentPackage = PaymentPackage.objects.create(description='description of a payment', currency='EUR',
+                                                       portfolio=portfolio1, performance=performance1)
 
-        response = self.client.get('/artists/'.format(1), format='json')
+        artist1 = Artist.objects.create(user=user1_artist1, portfolio=portfolio1, phone='600304999')
+        artist1.save()
+
+        response = self.client.get('/artists/', format='json')
         self.assertEqual(response.status_code, 200)
         item_dict = response.json()
         self.assertTrue(len(item_dict['results']) == 1)
-
 
     def test_list_artists_filter_artistic_name(self):
 

@@ -11,6 +11,8 @@ from utils.Assertions import Assertions
 from artist.serializers import ArtistSerializer
 from django.http import Http404
 from utils.whooshSearcher.searcher import search
+
+
 class GetPersonalInformationOfArtist(generics.ListAPIView):
 
     serializer_class = ArtistInfoSerializer
@@ -25,6 +27,17 @@ class GetPersonalInformationOfArtist(generics.ListAPIView):
             return Response(serializer.data)
         else:
             raise PermissionDenied()
+
+
+class ListAllArtists(generics.ListAPIView):
+
+    serializer_class = ListArtistSerializer
+
+    def get_queryset(self):
+
+        queryset = Artist.objects.all()
+
+        return queryset
 
 
 class ListArtist(generics.ListAPIView):
@@ -77,8 +90,6 @@ class ListArtist(generics.ListAPIView):
         """
         queryset = search(busqueda=artisticname, categoria=artisticgender, zone=zone, order=order)
         return queryset
-
-
 
 
 class ArtistRegister(generics.CreateAPIView):

@@ -20,7 +20,7 @@ class OfferTestCase(TestCase):
         zone1 = Zone.objects.create(name="Sevilla Sur")
         zone1.save()
 
-        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999', cvv=999,
+        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999',
                                             expirationDate=datetime.now())
         customer1.save()
 
@@ -50,9 +50,9 @@ class OfferTestCase(TestCase):
         calendar1 = Calendar.objects.create(days=days, portfolio=portfolio1)
         calendar1.save()
 
-        performance1 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance1 = Performance.objects.create(info="info", hours=3, price=200.0)
         performance1.save()
-        payment_package1 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+        payment_package1 = PaymentPackage.objects.create(description="Paymentcription",
                                                          portfolio=portfolio1, performance=performance1)
 
         payment_package1.save()
@@ -60,7 +60,7 @@ class OfferTestCase(TestCase):
         date = timezone.now()
 
         offer1 = Offer.objects.create(description="DESCRIPTIONOFFER1", status='PENDING', date=date, price="200",
-                                      currency="EUR", hours=2,
+                                      currency="EUR", hours=2, appliedVAT="0.35",
                                       paymentCode='EEE', eventLocation=event_location1, paymentPackage=payment_package1)
         offer1.save()
 
@@ -74,7 +74,7 @@ class OfferTestCase(TestCase):
         zone2 = Zone.objects.create(name="Sevilla Sur")
         zone2.save()
 
-        customer2 = Customer.objects.create(user=user3_customer2, holder="Juan", number='600304999', cvv=999,
+        customer2 = Customer.objects.create(user=user3_customer2, holder="Juan", number='600304999',
                                             expirationDate=datetime.now())
         customer2.save()
 
@@ -83,7 +83,6 @@ class OfferTestCase(TestCase):
                                                        description="The best event location", zone=zone2,
                                                        customer=customer2)
         event_location2.save()
-
 
         user4_artist2 = User.objects.create(username='artist2', password=make_password('artist2'),
                                             first_name='Bunny', last_name='Fufuu',
@@ -100,15 +99,15 @@ class OfferTestCase(TestCase):
         calendar2 = Calendar.objects.create(days=days, portfolio=portfolio2)
         calendar2.save()
 
-        performance2 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance2 = Performance.objects.create(info="info", hours=3, price=200.0)
         performance2.save()
-        payment_package2 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+        payment_package2 = PaymentPackage.objects.create(description="Paymentcription",
                                                          portfolio=portfolio2, performance=performance2)
 
         payment_package2.save()
 
         offer2 = Offer.objects.create(description="DESCRIPTIONOFFER2", status='PENDING', date=date, price="200",
-                                      currency="EUR", hours=2,
+                                      currency="EUR", hours=2, appliedVAT="0.35",
                                       paymentCode='YUJU', eventLocation=event_location2, paymentPackage=payment_package2)
         offer2.save()
 
@@ -137,7 +136,7 @@ class OfferTestCase(TestCase):
         zone1 = Zone.objects.create(name="Sevilla Sur")
         zone1.save()
 
-        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999', cvv=999,
+        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999',
                                             expirationDate=datetime.now())
         customer1.save()
 
@@ -167,9 +166,9 @@ class OfferTestCase(TestCase):
         calendar1 = Calendar.objects.create(days=days, portfolio=portfolio1)
         calendar1.save()
 
-        performance1 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance1 = Performance.objects.create(info="info", hours=3, price=200.0)
         performance1.save()
-        payment_package1 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+        payment_package1 = PaymentPackage.objects.create(description="Paymentcription",
                                                          portfolio=portfolio1, performance=performance1)
 
         payment_package1.save()
@@ -177,7 +176,7 @@ class OfferTestCase(TestCase):
         date = timezone.now()
 
         offer1 = Offer.objects.create(description="DESCRIPTIONOFFER1", status='PENDING', date=date, price="200",
-                                      currency="EUR", hours=2,
+                                      currency="EUR", hours=2, appliedVAT="0.35",
                                       paymentCode='EEE', eventLocation=event_location1, paymentPackage=payment_package1)
         offer1.save()
 
@@ -191,7 +190,7 @@ class OfferTestCase(TestCase):
         zone2 = Zone.objects.create(name="Sevilla Sur")
         zone2.save()
 
-        customer2 = Customer.objects.create(user=user3_customer2, holder="Juan", number='600304999', cvv=999,
+        customer2 = Customer.objects.create(user=user3_customer2, holder="Juan", number='600304999',
                                             expirationDate=datetime.now())
         customer2.save()
 
@@ -218,15 +217,15 @@ class OfferTestCase(TestCase):
         calendar2 = Calendar.objects.create(days=days, portfolio=portfolio2)
         calendar2.save()
 
-        performance2 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance2 = Performance.objects.create(info="info", hours=3, price=200.0)
         performance2.save()
-        payment_package2 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+        payment_package2 = PaymentPackage.objects.create(description="Paymentcription",
                                                          portfolio=portfolio2, performance=performance2)
 
         payment_package2.save()
 
         offer2 = Offer.objects.create(description="DESCRIPTIONOFFER2", status='PENDING', date=date, price="200",
-                                      currency="EUR", hours=2,
+                                      currency="EUR", hours=2,appliedVAT="0.35",
                                       paymentCode='YUJU', eventLocation=event_location1,
                                       paymentPackage=payment_package2)
         offer2.save()
@@ -253,7 +252,7 @@ class OfferTestCase(TestCase):
         zone1 = Zone.objects.create(name="Sevilla Sur")
         zone1.save()
 
-        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999', cvv=999,
+        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999',
                                             expirationDate=datetime.now())
         customer1.save()
 
@@ -283,9 +282,9 @@ class OfferTestCase(TestCase):
         calendar1 = Calendar.objects.create(days=days, portfolio=portfolio1)
         calendar1.save()
 
-        performance1 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
+        performance1 = Performance.objects.create(info="info", hours=3, price=200.0)
         performance1.save()
-        payment_package1 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
+        payment_package1 = PaymentPackage.objects.create(description="Paymentcription",
                                                          portfolio=portfolio1, performance=performance1)
 
         payment_package1.save()
