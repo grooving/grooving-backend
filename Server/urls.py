@@ -75,6 +75,10 @@ urlpatterns = [
 
     url(r'^fare/$', CreateFarePackage.as_view()),
     url(r'^performance/$', CreatePerformancePackage.as_view()),
-    url(r'^custom/$', CreateCustomPackage.as_view())
+    url(r'^custom/$', CreateCustomPackage.as_view()),
+
+    url(r'^fare/(?P<pk>[0-9]+)/$', CreateFarePackage.as_view()),
+    url(r'^performance/(?P<pk>[0-9]+)/$', CreatePerformancePackage.as_view()),
+    url(r'^custom/(?P<pk>[0-9]+)/$', CreateCustomPackage.as_view()),
 
 ]

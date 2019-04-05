@@ -138,13 +138,13 @@ class FareSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Fare
-        fields = ('description', 'fare', 'priceHour')
+        fields = ('priceHour','paymentPackage')
 
     def save(self, pk=None, logged_user=None):
         if pk is None:
             fare = self._service_create_package(self.initial_data,logged_user)
         else:
-            fare= Fare.objects.filter(pk=id).first()
+            fare= Fare.objects.filter(pk=pk).first()
             fare = self._service_update_package(self.initial_data, fare, logged_user)
         return fare
 
@@ -159,7 +159,7 @@ class FareSerializer(serializers.ModelSerializer):
         return fare
 
     @staticmethod
-    def _service_update_package(self, json: dict, fare: Fare, logged_user: User):
+    def _service_update_package(json: dict, fare: Fare, logged_user: User):
         assert_true(fare, "This offer does not exist")
 
         fare.priceHour=json.get('priceHour')
@@ -172,15 +172,16 @@ class CustomSerializer(serializers.ModelSerializer):
     paymentPackage = PaymentPackageSerializer()
     portfolio_id = serializers.CharField
 
+
     class Meta:
         model = Custom
-        fields = ('description', 'minimumPrice', 'portfolio_id', 'paymentPackage')
+        fields = ('minimumPrice', 'paymentPackage')
 
     def save(self, pk=None, logged_user=None):
         if pk is None:
             custom = self._service_create_package(self.initial_data, logged_user)
         else:
-            custom = Custom.objects.filter(pk=id).first()
+            custom = Custom.objects.filter(pk=pk).first()
             custom = self._service_update_package(self.initial_data, custom, logged_user)
         return custom
 
@@ -195,7 +196,7 @@ class CustomSerializer(serializers.ModelSerializer):
         return custom
 
     @staticmethod
-    def _service_update_package(self, json: dict, custom: Custom, logged_user: User):
+    def _service_update_package(json: dict, custom: Custom, logged_user: User):
         assert_true(custom, "This offer does not exist")
 
         custom.minimumPrice = json.get('minimumPrice')
@@ -209,13 +210,13 @@ class PerformanceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Performance
-        fields = ('description', 'performance', 'info', 'hours', 'price')
+        fields = ('info', 'hours', 'price','paymentPackage')
 
     def save(self, pk=None, logged_user=None):
         if pk is None:
             performance= self._service_create_package(self.initial_data, logged_user)
         else:
-            performance = Performance.objects.filter(pk=id).first()
+            performance = Performance.objects.filter(pk=pk).first()
             performance = self._service_update_package(self.initial_data, performance, logged_user)
         return performance
 
@@ -229,7 +230,7 @@ class PerformanceSerializer(serializers.ModelSerializer):
         return performance
 
     @staticmethod
-    def _service_update_package(self, json: dict, performance: Performance, logged_user: User):
+    def _service_update_package(json: dict, performance: Performance, logged_user: User):
         assert_true(performance, "This offer does not exist")
 
         performance.minimumPrice = json.get('hours')

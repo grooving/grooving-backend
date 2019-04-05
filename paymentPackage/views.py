@@ -111,8 +111,9 @@ class CreateCustomPackage(generics.CreateAPIView):
         except Custom.DoesNotExist:
             raise Http404
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request,pk=None):
         user_type = None
+
         try:
             logged_user = get_logged_user(request)
             user_type = get_user_type(logged_user)
@@ -121,7 +122,7 @@ class CreateCustomPackage(generics.CreateAPIView):
         if user_type == "Artist":
             serializer = CustomSerializer(data=request.data,partial=True)
             if serializer.is_valid:
-                serializer.save(request.data,logged_user=logged_user)
+                serializer.save(pk,logged_user=logged_user)
                 return Response(status=status.HTTP_201_CREATED)
 
         else:
@@ -138,7 +139,7 @@ class CreatePerformancePackage(generics.CreateAPIView):
         except Performance.DoesNotExist:
             raise Http404
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request,pk=None):
         user_type = None
         try:
             logged_user = get_logged_user(request)
@@ -148,7 +149,7 @@ class CreatePerformancePackage(generics.CreateAPIView):
         if user_type == "Artist":
             serializer = PerformanceSerializer(data=request.data, partial=True)
             if serializer.is_valid:
-                serializer.save(request.data, logged_user=logged_user)
+                serializer.save(pk,logged_user=logged_user)
                 return Response(status=status.HTTP_201_CREATED)
 
         else:
@@ -165,7 +166,7 @@ class CreateFarePackage(generics.CreateAPIView):
         except Fare.DoesNotExist:
             raise Http404
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, pk=None):
         user_type = None
         try:
             logged_user = get_logged_user(request)
@@ -175,7 +176,7 @@ class CreateFarePackage(generics.CreateAPIView):
         if user_type == "Artist":
             serializer = FareSerializer(data=request.data, partial=True)
             if serializer.is_valid:
-                serializer.save(request.data, logged_user=logged_user)
+                serializer.save(pk, logged_user=logged_user)
                 return Response(status=status.HTTP_201_CREATED)
 
         else:
