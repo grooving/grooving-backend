@@ -1,5 +1,5 @@
 from _decimal import Decimal
-
+import os
 from django.core.paginator import Paginator
 from whoosh import index
 from Grooving.models import Portfolio
@@ -31,7 +31,7 @@ def index_all():
     writer.commit()
 
 
-def add_update_index(portfolio):
+def add_update_index_rating(portfolio):
     ix = index.open_dir("index")
     writer = ix.writer()
     id = portfolio.id
@@ -43,7 +43,7 @@ def add_update_index(portfolio):
     writer.update_document(id=id, artisticName=artisticName, biography=biography,
                         artisticGender=artisticGender, zone=zone, rating=rating)
     writer.commit()
-
+#def add_update_index_()
 
 def gender_to_string(portfolio):
     genders = portfolio.artisticGender.all()
