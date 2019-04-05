@@ -38,7 +38,11 @@ def search(busqueda="", categoria="", zone="", order=""):
             lista.append(r['id'])
             print(r['id'])
         try:
+            #query = Artist.objects.filter(portfolio=lista[0]).all()
+            #for i in lista[1:0]:
+             #   query = query | Artist.objects.filter(portfolio=i).all()
             lista = [Artist.objects.filter(portfolio=i).first() for i in lista]
+            #lista =query
         except:
             lista = Artist.objects.all()
         return lista
