@@ -1,4 +1,4 @@
-from Grooving.models import Offer,  Artist, Portfolio, User, Calendar, PaymentPackage, Customer, EventLocation, Zone, Performance, Fare, Custom
+from Grooving.models import Offer,  Artist, Portfolio, User, Calendar, PaymentPackage, Customer, EventLocation, Zone, Performance, Fare, Custom, SystemConfiguration
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
@@ -28,7 +28,7 @@ class OfferTestCase(APITestCase):
         zone1.save()
 
         customer1 = Customer.objects.create(holder="customer1", expirationDate=date, user=user1_customer1,
-                                            number=9393393939393, cvv=203)
+                                            number=9393393939393)
 
         customer1.save()
         event_location1 = EventLocation.objects.create(name="Sala Rajoy", address="C/Madrid",
@@ -139,21 +139,24 @@ class OfferTestCase(APITestCase):
         # Populate database
         print("Populating database...\n")
 
+        SystemConfiguration.objects.create(minimumPrice='20', currency='EUR', paypalTax='2.9', creditCardTax='1.9',
+                                           vat='21', profit='7', corporateEmail='info@grooving.com',
+                                           reportEmail='report@grooving.com', appName='Grooving',
+                                           slogan='Connecting artist with you', termsText='Terms & conditions',
+                                           privacyText='Privacy text', logo='')
+
         user1 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
                                                   first_name='Cdds', last_name='Pedro',
                                                   email='artist1@gmail.com')
-        user1.save()
 
         user2 = User.objects.create(username='customer1', password=make_password('customer1customer1'),
                                               first_name='Cdds', last_name='Pedro',
                                               email='customer1@gmail.com')
-        user2.save()
 
         date = datetime.datetime(2020, 2, 7, 8, 49, 56, 81433, pytz.UTC)
 
         customer1 = Customer.objects.create(holder="customer1", expirationDate=date, user=user2,
-                                            number=9393393939393, cvv=203)
-        customer1.save()
+                                            number=9393393939393)
 
         zone1 = Zone.objects.create(name="Sevilla Sur")
         zone1.save()
@@ -162,35 +165,24 @@ class OfferTestCase(APITestCase):
                                                        equipment="Speakers and microphone",
                                                        description="The best event location",
                                                        zone=zone1, customer_id=customer1.id)
-        event_location.save()
 
         portfolio1 = Portfolio.objects.create(artisticName="Juanartist")
         portfolio1.zone.add(zone1)
         portfolio1.save()
 
         artist1 = Artist.objects.create(user=user1, portfolio=portfolio1, phone='600304999')
-        artist1.save()
 
         performance = Performance.objects.create(info="info", hours=3, price=200.0)
-        performance.save()
         payment_package1 = PaymentPackage.objects.create(description="Paymentcription",
                                                          portfolio=portfolio1, performance=performance)
 
-        payment_package1.save()
-
         fare= Fare.objects.create(priceHour=20.0)
-        fare.save()
         payment_package2 = PaymentPackage.objects.create(description="Paymentcription",
                                                          portfolio=portfolio1, fare=fare)
 
-        payment_package2.save()
-
         custom = Custom.objects.create(minimumPrice=50.0)
-        custom.save()
         payment_package3 = PaymentPackage.objects.create(description="Paymentcription",
                                                          portfolio=portfolio1, custom=custom)
-
-        payment_package3.save()
 
         # Start test
         print("Launching test...\n")
@@ -207,7 +199,13 @@ class OfferTestCase(APITestCase):
             "description": "This is a description",
             "date": "2019-05-10T10:00:00",
             "paymentPackage_id": payment_package1.id,
-            "eventLocation_id": event_location.id
+            "eventLocation_id": event_location.id,
+            "transaction": {
+                "holder": "Sebastian Lopez",
+                "number": "4831288402940405",
+                "expirationDate": "1221",
+                "cvv": "772"
+	        }
         }
 
         performanceOfferResponse = self.client.post('/offer/', performanceOfferBody, format='json',
@@ -220,7 +218,10 @@ class OfferTestCase(APITestCase):
             "date": "2019-05-10T10:00:00",
             "hours": 2.5,
             "paymentPackage_id": payment_package2.id,
-            "eventLocation_id": event_location.id
+            "eventLocation_id": event_location.id,
+            "transaction": {
+                "paypalCustomer": "customer1@paypal.com"
+            }
         }
 
         fareOfferResponse = self.client.post('/offer/', fareOfferBody, format='json',
@@ -234,7 +235,13 @@ class OfferTestCase(APITestCase):
             "hours": 2.5,
             "price": 100.0,
             "paymentPackage_id": payment_package3.id,
-            "eventLocation_id": event_location.id
+            "eventLocation_id": event_location.id,
+            "transaction": {
+                "holder": "Sebastian Lopez",
+                "number": "4831288402940405",
+                "expirationDate": "1221",
+                "cvv": "772"
+            }
         }
 
         customOfferResponse = self.client.post('/offer/', customOfferBody, format='json',
@@ -248,7 +255,7 @@ class OfferTestCase(APITestCase):
             "hours": 2.5,
             "price": 10.0,
             "paymentPackage_id": payment_package3.id,
-            "eventLocation_id": event_location.id
+            "eventLocation_id": event_location.id,
         }
 
         badRequestResponse = self.client.post('/offer/', badRequestBody, format='json',
