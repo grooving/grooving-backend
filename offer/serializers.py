@@ -39,8 +39,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ('id', 'holder', 'expirationDate', 'number', 'cvv', 'ibanCustomer', 'paypalCustomer', 'ibanArtist',
-                  'paypalArtist')
+        fields = ('id', 'holder', 'expirationDate', 'number', 'cvv', 'paypalCustomer')
 
     def validate(self, attrs):
         # if attrs.get('ibanCustomer') is not None:
@@ -107,7 +106,7 @@ class RatingSerializer(serializers.ModelSerializer):
         fields = ('score', 'comment')
 
 
-class OfferSerializer(serializers.ModelSerializer):
+class GetOfferSerializer(serializers.ModelSerializer):
 
     paymentPackage = PaymentPackageSerializer(read_only=True)
     paymentPackage_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=PaymentPackage.objects.all(),
@@ -115,6 +114,23 @@ class OfferSerializer(serializers.ModelSerializer):
     eventLocation = EventLocationSerializer(read_only=True)
     eventLocation_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=EventLocation.objects.all(),
                                                           source='eventLocation')
+
+    rating = RatingSerializer(read_only=True)
+
+    class Meta:
+        model = Offer
+        fields = ('id', 'reason', 'appliedVAT', 'description', 'status', 'date', 'hours', 'price', 'currency',
+                  'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id', 'rating')
+
+
+class OfferSerializer(serializers.ModelSerializer):
+
+    paymentPackage = PaymentPackageSerializer(read_only=True)
+    paymentPackage_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=PaymentPackage.objects.all(),
+                                                               source='paymentPackage')
+    eventLocation = EventLocationSerializer(read_only=True)
+    eventLocation_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=EventLocation.objects.all(),
+                                                              source='eventLocation')
     transaction = TransactionSerializer()
 
     rating = RatingSerializer(read_only=True)
@@ -122,8 +138,8 @@ class OfferSerializer(serializers.ModelSerializer):
     class Meta:
         model = Offer
         fields = ('id', 'reason', 'appliedVAT', 'description', 'status', 'date', 'hours', 'price', 'currency',
-                  'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id',
-                  'transaction', 'rating')
+                      'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id',
+                      'transaction', 'rating')
 
     # Esto sobrescribe una función heredada del serializer.
     def save(self, pk=None, logged_user=None):

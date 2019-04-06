@@ -32,6 +32,7 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         user = get_logged_user(request)
+        Assertions.assert_true_raise403(user is not None, {'error': 'You are not logged in.'})
         user_type = get_user_type(user)
         artist = Artist.objects.get(pk=pk)
         Assertions.assert_true_raise401((user_type == 'Customer' or user.user_id == artist.user_id), {'error': 'You are not a customer or the owner, and therefore '
