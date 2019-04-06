@@ -85,6 +85,11 @@ class ListZones(generics.ListAPIView):
 
     #   Pillamos al padre de todos los padres (o a aquellos que ya no tengan padre)
 
-        zones = Zone.objects.all()
+        zones = []
 
-        return zones
+        try:
+
+            zones = Zone.objects.all()
+            return zones
+        except Zone.DoesNotExist:
+            raise Http404
