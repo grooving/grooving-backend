@@ -12,6 +12,7 @@ from rest_framework import status
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
+from collections import defaultdict
 
 
 class ZoneManager(generics.RetrieveUpdateDestroyAPIView):
@@ -76,7 +77,7 @@ class CreateZone(generics.CreateAPIView):
         else:
             raise PermissionDenied("The artisticGender is not for yourself")
 
-
+'''
 class ListZones(generics.ListAPIView):
 
     serializer_class = SearchZoneSerializer
@@ -86,9 +87,11 @@ class ListZones(generics.ListAPIView):
     #   Pillamos al padre de todos los padres (o a aquellos que ya no tengan padre)
 
         zones = Zone.objects.all()
+        zone_by_parent = defaultdict()
+        for zone in zones:
+            if zone.parentZone is not None:
+                zone_by_parent[zone.parentZone].append(zone)
+        items = [{'Zone': zona.name, 'Child zones': zone_by_parent[zona]} for zona in zone_by_parent[1]]
 
-        listTree = []
-
-        get_childs_zone(zones, listTree)
-
-        return listTree
+        return items
+'''
