@@ -241,7 +241,6 @@ class OfferSerializer(serializers.ModelSerializer):
             normal_transitions = {}
             artist_flowstop_transitions = {}
             customer_flowstop_transitions = {}
-            # TODO: Must be check the login
 
             creator = Customer.objects.filter(pk=offer_in_db.eventLocation.customer.id).first()
             if get_user_type(logged_user) == 'Customer' and creator == logged_user:
@@ -257,6 +256,8 @@ class OfferSerializer(serializers.ModelSerializer):
                 if json_status == 'CONTRACT_MADE':
                     Assertions.assert_true_raise400(logged_user.iban is not None,
                                                     {"ERROR_CODE:""You must introduce your bank account before"})
+                    offer_in_db.transaction.ibanArtist = logged_user.iban
+                    offer_in_db.transaction.save()
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
                                   or artist_flowstop_transitions.get(status_in_db) == json_status
