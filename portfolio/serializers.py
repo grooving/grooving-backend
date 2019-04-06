@@ -131,14 +131,14 @@ class PortfolioSerializer(serializers.ModelSerializer):
                 portfolio.save()
                 return portfolio
             else:
-                return Assertions.assert_true_raise403(False, self.initial_data)
+                return Assertions.assert_true_raise403(False, {'error': 'User doesnt own this portfolio'})
         else:
             return Assertions.assert_true_raise404(False)
 
     @staticmethod
     def _service_update(json: dict, portfolio_in_db):
 
-        Assertions.assert_true_raise400(portfolio_in_db, json)
+        Assertions.assert_true_raise400(portfolio_in_db is not None, {'error' : 'Portfolio not in database'})
 
         if json['artisticName'] is not None:
             portfolio_in_db.artisticName = json.get('artisticName')
@@ -164,14 +164,12 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     if image_db.link == image:
                         aux = False
                 if aux:
-                    if image.endswith(".png") or image.endswith(".gif") or image.endswith(".jpg") or image.endswith(".jpeg"):
-                        module = PortfolioModule()
-                        module.type = 'PHOTO'
-                        module.link = image
-                        module.portfolio = portfolio_in_db
-                        module.save()
-                    else:
-                        return Assertions.assert_true_raise400(False, json)
+                    Assertions.assert_true_raise400(image.endswith(".png") or image.endswith(".gif") or image.endswith(".jpg") or image.endswith(".jpeg"), {'error': 'Formato imagen erroneo'})
+                    module = PortfolioModule()
+                    module.type = 'PHOTO'
+                    module.link = image
+                    module.portfolio = portfolio_in_db
+                    module.save()
 
         if json['videos'] is not None:
 
@@ -213,7 +211,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
                 try:
                     genre_db = ArtisticGender.objects.get(name=genre)
                 except:
-                    return Assertions.assert_true_raise400(False, json)
+                    return Assertions.assert_true_raise400(False, {'error': 'Genre not in database'})
                 if portfolio_in_db.id in genre_db.portfolio_set.all():
                     None
                 else:

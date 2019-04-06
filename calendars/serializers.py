@@ -33,7 +33,7 @@ class CalendarSerializer(serializers.ModelSerializer):
 
         portfolio = Portfolio.objects.filter(id=logged_user.portfolio.id)
 
-        Assertions.assert_true_raise400(portfolio.calendar is None,{'info':'A calendar already exist for this artist'})
+        Assertions.assert_true_raise400(portfolio.calendar is None,{'info': 'A calendar already exist for this artist'})
 
         r = re.compile('\d{4}-\d{4}-\d{2}')
 
