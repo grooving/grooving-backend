@@ -35,7 +35,7 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'parentGender')
 
 
-class ZoneSerializer(serializers.ModelSerializer):
+class ZoneSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Zone
@@ -66,11 +66,13 @@ class PortfolioSerializer(serializers.ModelSerializer):
     main_photo = serializers.SerializerMethodField('list_photo')
     artisticGenders = serializers.SerializerMethodField('list_genders')
     artist = ArtistSerializer(read_only=True)
+    zone = ZoneSerializer(read_only=True)
 
     class Meta:
         model = Portfolio
 
-        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGenders', 'artist')
+        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGenders',
+                  'artist', 'zone')
 
     @staticmethod
     def list_images(self):
@@ -121,14 +123,16 @@ class PortfolioSerializer(serializers.ModelSerializer):
 
     def save(self, loggedUser):
 
-        portfolio = Portfolio.objects.get(pk=self.initial_data.get('id'))
-        if loggedUser.portfolio.id == portfolio.id:
-            portfolio = self._service_update(self.initial_data, portfolio)
-            portfolio.save()
-            return portfolio
+        if Portfolio.objects.filter(pk=self.initial_data.get('id')).first():
+            portfolio = Portfolio.objects.filter(pk=self.initial_data.get('id')).first()
+            if loggedUser.portfolio.id == portfolio.id:
+                portfolio = self._service_update(self.initial_data, portfolio)
+                portfolio.save()
+                return portfolio
+            else:
+                return Assertions.assert_true_raise403(False, self.initial_data)
         else:
-            return Assertions.assert_true_raise403(False, self.initial_data)
-
+            return Assertions.assert_true_raise404(False)
 
     @staticmethod
     def _service_update(json: dict, portfolio_in_db):
@@ -183,7 +187,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     if video_db.link == video:
                         aux = False
                 if aux:
-                    if video.startswith("https://www.youtube.com/"):
+                    if video.startswith("https://www.youtube.com/") or video.startswith("http://www.youtube.com/"):
                         module = PortfolioModule()
                         module.type = 'VIDEO'
                         module.link = video

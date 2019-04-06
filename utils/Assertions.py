@@ -28,6 +28,7 @@ class Assertions:
             exception = APIException(code=code, detail=details)
             exception.status_code = http_error
             raise exception
+            print("Mierda, continua la ejecución")
 
 
 #Old functions - deprecated

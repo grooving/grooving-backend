@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import FieldError
 from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist, Transaction, Rating, \
     SystemConfiguration
 from utils.Assertions import assert_true, Assertions
@@ -9,6 +9,8 @@ from decimal import Decimal
 import random
 import string
 import datetime
+import pycard
+from validate_email_address import validate_email
 from django.utils import timezone
 from utils.authentication_utils import get_logged_user, get_user_type
 
@@ -32,9 +34,12 @@ class CodeSerializer(serializers.ModelSerializer):
 
 
 class TransactionSerializer(serializers.ModelSerializer):
+
+    expirationDate = serializers.DateField(input_formats='%m%y', format='%Y-%m')
+
     class Meta:
         model = Transaction
-        fields = ('holder', 'expirationDate', 'number', 'cvv', 'ibanCustomer', 'paypalCustomer', 'ibanArtist',
+        fields = ('id', 'holder', 'expirationDate', 'number', 'cvv', 'ibanCustomer', 'paypalCustomer', 'ibanArtist',
                   'paypalArtist')
 
     def validate(self, attrs):
@@ -48,9 +53,52 @@ class TransactionSerializer(serializers.ModelSerializer):
                 attrs.get('cvv') is not None,
                 {'error': 'credit card value doesn\'t valid'}
             )
+
+            # Credit Card validation
+
+            try:
+
+                Assertions.assert_true_raise400(
+                    len(attrs.get('number')) == 16 and attrs.get('number').isdigit(),
+                    {'error': 'credit card number field bad provided'}
+                )
+
+                Assertions.assert_true_raise400(
+                    len(attrs.get('expirationDate')) == 4 and attrs.get('expirationDate').isdigit(),
+                    {'error': 'expiration date field bad provided'}
+                )
+
+                Assertions.assert_true_raise400(
+                    len(attrs.get('cvv')) == 3 and attrs.get('cvv').isdigit(),
+                    {'error': 'cvv field bad provided'}
+                )
+
+                number = attrs['number']
+                cvc = attrs['cvv']
+
+                month = int(attrs['expirationDate'][:2])
+                year = attrs['expirationDate'][2:]
+                year = '20' + year
+                year = int(year)
+                Assertions.assert_true_raise400( month >= 1 and  month<=12,
+                    {'error':  'bad month number'}
+                )
+                card = pycard.Card(number=number, month=month, year=year,
+                                   cvc=cvc)
+                Assertions.assert_true_raise400(card.is_valid, {'error': 'The credit card is not valid.'})
+
+            except FieldError:
+
+                raise FieldError('Invalid credit card.')
+
+
         else:
-            Assertions.assert_true_raise400(attrs.get('paypalCustomer'),
-                                            {'error': 'paypal customer value doesn\'t valid'})
+
+            # Email validation
+
+            Assertions.assert_true_raise400(validate_email(attrs.get('paypalCustomer')),
+                                            {'error': 'paypal account provided isn\'t valid'})
+
         return True
 
 
@@ -61,20 +109,21 @@ class RatingSerializer(serializers.ModelSerializer):
 
 
 class OfferSerializer(serializers.ModelSerializer):
+
     paymentPackage = PaymentPackageSerializer(read_only=True)
     paymentPackage_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=PaymentPackage.objects.all(),
                                                            source='paymentPackage')
     eventLocation = EventLocationSerializer(read_only=True)
     eventLocation_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=EventLocation.objects.all(),
                                                           source='eventLocation')
-    transaction = TransactionSerializer(partial=True)
+    transaction = TransactionSerializer()
 
     rating = RatingSerializer(read_only=True)
 
     class Meta:
         model = Offer
         fields = ('id', 'reason', 'appliedVAT', 'description', 'status', 'date', 'hours', 'price', 'currency',
-                  'paymentCode', 'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id',
+                  'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id',
                   'transaction', 'rating')
 
     # Esto sobrescribe una función heredada del serializer.
@@ -254,8 +303,7 @@ class OfferSerializer(serializers.ModelSerializer):
         try:    
             datetime.datetime.strptime(json.get('date'), '%Y-%m-%dT%H:%M:%S')
         except ValueError:
-            badFormat = True
-            Assertions.assert_true_raise400(badFormat is not True, {'error': 'The format is not correct. It should be YYYY-MM-DDTHH:mm:ss'})
+            Assertions.assert_true_raise400(False, {'error': 'The format is not correct. It should be YYYY-MM-DDTHH:mm:ss'})
 
         Assertions.assert_true_raise400(datetime.datetime.strptime(json.get('date'),
                                                                    '%Y-%m-%dT%H:%M:%S') > datetime.datetime.now(),
@@ -273,6 +321,14 @@ class OfferSerializer(serializers.ModelSerializer):
         if paymentPackage.fare is not None:
             Assertions.assert_true_raise400(json.get("hours") is not None,
                                             {'error': 'hours field not provided'})
+            try:
+                decimal = json.get("hours")-int(json.get("hours"))
+                Assertions.assert_true_raise400(decimal == 0.5 or decimal == 0.0,
+                                                {'error': 'hours value bad provided'})
+            except Exception:
+                raise Assertions.assert_true_raise400(False, {'error': 'hours value bad provided'})
+
+
         elif paymentPackage.custom is not None:
             Assertions.assert_true_raise400(json.get("price") is not None,
                                             {'error': 'price field not provided'})

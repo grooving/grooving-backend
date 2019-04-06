@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from Grooving.models import Artist, Portfolio
 from user.serializers import UserSerializer
@@ -34,7 +34,7 @@ class ListArtistSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Artist
         depth = 1
-        fields = ('id', 'photo', 'portfolio')
+        fields = ('id', 'photo', 'rating', 'portfolio')
 
 
 class ArtistSerializer(serializers.ModelSerializer):
@@ -64,11 +64,11 @@ class ArtistSerializer(serializers.ModelSerializer):
         user = artist.user
         user_names = User.objects.values_list('username', flat=True)
         if json.get('username') != user.username:
-            Assertions.assert_true_raise400('username' not in user_names, {"Username already in the system"})
+            Assertions.assert_true_raise400('username' not in user_names, {"codeError": "Username already in the system"})
         user.first_name = json.get('first_name')
-        Assertions.assert_true_raise400(user.first_name, {"First name can't be null"})
+        Assertions.assert_true_raise400(user.first_name, {"codeError": "First name can't be null"})
         user.last_name = json.get('last_name')
-        Assertions.assert_true_raise400(user.last_name, {"Last name can't be null"})
+        Assertions.assert_true_raise400(user.last_name, {"codeError": "Last name can't be null"})
 
         user.save()
         artist.user = user
@@ -77,13 +77,12 @@ class ArtistSerializer(serializers.ModelSerializer):
     @staticmethod
     def _service_create_artist(json: dict):
 
-        user = User.objects.create(username=json.get('username'),
-                                   password=make_password(json.get('password')), first_name=json.get('first_name'),
-                                   last_name=json.get('last_name'), email=json.get('email'))
+        user = User.objects.create(username=json.get('username'), password=make_password(json.get('password')),
+                                   first_name=json.get('first_name'), last_name=json.get('last_name'), email=json.get('email'))
 
         portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'))
 
-        artist = Artist.objects.create(photo='photo', phone='phone',portfolio=portfolio1,user=user)
+        artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'),portfolio=portfolio1,user=user)
 
         return artist
 

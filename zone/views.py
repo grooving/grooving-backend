@@ -1,17 +1,17 @@
 from django.shortcuts import render
 from django.shortcuts import redirect, render
-from Grooving.models import Zone, Artist
+from Grooving.models import Zone, Artist, Portfolio
 from django.contrib import messages
 from django.db.utils import IntegrityError
-
 from rest_framework.response import Response
 from django.shortcuts import render_to_response
 from rest_framework import generics
-from .serializers import ZoneSerializer
+from .serializers import ZoneSerializer, SearchZoneSerializer
 from rest_framework import status
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
+from collections import defaultdict
 
 
 class ZoneManager(generics.RetrieveUpdateDestroyAPIView):
@@ -75,3 +75,22 @@ class CreateZone(generics.CreateAPIView):
                 return Response(serialized.data, status=status.HTTP_201_CREATED)
         else:
             raise PermissionDenied("The artisticGender is not for yourself")
+
+'''
+class ListZones(generics.ListAPIView):
+
+    serializer_class = SearchZoneSerializer
+
+    def get_queryset(self):
+
+    #   Pillamos al padre de todos los padres (o a aquellos que ya no tengan padre)
+
+        zones = Zone.objects.all()
+        zone_by_parent = defaultdict()
+        for zone in zones:
+            if zone.parentZone is not None:
+                zone_by_parent[zone.parentZone].append(zone)
+        items = [{'Zone': zona.name, 'Child zones': zone_by_parent[zona]} for zona in zone_by_parent[1]]
+
+        return items
+'''

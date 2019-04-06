@@ -25,7 +25,7 @@ from offer.views import OfferManage, CreateOffer, PaymentCode
 from portfolioModule.views import PortfolioModuleManager, CreatePortfolioModule
 from artist.views import ListArtist,ArtistRegister
 from offers.views import ListArtistOffers, ListCustomerOffers
-from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage
+from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage,CreateCustomPackage,CreateFarePackage,CreatePerformancePackage
 from calendars.views import CalendarByArtist, CalendarManager, CreateCalendar
 from artistGender.views import ArtisticGenderManager, CreateArtisticGender, ListArtisticGenders
 from zone.views import ZoneManager, CreateZone
@@ -72,5 +72,13 @@ urlpatterns = [
     url(r'^paymentCode/$', PaymentCode.as_view()),
     url(r'^artist/(?P<pk>[0-9]+)/$', ArtistRegister.as_view()),
     url(r'^customer/(?P<pk>[0-9]+)/$', CustomerRegister.as_view()),
+
+    url(r'^fare/$', CreateFarePackage.as_view()),
+    url(r'^performance/$', CreatePerformancePackage.as_view()),
+    url(r'^custom/$', CreateCustomPackage.as_view()),
+
+    url(r'^fare/(?P<pk>[0-9]+)/$', CreateFarePackage.as_view()),
+    url(r'^performance/(?P<pk>[0-9]+)/$', CreatePerformancePackage.as_view()),
+    url(r'^custom/(?P<pk>[0-9]+)/$', CreateCustomPackage.as_view()),
 
 ]
