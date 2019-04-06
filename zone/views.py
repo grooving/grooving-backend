@@ -76,7 +76,7 @@ class CreateZone(generics.CreateAPIView):
         else:
             raise PermissionDenied("The artisticGender is not for yourself")
 
-'''
+
 class ListZones(generics.ListAPIView):
 
     serializer_class = SearchZoneSerializer
@@ -86,11 +86,5 @@ class ListZones(generics.ListAPIView):
     #   Pillamos al padre de todos los padres (o a aquellos que ya no tengan padre)
 
         zones = Zone.objects.all()
-        zone_by_parent = defaultdict()
-        for zone in zones:
-            if zone.parentZone is not None:
-                zone_by_parent[zone.parentZone].append(zone)
-        items = [{'Zone': zona.name, 'Child zones': zone_by_parent[zona]} for zona in zone_by_parent[1]]
 
-        return items
-'''
+        return zones
