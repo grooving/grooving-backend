@@ -46,11 +46,10 @@ class TransactionSerializer(serializers.ModelSerializer):
         # if attrs.get('ibanCustomer') is not None:
         if attrs.get('paypalCustomer') is None:
             Assertions.assert_true_raise400(
-                # attrs.get('ibanCustomer') is not None and
-                attrs.get('holder') is not None and
-                attrs.get('number') is not None and
-                attrs.get('expirationDate') is not None and
-                attrs.get('cvv') is not None,
+                attrs.get('holder') and
+                attrs.get('number') and
+                attrs.get('expirationDate') and
+                attrs.get('cvv'),
                 {'error': 'credit card value doesn\'t valid'}
             )
 
@@ -80,7 +79,7 @@ class TransactionSerializer(serializers.ModelSerializer):
                 year = attrs['expirationDate'][2:]
                 year = '20' + year
                 year = int(year)
-                Assertions.assert_true_raise400( month >= 1 and  month<=12,
+                Assertions.assert_true_raise400(month >= 1 and  month<=12,
                     {'error':  'bad month number'}
                 )
                 card = pycard.Card(number=number, month=month, year=year,
@@ -289,11 +288,11 @@ class OfferSerializer(serializers.ModelSerializer):
 
         json = attrs.data
 
-        Assertions.assert_true_raise400(json.get("description") is not None,
+        Assertions.assert_true_raise400(json.get("description"),
                                         {'error': 'description field not provided'})
-        Assertions.assert_true_raise400(json.get("date") is not None,
+        Assertions.assert_true_raise400(json.get("date"),
                                         {'error': 'date field not provided'})
-        Assertions.assert_true_raise400(json.get("transaction") is not None,
+        Assertions.assert_true_raise400(json.get("transaction"),
                                         {'error': 'transaction field not provided'})
 
         TransactionSerializer.validate(self, json.get("transaction"))
@@ -308,18 +307,18 @@ class OfferSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(datetime.datetime.strptime(json.get('date'),
                                                                    '%Y-%m-%dT%H:%M:%S') > datetime.datetime.now(),
                                         {'error': 'date value is past'})
-        Assertions.assert_true_raise400(json.get("paymentPackage_id") is not None,
+        Assertions.assert_true_raise400(json.get("paymentPackage_id"),
                                         {'error': 'paymentPackage_id field not provided'})
 
         paymentPackage = PaymentPackage.objects.filter(pk=json.get("paymentPackage_id")).first()
 
-        Assertions.assert_true_raise400(paymentPackage is not None,
+        Assertions.assert_true_raise400(paymentPackage,
                                         {'error': 'paymentPackage doesn\'t exist'})
 
         # Custom offer properties for each paymentPackage type
 
         if paymentPackage.fare is not None:
-            Assertions.assert_true_raise400(json.get("hours") is not None,
+            Assertions.assert_true_raise400(json.get("hours"),
                                             {'error': 'hours field not provided'})
             try:
                 decimal = json.get("hours")-int(json.get("hours"))
@@ -328,21 +327,20 @@ class OfferSerializer(serializers.ModelSerializer):
             except Exception:
                 raise Assertions.assert_true_raise400(False, {'error': 'hours value bad provided'})
 
-
         elif paymentPackage.custom is not None:
-            Assertions.assert_true_raise400(json.get("price") is not None,
+            Assertions.assert_true_raise400(json.get("price"),
                                             {'error': 'price field not provided'})
             Assertions.assert_true_raise400(Decimal(json.get("price")) > paymentPackage.custom.minimumPrice,
                                             {'error': 'price entered it\'s below of minimum price'})
-            Assertions.assert_true_raise400(json.get('hours') is not None,
+            Assertions.assert_true_raise400(json.get('hours'),
                                             {'error': 'hours field not provided'})
 
-        Assertions.assert_true_raise400(json.get("eventLocation_id") is not None,
+        Assertions.assert_true_raise400(json.get("eventLocation_id"),
                                         {'error': 'eventLocation_id field not provided'})
 
         eventLocation = EventLocation.objects.filter(pk=attrs.data.get("eventLocation_id")).first()
 
-        Assertions.assert_true_raise400(eventLocation is not None,
+        Assertions.assert_true_raise400(eventLocation,
                                         {'error': 'eventLocation doesn\'t exist'})
 
         # User owner validation
