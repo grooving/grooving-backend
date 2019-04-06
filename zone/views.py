@@ -91,7 +91,7 @@ class ListZones(generics.RetrieveAPIView):
         tree = request.query_params.get("tree", None)
         portfolio = request.query_params.get("portfolio", None)
         zones = None
-        if tree is None and tree == "false" and portfolio is None:
+        if tree is None and portfolio is None:
             zones = list(Zone.objects.all())
             serializer = SearchZoneSerializer(zones, many=True)
             zones = serializer.data
