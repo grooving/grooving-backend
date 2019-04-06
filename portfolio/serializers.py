@@ -2,6 +2,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from Grooving.models import Portfolio, Calendar, ArtisticGender, PortfolioModule, Zone, PaymentPackage, Artist
 from utils.Assertions import Assertions
+import re
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -173,6 +174,13 @@ class PortfolioSerializer(serializers.ModelSerializer):
                         return Assertions.assert_true_raise400(False, json)
 
         if json['videos'] is not None:
+
+            r = re.compile('^(http(s)?:\/\/)?(|((m).)|((w){3}.))?youtu(be|.be)?(\.)')
+
+            for video in json['videos']:
+                print(video)
+                Assertions.assert_true_raise400(r.match(video), {'video': 'Bad format.'})
+
             for video_db in PortfolioModule.objects.filter(type='VIDEO', portfolio=portfolio_in_db):
                 aux = True
                 for video in json['videos']:
@@ -187,14 +195,11 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     if video_db.link == video:
                         aux = False
                 if aux:
-                    if video.startswith("https://www.youtube.com/") or video.startswith("http://www.youtube.com/"):
-                        module = PortfolioModule()
-                        module.type = 'VIDEO'
-                        module.link = video
-                        module.portfolio = portfolio_in_db
-                        module.save()
-                    else:
-                        return Assertions.assert_true_raise400(False, json)
+                    module = PortfolioModule()
+                    module.type = 'VIDEO'
+                    module.link = video
+                    module.portfolio = portfolio_in_db
+                    module.save()
 
         if json['artisticGenders'] is not None:
 
