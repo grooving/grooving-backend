@@ -3,7 +3,6 @@ from django.shortcuts import redirect, render
 from Grooving.models import Zone, Artist, Portfolio
 from django.contrib import messages
 from django.db.utils import IntegrityError
-from utils.whooshSearcher.indexing import get_childs_zone
 from rest_framework.response import Response
 from django.shortcuts import render_to_response
 from rest_framework import generics
