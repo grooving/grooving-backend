@@ -11,6 +11,7 @@ from rest_framework import status
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
+
 from collections import defaultdict
 
 
@@ -77,19 +78,22 @@ class CreateZone(generics.CreateAPIView):
             raise PermissionDenied("The artisticGender is not for yourself")
 
 
-class ListZones(generics.ListAPIView):
+class ListZones(generics.RetrieveAPIView):
 
     serializer_class = SearchZoneSerializer
 
     def get_queryset(self):
 
-    #   Pillamos al padre de todos los padres (o a aquellos que ya no tengan padre)
+        return Zone.objects.all()
 
-        zones = []
+    def get(self, request, *args, **kwargs):
 
-        try:
-
+        tree = request.query_params.get("tree", None)
+        zones = None
+        if tree is None or tree == "false":
             zones = Zone.objects.all()
-            return zones
-        except Zone.DoesNotExist:
-            raise Http404
+        elif tree == "true":
+            zones = SearchZoneSerializer.get_tree()
+        return Response(zones, status=status.HTTP_200_OK)
+
+
