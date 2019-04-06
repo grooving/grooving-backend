@@ -1,10 +1,15 @@
 from _decimal import Decimal
 import os
+import django
+import random
+import string
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'Server.settings')
+django.setup()
 from django.core.paginator import Paginator
 from whoosh import index
 from Grooving.models import Portfolio
 from utils.whooshSearcher.schemas import crear_esquema
-
+from zone.serializers import SearchZoneSerializer
 
 def index_all():
     if not os.path.exists("index"):
@@ -99,5 +104,12 @@ def array_to_string(array):
 
     return result
 
-index_all()
+def array_of_id_to_string(array):
+    result = ""
+    for a in array:
+        result = result + " " +str(a.id)
+
+    return result
+
+#index_all()
 
