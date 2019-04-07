@@ -29,7 +29,15 @@ class CalendarSerializer(serializers.ModelSerializer):
         fields = ('days',)
 
 
+'''class ParentGenderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ArtisticGender
+        fields = ('name',)'''
+
+
 class ArtisticGenderSerializer(serializers.ModelSerializer):
+
+    #parentGender = ParentGenderSerializer(read_only=True)
 
     class Meta:
         model = ArtisticGender
@@ -57,7 +65,7 @@ class PortfolioModuleSerializer(serializers.ModelSerializer):
         fields = ('type', 'link')
 
 
-class PortfolioSerializer(serializers.ModelSerializer):
+class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
 
     artisticName = serializers.CharField()
     biography = serializers.CharField()
@@ -65,14 +73,15 @@ class PortfolioSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField('list_images')
     videos = serializers.SerializerMethodField('list_videos')
     main_photo = serializers.SerializerMethodField('list_photo')
-    artisticGenders = serializers.SerializerMethodField('list_genders')
+    #artisticGenders = serializers.SerializerMethodField('list_genders')
     artist = ArtistSerializer(read_only=True)
     zone = ZoneSerializer(read_only=True)
+    artisticGender = ArtisticGenderSerializer(read_only=True, many=True)
 
     class Meta:
         model = Portfolio
 
-        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGenders',
+        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGender',
                   'artist', 'zone')
 
     @staticmethod
