@@ -24,8 +24,8 @@ def save_data():
     # System configuration
     system_configuration1 = SystemConfiguration.objects.create(minimumPrice='20', currency='EUR', paypalTax='2.9',
                                                                creditCardTax='1.9',
-                                                               vat='21', profit='7', corporateEmail='info@grooving.com',
-                                                               reportEmail='report@grooving.com', appName='Grooving',
+                                                               vat='21', profit='7', corporateEmail='grupogrooving@gmail.com',
+                                                               reportEmail='grupogrooving@gmail.com', appName='Grooving',
                                                                slogan='Connecting artist with you',
                                                                termsText='Terms & conditions',
                                                                privacyText='Privacy text', logo='')
@@ -600,51 +600,51 @@ def save_data():
     # ,,,musician
 
     user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
-                                        first_name='Carlos', last_name='Campos Cuesta', email='infoaudiowar@gmail.com')
+                                        first_name='Carlos', last_name='Campos Cuesta', email='Joseph.jmlc@gmail.com') #'infoaudiowar@gmail.com'
     user1_artist1.save()
     user2_artist2 = User.objects.create(username='artist2', password=make_password('artist2artist2'),
                                         first_name='José Antonio', last_name='Granero Guzmán',
-                                        email='josegraneroguzman@gmail.com')
+                                        email='Joseph.jmlc@gmail.com')#josegraneroguzman@gmail.com
     user2_artist2.save()
     user3_artist3 = User.objects.create(username='artist3', password=make_password('artist3artist3'),
-                                        first_name='Francisco', last_name='Martín', email='saralcum@gmail.com')
+                                        first_name='Francisco', last_name='Martín', email='Joseph.jmlc@gmail.com')#saralcum@gmail.com
     user3_artist3.save()
     user4_artist4 = User.objects.create(username='artist4', password=make_password('artist4artist4'), first_name='Ana',
-                                        last_name='Mellado González', email='mellizalez@hotmail.com')
+                                        last_name='Mellado González', email='Joseph.jmlc@gmail.com')#mellizalez@hotmail.com
     user4_artist4.save()
     user5_artist5 = User.objects.create(username='artist5', password=make_password('artist5artist5'),
                                         first_name='Alejandro', last_name='Arteaga Ramírez',
-                                        email='alejandroarteagaramirez@gmail.com')
+                                        email='Joseph.jmlc@gmail.com') #  alejandroarteagaramirez@gmail.com
     user5_artist5.save()
     user6_artist6 = User.objects.create(username='artist6', password=make_password('artist6artist6'),
-                                        first_name='Pablo', last_name='Delgado Flores', email='pabloj.df@gmail.com')
+                                        first_name='Pablo', last_name='Delgado Flores', email='Joseph.jmlc@gmail.com') #  pabloj.df@gmail.com
     user6_artist6.save()
     user7_artist7 = User.objects.create(username='artist7', password=make_password('artist7artist7'),
-                                        first_name='Domingo', last_name='Muñoz Daza', email='dmunnoz96@gmail.com')
+                                        first_name='Domingo', last_name='Muñoz Daza', email='Joseph.jmlc@gmail.com')# dmunnoz96@gmail.com
     user7_artist7.save()
     user8_artist8 = User.objects.create(username='artist8', password=make_password('artist8artist8'),
-                                        first_name='Rafael', last_name='Córdoba', email='contacto@medictum.es')
+                                        first_name='Rafael', last_name='Córdoba', email='Joseph.jmlc@gmail.com')# contacto@medictum.es
     user8_artist8.save()
     user9_artist9 = User.objects.create(username='artist9', password=make_password('artist9artist9'),
                                         first_name='José Luis', last_name='Salvador Lauret',
-                                        email='joseluis.salvador@gmail.com')
+                                        email='Joseph.jmlc@gmail.com')# joseluis.salvador@gmail.com
     user9_artist9.save()
 
     # ...customers
 
     user10_customer1 = User.objects.create(username='customer1', password=make_password('customer1customer1'),
                                            first_name='Rafael', last_name='Esquivias Ramírez',
-                                           email='resquiviasramirez@gmail.com')
+                                           email='Joseph.jmlc@gmail.com')#resquiviasramirez@gmail.com
     user10_customer1.save()
     user11_customer2 = User.objects.create(username='customer2', password=make_password('customer2customer2'),
-                                           first_name='Jorge', last_name='Jimenez', email='jorjicorral@gmail.com')
+                                           first_name='Jorge', last_name='Jimenez', email='Joseph.jmlc@gmail.com')#jorjicorral@gmail.com
     user11_customer2.save()
     user12_customer3 = User.objects.create(username='customer3', password=make_password('customer3customer3'),
                                            first_name='Juan Manuel', last_name='Fernández',
-                                           email='surlive@imgempresas.com')
+                                           email='Joseph.jmlc@gmail.com')#surlive@imgempresas.com
     user12_customer3.save()
     user13_customer4 = User.objects.create(username='customer4', password=make_password('customer4customer4'),
-                                           first_name='Miguel', last_name='Romero Gutierrez')  # La posada Sevilla
+                                           first_name='Miguel', last_name='Romero Gutierrez', email='Joseph.jmlc@gmail.com')  # La posada Sevilla
     user13_customer4.save()
 
     # ...admins
@@ -1230,6 +1230,10 @@ def save_data():
     portfolio10.zone.add(zone0)
     portfolio10.save()
 
+    portfolio10.artisticGender.add(artistic_gender3)
+    portfolio10.zone.add(zone0)
+    portfolio10.save()
+
     portfolio10_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio10,
                                                          description='Tv show',
                                                          link='https://www.formulatv.com/images/articulos/87000/n87271_n8ovm0YsatFie16RUc3HLxg49PEJzkB75-q.jpg')
@@ -1296,6 +1300,14 @@ def save_data():
                                            biography='She is a Spanish singer and actress. In 2018 she became the most Latin Grammy Award winning Spaniard for a single work. Her song "Malamente" won two awards out of five nominations.')
 
     portfolio11.artisticGender.add(artistic_gender1)
+    portfolio11.zone.add(zone0)
+    portfolio11.save()
+
+    portfolio11.artisticGender.add(artistic_gender3)
+    portfolio11.zone.add(zone0)
+    portfolio11.save()
+
+    portfolio11.artisticGender.add(artistic_gender5)
     portfolio11.zone.add(zone0)
     portfolio11.save()
 
@@ -1370,6 +1382,10 @@ def save_data():
                                            biography='Iis an American singer-songwriter. As one of the world`s leading contemporary recording artists, she is known for narrative songs about her personal life, which has received widespread media coverage.')
 
     portfolio12.artisticGender.add(artistic_gender1)
+    portfolio12.zone.add(zone0)
+    portfolio12.save()
+
+    portfolio12.artisticGender.add(artistic_gender3)
     portfolio12.zone.add(zone0)
     portfolio12.save()
 
@@ -1451,6 +1467,10 @@ def save_data():
                                            biography='Iis an American singer-songwriter. As one of the world`s leading contemporary recording artists, she is known for narrative songs about her personal life, which has received widespread media coverage.')
 
     portfolio13.artisticGender.add(artistic_gender1)
+    portfolio13.zone.add(zone0)
+    portfolio13.save()
+
+    portfolio13.artisticGender.add(artistic_gender3)
     portfolio13.zone.add(zone0)
     portfolio13.save()
 
