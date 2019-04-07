@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from Grooving.models import Portfolio, Calendar, ArtisticGender, PortfolioModule, Zone, PaymentPackage, Artist
+from Grooving.models import Portfolio, Calendar, ArtisticGender, PortfolioModule, PaymentPackage, Artist
 from utils.Assertions import Assertions
 import re
 
@@ -19,7 +19,7 @@ class ArtistSerializer(serializers.ModelSerializer):
     class Meta:
         depth = 1
         model = Artist
-        fields = ('id', 'user', 'photo')
+        fields = ('id', 'rating', 'user', 'photo')
 
 
 class CalendarSerializer(serializers.ModelSerializer):
@@ -29,18 +29,19 @@ class CalendarSerializer(serializers.ModelSerializer):
         fields = ('days',)
 
 
+'''class ParentGenderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ArtisticGender
+        fields = ('name',)'''
+
+
 class ArtisticGenderSerializer(serializers.ModelSerializer):
+
+    #parentGender = ParentGenderSerializer(read_only=True)
 
     class Meta:
         model = ArtisticGender
         fields = ('id', 'name', 'parentGender')
-
-
-class ZoneSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Zone
-        fields = ('name', 'parentZone')
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -57,7 +58,7 @@ class PortfolioModuleSerializer(serializers.ModelSerializer):
         fields = ('type', 'link')
 
 
-class PortfolioSerializer(serializers.ModelSerializer):
+class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
 
     artisticName = serializers.CharField()
     biography = serializers.CharField()
@@ -65,15 +66,15 @@ class PortfolioSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField('list_images')
     videos = serializers.SerializerMethodField('list_videos')
     main_photo = serializers.SerializerMethodField('list_photo')
-    artisticGenders = serializers.SerializerMethodField('list_genders')
+    #artisticGenders = serializers.SerializerMethodField('list_genders')
     artist = ArtistSerializer(read_only=True)
-    zone = ZoneSerializer(read_only=True)
+    artisticGender = ArtisticGenderSerializer(read_only=True, many=True)
 
     class Meta:
         model = Portfolio
 
-        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGenders',
-                  'artist', 'zone')
+        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGender',
+                  'artist')
 
     @staticmethod
     def list_images(self):

@@ -110,6 +110,17 @@ class CreateOffer(generics.CreateAPIView):
             return Response(serialized.data, status=status.HTTP_201_CREATED)
 
 
+class NumOffers(generics.GenericAPIView):
+
+    def get(self, request):
+        articustomer = get_logged_user(request)
+        user_type = get_user_type(articustomer)
+        if user_type == "Artist":
+            numOffers = Offer.objects.filter(paymentPackage__portfolio__artist=articustomer, status='PENDING').count()
+
+        return Response(numOffers)
+
+
 class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer

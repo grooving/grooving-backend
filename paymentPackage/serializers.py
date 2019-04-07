@@ -248,7 +248,7 @@ class PerformanceSerializer(serializers.ModelSerializer):
     def _service_update_package(json: dict, performance: Performance, logged_user: User):
         assert_true(performance, "This offer does not exist")
 
-        performance.minimumPrice = json.get('hours')
+        performance.hours = json.get('hours')
         performance.info = json.get('info')
         performance.price = json.get('price')
         performance.paymentpackage.description = json.get('description')

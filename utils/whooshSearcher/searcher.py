@@ -44,7 +44,7 @@ def search(busqueda="", categoria="", zone="", order=""):
             lista = [Artist.objects.filter(portfolio=i).first() for i in lista]
             #lista =query
         except:
-            lista = Artist.objects.all()
+            lista = list(Artist.objects.all())
         return lista
 
 
