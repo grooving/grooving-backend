@@ -37,7 +37,7 @@ def save_data():
     artistic_gender0 = ArtisticGender.objects.create(name='All genres')
     artistic_gender0.save()
 
-    artistic_gender1 = ArtisticGender.objects.create(name='Music')
+    artistic_gender1 = ArtisticGender.objects.create(name='Music', parentGender=artistic_gender0)
     artistic_gender1.save()
 
     artistic_gender2 = ArtisticGender.objects.create(name='DJ', parentGender=artistic_gender1)
@@ -52,13 +52,13 @@ def save_data():
     artistic_gender5 = ArtisticGender.objects.create(name='Flamenco', parentGender=artistic_gender1)
     artistic_gender5.save()
 
-    artistic_gender6 = ArtisticGender.objects.create(name='Magician')
+    artistic_gender6 = ArtisticGender.objects.create(name='Magician', parentGender=artistic_gender0)
     artistic_gender6.save()
 
-    artistic_gender7 = ArtisticGender.objects.create(name='Comedian')
+    artistic_gender7 = ArtisticGender.objects.create(name='Comedian', parentGender=artistic_gender0)
     artistic_gender7.save()
 
-    artistic_gender8 = ArtisticGender.objects.create(name='Carnival')
+    artistic_gender8 = ArtisticGender.objects.create(name='Carnival', parentGender=artistic_gender0)
     artistic_gender8.save()
 
     artistic_gender9 = ArtisticGender.objects.create(name='Clowns', parentGender=artistic_gender7)
@@ -67,10 +67,10 @@ def save_data():
     artistic_gender11 = ArtisticGender.objects.create(name='Mariachis', parentGender=artistic_gender1)
     artistic_gender11.save()
 
-    artistic_gender12 = ArtisticGender.objects.create(name='Animation')
+    artistic_gender12 = ArtisticGender.objects.create(name='Animation', parentGender=artistic_gender0)
     artistic_gender12.save()
 
-    artistic_gender13 = ArtisticGender.objects.create(name='Theater')
+    artistic_gender13 = ArtisticGender.objects.create(name='Theater', parentGender=artistic_gender0)
     artistic_gender13.save()
 
     artistic_gender10 = ArtisticGender.objects.create(name='Drag Queen', parentGender=artistic_gender12)
