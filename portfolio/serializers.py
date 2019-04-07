@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from Grooving.models import Portfolio, Calendar, ArtisticGender, PortfolioModule, Zone, PaymentPackage, Artist
+from Grooving.models import Portfolio, Calendar, ArtisticGender, PortfolioModule, PaymentPackage, Artist
 from utils.Assertions import Assertions
 import re
 
@@ -44,13 +44,6 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'parentGender')
 
 
-class ZoneSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Zone
-        fields = ('name', 'parentZone')
-
-
 class PaymentPackageSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -75,14 +68,13 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
     main_photo = serializers.SerializerMethodField('list_photo')
     #artisticGenders = serializers.SerializerMethodField('list_genders')
     artist = ArtistSerializer(read_only=True)
-    zone = ZoneSerializer(read_only=True)
     artisticGender = ArtisticGenderSerializer(read_only=True, many=True)
 
     class Meta:
         model = Portfolio
 
         fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGender',
-                  'artist', 'zone')
+                  'artist')
 
     @staticmethod
     def list_images(self):
