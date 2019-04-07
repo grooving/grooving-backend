@@ -11,6 +11,7 @@ from rest_framework import status
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
+from utils.Assertions import Assertions
 from collections import defaultdict
 
 
@@ -76,21 +77,39 @@ class CreateZone(generics.CreateAPIView):
         else:
             raise PermissionDenied("The artisticGender is not for yourself")
 
-'''
-class ListZones(generics.ListAPIView):
+
+class ListZones(generics.RetrieveAPIView):
 
     serializer_class = SearchZoneSerializer
 
     def get_queryset(self):
 
-    #   Pillamos al padre de todos los padres (o a aquellos que ya no tengan padre)
+        return Zone.objects.all()
 
-        zones = Zone.objects.all()
-        zone_by_parent = defaultdict()
-        for zone in zones:
-            if zone.parentZone is not None:
-                zone_by_parent[zone.parentZone].append(zone)
-        items = [{'Zone': zona.name, 'Child zones': zone_by_parent[zona]} for zona in zone_by_parent[1]]
+    def get(self, request, *args, **kwargs):
 
-        return items
-'''
+        tree = request.query_params.get("tree", None)
+        portfolio = request.query_params.get("portfolio", None)
+        zones = None
+        if tree is None and portfolio is None:
+            zones = list(Zone.objects.all())
+            serializer = SearchZoneSerializer(zones, many=True)
+            zones = serializer.data
+        elif tree == "true":
+            Assertions.assert_true_raise400(portfolio is None, {"error": "Portfolio's zones don't have tree option"})
+            zones = SearchZoneSerializer.get_tree()
+        elif portfolio is not None:
+
+            try:
+                portfolio = int(portfolio)
+            except ValueError:
+                Assertions.assert_true_raise400(False, {"error": "Incorrect format for id"})
+
+            zones = list(Portfolio.objects.filter(pk=portfolio).first().zone.all())
+            Assertions.assert_true_raise404(zones is not None)
+            serializer = SearchZoneSerializer(zones, many=True)
+            zones = serializer.data
+
+        return Response(zones, status=status.HTTP_200_OK)
+
+

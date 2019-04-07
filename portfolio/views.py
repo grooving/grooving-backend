@@ -1,6 +1,6 @@
 from Grooving.models import Portfolio, Artist
 from django.core.exceptions import PermissionDenied
-from utils.authentication_utils import get_logged_user
+from utils.authentication_utils import get_logged_user, get_user_type
 from rest_framework.response import Response
 from rest_framework import generics
 from .serializers import PortfolioSerializer
@@ -35,8 +35,9 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
         if Portfolio.objects.filter(pk=pk).first():
             portfolio = Portfolio.objects.filter(pk=pk).first()
             loggedUser = get_logged_user(request)
+            user_type = get_user_type(loggedUser)
             artist = Artist.objects.filter(portfolio=portfolio).first()
-            if loggedUser is not None and loggedUser.id == artist.id:
+            if loggedUser is not None and loggedUser.id == artist.id and user_type == "Artist":
                 serializer = PortfolioSerializer(portfolio, data=request.data, partial=True)
                 if serializer.is_valid():
                     serializer.save(loggedUser)
@@ -47,7 +48,7 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
                 else:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
-                raise PermissionDenied("The portfolio is not yours")
+                raise Assertions.assert_true_raise403(False, {'error': 'Not logged or not owner of Portfolio'})
         else:
             return Assertions.assert_true_raise404(False)
 
