@@ -278,7 +278,408 @@ def save_data():
     zone44 = Zone.objects.create(name='Bizkaia', parentZone=zone1_8)
     zone44.save()
 
-    # Asturias
+    # Famous artist
+    # TAMTA
+    portfolio10 = Portfolio.objects.create(artisticName='Tamta',
+                                           banner='http://www.ddi.com.au/wp-content/uploads/AdobeStock_115567415.jpeg',
+                                           biography='Tamta, is a Georgian-Greek singer. She first achieved popularity in Greece and Cyprus in 2004 for her participation in Super Idol Greece, in which she placed second. She went on to release several charting albums and singles in Greece and Cyprus. Goduadze became a mentor on X Factor Georgia in 2014, and The X Factor Greece in 2016.')
+
+    portfolio10.artisticGender.add(artistic_gender1)
+    portfolio10.zone.add(zone0)
+    portfolio10.save()
+
+    portfolio10.artisticGender.add(artistic_gender3)
+    portfolio10.zone.add(zone0)
+    portfolio10.save()
+
+    portfolio10_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio10,
+                                                         description='Tv show',
+                                                         link='https://www.formulatv.com/images/articulos/87000/n87271_n8ovm0YsatFie16RUc3HLxg49PEJzkB75-q.jpg')
+    portfolio10_module1.save()
+
+    portfolio10_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio10,
+                                                         description='Spot show',
+                                                         link='https://images.immediate.co.uk/volatile/sites/3/2019/02/Screen-Shot-2019-02-20-at-10.45.50-3a87e66.png?quality=45&resize=620,413')
+    portfolio10_module2.save()
+
+    portfolio10_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio10,
+                                                         description='Show',
+                                                         link='https://cyprus-mail.com/wp-content/uploads/2018/12/tamtaweb-770x571.jpg')
+    portfolio10_module3.save()
+
+    portfolio10_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio10,
+                                                         description='Videoclip',
+                                                         link='https://66.media.tumblr.com/94d8c94bcdf538e4316bd59112911141/tumblr_pnye731raA1vzbee3o4_500.gif')
+    portfolio10_module4.save()
+
+    portfolio10_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio10,
+                                                         description='New clip',
+                                                         link='https://www.esc-plus.com/wp-content/uploads/2015/06/tamta-unloved-video-mikrofwno.jpg')
+    portfolio10_module5.save()
+
+    portfolio10_module6 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio10,
+                                                         description='Replay',
+                                                         link='https://www.youtube.com/watch?v=ESkhPXfl4A0')
+    portfolio10_module6.save()
+
+    portfolio10_module7 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio10,
+                                                         description='Πες Μου Αν Τολμάς',
+                                                         link='https://www.youtube.com/watch?v=LiD1kiUF9CQ')
+    portfolio10_module7.save()
+
+    portfolio10_module8 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio10,
+                                                         description='Tag You In My Sky',
+                                                         link='https://www.youtube.com/watch?v=9G7FMG1ar1w')
+    portfolio10_module8.save()
+
+    portfolio10_module9 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio10,
+                                                         description='Don’t Kiss Goodbye',
+                                                         link='https://www.youtube.com/watch?v=S3BagUEA-LU')
+    portfolio10_module9.save()
+
+    availableDays10 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
+                       '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
+
+    calendar10 = Calendar.objects.create(days=availableDays10, portfolio=portfolio10)
+    calendar10.save()
+
+    user1_artist10 = User.objects.create(username='tamta', password=make_password('tamta'), first_name='Tamta',
+                                         last_name='Goduadze', email='Joseph.jmlc@gmail.com')
+    user1_artist10.save()
+
+    artist10 = Artist.objects.create(user=user1_artist10, rating=5.0, portfolio=portfolio10, phone='600304999',
+                                     photo='https://img.discogs.com/jgyNBtPsY4DiLegwMrOC9N_yOc4=/600x600/smart/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/A-1452461-1423476836-6354.jpeg.jpg',
+                                     iban='ES6621000418401234567891')
+    artist10.save()
+
+    performance1_paymentPackageFamous1 = Performance.objects.create(info='This is only mi pay for mi top 8 songs',
+                                                                    hours=1.5, price=200000)
+    performance1_paymentPackageFamous1.save()
+
+    paymentPackage1_performanceFamous1 = PaymentPackage.objects.create(
+        description='Performance Payment Package Type from Tamta',
+        portfolio=portfolio10,
+        performance=performance1_paymentPackageFamous1)
+    paymentPackage1_performanceFamous1.save()
+
+    fare1_paymentPackageFamous1 = Fare.objects.create(priceHour=50000)
+
+    fare1_paymentPackageFamous1.save()
+
+    paymentPackage2_fareFamous1 = PaymentPackage.objects.create(description='Fare Payment Package Type from Tamta',
+                                                                portfolio=portfolio10,
+                                                                fare=fare1_paymentPackageFamous1)
+    paymentPackage2_fareFamous1.save()
+
+    custom1_paymentPackageFamous1 = Custom.objects.create(minimumPrice=50000)
+    custom1_paymentPackageFamous1.save()
+
+    paymentPackage3_customFamous1 = PaymentPackage.objects.create(description='Custom Payment Package Type from Tamta',
+                                                                  portfolio=portfolio10,
+                                                                  custom=custom1_paymentPackageFamous1)
+    paymentPackage3_customFamous1.save()
+
+    # Rosalia
+    portfolio11 = Portfolio.objects.create(artisticName='Rosalía',
+                                           banner='https://rosalia.com/11.de617e41.jpg',
+                                           biography='She is a Spanish singer and actress. In 2018 she became the most Latin Grammy Award winning Spaniard for a single work. Her song "Malamente" won two awards out of five nominations.')
+
+    portfolio11.artisticGender.add(artistic_gender1)
+    portfolio11.zone.add(zone0)
+    portfolio11.save()
+
+    portfolio11.artisticGender.add(artistic_gender3)
+    portfolio11.zone.add(zone0)
+    portfolio11.save()
+
+    portfolio11.artisticGender.add(artistic_gender5)
+    portfolio11.zone.add(zone0)
+    portfolio11.save()
+
+    portfolio11_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
+                                                         description='Interview',
+                                                         link='https://www.elindependiente.com/wp-content/uploads/2018/12/rosalia-efe2-1440x808.jpg')
+    portfolio11_module1.save()
+
+    portfolio11_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
+                                                         description='Billboard',
+                                                         link='https://www.billboard.com/files/media/Rosalia-bb1-2019-feat-billboard-djhirpa-1548.jpg')
+    portfolio11_module2.save()
+
+    portfolio11_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
+                                                         description='Interview',
+                                                         link='https://www.elindependiente.com/wp-content/uploads/2018/10/Rosalia-en-Nueva-York-1440x808.jpeg')
+    portfolio11_module3.save()
+
+    portfolio11_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
+                                                         description='Videoclip malamente',
+                                                         link='https://i0.wp.com/revistafactum.com/wp-content/uploads/2018/11/Rosalia.gif?fit=640%2C360')
+    portfolio11_module4.save()
+
+    portfolio11_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
+                                                         description='Concert',
+                                                         link='https://www.thenation.com/wp-content/uploads/2018/11/rosalia-ap-ba.jpg')
+    portfolio11_module5.save()
+
+    portfolio11_module6 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio11,
+                                                         description='Con Altura',
+                                                         link='https://www.youtube.com/watch?v=ESkhPXfl4A0')
+    portfolio11_module6.save()
+
+    portfolio11_module7 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio11,
+                                                         description='MALAMENTE ',
+                                                         link='https://www.youtube.com/watch?v=Rht7rBHuXW8')
+    portfolio11_module7.save()
+
+    portfolio11_module8 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio11,
+                                                         description='DI MI NOMBRE',
+                                                         link='https://www.youtube.com/watch?v=mUBMPaj0L3o')
+    portfolio11_module8.save()
+
+    portfolio11_module9 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio11,
+                                                         description='BAGDAD ',
+                                                         link='https://www.youtube.com/watch?v=Q2WOIGyGzUQ')
+    portfolio11_module9.save()
+
+    portfolio11_module10 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio11,
+                                                          description='De Plata',
+                                                          link='https://www.youtube.com/watch?v=NfDEEyg3AdA')
+    portfolio11_module10.save()
+
+    availableDays11 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
+                       '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
+
+    calendar11 = Calendar.objects.create(days=availableDays11, portfolio=portfolio11)
+    calendar11.save()
+
+    user1_artist11 = User.objects.create(username='rosalia', password=make_password('rosalia'), first_name='Rosalía ',
+                                         last_name='Vila Tobella', email='Joseph.jmlc@gmail.com')
+    user1_artist11.save()
+
+    artist11 = Artist.objects.create(user=user1_artist11, rating=5.0, portfolio=portfolio11, phone='600304999',
+                                     photo='http://vein.es/wp-content/uploads/2018/11/cap5-lamento.gif',
+                                     iban='ES6621000418401234567891')
+    artist11.save()
+
+
+    performance1_paymentPackageFamous2 = Performance.objects.create(info='I begin with mi new 7 songs and end with Malamente',
+                                                              hours=2, price=500000)
+
+
+    performance1_paymentPackageFamous2.save()
+
+    paymentPackage1_performanceFamous2 = PaymentPackage.objects.create(
+        description='Performance Payment Package Type from Rosalía',
+        portfolio=portfolio11,
+        performance=performance1_paymentPackageFamous2)
+    paymentPackage1_performanceFamous2.save()
+
+
+    fare1_paymentPackageFamous2 = Fare.objects.create(priceHour=100000)
+    fare1_paymentPackageFamous2.save()
+
+    paymentPackage2_fareFamous2 = PaymentPackage.objects.create(description='Fare Payment Package Type from Rosalía',
+                                                          portfolio=portfolio11,
+                                                          fare=fare1_paymentPackageFamous2)
+    paymentPackage2_fareFamous2.save()
+
+    custom1_paymentPackageFamous2 = Custom.objects.create(minimumPrice=100000)
+    custom1_paymentPackageFamous2.save()
+
+    paymentPackage3_customFamous2 = PaymentPackage.objects.create(description='Custom Payment Package Type from Rosalía',
+                                                            portfolio=portfolio11,
+                                                            custom=custom1_paymentPackageFamous2)
+    paymentPackage3_customFamous2.save()
+
+
+    # Taylor Swift
+    portfolio12 = Portfolio.objects.create(artisticName='Taylor Swift',
+                                           banner='http://img2.rtve.es/a/4429044?w=1600&preview=1516350190645.jpg',
+                                           biography='Iis an American singer-songwriter. As one of the world`s leading contemporary recording artists, she is known for narrative songs about her personal life, which has received widespread media coverage.')
+
+    portfolio12.artisticGender.add(artistic_gender1)
+    portfolio12.zone.add(zone0)
+    portfolio12.save()
+
+    portfolio12.artisticGender.add(artistic_gender3)
+    portfolio12.zone.add(zone0)
+    portfolio12.save()
+
+    portfolio12_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
+                                                         description='Paper',
+                                                         link='https://www.eluniversal.com.mx/sites/default/files/2015/07/22/taylor-swift-sept2014-a06.jpg')
+    portfolio12_module1.save()
+
+    portfolio12_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
+                                                         description='Interview',
+                                                         link='https://www.telemundo.com/sites/nbcutelemundo/files/styles/article_cover_image/public/images/gallery/2015/12/02/taylor-swift-sonriendo-1989-tour.jpg?itok=Hw4e6KN3')
+    portfolio12_module2.save()
+
+    '''
+    portfolio12_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
+                                                         description='Smile',
+                                                         link='https://em.wattpad.com/67028e42a9ebd5c53342cae98d2082deb0d12424/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f51387a68664f58415a73575937773d3d2d32372e313536343431653536393831363236393135363633353535333030392e676966?s=fit&w=720&h=720')
+    portfolio12_module3.save()
+    '''
+
+    portfolio12_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
+                                                         description='Videoclip rainbow',
+                                                         link='https://www.nacionrex.com/__export/1548185009356/sites/debate/img/2019/01/22/taylor_swift_cats_bombalurina_personaje_quien_es_foto_instagram_2019_crop1548184963929.jpg_1834093470.jpg')
+    portfolio12_module4.save()
+
+    portfolio12_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
+                                                         description='Concert',
+                                                         link='https://ewedit.files.wordpress.com/2018/06/taylor-swift.jpg')
+    portfolio12_module5.save()
+
+    portfolio12_module6 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
+                                                         description='Interview',
+                                                         link='http://reportajede.news/wp-content/uploads/2017/06/Taylor-Swift.jpg')
+    portfolio12_module6.save()
+
+    portfolio12_module7 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio12,
+                                                         description='Delicate ',
+                                                         link='https://www.youtube.com/watch?v=tCXGJQYZ9JA')
+    portfolio12_module7.save()
+
+    portfolio12_module8 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio12,
+                                                         description='Ready For It',
+                                                         link='https://www.youtube.com/watch?v=wIft-t-MQuE')
+    portfolio12_module8.save()
+
+    portfolio12_module9 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio12,
+                                                         description='Look What You Made Me Do',
+                                                         link='https://www.youtube.com/watch?v=3tmd-ClpJxA')
+    portfolio12_module9.save()
+
+    portfolio12_module10 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio12,
+                                                          description='Wildest Dreams',
+                                                          link='https://www.youtube.com/watch?v=IdneKLhsWOQ')
+    portfolio12_module10.save()
+
+    portfolio12_module11 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio12,
+                                                          description='Style',
+                                                          link='https://www.youtube.com/watch?v=-CmadmM5cOk')
+    portfolio12_module11.save()
+
+    availableDays12 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
+                       '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
+
+    calendar12 = Calendar.objects.create(days=availableDays12, portfolio=portfolio12)
+    calendar12.save()
+
+    user1_artist12 = User.objects.create(username='taylor', password=make_password('taylor'),
+                                         first_name='Taylor Alison ',
+                                         last_name='Swift', email='Joseph.jmlc@gmail.com')
+    user1_artist12.save()
+
+    artist12 = Artist.objects.create(user=user1_artist12, portfolio=portfolio12, phone='600304999',
+                                     photo='https://los40es00.epimg.net/los40/imagenes/2018/08/18/actualidad/1534605895_686141_1534606292_noticia_normal.jpg',
+                                     iban='ES6621000418401234567891')
+    artist12.save()
+
+    performance1_paymentPackageFamous3 = Performance.objects.create(
+        info='I only play my songs of Reputation',
+        hours=2, price=400000)
+
+    performance1_paymentPackageFamous3.save()
+
+    paymentPackage1_performanceFamous3 = PaymentPackage.objects.create(
+        description='Performance Payment Package Type from  Taylor Swift',
+        portfolio=portfolio12,
+        performance=performance1_paymentPackageFamous3)
+    paymentPackage1_performanceFamous3.save()
+
+    fare1_paymentPackageFamous3 = Fare.objects.create(priceHour=75000)
+    fare1_paymentPackageFamous3.save()
+
+    paymentPackage2_fareFamous3 = PaymentPackage.objects.create(description='Fare Payment Package Type from Taylor Swift',
+                                                                portfolio=portfolio12,
+                                                                fare=fare1_paymentPackageFamous3)
+    paymentPackage2_fareFamous3.save()
+
+    custom1_paymentPackageFamous3 = Custom.objects.create(minimumPrice=100000)
+    custom1_paymentPackageFamous3.save()
+
+    paymentPackage3_customFamous3 = PaymentPackage.objects.create(
+        description='Custom Payment Package Type from Rosalía',
+        portfolio=portfolio12,
+        custom=custom1_paymentPackageFamous3)
+    paymentPackage3_customFamous3.save()
+
+    # Charli XCX
+    portfolio13 = Portfolio.objects.create(artisticName='Charli XCX',
+                                           banner='https://celebmix.com/wp-content/uploads/2018/07/charli-xcx-releases-two-of-her-best-singles-yet-focus-no-angel-01.jpg',
+                                           biography='Iis an American singer-songwriter. As one of the world`s leading contemporary recording artists, she is known for narrative songs about her personal life, which has received widespread media coverage.')
+
+    portfolio13.artisticGender.add(artistic_gender1)
+    portfolio13.zone.add(zone0)
+    portfolio13.save()
+
+    portfolio13.artisticGender.add(artistic_gender3)
+    portfolio13.zone.add(zone0)
+    portfolio13.save()
+
+    portfolio13_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio13,
+                                                         description='Road',
+                                                         link='https://www.musicmundial.com/wp-content/uploads/2018/02/charli-xcx.jpg')
+    portfolio13_module1.save()
+
+    portfolio13_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio13,
+                                                         description='Paper',
+                                                         link='https://static.stereogum.com/uploads/2018/05/charli-xcx-5-in-the-morning-1527704949-640x640.jpg')
+    portfolio13_module2.save()
+
+    portfolio13_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio13,
+                                                         description='Old Profile',
+                                                         link='https://pixel.nymag.com/imgs/daily/vulture/2018/08/03/magazine/03-charlie-xcx-feature-lede.w512.h600.2x.jpg')
+    portfolio13_module3.save()
+
+    portfolio13_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio13,
+                                                         description='Old style',
+                                                         link='https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/3/c/1/e/3c1ef403cef2e1dd5bf801b6efcfe4b9.jpg')
+    portfolio13_module4.save()
+
+    portfolio13_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio13,
+                                                         description='Concert',
+                                                         link='https://ksassets.timeincuk.net/wp/uploads/sites/55/2018/07/charli-xcx-sucker-fake-920x584.jpg')
+    portfolio13_module5.save()
+
+    portfolio13_module7 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio13,
+                                                         description='Troye Sivan',
+                                                         link='https://www.youtube.com/watch?v=6-v1b9waHWY')
+    portfolio13_module7.save()
+
+    portfolio13_module8 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio13,
+                                                         description='Girls Night Out',
+                                                         link='https://www.youtube.com/watch?v=IFr3GnboNRU')
+    portfolio13_module8.save()
+
+    portfolio13_module9 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio13,
+                                                         description='Backseat ',
+                                                         link='https://www.youtube.com/watch?v=hiGqKwy4yM0')
+    portfolio13_module9.save()
+
+    portfolio13_module10 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio13,
+                                                          description=' I Love It ',
+                                                          link='https://www.youtube.com/watch?v=UxxajLWwzqY')
+    portfolio13_module10.save()
+
+    availableDays13 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
+                       '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
+
+    calendar13 = Calendar.objects.create(days=availableDays13, portfolio=portfolio13)
+    calendar13.save()
+
+    user1_artist13 = User.objects.create(username='charli', password=make_password('charli'),
+                                         first_name='Charlotte Emma',
+                                         last_name='Aitchison', email='Joseph.jmlc@gmail.com')
+    user1_artist13.save()
+
+    artist13 = Artist.objects.create(user=user1_artist13, portfolio=portfolio13, phone='600304999',
+                                     photo='https://data.whicdn.com/images/152059660/original.gif',
+                                     iban='ES6621000418401234567891')
+    artist13.save()
 
     # Portfolios with his modules
 
@@ -1235,408 +1636,6 @@ def save_data():
 
     offer18_performance1.save()
 
-    # Famous artist
-    # TAMTA
-    portfolio10 = Portfolio.objects.create(artisticName='Tamta',
-                                           banner='http://www.ddi.com.au/wp-content/uploads/AdobeStock_115567415.jpeg',
-                                           biography='Tamta, is a Georgian-Greek singer. She first achieved popularity in Greece and Cyprus in 2004 for her participation in Super Idol Greece, in which she placed second. She went on to release several charting albums and singles in Greece and Cyprus. Goduadze became a mentor on X Factor Georgia in 2014, and The X Factor Greece in 2016.')
-
-    portfolio10.artisticGender.add(artistic_gender1)
-    portfolio10.zone.add(zone0)
-    portfolio10.save()
-
-    portfolio10.artisticGender.add(artistic_gender3)
-    portfolio10.zone.add(zone0)
-    portfolio10.save()
-
-    portfolio10_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio10,
-                                                         description='Tv show',
-                                                         link='https://www.formulatv.com/images/articulos/87000/n87271_n8ovm0YsatFie16RUc3HLxg49PEJzkB75-q.jpg')
-    portfolio10_module1.save()
-
-    portfolio10_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio10,
-                                                         description='Spot show',
-                                                         link='https://images.immediate.co.uk/volatile/sites/3/2019/02/Screen-Shot-2019-02-20-at-10.45.50-3a87e66.png?quality=45&resize=620,413')
-    portfolio10_module2.save()
-
-    portfolio10_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio10,
-                                                         description='Show',
-                                                         link='https://cyprus-mail.com/wp-content/uploads/2018/12/tamtaweb-770x571.jpg')
-    portfolio10_module3.save()
-
-    portfolio10_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio10,
-                                                         description='Videoclip',
-                                                         link='https://66.media.tumblr.com/94d8c94bcdf538e4316bd59112911141/tumblr_pnye731raA1vzbee3o4_500.gif')
-    portfolio10_module4.save()
-
-    portfolio10_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio10,
-                                                         description='New clip',
-                                                         link='https://www.esc-plus.com/wp-content/uploads/2015/06/tamta-unloved-video-mikrofwno.jpg')
-    portfolio10_module5.save()
-
-    portfolio10_module6 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio10,
-                                                         description='Replay',
-                                                         link='https://www.youtube.com/watch?v=ESkhPXfl4A0')
-    portfolio10_module6.save()
-
-    portfolio10_module7 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio10,
-                                                         description='Πες Μου Αν Τολμάς',
-                                                         link='https://www.youtube.com/watch?v=LiD1kiUF9CQ')
-    portfolio10_module7.save()
-
-    portfolio10_module8 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio10,
-                                                         description='Tag You In My Sky',
-                                                         link='https://www.youtube.com/watch?v=9G7FMG1ar1w')
-    portfolio10_module8.save()
-
-    portfolio10_module9 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio10,
-                                                         description='Don’t Kiss Goodbye',
-                                                         link='https://www.youtube.com/watch?v=S3BagUEA-LU')
-    portfolio10_module9.save()
-
-    availableDays10 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
-                       '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
-
-    calendar10 = Calendar.objects.create(days=availableDays10, portfolio=portfolio10)
-    calendar10.save()
-
-    user1_artist10 = User.objects.create(username='tamta', password=make_password('tamta'), first_name='Tamta',
-                                         last_name='Goduadze', email='Joseph.jmlc@gmail.com')
-    user1_artist10.save()
-
-    artist10 = Artist.objects.create(user=user1_artist10, rating=5.0, portfolio=portfolio10, phone='600304999',
-                                     photo='https://img.discogs.com/jgyNBtPsY4DiLegwMrOC9N_yOc4=/600x600/smart/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/A-1452461-1423476836-6354.jpeg.jpg',
-                                     iban='ES6621000418401234567891')
-    artist10.save()
-
-    performance1_paymentPackageFamous1 = Performance.objects.create(info='This is only mi pay for mi top 8 songs',
-                                                                    hours=1.5, price=200000)
-    performance1_paymentPackageFamous1.save()
-
-    paymentPackage1_performanceFamous1 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from Tamta',
-        portfolio=portfolio10,
-        performance=performance1_paymentPackageFamous1)
-    paymentPackage1_performanceFamous1.save()
-
-    fare1_paymentPackageFamous1 = Fare.objects.create(priceHour=50000)
-
-    fare1_paymentPackageFamous1.save()
-
-    paymentPackage2_fareFamous1 = PaymentPackage.objects.create(description='Fare Payment Package Type from Tamta',
-                                                                portfolio=portfolio10,
-                                                                fare=fare1_paymentPackageFamous1)
-    paymentPackage2_fareFamous1.save()
-
-    custom1_paymentPackageFamous1 = Custom.objects.create(minimumPrice=50000)
-    custom1_paymentPackageFamous1.save()
-
-    paymentPackage3_customFamous1 = PaymentPackage.objects.create(description='Custom Payment Package Type from Tamta',
-                                                                  portfolio=portfolio10,
-                                                                  custom=custom1_paymentPackageFamous1)
-    paymentPackage3_customFamous1.save()
-
-    # Rosalia
-    portfolio11 = Portfolio.objects.create(artisticName='Rosalía',
-                                           banner='https://rosalia.com/11.de617e41.jpg',
-                                           biography='She is a Spanish singer and actress. In 2018 she became the most Latin Grammy Award winning Spaniard for a single work. Her song "Malamente" won two awards out of five nominations.')
-
-    portfolio11.artisticGender.add(artistic_gender1)
-    portfolio11.zone.add(zone0)
-    portfolio11.save()
-
-    portfolio11.artisticGender.add(artistic_gender3)
-    portfolio11.zone.add(zone0)
-    portfolio11.save()
-
-    portfolio11.artisticGender.add(artistic_gender5)
-    portfolio11.zone.add(zone0)
-    portfolio11.save()
-
-    portfolio11_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
-                                                         description='Interview',
-                                                         link='https://www.elindependiente.com/wp-content/uploads/2018/12/rosalia-efe2-1440x808.jpg')
-    portfolio11_module1.save()
-
-    portfolio11_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
-                                                         description='Billboard',
-                                                         link='https://www.billboard.com/files/media/Rosalia-bb1-2019-feat-billboard-djhirpa-1548.jpg')
-    portfolio11_module2.save()
-
-    portfolio11_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
-                                                         description='Interview',
-                                                         link='https://www.elindependiente.com/wp-content/uploads/2018/10/Rosalia-en-Nueva-York-1440x808.jpeg')
-    portfolio11_module3.save()
-
-    portfolio11_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
-                                                         description='Videoclip malamente',
-                                                         link='https://i0.wp.com/revistafactum.com/wp-content/uploads/2018/11/Rosalia.gif?fit=640%2C360')
-    portfolio11_module4.save()
-
-    portfolio11_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
-                                                         description='Concert',
-                                                         link='https://www.thenation.com/wp-content/uploads/2018/11/rosalia-ap-ba.jpg')
-    portfolio11_module5.save()
-
-    portfolio11_module6 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio11,
-                                                         description='Con Altura',
-                                                         link='https://www.youtube.com/watch?v=ESkhPXfl4A0')
-    portfolio11_module6.save()
-
-    portfolio11_module7 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio11,
-                                                         description='MALAMENTE ',
-                                                         link='https://www.youtube.com/watch?v=Rht7rBHuXW8')
-    portfolio11_module7.save()
-
-    portfolio11_module8 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio11,
-                                                         description='DI MI NOMBRE',
-                                                         link='https://www.youtube.com/watch?v=mUBMPaj0L3o')
-    portfolio11_module8.save()
-
-    portfolio11_module9 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio11,
-                                                         description='BAGDAD ',
-                                                         link='https://www.youtube.com/watch?v=Q2WOIGyGzUQ')
-    portfolio11_module9.save()
-
-    portfolio11_module10 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio11,
-                                                          description='De Plata',
-                                                          link='https://www.youtube.com/watch?v=NfDEEyg3AdA')
-    portfolio11_module10.save()
-
-    availableDays11 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
-                       '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
-
-    calendar11 = Calendar.objects.create(days=availableDays11, portfolio=portfolio11)
-    calendar11.save()
-
-    user1_artist11 = User.objects.create(username='rosalia', password=make_password('rosalia'), first_name='Rosalía ',
-                                         last_name='Vila Tobella', email='Joseph.jmlc@gmail.com')
-    user1_artist11.save()
-
-    artist11 = Artist.objects.create(user=user1_artist11, rating=5.0, portfolio=portfolio11, phone='600304999',
-                                     photo='http://vein.es/wp-content/uploads/2018/11/cap5-lamento.gif',
-                                     iban='ES6621000418401234567891')
-    artist11.save()
-
-
-    performance1_paymentPackageFamous2 = Performance.objects.create(info='I begin with mi new 7 songs and end with Malamente',
-                                                              hours=2, price=500000)
-
-
-    performance1_paymentPackageFamous2.save()
-
-    paymentPackage1_performanceFamous2 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from Rosalía',
-        portfolio=portfolio11,
-        performance=performance1_paymentPackageFamous2)
-    paymentPackage1_performanceFamous2.save()
-
-
-    fare1_paymentPackageFamous2 = Fare.objects.create(priceHour=100000)
-    fare1_paymentPackageFamous2.save()
-
-    paymentPackage2_fareFamous2 = PaymentPackage.objects.create(description='Fare Payment Package Type from Rosalía',
-                                                          portfolio=portfolio11,
-                                                          fare=fare1_paymentPackageFamous2)
-    paymentPackage2_fareFamous2.save()
-
-    custom1_paymentPackageFamous2 = Custom.objects.create(minimumPrice=100000)
-    custom1_paymentPackageFamous2.save()
-
-    paymentPackage3_customFamous2 = PaymentPackage.objects.create(description='Custom Payment Package Type from Rosalía',
-                                                            portfolio=portfolio11,
-                                                            custom=custom1_paymentPackageFamous2)
-    paymentPackage3_customFamous2.save()
-
-
-    # Taylor Swift
-    portfolio12 = Portfolio.objects.create(artisticName='Taylor Swift',
-                                           banner='http://img2.rtve.es/a/4429044?w=1600&preview=1516350190645.jpg',
-                                           biography='Iis an American singer-songwriter. As one of the world`s leading contemporary recording artists, she is known for narrative songs about her personal life, which has received widespread media coverage.')
-
-    portfolio12.artisticGender.add(artistic_gender1)
-    portfolio12.zone.add(zone0)
-    portfolio12.save()
-
-    portfolio12.artisticGender.add(artistic_gender3)
-    portfolio12.zone.add(zone0)
-    portfolio12.save()
-
-    portfolio12_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
-                                                         description='Paper',
-                                                         link='https://www.eluniversal.com.mx/sites/default/files/2015/07/22/taylor-swift-sept2014-a06.jpg')
-    portfolio12_module1.save()
-
-    portfolio12_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
-                                                         description='Interview',
-                                                         link='https://www.telemundo.com/sites/nbcutelemundo/files/styles/article_cover_image/public/images/gallery/2015/12/02/taylor-swift-sonriendo-1989-tour.jpg?itok=Hw4e6KN3')
-    portfolio12_module2.save()
-
-    '''
-    portfolio12_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
-                                                         description='Smile',
-                                                         link='https://em.wattpad.com/67028e42a9ebd5c53342cae98d2082deb0d12424/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f51387a68664f58415a73575937773d3d2d32372e313536343431653536393831363236393135363633353535333030392e676966?s=fit&w=720&h=720')
-    portfolio12_module3.save()
-    '''
-
-    portfolio12_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
-                                                         description='Videoclip rainbow',
-                                                         link='https://www.nacionrex.com/__export/1548185009356/sites/debate/img/2019/01/22/taylor_swift_cats_bombalurina_personaje_quien_es_foto_instagram_2019_crop1548184963929.jpg_1834093470.jpg')
-    portfolio12_module4.save()
-
-    portfolio12_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
-                                                         description='Concert',
-                                                         link='https://ewedit.files.wordpress.com/2018/06/taylor-swift.jpg')
-    portfolio12_module5.save()
-
-    portfolio12_module6 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
-                                                         description='Interview',
-                                                         link='http://reportajede.news/wp-content/uploads/2017/06/Taylor-Swift.jpg')
-    portfolio12_module6.save()
-
-    portfolio12_module7 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio12,
-                                                         description='Delicate ',
-                                                         link='https://www.youtube.com/watch?v=tCXGJQYZ9JA')
-    portfolio12_module7.save()
-
-    portfolio12_module8 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio12,
-                                                         description='Ready For It',
-                                                         link='https://www.youtube.com/watch?v=wIft-t-MQuE')
-    portfolio12_module8.save()
-
-    portfolio12_module9 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio12,
-                                                         description='Look What You Made Me Do',
-                                                         link='https://www.youtube.com/watch?v=3tmd-ClpJxA')
-    portfolio12_module9.save()
-
-    portfolio12_module10 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio12,
-                                                          description='Wildest Dreams',
-                                                          link='https://www.youtube.com/watch?v=IdneKLhsWOQ')
-    portfolio12_module10.save()
-
-    portfolio12_module11 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio12,
-                                                          description='Style',
-                                                          link='https://www.youtube.com/watch?v=-CmadmM5cOk')
-    portfolio12_module11.save()
-
-    availableDays12 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
-                       '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
-
-    calendar12 = Calendar.objects.create(days=availableDays12, portfolio=portfolio12)
-    calendar12.save()
-
-    user1_artist12 = User.objects.create(username='taylor', password=make_password('taylor'),
-                                         first_name='Taylor Alison ',
-                                         last_name='Swift', email='Joseph.jmlc@gmail.com')
-    user1_artist12.save()
-
-    artist12 = Artist.objects.create(user=user1_artist12, portfolio=portfolio12, phone='600304999',
-                                     photo='https://los40es00.epimg.net/los40/imagenes/2018/08/18/actualidad/1534605895_686141_1534606292_noticia_normal.jpg',
-                                     iban='ES6621000418401234567891')
-    artist12.save()
-
-    performance1_paymentPackageFamous3 = Performance.objects.create(
-        info='I only play my songs of Reputation',
-        hours=2, price=400000)
-
-    performance1_paymentPackageFamous3.save()
-
-    paymentPackage1_performanceFamous3 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from  Taylor Swift',
-        portfolio=portfolio12,
-        performance=performance1_paymentPackageFamous3)
-    paymentPackage1_performanceFamous3.save()
-
-    fare1_paymentPackageFamous3 = Fare.objects.create(priceHour=75000)
-    fare1_paymentPackageFamous3.save()
-
-    paymentPackage2_fareFamous3 = PaymentPackage.objects.create(description='Fare Payment Package Type from Taylor Swift',
-                                                                portfolio=portfolio12,
-                                                                fare=fare1_paymentPackageFamous3)
-    paymentPackage2_fareFamous3.save()
-
-    custom1_paymentPackageFamous3 = Custom.objects.create(minimumPrice=100000)
-    custom1_paymentPackageFamous3.save()
-
-    paymentPackage3_customFamous3 = PaymentPackage.objects.create(
-        description='Custom Payment Package Type from Rosalía',
-        portfolio=portfolio12,
-        custom=custom1_paymentPackageFamous3)
-    paymentPackage3_customFamous3.save()
-
-    # Charli XCX
-    portfolio13 = Portfolio.objects.create(artisticName='Charli XCX',
-                                           banner='https://celebmix.com/wp-content/uploads/2018/07/charli-xcx-releases-two-of-her-best-singles-yet-focus-no-angel-01.jpg',
-                                           biography='Iis an American singer-songwriter. As one of the world`s leading contemporary recording artists, she is known for narrative songs about her personal life, which has received widespread media coverage.')
-
-    portfolio13.artisticGender.add(artistic_gender1)
-    portfolio13.zone.add(zone0)
-    portfolio13.save()
-
-    portfolio13.artisticGender.add(artistic_gender3)
-    portfolio13.zone.add(zone0)
-    portfolio13.save()
-
-    portfolio13_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio13,
-                                                         description='Road',
-                                                         link='https://www.musicmundial.com/wp-content/uploads/2018/02/charli-xcx.jpg')
-    portfolio13_module1.save()
-
-    portfolio13_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio13,
-                                                         description='Paper',
-                                                         link='https://static.stereogum.com/uploads/2018/05/charli-xcx-5-in-the-morning-1527704949-640x640.jpg')
-    portfolio13_module2.save()
-
-    portfolio13_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio13,
-                                                         description='Old Profile',
-                                                         link='https://pixel.nymag.com/imgs/daily/vulture/2018/08/03/magazine/03-charlie-xcx-feature-lede.w512.h600.2x.jpg')
-    portfolio13_module3.save()
-
-    portfolio13_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio13,
-                                                         description='Old style',
-                                                         link='https://studiosol-a.akamaihd.net/uploadfile/letras/fotos/3/c/1/e/3c1ef403cef2e1dd5bf801b6efcfe4b9.jpg')
-    portfolio13_module4.save()
-
-    portfolio13_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio13,
-                                                         description='Concert',
-                                                         link='https://ksassets.timeincuk.net/wp/uploads/sites/55/2018/07/charli-xcx-sucker-fake-920x584.jpg')
-    portfolio13_module5.save()
-
-    portfolio13_module7 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio13,
-                                                         description='Troye Sivan',
-                                                         link='https://www.youtube.com/watch?v=6-v1b9waHWY')
-    portfolio13_module7.save()
-
-    portfolio13_module8 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio13,
-                                                         description='Girls Night Out',
-                                                         link='https://www.youtube.com/watch?v=IFr3GnboNRU')
-    portfolio13_module8.save()
-
-    portfolio13_module9 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio13,
-                                                         description='Backseat ',
-                                                         link='https://www.youtube.com/watch?v=hiGqKwy4yM0')
-    portfolio13_module9.save()
-
-    portfolio13_module10 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio13,
-                                                          description=' I Love It ',
-                                                          link='https://www.youtube.com/watch?v=UxxajLWwzqY')
-    portfolio13_module10.save()
-
-    availableDays13 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
-                       '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
-
-    calendar13 = Calendar.objects.create(days=availableDays13, portfolio=portfolio13)
-    calendar13.save()
-
-    user1_artist13 = User.objects.create(username='charli', password=make_password('charli'),
-                                         first_name='Charlotte Emma',
-                                         last_name='Aitchison', email='Joseph.jmlc@gmail.com')
-    user1_artist13.save()
-
-    artist13 = Artist.objects.create(user=user1_artist13, portfolio=portfolio13, phone='600304999',
-                                     photo='https://data.whicdn.com/images/152059660/original.gif',
-                                     iban='ES6621000418401234567891')
-    artist13.save()
 
 
 os.system('python3 manage.py sqlflush | python3 manage.py dbshell')
