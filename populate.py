@@ -573,7 +573,7 @@ def save_data():
                                          last_name='Swift', email='Joseph.jmlc@gmail.com')
     user1_artist12.save()
 
-    artist12 = Artist.objects.create(user=user1_artist12, portfolio=portfolio12, phone='600304999',
+    artist12 = Artist.objects.create(user=user1_artist12,rating=5.0, portfolio=portfolio12, phone='600304999',
                                      photo='https://los40es00.epimg.net/los40/imagenes/2018/08/18/actualidad/1534605895_686141_1534606292_noticia_normal.jpg',
                                      iban='ES6621000418401234567891')
     artist12.save()
@@ -676,7 +676,7 @@ def save_data():
                                          last_name='Aitchison', email='Joseph.jmlc@gmail.com')
     user1_artist13.save()
 
-    artist13 = Artist.objects.create(user=user1_artist13, portfolio=portfolio13, phone='600304999',
+    artist13 = Artist.objects.create(user=user1_artist13,rating=5.0, portfolio=portfolio13, phone='600304999',
                                      photo='https://data.whicdn.com/images/152059660/original.gif',
                                      iban='ES6621000418401234567891')
     artist13.save()
