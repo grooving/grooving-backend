@@ -24,4 +24,4 @@ django_heroku
 Whoosh == 2.7.4
 captain-pycard
 validate-email-address
-
+braintree==3.52.0
