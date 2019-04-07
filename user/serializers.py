@@ -16,3 +16,12 @@ class ShortUserSerializer(serializers.HyperlinkedModelSerializer):
         depth = 1
         model = User
         fields = ('first_name', 'last_name', 'username')
+
+
+class UserRegisterSerializer(serializers.HyperlinkedModelSerializer):
+    confirm_password = serializers.CharField()
+
+    class Meta:
+        depth = 1
+        model = User
+        fields = ('first_name', 'last_name', 'username', 'email', 'password', 'confirm_password')

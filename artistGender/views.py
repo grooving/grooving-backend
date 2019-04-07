@@ -83,8 +83,6 @@ class ListArtisticGenders(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ArtisticGenderSerializer
 
     def get_object(self, pk=None):
-        if pk is None:
-            pk = self.kwargs['pk']
         try:
             return ArtisticGender.objects.get(pk=pk)
         except ArtisticGender.DoesNotExist:

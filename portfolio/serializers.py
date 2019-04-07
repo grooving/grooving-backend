@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from Grooving.models import Portfolio, Calendar, ArtisticGender, PortfolioModule, Zone, PaymentPackage, Artist
-from utils.Assertions import assert_true
+from Grooving.models import Portfolio, Calendar, ArtisticGender, PortfolioModule, PaymentPackage, Artist
+from utils.Assertions import Assertions
+import re
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -18,7 +19,7 @@ class ArtistSerializer(serializers.ModelSerializer):
     class Meta:
         depth = 1
         model = Artist
-        fields = ('id', 'user', 'photo')
+        fields = ('id', 'rating', 'user', 'photo')
 
 
 class CalendarSerializer(serializers.ModelSerializer):
@@ -28,18 +29,19 @@ class CalendarSerializer(serializers.ModelSerializer):
         fields = ('days',)
 
 
+'''class ParentGenderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ArtisticGender
+        fields = ('name',)'''
+
+
 class ArtisticGenderSerializer(serializers.ModelSerializer):
+
+    #parentGender = ParentGenderSerializer(read_only=True)
 
     class Meta:
         model = ArtisticGender
         fields = ('id', 'name', 'parentGender')
-
-
-class ZoneSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Zone
-        fields = ('name', 'parentZone')
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -56,19 +58,23 @@ class PortfolioModuleSerializer(serializers.ModelSerializer):
         fields = ('type', 'link')
 
 
-class PortfolioSerializer(serializers.ModelSerializer):
+class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
 
-    artisticName = serializers.CharField(read_only=True)
-    biography = serializers.CharField(read_only=True)
-    banner = serializers.CharField(read_only=True)
+    artisticName = serializers.CharField()
+    biography = serializers.CharField()
+    banner = serializers.CharField()
     images = serializers.SerializerMethodField('list_images')
     videos = serializers.SerializerMethodField('list_videos')
     main_photo = serializers.SerializerMethodField('list_photo')
-    artisticGenders = serializers.SerializerMethodField('list_genders')
+    #artisticGenders = serializers.SerializerMethodField('list_genders')
+    artist = ArtistSerializer(read_only=True)
+    artisticGender = ArtisticGenderSerializer(read_only=True, many=True)
 
     class Meta:
         model = Portfolio
-        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGenders')
+
+        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGender',
+                  'artist')
 
     @staticmethod
     def list_images(self):
@@ -109,18 +115,31 @@ class PortfolioSerializer(serializers.ModelSerializer):
             genderlist.append(gender.name)
         return genderlist
 
-    def save(self):
+    @staticmethod
+    def list_artist(self):
 
-        print("Clave primaria:" + str(self.initial_data.get('id')))
-        portfolio = Portfolio.objects.get(pk=self.initial_data.get('id'))
-        portfolio = self._service_update(self.initial_data, portfolio)
-        portfolio.save()
-        return portfolio
+        artist = Artist.objects.filter(portfolio=self).first()
+        artistId = artist.id
+
+        return artistId
+
+    def save(self, loggedUser):
+
+        if Portfolio.objects.filter(pk=self.initial_data.get('id')).first():
+            portfolio = Portfolio.objects.filter(pk=self.initial_data.get('id')).first()
+            if loggedUser.portfolio.id == portfolio.id:
+                portfolio = self._service_update(self.initial_data, portfolio)
+                portfolio.save()
+                return portfolio
+            else:
+                return Assertions.assert_true_raise403(False, {'error': 'User doesnt own this portfolio'})
+        else:
+            return Assertions.assert_true_raise404(False)
 
     @staticmethod
     def _service_update(json: dict, portfolio_in_db):
 
-        assert_true(portfolio_in_db, "No existe un artista con esa id")
+        Assertions.assert_true_raise400(portfolio_in_db is not None, {'error' : 'Portfolio not in database'})
 
         if json['artisticName'] is not None:
             portfolio_in_db.artisticName = json.get('artisticName')
@@ -129,7 +148,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
             portfolio_in_db.banner = json.get('banner')
 
         if json['biography'] is not None:
-            portfolio_in_db.banner = json.get('biography')
+            portfolio_in_db.biography = json.get('biography')
 
         if json['images'] is not None:
             for image_db in PortfolioModule.objects.filter(type='PHOTO', portfolio=portfolio_in_db):
@@ -146,6 +165,7 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     if image_db.link == image:
                         aux = False
                 if aux:
+                    Assertions.assert_true_raise400(image.endswith(".png") or image.endswith(".gif") or image.endswith(".jpg") or image.endswith(".jpeg"), {'error': 'Formato imagen erroneo'})
                     module = PortfolioModule()
                     module.type = 'PHOTO'
                     module.link = image
@@ -153,6 +173,13 @@ class PortfolioSerializer(serializers.ModelSerializer):
                     module.save()
 
         if json['videos'] is not None:
+
+            r = re.compile('^(http(s)?:\/\/)?(|((m).)|((w){3}.))?youtu(be|.be)?(\.)')
+
+            for video in json['videos']:
+                print(video)
+                Assertions.assert_true_raise400(r.match(video), {'video': 'Bad format.'})
+
             for video_db in PortfolioModule.objects.filter(type='VIDEO', portfolio=portfolio_in_db):
                 aux = True
                 for video in json['videos']:
@@ -179,16 +206,17 @@ class PortfolioSerializer(serializers.ModelSerializer):
                 if genre.name in json['artisticGenders']:
                     None
                 else:
-                    portfolio_in_db.artisticGender_set.remove(genre)
+                    portfolio_in_db.artisticGender.remove(genre.id)
 
             for genre in json['artisticGenders']:
-                genre_db = ArtisticGender.objects.get(name=genre)
+                try:
+                    genre_db = ArtisticGender.objects.get(name=genre)
+                except:
+                    return Assertions.assert_true_raise400(False, {'error': 'Genre not in database'})
                 if portfolio_in_db.id in genre_db.portfolio_set.all():
                     None
                 else:
-                    portfolio_in_db.artisticGender.add(portfolio_in_db.id)
-
-
+                    portfolio_in_db.artisticGender.add(genre_db.id)
 
         if json['main_photo'] is not None:
             artist = Artist.objects.get(portfolio=portfolio_in_db)

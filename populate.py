@@ -24,14 +24,18 @@ def save_data():
     # System configuration
     system_configuration1 = SystemConfiguration.objects.create(minimumPrice='20', currency='EUR', paypalTax='2.9',
                                                                creditCardTax='1.9',
-                                                               vat='21', profit='7', corporateEmail='grupogrooving@gmail.com',
-                                                               reportEmail='grupogrooving@gmail.com', appName='Grooving',
+                                                               vat='21', profit='7',
+                                                               corporateEmail='grupogrooving@gmail.com',
+                                                               reportEmail='grupogrooving@gmail.com',
+                                                               appName='Grooving',
                                                                slogan='Connecting artist with you',
                                                                termsText='Terms & conditions',
                                                                privacyText='Privacy text', logo='')
     system_configuration1.save()
 
     # ArtisticGenders
+    artistic_gender0 = ArtisticGender.objects.create(name='All genres')
+    artistic_gender0.save()
 
     artistic_gender1 = ArtisticGender.objects.create(name='Music')
     artistic_gender1.save()
@@ -600,51 +604,59 @@ def save_data():
     # ,,,musician
 
     user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
-                                        first_name='Carlos', last_name='Campos Cuesta', email='Joseph.jmlc@gmail.com') #'infoaudiowar@gmail.com'
+                                        first_name='Carlos', last_name='Campos Cuesta',
+                                        email='Joseph.jmlc@gmail.com')  # 'infoaudiowar@gmail.com'
     user1_artist1.save()
     user2_artist2 = User.objects.create(username='artist2', password=make_password('artist2artist2'),
                                         first_name='José Antonio', last_name='Granero Guzmán',
-                                        email='Joseph.jmlc@gmail.com')#josegraneroguzman@gmail.com
+                                        email='Joseph.jmlc@gmail.com')  # josegraneroguzman@gmail.com
     user2_artist2.save()
     user3_artist3 = User.objects.create(username='artist3', password=make_password('artist3artist3'),
-                                        first_name='Francisco', last_name='Martín', email='Joseph.jmlc@gmail.com')#saralcum@gmail.com
+                                        first_name='Francisco', last_name='Martín',
+                                        email='Joseph.jmlc@gmail.com')  # saralcum@gmail.com
     user3_artist3.save()
     user4_artist4 = User.objects.create(username='artist4', password=make_password('artist4artist4'), first_name='Ana',
-                                        last_name='Mellado González', email='Joseph.jmlc@gmail.com')#mellizalez@hotmail.com
+                                        last_name='Mellado González',
+                                        email='Joseph.jmlc@gmail.com')  # mellizalez@hotmail.com
     user4_artist4.save()
     user5_artist5 = User.objects.create(username='artist5', password=make_password('artist5artist5'),
                                         first_name='Alejandro', last_name='Arteaga Ramírez',
-                                        email='Joseph.jmlc@gmail.com') #  alejandroarteagaramirez@gmail.com
+                                        email='Joseph.jmlc@gmail.com')  # alejandroarteagaramirez@gmail.com
     user5_artist5.save()
     user6_artist6 = User.objects.create(username='artist6', password=make_password('artist6artist6'),
-                                        first_name='Pablo', last_name='Delgado Flores', email='Joseph.jmlc@gmail.com') #  pabloj.df@gmail.com
+                                        first_name='Pablo', last_name='Delgado Flores',
+                                        email='Joseph.jmlc@gmail.com')  # pabloj.df@gmail.com
     user6_artist6.save()
     user7_artist7 = User.objects.create(username='artist7', password=make_password('artist7artist7'),
-                                        first_name='Domingo', last_name='Muñoz Daza', email='Joseph.jmlc@gmail.com')# dmunnoz96@gmail.com
+                                        first_name='Domingo', last_name='Muñoz Daza',
+                                        email='Joseph.jmlc@gmail.com')  # dmunnoz96@gmail.com
     user7_artist7.save()
     user8_artist8 = User.objects.create(username='artist8', password=make_password('artist8artist8'),
-                                        first_name='Rafael', last_name='Córdoba', email='Joseph.jmlc@gmail.com')# contacto@medictum.es
+                                        first_name='Rafael', last_name='Córdoba',
+                                        email='Joseph.jmlc@gmail.com')  # contacto@medictum.es
     user8_artist8.save()
     user9_artist9 = User.objects.create(username='artist9', password=make_password('artist9artist9'),
                                         first_name='José Luis', last_name='Salvador Lauret',
-                                        email='Joseph.jmlc@gmail.com')# joseluis.salvador@gmail.com
+                                        email='Joseph.jmlc@gmail.com')  # joseluis.salvador@gmail.com
     user9_artist9.save()
 
     # ...customers
 
     user10_customer1 = User.objects.create(username='customer1', password=make_password('customer1customer1'),
                                            first_name='Rafael', last_name='Esquivias Ramírez',
-                                           email='Joseph.jmlc@gmail.com')#resquiviasramirez@gmail.com
+                                           email='Joseph.jmlc@gmail.com')  # resquiviasramirez@gmail.com
     user10_customer1.save()
     user11_customer2 = User.objects.create(username='customer2', password=make_password('customer2customer2'),
-                                           first_name='Jorge', last_name='Jimenez', email='Joseph.jmlc@gmail.com')#jorjicorral@gmail.com
+                                           first_name='Jorge', last_name='Jimenez',
+                                           email='Joseph.jmlc@gmail.com')  # jorjicorral@gmail.com
     user11_customer2.save()
     user12_customer3 = User.objects.create(username='customer3', password=make_password('customer3customer3'),
                                            first_name='Juan Manuel', last_name='Fernández',
-                                           email='Joseph.jmlc@gmail.com')#surlive@imgempresas.com
+                                           email='Joseph.jmlc@gmail.com')  # surlive@imgempresas.com
     user12_customer3.save()
     user13_customer4 = User.objects.create(username='customer4', password=make_password('customer4customer4'),
-                                           first_name='Miguel', last_name='Romero Gutierrez', email='Joseph.jmlc@gmail.com')  # La posada Sevilla
+                                           first_name='Miguel', last_name='Romero Gutierrez',
+                                           email='Joseph.jmlc@gmail.com')  # La posada Sevilla
     user13_customer4.save()
 
     # ...admins
@@ -714,14 +726,17 @@ def save_data():
                                                    customer=customer1)
     event_location1.save()
     event_location2 = EventLocation.objects.create(name='Event 2 - La Posada Sevilla',
-                                                   address='C/Astronomía, 42, 41015', equipment='Yes, we have al equipment necesary, we have concerts every week, we have all you need for this job.', zone=zone2,
+                                                   address='C/Astronomía, 42, 41015',
+                                                   equipment='Yes, we have al equipment necesary, we have concerts every week, we have all you need for this job.',
+                                                   zone=zone2,
                                                    customer=customer2)
     event_location2.save()
     event_location3 = EventLocation.objects.create(name='Event 3 - Rosalia en vivo', address='C/Sol, 45, 41652',
                                                    equipment='No', zone=zone2, customer=customer3)
     event_location3.save()
     event_location4 = EventLocation.objects.create(name='Event 4 - Charlie XCX', address='C/Amalgama, 2, 41609',
-                                                   equipment='Yes, we have a stage of 30 square meters, a system of loudspeakers distributed by the local, with a total of 16 loudspeakers and a complete system of LED lights that can be adjusted to the intensity and color desired.', zone=zone4, customer=customer4)
+                                                   equipment='Yes, we have a stage of 30 square meters, a system of loudspeakers distributed by the local, with a total of 16 loudspeakers and a complete system of LED lights that can be adjusted to the intensity and color desired.',
+                                                   zone=zone4, customer=customer4)
     event_location4.save()
 
     # Payment packages with Payment types
@@ -1289,10 +1304,37 @@ def save_data():
                                          last_name='Goduadze', email='Joseph.jmlc@gmail.com')
     user1_artist10.save()
 
-    artist10 = Artist.objects.create(user=user1_artist10, rating=5.0,portfolio=portfolio10, phone='600304999',
+    artist10 = Artist.objects.create(user=user1_artist10, rating=5.0, portfolio=portfolio10, phone='600304999',
                                      photo='https://img.discogs.com/jgyNBtPsY4DiLegwMrOC9N_yOc4=/600x600/smart/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/A-1452461-1423476836-6354.jpeg.jpg',
                                      iban='ES6621000418401234567891')
     artist10.save()
+
+    performance1_paymentPackageFamous1 = Performance.objects.create(info='This is only mi pay for mi top 8 songs',
+                                                                    hours=1.5, price=200000)
+    performance1_paymentPackageFamous1.save()
+
+    paymentPackage1_performanceFamous1 = PaymentPackage.objects.create(
+        description='Performance Payment Package Type from Tamta',
+        portfolio=portfolio10,
+        performance=performance1_paymentPackageFamous1)
+    paymentPackage1_performanceFamous1.save()
+
+    fare1_paymentPackageFamous1 = Fare.objects.create(priceHour=50000)
+
+    fare1_paymentPackageFamous1.save()
+
+    paymentPackage2_fareFamous1 = PaymentPackage.objects.create(description='Fare Payment Package Type from Tamta',
+                                                                portfolio=portfolio10,
+                                                                fare=fare1_paymentPackageFamous1)
+    paymentPackage2_fareFamous1.save()
+
+    custom1_paymentPackageFamous1 = Custom.objects.create(minimumPrice=50000)
+    custom1_paymentPackageFamous1.save()
+
+    paymentPackage3_customFamous1 = PaymentPackage.objects.create(description='Custom Payment Package Type from Tamta',
+                                                                  portfolio=portfolio10,
+                                                                  custom=custom1_paymentPackageFamous1)
+    paymentPackage3_customFamous1.save()
 
     # Rosalia
     portfolio11 = Portfolio.objects.create(artisticName='Rosalía',
@@ -1357,8 +1399,8 @@ def save_data():
     portfolio11_module9.save()
 
     portfolio11_module10 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio11,
-                                                         description='De Plata',
-                                                         link='https://www.youtube.com/watch?v=NfDEEyg3AdA')
+                                                          description='De Plata',
+                                                          link='https://www.youtube.com/watch?v=NfDEEyg3AdA')
     portfolio11_module10.save()
 
     availableDays11 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
@@ -1375,6 +1417,37 @@ def save_data():
                                      photo='http://vein.es/wp-content/uploads/2018/11/cap5-lamento.gif',
                                      iban='ES6621000418401234567891')
     artist11.save()
+
+
+    performance1_paymentPackageFamous2 = Performance.objects.create(info='I begin with mi new 7 songs and end with Malamente',
+                                                              hours=2, price=500000)
+
+
+    performance1_paymentPackageFamous2.save()
+
+    paymentPackage1_performanceFamous2 = PaymentPackage.objects.create(
+        description='Performance Payment Package Type from Rosalía',
+        portfolio=portfolio11,
+        performance=performance1_paymentPackageFamous2)
+    paymentPackage1_performanceFamous2.save()
+
+
+    fare1_paymentPackageFamous2 = Fare.objects.create(priceHour=100000)
+    fare1_paymentPackageFamous2.save()
+
+    paymentPackage2_fareFamous2 = PaymentPackage.objects.create(description='Fare Payment Package Type from Rosalía',
+                                                          portfolio=portfolio11,
+                                                          fare=fare1_paymentPackageFamous2)
+    paymentPackage2_fareFamous2.save()
+
+    custom1_paymentPackageFamous2 = Custom.objects.create(minimumPrice=100000)
+    custom1_paymentPackageFamous2.save()
+
+    paymentPackage3_customFamous2 = PaymentPackage.objects.create(description='Custom Payment Package Type from Rosalía',
+                                                            portfolio=portfolio11,
+                                                            custom=custom1_paymentPackageFamous2)
+    paymentPackage3_customFamous2.save()
+
 
     # Taylor Swift
     portfolio12 = Portfolio.objects.create(artisticName='Taylor Swift',
@@ -1437,13 +1510,13 @@ def save_data():
     portfolio12_module9.save()
 
     portfolio12_module10 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio12,
-                                                         description='Wildest Dreams',
-                                                         link='https://www.youtube.com/watch?v=IdneKLhsWOQ')
+                                                          description='Wildest Dreams',
+                                                          link='https://www.youtube.com/watch?v=IdneKLhsWOQ')
     portfolio12_module10.save()
 
     portfolio12_module11 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio12,
-                                                         description='Style',
-                                                         link='https://www.youtube.com/watch?v=-CmadmM5cOk')
+                                                          description='Style',
+                                                          link='https://www.youtube.com/watch?v=-CmadmM5cOk')
     portfolio12_module11.save()
 
     availableDays12 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
@@ -1452,7 +1525,8 @@ def save_data():
     calendar12 = Calendar.objects.create(days=availableDays12, portfolio=portfolio12)
     calendar12.save()
 
-    user1_artist12 = User.objects.create(username='taylor', password=make_password('taylor'), first_name='Taylor Alison ',
+    user1_artist12 = User.objects.create(username='taylor', password=make_password('taylor'),
+                                         first_name='Taylor Alison ',
                                          last_name='Swift', email='Joseph.jmlc@gmail.com')
     user1_artist12.save()
 
@@ -1460,6 +1534,35 @@ def save_data():
                                      photo='https://los40es00.epimg.net/los40/imagenes/2018/08/18/actualidad/1534605895_686141_1534606292_noticia_normal.jpg',
                                      iban='ES6621000418401234567891')
     artist12.save()
+
+    performance1_paymentPackageFamous3 = Performance.objects.create(
+        info='I only play my songs of Reputation',
+        hours=2, price=400000)
+
+    performance1_paymentPackageFamous3.save()
+
+    paymentPackage1_performanceFamous3 = PaymentPackage.objects.create(
+        description='Performance Payment Package Type from  Taylor Swift',
+        portfolio=portfolio12,
+        performance=performance1_paymentPackageFamous3)
+    paymentPackage1_performanceFamous3.save()
+
+    fare1_paymentPackageFamous3 = Fare.objects.create(priceHour=75000)
+    fare1_paymentPackageFamous3.save()
+
+    paymentPackage2_fareFamous3 = PaymentPackage.objects.create(description='Fare Payment Package Type from Taylor Swift',
+                                                                portfolio=portfolio12,
+                                                                fare=fare1_paymentPackageFamous3)
+    paymentPackage2_fareFamous3.save()
+
+    custom1_paymentPackageFamous3 = Custom.objects.create(minimumPrice=100000)
+    custom1_paymentPackageFamous3.save()
+
+    paymentPackage3_customFamous3 = PaymentPackage.objects.create(
+        description='Custom Payment Package Type from Rosalía',
+        portfolio=portfolio12,
+        custom=custom1_paymentPackageFamous3)
+    paymentPackage3_customFamous3.save()
 
     # Charli XCX
     portfolio13 = Portfolio.objects.create(artisticName='Charli XCX',
@@ -1519,7 +1622,6 @@ def save_data():
                                                           link='https://www.youtube.com/watch?v=UxxajLWwzqY')
     portfolio13_module10.save()
 
-
     availableDays13 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
                        '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
 
@@ -1535,6 +1637,7 @@ def save_data():
                                      photo='https://data.whicdn.com/images/152059660/original.gif',
                                      iban='ES6621000418401234567891')
     artist13.save()
+
 
 os.system('python3 manage.py sqlflush | python3 manage.py dbshell')
 save_data()

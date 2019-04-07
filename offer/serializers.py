@@ -1,21 +1,24 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from django.core.exceptions import PermissionDenied
-from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist
-from utils.Assertions import assert_true
+from django.core.exceptions import FieldError
+from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist, Transaction, Rating, \
+    SystemConfiguration
+from utils.Assertions import assert_true, Assertions
 from django.db import IntegrityError
 from decimal import Decimal
 import random
 import string
 import datetime
+import pycard
+from validate_email_address import validate_email
 from django.utils import timezone
-from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
+from utils.authentication_utils import get_logged_user, get_user_type
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentPackage
-        fields = ('id', 'description', 'appliedVAT', 'portfolio_id', 'performance_id', 'fare_id', 'custom_id')
+        fields = ('id', 'description', 'portfolio_id', 'performance_id', 'fare_id', 'custom_id')
 
 
 class EventLocationSerializer(serializers.ModelSerializer):
@@ -24,18 +27,86 @@ class EventLocationSerializer(serializers.ModelSerializer):
         fields = ('id', 'address', 'equipment', 'description')
 
 
-
-
-
-class OfferCodeSerializer(serializers.ModelSerializer):
-
-
+class CodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Offer
-        fields = ('id', 'description', 'status', 'date', 'hours', 'price','paymentPackage',
-                  'paymentPackage_id', 'eventLocation', 'eventLocation_id','paymentCode')
+        fields = ('paymentCode',)
 
-class OfferSerializer(serializers.ModelSerializer):
+
+class TransactionSerializer(serializers.ModelSerializer):
+
+    expirationDate = serializers.DateField(input_formats='%m%y', format='%Y-%m')
+
+    class Meta:
+        model = Transaction
+        fields = ('id', 'holder', 'expirationDate', 'number', 'cvv', 'paypalCustomer')
+
+    def validate(self, attrs):
+        # if attrs.get('ibanCustomer') is not None:
+        if attrs.get('paypalCustomer') is None:
+            Assertions.assert_true_raise400(
+                attrs.get('holder') and
+                attrs.get('number') and
+                attrs.get('expirationDate') and
+                attrs.get('cvv'),
+                {'error': 'credit card value doesn\'t valid'}
+            )
+
+            # Credit Card validation
+
+            try:
+
+                Assertions.assert_true_raise400(
+                    len(attrs.get('number')) == 16 and attrs.get('number').isdigit(),
+                    {'error': 'credit card number field bad provided'}
+                )
+
+                Assertions.assert_true_raise400(
+                    len(attrs.get('expirationDate')) == 4 and attrs.get('expirationDate').isdigit(),
+                    {'error': 'expiration date field bad provided'}
+                )
+
+                Assertions.assert_true_raise400(
+                    len(attrs.get('cvv')) == 3 and attrs.get('cvv').isdigit(),
+                    {'error': 'cvv field bad provided'}
+                )
+
+                number = attrs['number']
+                cvc = attrs['cvv']
+
+                month = int(attrs['expirationDate'][:2])
+                year = attrs['expirationDate'][2:]
+                year = '20' + year
+                year = int(year)
+                Assertions.assert_true_raise400(month >= 1 and  month<=12,
+                    {'error':  'bad month number'}
+                )
+                card = pycard.Card(number=number, month=month, year=year,
+                                   cvc=cvc)
+                Assertions.assert_true_raise400(card.is_valid, {'error': 'The credit card is not valid.'})
+
+            except FieldError:
+
+                raise FieldError('Invalid credit card.')
+
+
+        else:
+
+            # Email validation
+
+            Assertions.assert_true_raise400(validate_email(attrs.get('paypalCustomer')),
+                                            {'error': 'paypal account provided isn\'t valid'})
+
+        return True
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ('score', 'comment')
+
+
+class GetOfferSerializer(serializers.ModelSerializer):
 
     paymentPackage = PaymentPackageSerializer(read_only=True)
     paymentPackage_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=PaymentPackage.objects.all(),
@@ -44,17 +115,38 @@ class OfferSerializer(serializers.ModelSerializer):
     eventLocation_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=EventLocation.objects.all(),
                                                           source='eventLocation')
 
+    rating = RatingSerializer(read_only=True)
+
     class Meta:
         model = Offer
-        fields = ('id', 'description', 'status', 'date', 'hours', 'price','paymentPackage',
-                  'paymentPackage_id', 'eventLocation', 'eventLocation_id')
+        fields = ('id', 'reason', 'appliedVAT', 'description', 'status', 'date', 'hours', 'price', 'currency',
+                  'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id', 'rating')
+
+
+class OfferSerializer(serializers.ModelSerializer):
+
+    paymentPackage = PaymentPackageSerializer(read_only=True)
+    paymentPackage_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=PaymentPackage.objects.all(),
+                                                               source='paymentPackage')
+    eventLocation = EventLocationSerializer(read_only=True)
+    eventLocation_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=EventLocation.objects.all(),
+                                                              source='eventLocation')
+    transaction = TransactionSerializer()
+
+    rating = RatingSerializer(read_only=True)
+
+    class Meta:
+        model = Offer
+        fields = ('id', 'reason', 'appliedVAT', 'description', 'status', 'date', 'hours', 'price', 'currency',
+                      'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id',
+                      'transaction', 'rating')
 
     # Esto sobrescribe una función heredada del serializer.
     def save(self, pk=None, logged_user=None):
         if self.initial_data.get('id') is None and pk is None:
             # creation
             offer = Offer()
-            offer = self._service_create(self.initial_data, offer)
+            offer = self._service_create(self.initial_data, offer, logged_user)
         else:
             # edit
             id = (self.initial_data, pk)[pk is not None]
@@ -65,29 +157,29 @@ class OfferSerializer(serializers.ModelSerializer):
         return offer
 
     @staticmethod
-    def service_made_payment_artist(paymentCode,user_logged):
-        user_type = get_user_type(user_logged)
-        if not None and user_type != "Artist":
-            raise PermissionDenied("Only an artist can get the payment")
+    def service_made_payment_artist(paymentCode, user_logged):
+        Assertions.assert_true_raise403(user_logged is not None)
+        Assertions.assert_true_raise400(paymentCode is not None, {"paymentCode": "null payment code"})
 
         offer = Offer.objects.filter(paymentCode=paymentCode).first()
-        assert_true(offer, 'La oferta no existe')
-        if offer.paymentPackage.portfolio.artist.id != user_logged.id:
-            raise PermissionDenied("You are not the artist who was hired.")
-        assert_true(offer.status == 'CONTRACT_MADE', 'Posiblemente el pago ya se ha hecho o no se puede realizar ya')
-        
+        Assertions.assert_true_raise404(offer is not None)
+        Assertions.assert_true_raise403(offer.paymentPackage.portfolio.artist.id == user_logged.id)
+        Assertions.assert_true_raise400(offer.status == 'CONTRACT_MADE',
+                                        {"status": 'El pago ya se ha hecho o no se puede realizar ya'})
+
         offer.status = 'PAYMENT_MADE'
-        #try:
-            #TODO: Pago por braintree
-        #except:
-            #offer.status == 'CONTRACT_MADE'
+        # try:
+        # TODO: Pago por braintree
+        # except:
+        # offer.status == 'CONTRACT_MADE'
         offer.save()
+        return offer
 
     # Se pondrá service delante de nuestros métodos para no sobrescribir por error métodos del serializer
     @staticmethod
-    def _service_create(json: dict, offer: Offer):
+    def _service_create(json: dict, offer: Offer, logged_user: User):
         offer.description = json.get('description')
-        offer.date = json.get('date')
+        offer.date = datetime.datetime.strptime(json.get('date'), "%Y-%m-%dT%H:%M:%S")
         offer.status = 'PENDING'
         offer.paymentCode = None
         offer.eventLocation = EventLocation.objects.get(pk=json.get('eventLocation_id'))
@@ -95,15 +187,40 @@ class OfferSerializer(serializers.ModelSerializer):
         if offer.paymentPackage.performance is not None:
             offer.hours = offer.paymentPackage.performance.hours
             offer.price = offer.paymentPackage.performance.price
-            offer.currency = offer.paymentPackage.performance.currency
+            offer.currency = offer.paymentPackage.currency
         elif offer.paymentPackage.fare is not None:
             offer.hours = json.get('hours')
             offer.price = offer.paymentPackage.fare.priceHour * Decimal(json.get('hours'))
-            offer.currency = offer.paymentPackage.fare.currency
+            offer.currency = offer.paymentPackage.currency
         elif offer.paymentPackage.custom is not None:
             offer.hours = json.get('hours')
             offer.price = json.get('price')
-            offer.currency = offer.paymentPackage.custom.currency
+            offer.currency = offer.paymentPackage.currency
+
+        transaction = Transaction()
+        if json.get('transaction').get('paypalCustomer') is not None:
+            transaction = Transaction.objects.create(
+                paypalCustomer=json.get('transaction').get('paypalCustomer'),
+            )
+            Customer.objects.filter(user_id=logged_user.id).update(
+                paypalAccount=transaction.paypalCustomer,
+            )
+        else:
+            transaction = Transaction.objects.create(
+                # ibanCustomer=json.get('transaction').get('ibanCustomer'),
+                holder=json.get('transaction').get('holder'),
+                number=json.get('transaction').get('number'),
+                expirationDate=datetime.datetime.strptime(json.get('transaction').get('expirationDate'), "%m%y").date(),
+                cvv=json.get('transaction').get('cvv')
+            )
+            Customer.objects.filter(user_id=logged_user.id).update(
+                # ibanCustomer=json.get('transaction').get('ibanCustomer'),
+                holder=transaction.holder,
+                number=transaction.number,
+                expirationDate=transaction.expirationDate
+            )
+        offer.transaction = transaction
+        offer.appliedVAT = SystemConfiguration.objects.all().first().vat
         offer.save()
         return offer
 
@@ -112,7 +229,7 @@ class OfferSerializer(serializers.ModelSerializer):
         print(offer_in_db.date)
         now = timezone.now()
 
-        assert_true(offer_in_db.date > now,"The offer ocurred in the past")
+        assert_true(offer_in_db.date > now, "The offer ocurred in the past")
         offer = self._service_update_status(json, offer_in_db, logged_user)
 
         return offer
@@ -124,21 +241,23 @@ class OfferSerializer(serializers.ModelSerializer):
             normal_transitions = {}
             artist_flowstop_transitions = {}
             customer_flowstop_transitions = {}
-            # TODO: Must be check the login
 
             creator = Customer.objects.filter(pk=offer_in_db.eventLocation.customer.id).first()
             if get_user_type(logged_user) == 'Customer' and creator == logged_user:
                 customer_flowstop_transitions = {'PENDING': 'WITHDRAWN',
-                                                 'CONTRACT_MADE': 'CANCELED'}
+                                                 'CONTRACT_MADE': 'CANCELLED_CUSTOMER'}
 
             artistReceiver = Artist.objects.filter(pk=offer_in_db.paymentPackage.portfolio.artist.id).first()
-            print(artistReceiver)
-            print(logged_user)
+
             if get_user_type(logged_user) == 'Artist' and artistReceiver == logged_user:
                 normal_transitions = {'PENDING': 'CONTRACT_MADE'}
                 artist_flowstop_transitions = {'PENDING': 'REJECTED',
-                                               'CONTRACT_MADE': 'CANCELED'}
-
+                                               'CONTRACT_MADE': 'CANCELLED_ARTIST'}
+                if json_status == 'CONTRACT_MADE':
+                    Assertions.assert_true_raise400(logged_user.iban is not None,
+                                                    {"ERROR_CODE:""You must introduce your bank account before"})
+                    offer_in_db.transaction.ibanArtist = logged_user.iban
+                    offer_in_db.transaction.save()
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
                                   or artist_flowstop_transitions.get(status_in_db) == json_status
@@ -151,7 +270,7 @@ class OfferSerializer(serializers.ModelSerializer):
 
             if json_status == "CONTRACT_MADE":
                 while True:
-                    # noinspection PyBroadException
+
                     try:
                         offer_in_db.paymentCode = self._service_generate_unique_payment_code()
                         offer_in_db.save()
@@ -161,6 +280,9 @@ class OfferSerializer(serializers.ModelSerializer):
 
             print("ESTADO DB ANTES:" + offer_in_db.status)
             offer_in_db.status = json_status
+            offer_in_db.reason = json.get('reason')
+            if json_status == "CONTRACT_MADE" or json_status == "PAYMENT_MADE":
+                offer_in_db.reason = None
             offer_in_db.save()
             print("ESTADO DB DESPUES:" + offer_in_db.status)
             return offer_in_db
@@ -171,42 +293,79 @@ class OfferSerializer(serializers.ModelSerializer):
         payment_code = random_alphanumeric
         return payment_code
 
-    def validate(self, request):
-        customer = Customer.objects.filter(user_id=request.user.id).first()
-        if customer is None:
-            raise serializers.ValidationError("user isn't authorized")
-        json = request.data
-        if json.get("description") is None:
-            raise serializers.ValidationError("description field not provided")
-        if json.get("date") is None:
-            raise serializers.ValidationError("date field not provided")
-        elif datetime.datetime.strptime(json.get('date'), '%Y-%m-%dT%H:%M:%S') < datetime.datetime.now():
-            raise serializers.ValidationError("date value is past")
-        if json.get("paymentPackage_id") is None:
-            raise serializers.ValidationError("paymentPackage_id field not provided")
+    def validate(self, attrs):
+
+        # Customer validation
+
+        customer = Customer.objects.filter(user_id=attrs.user.id).first()
+
+        Assertions.assert_true_raise403(customer is not None, {'error': 'user isn\'t authorized'})
+
+        # Body request validation
+
+        json = attrs.data
+
+        Assertions.assert_true_raise400(json.get("description"),
+                                        {'error': 'description field not provided'})
+        Assertions.assert_true_raise400(json.get("date"),
+                                        {'error': 'date field not provided'})
+        Assertions.assert_true_raise400(json.get("transaction"),
+                                        {'error': 'transaction field not provided'})
+
+        TransactionSerializer.validate(self, json.get("transaction"))
+
+        # Past date value validation
+
+        try:    
+            datetime.datetime.strptime(json.get('date'), '%Y-%m-%dT%H:%M:%S')
+        except ValueError:
+            Assertions.assert_true_raise400(False, {'error': 'The format is not correct. It should be YYYY-MM-DDTHH:mm:ss'})
+
+        Assertions.assert_true_raise400(datetime.datetime.strptime(json.get('date'),
+                                                                   '%Y-%m-%dT%H:%M:%S') > datetime.datetime.now(),
+                                        {'error': 'date value is past'})
+        Assertions.assert_true_raise400(json.get("paymentPackage_id"),
+                                        {'error': 'paymentPackage_id field not provided'})
+
         paymentPackage = PaymentPackage.objects.filter(pk=json.get("paymentPackage_id")).first()
-        if paymentPackage is None:
-            raise serializers.ValidationError("paymentPackage doesn't exist")
-        elif paymentPackage.fare is not None:
-            if json.get("hours") is None:
-                raise serializers.ValidationError("hours field not provided")
+
+        Assertions.assert_true_raise400(paymentPackage,
+                                        {'error': 'paymentPackage doesn\'t exist'})
+
+        # Custom offer properties for each paymentPackage type
+
+        if paymentPackage.fare is not None:
+            Assertions.assert_true_raise400(json.get("hours"),
+                                            {'error': 'hours field not provided'})
+            try:
+                decimal = json.get("hours")-int(json.get("hours"))
+                Assertions.assert_true_raise400(decimal == 0.5 or decimal == 0.0,
+                                                {'error': 'hours value bad provided'})
+            except Exception:
+                raise Assertions.assert_true_raise400(False, {'error': 'hours value bad provided'})
+
         elif paymentPackage.custom is not None:
-            if json.get("price") is None:
-                raise serializers.ValidationError("price field not provided")
-            elif Decimal(json.get("price")) < paymentPackage.custom.minimumPrice:
-                raise serializers.ValidationError("price entered it's below of minimum price")
-            if json.get("hours") is None:
-                raise serializers.ValidationError("hours field not provided")
-        if json.get("eventLocation_id") is None:
-            raise serializers.ValidationError("eventLocation_id field not provided")
-        eventLocation = EventLocation.objects.filter(pk=request.data.get("eventLocation_id")).first()
-        if eventLocation is None:
-            raise serializers.ValidationError("eventLocation doesn't exist")
-        elif eventLocation.customer.user != request.user:
-            raise serializers.ValidationError("can't reference this eventLocation")
+            Assertions.assert_true_raise400(json.get("price"),
+                                            {'error': 'price field not provided'})
+            Assertions.assert_true_raise400(Decimal(json.get("price")) > paymentPackage.custom.minimumPrice,
+                                            {'error': 'price entered it\'s below of minimum price'})
+            Assertions.assert_true_raise400(json.get('hours'),
+                                            {'error': 'hours field not provided'})
+
+        Assertions.assert_true_raise400(json.get("eventLocation_id"),
+                                        {'error': 'eventLocation_id field not provided'})
+
+        eventLocation = EventLocation.objects.filter(pk=attrs.data.get("eventLocation_id")).first()
+
+        Assertions.assert_true_raise400(eventLocation,
+                                        {'error': 'eventLocation doesn\'t exist'})
+
+        # User owner validation
+
+        Assertions.assert_true_raise400(eventLocation.customer.user.id == attrs.user.id,
+                                        {'error': 'can\'t reference this eventLocation'})
+
         return True
-
-
 
 
 """
@@ -217,5 +376,3 @@ class CreateOfferRequest(serializers.ModelSerializer):
         fields = ('description', 'date', 'hours', 'price', 'paymentPackage_id', 'eventLocation_id')
 
 """
-
-

@@ -19,19 +19,19 @@ from rest_framework import routers
 from django.conf.urls import url, include
 from login.views import LoginManager
 from portfolio.views import PortfolioManager
-from artist.views import GetPersonalInformationOfArtist
-from customer.views import GetPersonalInformationOfCustomer, GetPublicInformationOfCustomer
-from offer.views import OfferManage, CreateOffer, PaymentCode
+from artist.views import GetPersonalInformationOfArtist,ArtistRegister
+from customer.views import GetPersonalInformationOfCustomer, GetPublicInformationOfCustomer, CustomerRegister
+from offer.views import OfferManage, CreateOffer, PaymentCode,NumOffers
 from portfolioModule.views import PortfolioModuleManager, CreatePortfolioModule
-from artist.views import ListArtist
+from artist.views import ListArtist,ArtistRegister
 from offers.views import ListArtistOffers, ListCustomerOffers
-from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage
+from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage,CreateCustomPackage,CreateFarePackage,CreatePerformancePackage
 from calendars.views import CalendarByArtist, CalendarManager, CreateCalendar
 from artistGender.views import ArtisticGenderManager, CreateArtisticGender, ListArtisticGenders
-from zone.views import ZoneManager, CreateZone
+from zone.views import ZoneManager, CreateZone, ListZones
 from eventLocation.views import EventLocationManager, CreateEventLocation
+from rating.views import GetRatings, PostRating
 from rest_framework.authtoken.views import obtain_auth_token
-
 router = routers.DefaultRouter()
 
 urlpatterns = [
@@ -60,9 +60,28 @@ urlpatterns = [
     url(r'^zone/$', CreateZone.as_view()),
     url(r'^zone/(?P<pk>[0-9]+)/$', ZoneManager.as_view()),
     path('api/login/', LoginManager.as_view(), name='login'),
+    url(r'^paymentCode/$', PaymentCode.as_view()),
+    url(r'^signupArtist/$', ArtistRegister.as_view()),
+    url(r'^signupCustomer/$', CustomerRegister.as_view()),
     url(r'^artist/offers/$', ListArtistOffers.as_view()),
     url(r'^customer/offers/$', ListCustomerOffers.as_view()),
-    url(r'^paymentCode/$', PaymentCode.as_view())
+    url(r'^artist/(?P<pk>[0-9]+)/$', ArtistRegister.as_view()),
+    url(r'^customer/(?P<pk>[0-9]+)/$', CustomerRegister.as_view()),
+    url(r'^artist/ratings/(?P<pk>[0-9]+)/$', GetRatings.as_view()),
+    url(r'^customer/rating/(?P<pk>[0-9]+)/$', PostRating.as_view()),
+    url(r'^paymentCode/$', PaymentCode.as_view()),
+    url(r'^artist/(?P<pk>[0-9]+)/$', ArtistRegister.as_view()),
+    url(r'^customer/(?P<pk>[0-9]+)/$', CustomerRegister.as_view()),
 
+    url(r'^fare/$', CreateFarePackage.as_view()),
+    url(r'^performance/$', CreatePerformancePackage.as_view()),
+    url(r'^custom/$', CreateCustomPackage.as_view()),
+
+    url(r'^fare/(?P<pk>[0-9]+)/$', CreateFarePackage.as_view()),
+    url(r'^performance/(?P<pk>[0-9]+)/$', CreatePerformancePackage.as_view()),
+    url(r'^custom/(?P<pk>[0-9]+)/$', CreateCustomPackage.as_view()),
+    url(r'^zones/$', ListZones.as_view()),
+
+    url(r'^numOffers/$', NumOffers.as_view())
 
 ]
