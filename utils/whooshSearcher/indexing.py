@@ -1,10 +1,17 @@
+import os
+import django
+
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'Server.settings')
+django.setup()
+
 from django.core.paginator import Paginator
 from whoosh import index
 from Grooving.models import Portfolio
 from utils.whooshSearcher.schemas import crear_esquema
 from zone.serializers import SearchZoneSerializer
 from django.conf import settings
-import os
+
 
 def index_all():
     if not os.path.exists(settings.PROJECT_PATH+'/utils/whooshSearcher/index'):
@@ -106,5 +113,5 @@ def array_of_id_to_string(array):
 
     return result
 
-#index_all()
+index_all()
 
