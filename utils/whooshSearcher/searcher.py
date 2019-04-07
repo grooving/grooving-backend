@@ -6,11 +6,12 @@ from whoosh.query.terms import MultiTerm
 from whoosh.sorting import MultiFacet
 from utils.whooshSearcher.schemas import crear_esquema
 from Grooving.models import Portfolio, Artist
-
-
+import os
+from django.conf import settings
+BASE_DIR = settings.BASE_DIR
 def search(busqueda="", categoria="", zone="", order=""):
 
-    ix = index.open_dir("utils/whooshSearcher/index")
+    ix = index.open_dir(os.path.join(BASE_DIR, 'utils/whooshSearcher/index'))
     lista = []
     with ix.searcher() as searcher:
         query = None
