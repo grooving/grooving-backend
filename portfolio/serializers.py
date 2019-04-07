@@ -19,7 +19,7 @@ class ArtistSerializer(serializers.ModelSerializer):
     class Meta:
         depth = 1
         model = Artist
-        fields = ('id', 'user', 'photo')
+        fields = ('id', 'rating', 'user', 'photo')
 
 
 class CalendarSerializer(serializers.ModelSerializer):
