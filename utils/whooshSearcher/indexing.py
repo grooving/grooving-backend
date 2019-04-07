@@ -10,13 +10,14 @@ from whoosh import index
 from Grooving.models import Portfolio
 from utils.whooshSearcher.schemas import crear_esquema
 from zone.serializers import SearchZoneSerializer
-
+from django.conf import settings
+BASE_DIR = settings.BASE_DIR
 def index_all():
-    if not os.path.exists("utils/whooshSearcher/index"):
-        os.mkdir("utils/whooshSearcher/index")
-    index.create_in("utils/whooshSearcher/index", crear_esquema())
+    if not os.path.exists(os.path.join(BASE_DIR, 'utils/whooshSearcher/index')):
+        os.mkdir(os.path.join(BASE_DIR, 'utils/whooshSearcher/index'))
+    index.create_in(os.path.join(BASE_DIR, 'utils/whooshSearcher/index'), crear_esquema())
 
-    ix = index.open_dir("utils/whooshSearcher/index")
+    ix = index.open_dir(os.path.join(BASE_DIR, 'utils/whooshSearcher/index'))
     writer = ix.writer()
 
     portfolios = Portfolio.objects.all().order_by("id")
