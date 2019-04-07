@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<h1 style="color: #FFFFF; font-family: Helvetica"> {{ title }} </h1></br>
+<h2 style="color: #FFFFF; font-family: Helvetica">Event information: </h2>
+<table>
+    <tr>
+        <td><b>Name event</b>:</td>
+        <td>{{ event_name }}</td>
+    </tr>
+    <tr>
+        <td><b>Address</b>:</td>
+        <td>{{ event_address }}</td>
+    </tr>
+    <tr>
+        <td><b>Package selected</b>:</td>
+        <td>{{ event_payment_package }}</td>
+    </tr>
+    <tr>
+        <td><b>Date</b>:</td>
+        <td>{{ event_date }} at {{ event_hour }}</td>
+    </tr>
+    <tr>
+        <td><b>Duration</b>:</td>
+        <td>{{ event_duration }} hour/s</td>
+    </tr>
+    <tr>
+        <td><b>Price</b>:</td>
+        <td>{{ event_price }} {{ event_currency }}</td>
+    </tr>
+    <tr>
+        <td><b>Equipment</b>:</td>
+        <td>{{ event_equipment }}</td>
+    </tr>
+</table>
+
+<h2 style="color: #FFFFF; font-family: Helvetica">Terms & conditions: </h2>
+<p>{{ system_configuration_terms_and_conditions }}</p>
+</body>
+</html>

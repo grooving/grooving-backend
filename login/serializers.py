@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from Grooving.models import Artist, Customer, Portfolio, EventLocation
+from Grooving.models import Artist, Customer, Portfolio, EventLocation,Offer
 from django.contrib.auth.models import User
-
+from django.db import models
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -18,14 +18,18 @@ class PortfolioSerializer(serializers.ModelSerializer):
 
 
 class ArtistSerializer(serializers.ModelSerializer):
-
+    numOffers = serializers.SerializerMethodField('give_offers')
     user = UserSerializer(read_only=True)
     portfolio = PortfolioSerializer(read_only=True)
 
     class Meta:
         model = Artist
-        fields = ('id', 'photo', 'phone', 'portfolio', 'user')
+        fields = ('id', 'photo', 'phone', 'portfolio', 'user','numOffers')
 
+    @staticmethod
+    def give_offers(self):
+        numOffers = Offer.objects.filter(paymentPackage__portfolio__artist=self,status='PENDING').count()
+        return numOffers
 
 class CustomerSerializer(serializers.ModelSerializer):
 
@@ -41,7 +45,9 @@ class LoginSerializer(serializers.Serializer):
     def to_representation(self, instance):
         if isinstance(instance, Artist):
             artistSerializer = ArtistSerializer(instance)
+
             return {
+
                 'artist': artistSerializer.data,
             }
         elif isinstance(instance, Customer):
@@ -52,4 +58,5 @@ class LoginSerializer(serializers.Serializer):
 
 
     class Meta:
+
         fields = ('user', 'artist', 'customer')

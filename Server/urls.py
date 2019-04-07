@@ -21,14 +21,14 @@ from login.views import LoginManager
 from portfolio.views import PortfolioManager
 from artist.views import GetPersonalInformationOfArtist,ArtistRegister
 from customer.views import GetPersonalInformationOfCustomer, GetPublicInformationOfCustomer, CustomerRegister
-from offer.views import OfferManage, CreateOffer, PaymentCode
+from offer.views import OfferManage, CreateOffer, PaymentCode,NumOffers
 from portfolioModule.views import PortfolioModuleManager, CreatePortfolioModule
 from artist.views import ListArtist,ArtistRegister
 from offers.views import ListArtistOffers, ListCustomerOffers
 from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage,CreateCustomPackage,CreateFarePackage,CreatePerformancePackage
 from calendars.views import CalendarByArtist, CalendarManager, CreateCalendar
 from artistGender.views import ArtisticGenderManager, CreateArtisticGender, ListArtisticGenders
-from zone.views import ZoneManager, CreateZone
+from zone.views import ZoneManager, CreateZone, ListZones
 from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
 from rest_framework.authtoken.views import obtain_auth_token
@@ -80,5 +80,8 @@ urlpatterns = [
     url(r'^fare/(?P<pk>[0-9]+)/$', CreateFarePackage.as_view()),
     url(r'^performance/(?P<pk>[0-9]+)/$', CreatePerformancePackage.as_view()),
     url(r'^custom/(?P<pk>[0-9]+)/$', CreateCustomPackage.as_view()),
+    url(r'^zones/$', ListZones.as_view()),
+
+    url(r'^numOffers/$', NumOffers.as_view())
 
 ]

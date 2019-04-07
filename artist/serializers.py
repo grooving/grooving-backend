@@ -34,7 +34,7 @@ class ListArtistSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Artist
         depth = 1
-        fields = ('id', 'photo', 'portfolio')
+        fields = ('id', 'photo', 'rating', 'portfolio')
 
 
 class ArtistSerializer(serializers.ModelSerializer):

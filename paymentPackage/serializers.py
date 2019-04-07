@@ -14,32 +14,47 @@ class CurrencySerializer(serializers.HyperlinkedModelSerializer):
         fields = ('currency',)
 
 
-#class CustomSerializer(serializers.HyperlinkedModelSerializer):
+class CustomPaymentPackageSerializer(serializers.HyperlinkedModelSerializer):
 
-   # currency = CurrencySerializer(read_only=True)
-
-   # class Meta:
-    #    model = Custom
-    #    fields = ('minimumPrice', 'currency')
+    class Meta:
+        model = Custom
+        fields = ('minimumPrice',)
 
 
-class FareSerializer(serializers.HyperlinkedModelSerializer):
-
-    currency = CurrencySerializer(read_only=True)
+class FarePaymentPackageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Fare
-        fields = ('priceHour')
+        fields = ('priceHour',)
 
 
-class PerformanceSerializer(serializers.HyperlinkedModelSerializer):
-
-    currency = CurrencySerializer(read_only=True)
+class PerformancePaymentPackageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Performance
         fields = ('info', 'hours', 'price')
 
+class PaymentPackageListSerializer(serializers.ModelSerializer):
+    custom = CustomPaymentPackageSerializer(read_only=True)
+    fare = FarePaymentPackageSerializer(read_only=True)
+    performance = PerformancePaymentPackageSerializer(read_only=True)
+
+    class Meta:
+        model = PaymentPackage
+        fields = ('id', 'description', 'custom', 'custom_id', 'fare', 'fare_id', 'performance', 'performance_id')
+
+    @staticmethod
+    def list_payment(self):
+
+        paymentPackage = PaymentPackage.objects.get(pk=self.id)
+        package = ""
+        if paymentPackage.performance is not None:
+            package = package + "{type: Performance,"
+        elif paymentPackage.custom is not None:
+            package = "Custom"
+        elif paymentPackage.fare is not None:
+            package = "Fare"
+        return package
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
 
@@ -233,7 +248,7 @@ class PerformanceSerializer(serializers.ModelSerializer):
     def _service_update_package(json: dict, performance: Performance, logged_user: User):
         assert_true(performance, "This offer does not exist")
 
-        performance.minimumPrice = json.get('hours')
+        performance.hours = json.get('hours')
         performance.info = json.get('info')
         performance.price = json.get('price')
         performance.paymentpackage.description = json.get('description')

@@ -67,7 +67,10 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
             serializer = CalendarSerializer(calendar, data=request.data, partial=True)
 
             if serializer.is_valid():
-                serializer.save()
+                serializer.save(pk,loggedUser)
+                calendar = self.get_object(pk)
+                serializer = CalendarSerializer(calendar, data=serializer.data, partial=True)
+                serializer.is_valid()
                 return Response(serializer.data)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
