@@ -11,7 +11,7 @@ from django.conf import settings
 BASE_DIR = settings.BASE_DIR
 def search(busqueda="", categoria="", zone="", order=""):
 
-    ix = index.open_dir(os.path.join(BASE_DIR, 'utils/whooshSearcher/index'))
+    ix = index.open_dir(settings.PROJECT_PATH+'/utils/whooshSearcher/index')
     lista = []
     with ix.searcher() as searcher:
         query = None
