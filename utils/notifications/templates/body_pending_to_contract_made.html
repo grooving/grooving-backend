@@ -37,6 +37,12 @@
         <td><b>Equipment</b>:</td>
         <td>{{ event_equipment }}</td>
     </tr>
+    {% if event_payment_code %}
+    <tr>
+        <td><b>Payment code</b>:</td>
+        <td>{{ event_payment_code }}</td>
+    </tr>
+    {% endif %}
 </table>
 
 <h2 style="color: #FFFFF; font-family: Helvetica">Terms & conditions: </h2>
