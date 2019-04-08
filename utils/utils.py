@@ -1,13 +1,15 @@
-from Grooving.models import Artist, Customer,Offer
+from django.utils import timezone
 
 
 def auto_update_old_offers(offers):
+    now = timezone.now()
     if not offers:
-        return None
+        pass
     if len(offers) == 0:
-        return None
+        pass
     else:
-        pending_offers = []
         for o in offers:
-            if o.status == 'PENDING' and o.date is None:
-                pass
+            if o.status == 'PENDING' and o.date < now:
+                o.status = 'REJECTED'
+                o.save()
+
