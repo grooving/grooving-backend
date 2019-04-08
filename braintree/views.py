@@ -16,9 +16,8 @@ from Grooving.models import Transaction
 
 class CheckoutView(generics.RetrieveUpdateDestroyAPIView):
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         # We need the user to assign the transaction
-        self.user = request.user
 
         # Ha! There it is. This allows you to switch the
         # Braintree environments by changing one setting
@@ -51,6 +50,9 @@ class InfoView(generics.RetrieveUpdateDestroyAPIView):
         # Braintree customer info
         # You can, for sure, use several approaches to gather customer infos
         # For now, we'll simply use the given data of the user instance
+
+        self.user = request.user
+
         customer_kwargs = {
             "first_name": self.user.first_name,
             "last_name": self.user.last_name,
@@ -66,7 +68,7 @@ class InfoView(generics.RetrieveUpdateDestroyAPIView):
             # I recommend to send an error report to all admins
             # , including ``result.message`` and ``self.user.email``
 
-            context = self.get_context_data()
+            context = request.data['context']
             # We re-generate the form and display the relevant braintree error
             context.update({
                 'body': request.data,
@@ -143,10 +145,3 @@ class InfoView(generics.RetrieveUpdateDestroyAPIView):
         # Now you can send out confirmation emails or update your metrics
         # or do whatever makes you and your customers happy :)
         return Response()
-
-    def get_context_data(self, **kwargs):
-        ctx = super(CheckoutView, self).get_context_data(**kwargs)
-        ctx.update({
-            'braintree_client_token': self.braintree_client_token,
-        })
-        return ctx
