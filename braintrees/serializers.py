@@ -8,17 +8,19 @@ from django.core.exceptions import FieldError
 
 class TransactionSerializer(serializers.ModelSerializer):
 
+    payment_method_nonce = serializers.CharField()
     amount = serializers.FloatField()
     expirationDate = serializers.DateField(input_formats='%m%y', format='%Y-%m')
 
     class Meta:
         model = Transaction
-        fields = ('id', 'amount', 'holder', 'expirationDate', 'number', 'cvv', 'paypalCustomer')
+        fields = ('id', 'amount', 'holder', 'expirationDate', 'number', 'cvv', 'paypalCustomer', 'payment_method_nonce')
 
     def validate(self, attrs):
         # if attrs.get('ibanCustomer') is not None:
         if attrs.get('paypalCustomer') is None:
             Assertions.assert_true_raise400(
+                attrs.get('amount') and
                 attrs.get('holder') and
                 attrs.get('number') and
                 attrs.get('expirationDate') and
@@ -29,6 +31,11 @@ class TransactionSerializer(serializers.ModelSerializer):
             # Credit Card validation
 
             try:
+
+                Assertions.assert_true_raise400(
+                    len(attrs.get('amount')) > 0 and attrs.get('amount').isdigit() and int(attrs.get('amount')) > 0,
+                    {'error': 'Error with the amount introduced'}
+                )
 
                 Assertions.assert_true_raise400(
                     len(attrs.get('number')) == 16 and attrs.get('number').isdigit(),

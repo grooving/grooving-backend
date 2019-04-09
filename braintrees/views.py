@@ -14,6 +14,10 @@ from rest_framework.response import Response
 from Grooving.models import Transaction
 from .serializers import TransactionSerializer
 from utils.authentication_utils import get_logged_user
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from utils.Assertions import Assertions
+from Grooving.models import Offer, Customer
+from django.core.exceptions import PermissionDenied
 
 class BraintreeViews(generics.GenericAPIView):
 
@@ -26,10 +30,16 @@ class BraintreeViews(generics.GenericAPIView):
         # Ha! There it is. This allows you to switch theself.braintree_client_token
         # Braintree environments by changing one setting
 
+        logged_user = get_logged_user(request)
+
+        Assertions.assert_true_raise401(logged_user, {'error': 'You are not logged in'})
+
         if settings.BRAINTREE_PRODUCTION:
             braintree_env = braintree.Environment.Production
         else:
             braintree_env = braintree.Environment.Sandbox
+
+        Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
 
         # Configure Braintree
         braintree.Configuration.configure(
@@ -45,6 +55,8 @@ class BraintreeViews(generics.GenericAPIView):
         # if you've already saved the ID
         self.braintree_client_token = braintree.ClientToken.generate({})
 
+        Assertions.assert_true_raise400(self.braintree_client_token, {'error': 'There was an error generating the token'})
+
         return Response(self.braintree_client_token)
 
     def post(self, request, *args, **kwargs):
@@ -54,11 +66,14 @@ class BraintreeViews(generics.GenericAPIView):
 
         logged_user = get_logged_user(request)
 
+        Assertions.assert_true_raise401(logged_user, {'error': 'You are not logged in'})
+
         if settings.BRAINTREE_PRODUCTION:
             braintree_env = braintree.Environment.Production
         else:
             braintree_env = braintree.Environment.Sandbox
 
+        Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
         # Configure Braintree
         braintree.Configuration.configure(
             environment=braintree_env,
@@ -69,6 +84,7 @@ class BraintreeViews(generics.GenericAPIView):
 
         serializer = TransactionSerializer(data=request.data, partial=True)
         serializer.is_valid()
+
         """
         Create a new transaction and submit it.
         I don't gather the whole address in this example, but I can
@@ -85,20 +101,11 @@ class BraintreeViews(generics.GenericAPIView):
             elif i > 2:
                 year += char
             i = i + 1
-        print(month)
-        print(year)
         number = ""
         i = 0
 
-        for char in serializer.data['number']:
-            if i < 6:
-                number += char
-            elif i > 5 and i < (len(serializer.data['number']) - 4):
-                number += "*"
-            elif i > (len(serializer.data['number']) - 5):
-                number += char
-
-            i = i + 1
+        Assertions.assert_true_raise400(len(year) == 4, {'error': 'Error  with the year pls try again'})
+        Assertions.assert_true_raise400(len(month) == 2, {'error': 'Error  with the month pls try again'})
 
 
         # You can use the form to calculate a total or add a static total amount
@@ -110,8 +117,17 @@ class BraintreeViews(generics.GenericAPIView):
         }
 
         customer = braintree.Customer.create(customer_kwargs)
+        Assertions.assert_true_raise400(customer, {'error': 'No customer was created'})
+
+        Assertions.assert_true_raise400(customer, {'error': 'No amount was given'})
+        Assertions.assert_true_raise400(customer, {'error': 'No card holder was given'})
+        Assertions.assert_true_raise400(customer, {'error': 'No card number was given'})
+        Assertions.assert_true_raise400(customer, {'error': 'No cvv was given'})
+        Assertions.assert_true_raise400(customer, {'error': 'No nounce was created'})
+
         result = braintree.Transaction.sale({
             "customer_id": customer.customer.id,
+            "payment_method_nonce": serializer.data['payment_method_nonce'],
             "amount": serializer.data['amount'],
             "credit_card": {
                 "cardholder_name": serializer.data['holder'],
@@ -129,7 +145,7 @@ class BraintreeViews(generics.GenericAPIView):
                 'submit_for_settlement': False,
             }
         })
-        print(result.is_success)
+
         if not result.is_success:
             # Card could've been declined or whatever
             # I recommend to send an error report to all admins
@@ -145,9 +161,6 @@ class BraintreeViews(generics.GenericAPIView):
 
         # Finally there's the transaction ID
         # You definitely want to send it to your database
-        #transaction = Transaction.objects.get()
-        #transaction_id = result.transaction.id
-        #transaction.id = transaction_id
         # Now you can send out confirmation emails or update your metrics
         # or do whatever makes you and your customers happy :)
         return Response(serializer.data)
