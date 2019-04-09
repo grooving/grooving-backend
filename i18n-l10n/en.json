@@ -1,0 +1,4 @@
+{
+  "ERROR_DELETE_USER_UNKNOWN": "Commit error to delete an unknown user",
+  "ERROR_DELETE_USER": "Commit error to delete user"
+}
