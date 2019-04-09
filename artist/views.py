@@ -1,8 +1,7 @@
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics
 from .serializers import ArtistInfoSerializer
 from django.core.exceptions import PermissionDenied
-from Grooving.models import Artist, ArtisticGender
+from Grooving.models import Artist
 from utils.authentication_utils import get_user_type, get_logged_user
 from .serializers import ListArtistSerializer
 from rest_framework.response import Response
@@ -11,6 +10,9 @@ from utils.Assertions import Assertions
 from artist.serializers import ArtistSerializer
 from django.http import Http404
 from utils.whooshSearcher.searcher import search
+
+
+
 class GetPersonalInformationOfArtist(generics.ListAPIView):
 
     serializer_class = ArtistInfoSerializer
@@ -79,8 +81,6 @@ class ListArtist(generics.ListAPIView):
         return queryset
 
 
-
-
 class ArtistRegister(generics.CreateAPIView):
 
     serializer_class = ArtistSerializer
@@ -102,6 +102,7 @@ class ArtistRegister(generics.CreateAPIView):
             serializer = ArtistSerializer(data=request.data, partial=True)
             if serializer.validate_artist(request):
                 serializer.save()
+
                 return Response(status=status.HTTP_201_CREATED)
 
         else:

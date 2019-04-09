@@ -6,6 +6,8 @@ from portfolio.serializers import ArtisticGenderSerializer
 from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
 from utils.Assertions import Assertions
+from utils.notifications.notifications import Notifications
+from django.core.validators import URLValidator
 
 
 class ArtistInfoSerializer(serializers.HyperlinkedModelSerializer):
@@ -49,11 +51,12 @@ class ArtistSerializer(serializers.ModelSerializer):
     def save(self):
 
         artist = self._service_create_artist(self.initial_data)
+        Notifications.send_email_welcome(artist.user.id)
         return artist
 
     def update(self, pk):
 
-        artist = self._service_update_artist(self.initial_data,pk)
+        artist = self._service_update_artist(self.initial_data, pk)
         return artist
 
     @staticmethod
@@ -62,14 +65,19 @@ class ArtistSerializer(serializers.ModelSerializer):
         artist = Artist.objects.get(pk=pk)
         artist.phone = json.get('phone')
         user = artist.user
-        user_names = User.objects.values_list('username', flat=True)
-        if json.get('username') != user.username:
-            Assertions.assert_true_raise400('username' not in user_names, {"codeError": "Username already in the system"})
         user.first_name = json.get('first_name')
-        Assertions.assert_true_raise400(user.first_name, {"codeError": "First name can't be null"})
         user.last_name = json.get('last_name')
-        Assertions.assert_true_raise400(user.last_name, {"codeError": "Last name can't be null"})
+        Assertions.assert_true_raise400(user.first_name, {'error': "First name not provided"})
+        Assertions.assert_true_raise400(user.last_name, {'error': "Last name not provided"})
+        if user.phone:
+            Assertions.assert_true_raise400(user.phone.isnumeric(), {'error': "Phone must be a number"})
+            Assertions.assert_true_raise400(len(user.phone) == 9, {'error': "Phone length must be 9 digits"})
 
+        Assertions.assert_true_raise400(len(user.first_name) > 1 and len(user.last_name) > 1,
+                                        {'error': "First or second name do not seem real"})
+        if user.photo:
+            val = URLValidator(verify_exists=True)
+            Assertions.assert_true_raise400(val(user.photo), {'error': 'This photo url does not exist'})
         user.save()
         artist.user = user
         return artist
@@ -78,11 +86,13 @@ class ArtistSerializer(serializers.ModelSerializer):
     def _service_create_artist(json: dict):
 
         user = User.objects.create(username=json.get('username'), password=make_password(json.get('password')),
-                                   first_name=json.get('first_name'), last_name=json.get('last_name'), email=json.get('email'))
+                                   first_name=json.get('first_name'), last_name=json.get('last_name'),
+                                   email=json.get('email'))
 
         portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'))
 
-        artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'),portfolio=portfolio1,user=user)
+        artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'),
+                                       portfolio=portfolio1, user=user)
 
         return artist
 
@@ -93,40 +103,51 @@ class ArtistSerializer(serializers.ModelSerializer):
         emails = User.objects.values_list('email', flat=True)
         password = request.data.get("password")
         username = request.data.get("username")
-
+        confirm_password = request.data.get("confirm_password")
         email = request.data.get("email")
         first_name = request.data.get("first_name")
         last_name = request.data.get("last_name")
+        phone = request.data.get("phone")
 
-        if username in user_names:
-            raise serializers.ValidationError("Username already used in the system")
-        if email in emails:
-            raise serializers.ValidationError("Email already used in the system")
-        if username is None:
-            raise serializers.ValidationError("Username field not provided")
-        if password is None:
-            raise serializers.ValidationError("Password field not provided")
-        if password != request.data.get("confirm_password"):
-            raise serializers.ValidationError("Password and confirmation must match")
-        if email is None:
-            raise serializers.ValidationError("Email field not provided")
-        if first_name is None:
-            raise serializers.ValidationError("First name field not provided")
-        if last_name is None:
-            raise serializers.ValidationError("Last name field not provided")
+        Assertions.assert_true_raise400(request.data, {'error': "Empty form is not valid"})
 
-        if username in password or password in username:
-            raise serializers.ValidationError("Password can't be similar than username")
+        # Empty validations
+        Assertions.assert_true_raise400(username, {'error': "Username field not provided"})
+        Assertions.assert_true_raise400(password, {'error': "Password field not provided"})
+        Assertions.assert_true_raise400(email, {'error': "Email field not provided"})
+        Assertions.assert_true_raise400(first_name, {'error': "First name not provided"})
+        Assertions.assert_true_raise400(last_name, {'error': "Last name not provided"})
+        Assertions.assert_true_raise400(password == confirm_password, {'error': "Password and confirmation must match"})
 
-        if email in password or password in username:
-            raise serializers.ValidationError("Last name can't be similar than username")
+        # Email in use validation
+        Assertions.assert_true_raise400(not(email in emails), {'error': "Email already in use"})
 
-        if first_name in password or password in first_name:
-            raise serializers.ValidationError("First name can't be similar than username")
+        # Password validations
+        Assertions.assert_true_raise400(not(username in password or password in username),
+                                        {'error': "Password can't be similar to the username"})
 
-        if last_name in password or password in last_name:
-            raise serializers.ValidationError("Last name can't be similar than username")
+        Assertions.assert_true_raise400(not (email in password or password in username),
+                                        {'error': "Password can't be similar to the email"})
 
-        if len(password) < 8:
-            raise serializers.ValidationError("Password length is too short")
+        Assertions.assert_true_raise400(not (first_name in password or password in first_name),
+                                        {'error': "Password can't be similar to the first name"})
+
+        Assertions.assert_true_raise400(not (last_name in password or password in last_name),
+                                        {'error': "Password can't be similar to the last name"})
+
+        Assertions.assert_true_raise400('123' not in password and 'qwerty' not in password and
+                                        not password.isnumeric(), {'error':  "Password must be complex"})
+
+        Assertions.assert_true_raise400(len(password) > 7, {'error': "Password is too short"})
+
+        Assertions.assert_true_raise400(username not in user_names, {'error': "Username already in use"})
+
+        if phone:
+            Assertions.assert_true_raise400(phone.isnumeric(), {'error': "Phone must be a number"})
+            Assertions.assert_true_raise400(len(phone) == 9, {'error': "Phone length must be 9 digits"})
+
+        Assertions.assert_true_raise400(len(first_name) > 1 and len(last_name) > 1,
+                                        {'error': "First or second name do not seem real"})
+        Assertions.assert_true_raise400('@' in email and '.' in email, {'error': "Invalid email"})
         return True
+

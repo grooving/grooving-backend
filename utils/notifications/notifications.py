@@ -1,5 +1,5 @@
 from django.core.mail import EmailMessage
-from Grooving.models import Offer, SystemConfiguration
+from Grooving.models import Offer, SystemConfiguration, User
 from weasyprint import HTML
 from django.template.loader import render_to_string
 from datetime import datetime
@@ -10,6 +10,28 @@ class Notifications:
     @staticmethod
     def footer():
         return render_to_string('footer_mail.html')
+
+    @staticmethod
+    def send_email_welcome(user_id):
+
+        user = User.objects.get(pk=user_id)
+
+        email = EmailMessage()
+        email.from_email = 'Grooving <no-reply@grupogrooving.com>'
+        email.content_subtype = 'html'
+
+        email.to = [user.email]
+        email.subject = "Welcome to Grooving family"
+        email.body = "<p>Hi there,</p>" \
+                     "<p>Congratulations! You've signing with Grooving and are now part of a community that connects " \
+                     "artists and improve their visibility in an easy, simple, simple and reliable way. " \
+                     "From now, you'll get regular updates on the offers status made and all the information related" \
+                     " to them. </p>" \
+                     "<p>Your username is: <b>" + user.username + "</b></p>" \
+                                                                  "<p>Cheers,</p>" \
+                                                                  "<p>Grooving team</p>" \
+                     + Notifications.footer()
+        email.send()
 
     @staticmethod
     def send_email_create_an_offer(offer_id):
@@ -207,8 +229,8 @@ class Notifications:
         email.subject = offer.paymentPackage.portfolio.artisticName + ' performance is over'
         # email.to = ['utri1990@gmail.com']
         email.to = [offer.eventLocation.customer.user.email]
-        email.body = '<p>We hope you enjoyed to ' + offer.paymentPackage.portfolio.artisticName + ' performance. ' \
-                     'You can rate the performance in the following link: [FRONTEND LINK]<p>' + Notifications.footer()
+        email.body = '<p>We hope you enjoyed to ' + offer.paymentPackage.portfolio.artisticName + ' performance.<p>'\
+                     + Notifications.footer()
 
         email.send()  # Sending email
 
