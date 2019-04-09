@@ -25,11 +25,11 @@ def index_all():
 
     for portfolio in portfolios:
         id = portfolio.id
-        artisticName = portfolio.artisticName.lower()
-        biography = portfolio.biography.lower()
+        artisticName = portfolio.artisticName.lower() if portfolio.artisticName else None
+        biography = portfolio.biography.lower() if portfolio.biography else None
         artisticGender = gender_to_string(portfolio)
         zone = zone_to_string(portfolio)
-        rating= calculate_rating(portfolio)
+        rating = portfolio.artist.rating if portfolio.artist else calculate_rating(portfolio)
 
         writer.add_document(id=id, artisticName=artisticName, biography=biography,
                             artisticGender=artisticGender, zone=zone, rating=rating)
@@ -40,10 +40,10 @@ def index_all():
 
 def calculate_rating(portfolio):
     res = 0
-    ratings = Rating.objects.filter(offers__in=Offer.objects.filter(paymentPackage__in=portfolio.paymentpackage_set))
+    ratings = Rating.objects.filter(offer__paymentPackage__portfolio=portfolio)
     for rating in ratings:
         res += rating.score
-    return round(res/len(rating), ndigits=1)
+    return round(res/len(ratings), ndigits=1) if len(ratings) != 0 else 0.0
 
 
 def add_update_index_rating(portfolio):
