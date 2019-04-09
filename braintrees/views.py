@@ -14,13 +14,14 @@ from rest_framework.response import Response
 from Grooving.models import Transaction
 
 
-class CheckoutView(generics.RetrieveUpdateDestroyAPIView):
+class BraintreeViews(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         # We need the user to assign the transaction
 
         # Ha! There it is. This allows you to switch the
         # Braintree environments by changing one setting
+
         if settings.BRAINTREE_PRODUCTION:
             braintree_env = braintree.Environment.Production
         else:
@@ -28,7 +29,7 @@ class CheckoutView(generics.RetrieveUpdateDestroyAPIView):
 
         # Configure Braintree
         braintree.Configuration.configure(
-            braintree_env,
+            environment=braintree_env,
             merchant_id=settings.BRAINTREE_MERCHANT_ID,
             public_key=settings.BRAINTREE_PUBLIC_KEY,
             private_key=settings.BRAINTREE_PRIVATE_KEY,
@@ -42,21 +43,29 @@ class CheckoutView(generics.RetrieveUpdateDestroyAPIView):
 
         return Response(self.braintree_client_token)
 
-
-
-class InfoView(generics.RetrieveUpdateDestroyAPIView):
-
     def post(self, request, *args, **kwargs):
         # Braintree customer info
         # You can, for sure, use several approaches to gather customer infos
         # For now, we'll simply use the given data of the user instance
 
-        self.user = request.user
+        if settings.BRAINTREE_PRODUCTION:
+            braintree_env = braintree.Environment.Production
+        else:
+            braintree_env = braintree.Environment.Sandbox
 
+        # Configure Braintree
+        braintree.Configuration.configure(
+            environment=braintree_env,
+            merchant_id=settings.BRAINTREE_MERCHANT_ID,
+            public_key=settings.BRAINTREE_PUBLIC_KEY,
+            private_key=settings.BRAINTREE_PRIVATE_KEY,
+        )
+
+        print(request.data['user'])
         customer_kwargs = {
-            "first_name": self.user.first_name,
-            "last_name": self.user.last_name,
-            "email": self.user.email,
+            "first_name": request.data['user']['first_name'],
+            "last_name": request.data['user']['last_name'],
+            "email": request.data['user']['email'],
         }
 
         # Create a new Braintree customer
@@ -89,8 +98,8 @@ class InfoView(generics.RetrieveUpdateDestroyAPIView):
 
         """
         address_dict = {
-            "first_name": self.user.first_name,
-            "last_name": self.user.last_name,
+            "first_name": request.data['user']['first_name'],
+            "last_name": request.data['user']['last_name'],
             "street_address": 'street',
             "extended_address": 'street_2',
             "locality": 'city',
@@ -108,7 +117,7 @@ class InfoView(generics.RetrieveUpdateDestroyAPIView):
         result = braintree.Transaction.sale({
             "customer_id": customer_id,
             "amount": 100,
-            "payment_method_nonce": request.get('payment_method_nonce'),
+            "payment_method_nonce": "fake-valid-visa-nonce",
             "descriptor": {
                 # Definitely check out https://developers.braintreepayments.com/reference/general/validation-errors/all/python#descriptor
                 "name": "COMPANY.*test",
@@ -128,20 +137,19 @@ class InfoView(generics.RetrieveUpdateDestroyAPIView):
             # Card could've been declined or whatever
             # I recommend to send an error report to all admins
             # , including ``result.message`` and ``self.user.email``
-            context = self.get_context_data()
-            context.update({
+            context = {
                 'form': request.data,
-                'braintree_error': _(
+                'braintree_error': (
                     'Your payment could not be processed. Please check your'
                     ' input or use another payment method and try again.')
-            })
-            return Response()
+            }
+            return Response(context)
 
         # Finally there's the transaction ID
         # You definitely want to send it to your database
-        transaction = Transaction.objects.get()
-        transaction_id = result.transaction.id
-        transaction.id = transaction_id
+        #transaction = Transaction.objects.get()
+        #transaction_id = result.transaction.id
+        #transaction.id = transaction_id
         # Now you can send out confirmation emails or update your metrics
         # or do whatever makes you and your customers happy :)
-        return Response()
+        return Response(request.data['user']['first_name'])
