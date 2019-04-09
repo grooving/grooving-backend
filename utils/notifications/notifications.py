@@ -22,9 +22,14 @@ class Notifications:
 
         email.to = [user.email]
         email.subject = "Welcome to Grooving family"
-        email.body = "<h1>Welcome to Grooving </h1> " \
-                     "<p>We are glad that you have joined our family.</p>" \
-                     "<p>Your username is: <b>" + user.username + "</b> </p>" \
+        email.body = "<p>Hi there,</p>" \
+                     "<p>Congratulations! You've signing with Grooving and are now part of a community that connects " \
+                     "artists and improve their visibility in an easy, simple, simple and reliable way. " \
+                     "From now, you'll get regular updates on the offers status made and all the information related" \
+                     " to them. </p>" \
+                     "<p>Your username is: <b>" + user.username + "</b></p>" \
+                                                                  "<p>Cheers,</p>" \
+                                                                  "<p>Grooving team</p>" \
                      + Notifications.footer()
         email.send()
 
