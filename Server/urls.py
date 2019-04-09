@@ -32,6 +32,8 @@ from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
 from braintrees.views import BraintreeViews
 from rest_framework.authtoken.views import obtain_auth_token
+from utils.utils import TermsAndConditions
+
 router = routers.DefaultRouter()
 
 urlpatterns = [
@@ -83,7 +85,7 @@ urlpatterns = [
     url(r'^zones/$', ListZones.as_view()),
 
     url(r'^numOffers/$', NumOffers.as_view()),
-
+	url(r'^terms/$', TermsAndConditions.as_view()),
     url(r'^braintree_token/$', BraintreeViews.as_view())
 
 ]
