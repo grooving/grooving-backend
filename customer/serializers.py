@@ -6,6 +6,7 @@ from eventLocation.serializers import EventLocationSerializer, ShortEventLocatio
 from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
 from utils.Assertions import Assertions
+from utils.notifications.notifications import Notifications
 
 
 class CustomerInfoSerializer(serializers.HyperlinkedModelSerializer):
@@ -41,6 +42,7 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
     def save(self):
 
         customer = self._service_create_customer(self.initial_data)
+        Notifications.send_email_welcome(customer.user.id)
         return customer
 
     def update(self, pk):

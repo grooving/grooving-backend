@@ -6,6 +6,7 @@ from portfolio.serializers import ArtisticGenderSerializer
 from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
 from utils.Assertions import Assertions
+from utils.notifications.notifications import Notifications
 
 
 class ArtistInfoSerializer(serializers.HyperlinkedModelSerializer):
@@ -49,6 +50,7 @@ class ArtistSerializer(serializers.ModelSerializer):
     def save(self):
 
         artist = self._service_create_artist(self.initial_data)
+        Notifications.send_email_welcome(artist.user.id)
         return artist
 
     def update(self, pk):

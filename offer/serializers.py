@@ -12,7 +12,7 @@ import datetime
 import pycard
 from validate_email_address import validate_email
 from django.utils import timezone
-from utils.authentication_utils import get_logged_user, get_user_type
+from utils.authentication_utils import get_user_type
 from utils.notifications.notifications import Notifications
 
 
