@@ -7,7 +7,7 @@ django.setup()
 
 from django.core.paginator import Paginator
 from whoosh import index
-from Grooving.models import Portfolio
+from Grooving.models import Portfolio, Rating, Offer
 from utils.whooshSearcher.schemas import crear_esquema
 from zone.serializers import SearchZoneSerializer
 from django.conf import settings
@@ -29,13 +29,21 @@ def index_all():
         biography = portfolio.biography.lower()
         artisticGender = gender_to_string(portfolio)
         zone = zone_to_string(portfolio)
-        rating= portfolio.artist.rating
+        rating= calculate_rating(portfolio)
 
         writer.add_document(id=id, artisticName=artisticName, biography=biography,
                             artisticGender=artisticGender, zone=zone, rating=rating)
 
 
     writer.commit()
+
+
+def calculate_rating(portfolio):
+    res = 0
+    ratings = Rating.objects.filter(offers__in=Offer.objects.filter(paymentPackage__in=portfolio.paymentpackage_set))
+    for rating in ratings:
+        res += rating.score
+    return round(res/len(rating), ndigits=1)
 
 
 def add_update_index_rating(portfolio):
