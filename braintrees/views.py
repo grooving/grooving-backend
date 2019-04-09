@@ -12,9 +12,12 @@ from rest_framework import generics
 from Server import settings
 from rest_framework.response import Response
 from Grooving.models import Transaction
+from braintrees.serializers import BraintreeSerializer
 
 
-class BraintreeViews(generics.RetrieveUpdateDestroyAPIView):
+class BraintreeViews(generics.ListCreateAPIView):
+
+    serializer_class = BraintreeSerializer
 
     def get(self, request, *args, **kwargs):
         # We need the user to assign the transaction
@@ -116,8 +119,8 @@ class BraintreeViews(generics.RetrieveUpdateDestroyAPIView):
 
         result = braintree.Transaction.sale({
             "customer_id": customer_id,
-            "amount": 100,
-            "payment_method_nonce": "fake-valid-nonce",
+            "amount": 120,
+            "payment_method_nonce": "fake-paypal-one-time-nonce",
             "options": {
                 # Use this option to store the customer data, if successful
                 'store_in_vault_on_success': True,
