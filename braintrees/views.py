@@ -117,13 +117,7 @@ class BraintreeViews(generics.RetrieveUpdateDestroyAPIView):
         result = braintree.Transaction.sale({
             "customer_id": customer_id,
             "amount": 100,
-            "payment_method_nonce": "fake-valid-visa-nonce",
-            "descriptor": {
-                # Definitely check out https://developers.braintreepayments.com/reference/general/validation-errors/all/python#descriptor
-                "name": "COMPANY.*test",
-            },
-            "billing": address_dict,
-            "shipping": address_dict,
+            "payment_method_nonce": "fake-valid-nonce",
             "options": {
                 # Use this option to store the customer data, if successful
                 'store_in_vault_on_success': True,
@@ -131,8 +125,9 @@ class BraintreeViews(generics.RetrieveUpdateDestroyAPIView):
                 # If you want to settle the transaction later, use ``False`` and later on
                 # ``braintree.Transaction.submit_for_settlement("the_transaction_id")``
                 'submit_for_settlement': False,
-            },
+            }
         })
+        print(result.is_success)
         if not result.is_success:
             # Card could've been declined or whatever
             # I recommend to send an error report to all admins
