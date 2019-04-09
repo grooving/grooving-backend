@@ -13,6 +13,7 @@ import pycard
 from validate_email_address import validate_email
 from django.utils import timezone
 from utils.authentication_utils import get_logged_user, get_user_type
+from utils.notifications.notifications import Notifications
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -147,6 +148,7 @@ class OfferSerializer(serializers.ModelSerializer):
             # creation
             offer = Offer()
             offer = self._service_create(self.initial_data, offer, logged_user)
+            Notifications.send_email_create_an_offer(offer.id)
         else:
             # edit
             id = (self.initial_data, pk)[pk is not None]
@@ -173,6 +175,10 @@ class OfferSerializer(serializers.ModelSerializer):
         # except:
         # offer.status == 'CONTRACT_MADE'
         offer.save()
+
+        # Notification by email
+        Notifications.send_email_contract_made_to_payment_made(offer.id)
+
         return offer
 
     # Se pondrá service delante de nuestros métodos para no sobrescribir por error métodos del serializer
@@ -284,6 +290,20 @@ class OfferSerializer(serializers.ModelSerializer):
             if json_status == "CONTRACT_MADE" or json_status == "PAYMENT_MADE":
                 offer_in_db.reason = None
             offer_in_db.save()
+
+            # Sending email notifications
+
+            if offer_in_db.status == 'CONTRACT_MADE':
+                Notifications.send_email_pending_to_contract_made(offer_in_db.id)
+            elif offer_in_db.status == 'REJECTED':
+                Notifications.send_email_pending_to_rejected(offer_in_db.id)
+            elif offer_in_db.status == 'WITHDRAWN':
+                Notifications.send_email_pending_to_withdrawn(offer_in_db.id)
+            elif offer_in_db.status == 'CANCELLED_ARTIST':
+                Notifications.send_email_contract_made_to_cancelled_artist(offer_in_db.id)
+            elif offer_in_db.status == 'CANCELLED_CUSTOMER':
+                Notifications.send_email_contract_made_to_cancelled_customer(offer_in_db.id)
+
             print("ESTADO DB DESPUES:" + offer_in_db.status)
             return offer_in_db
 
