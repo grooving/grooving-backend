@@ -19,5 +19,6 @@ def auto_update_old_offers(offers):
 
 class TermsAndConditions(generics.GenericAPIView):
 
-    def get(self, request):
+    @staticmethod
+    def get(request):
         return Response(SystemConfiguration.objects.all().first().termsText)
