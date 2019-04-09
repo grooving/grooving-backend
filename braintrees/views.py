@@ -12,17 +12,18 @@ from rest_framework import generics
 from Server import settings
 from rest_framework.response import Response
 from Grooving.models import Transaction
-from braintrees.serializers import BraintreeSerializer
+from .serializers import TransactionSerializer
+from utils.authentication_utils import get_logged_user
 
+class BraintreeViews(generics.GenericAPIView):
 
-class BraintreeViews(generics.ListCreateAPIView):
+    serializer_class = TransactionSerializer
 
-    serializer_class = BraintreeSerializer
+    def get(self, request, format=None):
 
-    def get(self, request, *args, **kwargs):
         # We need the user to assign the transaction
 
-        # Ha! There it is. This allows you to switch the
+        # Ha! There it is. This allows you to switch theself.braintree_client_token
         # Braintree environments by changing one setting
 
         if settings.BRAINTREE_PRODUCTION:
@@ -51,6 +52,8 @@ class BraintreeViews(generics.ListCreateAPIView):
         # You can, for sure, use several approaches to gather customer infos
         # For now, we'll simply use the given data of the user instance
 
+        logged_user = get_logged_user(request)
+
         if settings.BRAINTREE_PRODUCTION:
             braintree_env = braintree.Environment.Production
         else:
@@ -64,64 +67,59 @@ class BraintreeViews(generics.ListCreateAPIView):
             private_key=settings.BRAINTREE_PRIVATE_KEY,
         )
 
-        print(request.data['user'])
-        customer_kwargs = {
-            "first_name": request.data['user']['first_name'],
-            "last_name": request.data['user']['last_name'],
-            "email": request.data['user']['email'],
-        }
-
-        # Create a new Braintree customer
-        # In this example we always create new Braintree users
-        # You can store and re-use Braintree's customer IDs, if you want to
-        result = braintree.Customer.create(customer_kwargs)
-        if not result.is_success:
-            # Ouch, something went wrong here
-            # I recommend to send an error report to all admins
-            # , including ``result.message`` and ``self.user.email``
-
-            context = request.data['context']
-            # We re-generate the form and display the relevant braintree error
-            context.update({
-                'body': request.data,
-                'braintree_error': u'{} {}'.format(
-                    result.message, _('Please get in contact.'))
-            })
-            return self.render_to_response(context)
-
-        # If the customer creation was successful you might want to also
-        # add the customer id to your user profile
-        customer_id = result.customer.id
-
+        serializer = TransactionSerializer(data=request.data, partial=True)
+        serializer.is_valid()
         """
         Create a new transaction and submit it.
         I don't gather the whole address in this example, but I can
         highly recommend to do that. It will help you to avoid any
         fraud issues, since some providers require matching addresses
-
         """
-        address_dict = {
-            "first_name": request.data['user']['first_name'],
-            "last_name": request.data['user']['last_name'],
-            "street_address": 'street',
-            "extended_address": 'street_2',
-            "locality": 'city',
-            "region": 'state_or_region',
-            "postal_code": 'postal_code',
-            "country_code_alpha2": 'alpha2_country_code',
-            "country_code_alpha3": 'alpha3_country_code',
-            "country_name": 'country',
-            "country_code_numeric": 'numeric_country_code',
-        }
+        i = 0
+        year = "20"
+        month = ""
+        for char in serializer.data['expirationDate']:
+            if i < 2:
+                month += char
+            elif i > 2:
+                year += char
+            i = i + 1
+        print(month)
+        print(year)
+        number = ""
+        i = 0
+
+        for char in serializer.data['number']:
+            if i < 6:
+                number += char
+            elif i > 5 and i < (len(serializer.data['number']) - 4):
+                number += "*"
+            elif i > (len(serializer.data['number']) - 5):
+                number += char
+
+            i = i + 1
+
 
         # You can use the form to calculate a total or add a static total amount
         # I'll use a static amount in this example
+        customer_kwargs = {
+            "first_name": logged_user.user.first_name,
+            "last_name": logged_user.user.last_name,
+            "email": logged_user.user.email,
+        }
 
+        customer = braintree.Customer.create(customer_kwargs)
         result = braintree.Transaction.sale({
-            "customer_id": customer_id,
-            "amount": 120,
-            "payment_method_nonce": "fake-paypal-one-time-nonce",
-            "options": {
+            "customer_id": customer.customer.id,
+            "amount": serializer.data['amount'],
+            "credit_card": {
+                "cardholder_name": serializer.data['holder'],
+                "expiration_month": month,
+                "expiration_year": year,
+                "number": serializer.data['number'],
+                "cvv": serializer.data['cvv']
+            },
+            "options":{
                 # Use this option to store the customer data, if successful
                 'store_in_vault_on_success': True,
                 # Use this option to directly settle the transaction
@@ -136,6 +134,7 @@ class BraintreeViews(generics.ListCreateAPIView):
             # I recommend to send an error report to all admins
             # , including ``result.message`` and ``self.user.email``
             context = {
+                'error': "Failed to validate",
                 'form': request.data,
                 'braintree_error': (
                     'Your payment could not be processed. Please check your'
@@ -150,4 +149,4 @@ class BraintreeViews(generics.ListCreateAPIView):
         #transaction.id = transaction_id
         # Now you can send out confirmation emails or update your metrics
         # or do whatever makes you and your customers happy :)
-        return Response(request.data['user']['first_name'])
+        return Response(serializer.data)
