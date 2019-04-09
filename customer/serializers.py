@@ -7,7 +7,7 @@ from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
 from utils.Assertions import Assertions
 from utils.notifications.notifications import Notifications
-
+from django.core.validators import URLValidator
 
 class CustomerInfoSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -56,11 +56,22 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         customer.phone = json.get('phone')
         customer.photo = json.get('photo')
         user = customer.user
-
         user.first_name = json.get('first_name')
-        Assertions.assert_true_raise400(user.first_name, {'error': "First name can't be null"})
         user.last_name = json.get('last_name')
-        Assertions.assert_true_raise400(user.last_name, {'error': "Last name can't be null"})
+
+        Assertions.assert_true_raise400(user.first_name, {'error': "First name not provided"})
+        Assertions.assert_true_raise400(user.last_name, {'error': "Last name not provided"})
+        if user.phone:
+            Assertions.assert_true_raise400(user.phone.isnumeric(), {'error': "Phone must be a number"})
+            Assertions.assert_true_raise400(len(user.phone) == 9, {'error': "Phone length must be 9 digits"})
+
+        Assertions.assert_true_raise400(len(user.first_name) > 1 and len(user.last_name) > 1,
+                                        {'error': "First or second name do not seem real"})
+        if user.photo:
+
+            val = URLValidator(verify_exists=True)
+            Assertions.assert_true_raise400(val(user.photo), {'error': 'This photo url does not exist'})
+
 
         user.save()
         customer.user = user
@@ -132,5 +143,6 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(len(first_name) > 1 and len(last_name) > 1,
                                         {'error': "First or second name do not seem real"})
         Assertions.assert_true_raise400('@' in email and '.' in email, {'error': "Invalid email"})
+        Assertions.assert_true_raise400(len(email) > 5, {'error': "Invalid email"})
 
         return True

@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
 from utils.Assertions import Assertions
 from utils.notifications.notifications import Notifications
+from django.core.validators import URLValidator
 
 
 class ArtistInfoSerializer(serializers.HyperlinkedModelSerializer):
@@ -64,15 +65,19 @@ class ArtistSerializer(serializers.ModelSerializer):
         artist = Artist.objects.get(pk=pk)
         artist.phone = json.get('phone')
         user = artist.user
-        user_names = User.objects.values_list('username', flat=True)
-        if json.get('username') != user.username:
-            Assertions.assert_true_raise400('username' not in user_names,
-                                            {"codeError": "Username already in the system"})
         user.first_name = json.get('first_name')
-        Assertions.assert_true_raise400(user.first_name, {"codeError": "First name can't be null"})
         user.last_name = json.get('last_name')
-        Assertions.assert_true_raise400(user.last_name, {"codeError": "Last name can't be null"})
+        Assertions.assert_true_raise400(user.first_name, {'error': "First name not provided"})
+        Assertions.assert_true_raise400(user.last_name, {'error': "Last name not provided"})
+        if user.phone:
+            Assertions.assert_true_raise400(user.phone.isnumeric(), {'error': "Phone must be a number"})
+            Assertions.assert_true_raise400(len(user.phone) == 9, {'error': "Phone length must be 9 digits"})
 
+        Assertions.assert_true_raise400(len(user.first_name) > 1 and len(user.last_name) > 1,
+                                        {'error': "First or second name do not seem real"})
+        if user.photo:
+            val = URLValidator(verify_exists=True)
+            Assertions.assert_true_raise400(val(user.photo), {'error': 'This photo url does not exist'})
         user.save()
         artist.user = user
         return artist

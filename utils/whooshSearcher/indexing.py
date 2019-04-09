@@ -25,11 +25,14 @@ def index_all():
 
     for portfolio in portfolios:
         id = portfolio.id
-        artisticName = portfolio.artisticName.lower()
-        biography = portfolio.biography.lower()
+
+        artisticName = portfolio.artisticName.lower() if portfolio.artisticName else None
+
+        biography = portfolio.biography.lower() if portfolio.biography else None
+
         artisticGender = gender_to_string(portfolio)
         zone = zone_to_string(portfolio)
-        rating= portfolio.artist.rating
+        rating = portfolio.artist.rating
 
         writer.add_document(id=id, artisticName=artisticName, biography=biography,
                             artisticGender=artisticGender, zone=zone, rating=rating)

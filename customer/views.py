@@ -8,7 +8,6 @@ from django.http import Http404
 from rest_framework import status
 from utils.Assertions import Assertions
 from customer.serializers import CustomerSerializer
-from utils.notifications.notifications import Notifications
 
 
 class GetPersonalInformationOfCustomer(generics.ListAPIView):
