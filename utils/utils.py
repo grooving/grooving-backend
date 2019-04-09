@@ -1,4 +1,7 @@
 from django.utils import timezone
+from Grooving.models import SystemConfiguration
+from rest_framework import generics
+from rest_framework.response import Response
 
 
 def auto_update_old_offers(offers):
@@ -13,3 +16,8 @@ def auto_update_old_offers(offers):
                 o.status = 'REJECTED'
                 o.save()
 
+
+class TermsAndConditions(generics.GenericAPIView):
+
+    def get(self, request):
+        return Response(SystemConfiguration.objects.all().first().termsText)
