@@ -1,9 +1,9 @@
 from rest_framework.response import Response
-from rest_framework import generics,status
-from .serializers import CustomerInfoSerializer, PublicCustomerInfoSerializer, CustomerSerializer
+from rest_framework import generics
+from .serializers import CustomerInfoSerializer, PublicCustomerInfoSerializer
 from django.core.exceptions import PermissionDenied
 from Grooving.models import Customer
-from utils.authentication_utils import get_user_type, get_logged_user, is_user_authenticated
+from utils.authentication_utils import get_user_type, get_logged_user
 from django.http import Http404
 from rest_framework import status
 from utils.Assertions import Assertions
@@ -86,9 +86,10 @@ class CustomerRegister(generics.CreateAPIView):
             customer = Customer.objects.get(pk=pk)
             articustomer = get_logged_user(request)
 
-            Assertions.assert_true_raise403(articustomer.id == customer.id, "You can only change your personal info")
+            Assertions.assert_true_raise403(articustomer.id == customer.id,
+                                            {'error':  "You can only change your personal info"})
             serializer = CustomerSerializer(customer, data=request.data, partial=True)
-            Assertions.assert_true_raise400(serializer.is_valid(), {"code": "invalid data"})
+            Assertions.assert_true_raise400(serializer.is_valid(), {'error': "invalid data"})
             customer = serializer.update(pk)
 
             customer.save()

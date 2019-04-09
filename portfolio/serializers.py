@@ -234,5 +234,3 @@ class ShortPortfolioSerializer(serializers.ModelSerializer):
 
         model = Portfolio
         fields = ('artisticName', 'artisticGender')
-
-

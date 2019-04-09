@@ -1,5 +1,4 @@
 """Server URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.1/topics/http/urls/
 Examples:
@@ -23,6 +22,7 @@ from artist.views import GetPersonalInformationOfArtist,ArtistRegister
 from customer.views import GetPersonalInformationOfCustomer, GetPublicInformationOfCustomer, CustomerRegister
 from offer.views import OfferManage, CreateOffer, PaymentCode,NumOffers
 from portfolioModule.views import PortfolioModuleManager, CreatePortfolioModule
+from user.views import UserManage
 from artist.views import ListArtist,ArtistRegister
 from offers.views import ListArtistOffers, ListCustomerOffers
 from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage,CreateCustomPackage,CreateFarePackage,CreatePerformancePackage
@@ -32,6 +32,8 @@ from zone.views import ZoneManager, CreateZone, ListZones
 from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
 from rest_framework.authtoken.views import obtain_auth_token
+from utils.utils import TermsAndConditions
+
 router = routers.DefaultRouter()
 
 urlpatterns = [
@@ -54,6 +56,7 @@ urlpatterns = [
     url(r'^customer/publicInformation/(?P<pk>[0-9]+)/$', GetPublicInformationOfCustomer.as_view()),
     url(r'^calendar/(?P<pk>[0-9]+)/$', CalendarManager.as_view()),
     url(r'^calendar/$', CreateCalendar.as_view()),
+    url(r'^user/$', UserManage.as_view()),
     url(r'^artisticGender/$', CreateArtisticGender.as_view()),
     url(r'^artisticGenders/$', ListArtisticGenders.as_view()),
     url(r'^artisticGender/(?P<pk>[0-9]+)/ ', ArtisticGenderManager.as_view()),
@@ -82,6 +85,6 @@ urlpatterns = [
     url(r'^custom/(?P<pk>[0-9]+)/$', CreateCustomPackage.as_view()),
     url(r'^zones/$', ListZones.as_view()),
 
-    url(r'^numOffers/$', NumOffers.as_view())
-
+    url(r'^numOffers/$', NumOffers.as_view()),
+    url(r'^terms/$', TermsAndConditions.as_view()),
 ]

@@ -12,7 +12,8 @@ import datetime
 import pycard
 from validate_email_address import validate_email
 from django.utils import timezone
-from utils.authentication_utils import get_logged_user, get_user_type
+from utils.authentication_utils import get_user_type
+from utils.notifications.notifications import Notifications
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -147,6 +148,7 @@ class OfferSerializer(serializers.ModelSerializer):
             # creation
             offer = Offer()
             offer = self._service_create(self.initial_data, offer, logged_user)
+            Notifications.send_email_create_an_offer(offer.id)
         else:
             # edit
             id = (self.initial_data, pk)[pk is not None]
@@ -173,6 +175,10 @@ class OfferSerializer(serializers.ModelSerializer):
         # except:
         # offer.status == 'CONTRACT_MADE'
         offer.save()
+
+        # Notification by email
+        Notifications.send_email_contract_made_to_payment_made(offer.id)
+
         return offer
 
     # Se pondrá service delante de nuestros métodos para no sobrescribir por error métodos del serializer
@@ -255,7 +261,7 @@ class OfferSerializer(serializers.ModelSerializer):
                                                'CONTRACT_MADE': 'CANCELLED_ARTIST'}
                 if json_status == 'CONTRACT_MADE':
                     Assertions.assert_true_raise400(logged_user.iban is not None,
-                                                    {"ERROR_CODE:""You must introduce your bank account before"})
+                                                    {'error': "You must introduce your bank account before"})
                     offer_in_db.transaction.ibanArtist = logged_user.iban
                     offer_in_db.transaction.save()
 
@@ -284,6 +290,20 @@ class OfferSerializer(serializers.ModelSerializer):
             if json_status == "CONTRACT_MADE" or json_status == "PAYMENT_MADE":
                 offer_in_db.reason = None
             offer_in_db.save()
+
+            # Sending email notifications
+
+            if offer_in_db.status == 'CONTRACT_MADE':
+                Notifications.send_email_pending_to_contract_made(offer_in_db.id)
+            elif offer_in_db.status == 'REJECTED':
+                Notifications.send_email_pending_to_rejected(offer_in_db.id)
+            elif offer_in_db.status == 'WITHDRAWN':
+                Notifications.send_email_pending_to_withdrawn(offer_in_db.id)
+            elif offer_in_db.status == 'CANCELLED_ARTIST':
+                Notifications.send_email_contract_made_to_cancelled_artist(offer_in_db.id)
+            elif offer_in_db.status == 'CANCELLED_CUSTOMER':
+                Notifications.send_email_contract_made_to_cancelled_customer(offer_in_db.id)
+
             print("ESTADO DB DESPUES:" + offer_in_db.status)
             return offer_in_db
 
@@ -358,7 +378,7 @@ class OfferSerializer(serializers.ModelSerializer):
         eventLocation = EventLocation.objects.filter(pk=attrs.data.get("eventLocation_id")).first()
 
         Assertions.assert_true_raise400(eventLocation,
-                                        {'error': 'eventLocation doesn\'t exist'})
+                                        {'error': 'eventLocation does not exist'})
 
         # User owner validation
 
@@ -367,12 +387,3 @@ class OfferSerializer(serializers.ModelSerializer):
 
         return True
 
-
-"""
-class CreateOfferRequest(serializers.ModelSerializer):
-
-    class Meta:
-        model = Offer
-        fields = ('description', 'date', 'hours', 'price', 'paymentPackage_id', 'eventLocation_id')
-
-"""

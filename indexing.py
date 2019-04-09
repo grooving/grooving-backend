@@ -60,7 +60,6 @@ def add_update_index_rating(portfolio):
     writer.commit()
 #def add_update_index_()
 
-
 def gender_to_string(portfolio):
     genders = portfolio.artisticGender.all()
     all_child = get_childs_gender(genders, [])
