@@ -279,48 +279,8 @@ def save_data():
     zone44.save()
 
     # Famous artist
-
-    user1_artist10 = User.objects.create(username='tamta', password=make_password('tamta'), first_name='Tamta',
-                                         last_name='Goduadze', email='Joseph.jmlc@gmail.com')
-    user1_artist10.save()
-
-    artist10 = Artist.objects.create(user=user1_artist10, rating=5.0, phone='600304999',
-                                     photo='https://img.discogs.com/jgyNBtPsY4DiLegwMrOC9N_yOc4=/600x600/smart/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/A-1452461-1423476836-6354.jpeg.jpg',
-                                     iban='ES6621000418401234567891')
-    artist10.save()
-
-    user1_artist11 = User.objects.create(username='rosalia', password=make_password('rosalia'), first_name='Rosalía ',
-                                         last_name='Vila Tobella', email='Joseph.jmlc@gmail.com')
-    user1_artist11.save()
-
-    artist11 = Artist.objects.create(user=user1_artist11, rating=5.0, phone='600304999',
-                                     photo='http://vein.es/wp-content/uploads/2018/11/cap5-lamento.gif',
-                                     iban='ES6621000418401234567891')
-    artist11.save()
-
-    user1_artist12 = User.objects.create(username='taylor', password=make_password('taylor'),
-                                         first_name='Taylor Alison ',
-                                         last_name='Swift', email='Joseph.jmlc@gmail.com')
-    user1_artist12.save()
-
-    artist12 = Artist.objects.create(user=user1_artist12, rating=5.0, phone='600304999',
-                                     photo='https://los40es00.epimg.net/los40/imagenes/2018/08/18/actualidad/1534605895_686141_1534606292_noticia_normal.jpg',
-                                     iban='ES6621000418401234567891')
-    artist12.save()
-
-    user1_artist13 = User.objects.create(username='charli', password=make_password('charli'),
-                                         first_name='Charlotte Emma',
-                                         last_name='Aitchison', email='Joseph.jmlc@gmail.com')
-    user1_artist13.save()
-
-    artist13 = Artist.objects.create(user=user1_artist13, rating=5.0, phone='600304999',
-                                     photo='https://data.whicdn.com/images/152059660/original.gif',
-                                     iban='ES6621000418401234567891')
-    artist13.save()
-
     # TAMTA
     portfolio10 = Portfolio.objects.create(artisticName='Tamta',
-                                           artist=artist10,
                                            banner='http://www.ddi.com.au/wp-content/uploads/AdobeStock_115567415.jpeg',
                                            biography='Tamta, is a Georgian-Greek singer. She first achieved popularity in Greece and Cyprus in 2004 for her participation in Super Idol Greece, in which she placed second. She went on to release several charting albums and singles in Greece and Cyprus. Goduadze became a mentor on X Factor Georgia in 2014, and The X Factor Greece in 2016.')
 
@@ -383,6 +343,15 @@ def save_data():
     calendar10 = Calendar.objects.create(days=availableDays10, portfolio=portfolio10)
     calendar10.save()
 
+    user1_artist10 = User.objects.create(username='tamta', password=make_password('tamta'), first_name='Tamta',
+                                         last_name='Goduadze', email='Joseph.jmlc@gmail.com')
+    user1_artist10.save()
+
+    artist10 = Artist.objects.create(user=user1_artist10, rating=5.0, portfolio=portfolio10, phone='600304999',
+                                     photo='https://img.discogs.com/jgyNBtPsY4DiLegwMrOC9N_yOc4=/600x600/smart/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/A-1452461-1423476836-6354.jpeg.jpg',
+                                     iban='ES6621000418401234567891')
+    artist10.save()
+
     performance1_paymentPackageFamous1 = Performance.objects.create(info='This is only mi pay for mi top 8 songs',
                                                                     hours=1.5, price=200000)
     performance1_paymentPackageFamous1.save()
@@ -412,7 +381,6 @@ def save_data():
 
     # Rosalia
     portfolio11 = Portfolio.objects.create(artisticName='Rosalía',
-                                           artist=artist11,
                                            banner='https://rosalia.com/11.de617e41.jpg',
                                            biography='She is a Spanish singer and actress. In 2018 she became the most Latin Grammy Award winning Spaniard for a single work. Her song "Malamente" won two awards out of five nominations.')
 
@@ -484,6 +452,16 @@ def save_data():
     calendar11 = Calendar.objects.create(days=availableDays11, portfolio=portfolio11)
     calendar11.save()
 
+    user1_artist11 = User.objects.create(username='rosalia', password=make_password('rosalia'), first_name='Rosalía ',
+                                         last_name='Vila Tobella', email='Joseph.jmlc@gmail.com')
+    user1_artist11.save()
+
+    artist11 = Artist.objects.create(user=user1_artist11, rating=5.0, portfolio=portfolio11, phone='600304999',
+                                     photo='http://vein.es/wp-content/uploads/2018/11/cap5-lamento.gif',
+                                     iban='ES6621000418401234567891')
+    artist11.save()
+
+
     performance1_paymentPackageFamous2 = Performance.objects.create(info='I begin with mi new 7 songs and end with Malamente',
                                                               hours=2, price=500000)
 
@@ -516,7 +494,6 @@ def save_data():
 
     # Taylor Swift
     portfolio12 = Portfolio.objects.create(artisticName='Taylor Swift',
-                                           artist=artist12,
                                            banner='http://img2.rtve.es/a/4429044?w=1600&preview=1516350190645.jpg',
                                            biography='Iis an American singer-songwriter. As one of the world`s leading contemporary recording artists, she is known for narrative songs about her personal life, which has received widespread media coverage.')
 
@@ -591,6 +568,16 @@ def save_data():
     calendar12 = Calendar.objects.create(days=availableDays12, portfolio=portfolio12)
     calendar12.save()
 
+    user1_artist12 = User.objects.create(username='taylor', password=make_password('taylor'),
+                                         first_name='Taylor Alison ',
+                                         last_name='Swift', email='Joseph.jmlc@gmail.com')
+    user1_artist12.save()
+
+    artist12 = Artist.objects.create(user=user1_artist12,rating=5.0, portfolio=portfolio12, phone='600304999',
+                                     photo='https://los40es00.epimg.net/los40/imagenes/2018/08/18/actualidad/1534605895_686141_1534606292_noticia_normal.jpg',
+                                     iban='ES6621000418401234567891')
+    artist12.save()
+
     performance1_paymentPackageFamous3 = Performance.objects.create(
         info='I only play my songs of Reputation',
         hours=2, price=400000)
@@ -622,7 +609,6 @@ def save_data():
 
     # Charli XCX
     portfolio13 = Portfolio.objects.create(artisticName='Charli XCX',
-                                           artist=artist13,
                                            banner='https://celebmix.com/wp-content/uploads/2018/07/charli-xcx-releases-two-of-her-best-singles-yet-focus-no-angel-01.jpg',
                                            biography='Iis an American singer-songwriter. As one of the world`s leading contemporary recording artists, she is known for narrative songs about her personal life, which has received widespread media coverage.')
 
@@ -685,130 +671,19 @@ def save_data():
     calendar13 = Calendar.objects.create(days=availableDays13, portfolio=portfolio13)
     calendar13.save()
 
-    # Users...
+    user1_artist13 = User.objects.create(username='charli', password=make_password('charli'),
+                                         first_name='Charlotte Emma',
+                                         last_name='Aitchison', email='Joseph.jmlc@gmail.com')
+    user1_artist13.save()
 
-    # ,,,musician
-
-    user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
-                                        first_name='Carlos', last_name='Campos Cuesta',
-                                        email='Joseph.jmlc@gmail.com')  # 'infoaudiowar@gmail.com'
-    user1_artist1.save()
-    user2_artist2 = User.objects.create(username='artist2', password=make_password('artist2artist2'),
-                                        first_name='José Antonio', last_name='Granero Guzmán',
-                                        email='Joseph.jmlc@gmail.com')  # josegraneroguzman@gmail.com
-    user2_artist2.save()
-    user3_artist3 = User.objects.create(username='artist3', password=make_password('artist3artist3'),
-                                        first_name='Francisco', last_name='Martín',
-                                        email='Joseph.jmlc@gmail.com')  # saralcum@gmail.com
-    user3_artist3.save()
-    user4_artist4 = User.objects.create(username='artist4', password=make_password('artist4artist4'), first_name='Ana',
-                                        last_name='Mellado González',
-                                        email='Joseph.jmlc@gmail.com')  # mellizalez@hotmail.com
-    user4_artist4.save()
-    user5_artist5 = User.objects.create(username='artist5', password=make_password('artist5artist5'),
-                                        first_name='Alejandro', last_name='Arteaga Ramírez',
-                                        email='Joseph.jmlc@gmail.com')  # alejandroarteagaramirez@gmail.com
-    user5_artist5.save()
-    user6_artist6 = User.objects.create(username='artist6', password=make_password('artist6artist6'),
-                                        first_name='Pablo', last_name='Delgado Flores',
-                                        email='Joseph.jmlc@gmail.com')  # pabloj.df@gmail.com
-    user6_artist6.save()
-    user7_artist7 = User.objects.create(username='artist7', password=make_password('artist7artist7'),
-                                        first_name='Domingo', last_name='Muñoz Daza',
-                                        email='Joseph.jmlc@gmail.com')  # dmunnoz96@gmail.com
-    user7_artist7.save()
-    user8_artist8 = User.objects.create(username='artist8', password=make_password('artist8artist8'),
-                                        first_name='Rafael', last_name='Córdoba',
-                                        email='Joseph.jmlc@gmail.com')  # contacto@medictum.es
-    user8_artist8.save()
-    user9_artist9 = User.objects.create(username='artist9', password=make_password('artist9artist9'),
-                                        first_name='José Luis', last_name='Salvador Lauret',
-                                        email='Joseph.jmlc@gmail.com')  # joseluis.salvador@gmail.com
-    user9_artist9.save()
-
-    # ...customers
-
-    user10_customer1 = User.objects.create(username='customer1', password=make_password('customer1customer1'),
-                                           first_name='Rafael', last_name='Esquivias Ramírez',
-                                           email='Joseph.jmlc@gmail.com')  # resquiviasramirez@gmail.com
-    user10_customer1.save()
-    user11_customer2 = User.objects.create(username='customer2', password=make_password('customer2customer2'),
-                                           first_name='Jorge', last_name='Jimenez',
-                                           email='Joseph.jmlc@gmail.com')  # jorjicorral@gmail.com
-    user11_customer2.save()
-    user12_customer3 = User.objects.create(username='customer3', password=make_password('customer3customer3'),
-                                           first_name='Juan Manuel', last_name='Fernández',
-                                           email='Joseph.jmlc@gmail.com')  # surlive@imgempresas.com
-    user12_customer3.save()
-    user13_customer4 = User.objects.create(username='customer4', password=make_password('customer4customer4'),
-                                           first_name='Miguel', last_name='Romero Gutierrez',
-                                           email='Joseph.jmlc@gmail.com')  # La posada Sevilla
-    user13_customer4.save()
-
-    # ...admins
-
-    user14_admin = User.objects.create(username='admin', password=make_password('admin'), is_staff=True,
-                                       is_superuser=True)
-    user14_admin.save()
-
-    # Artists
-
-    artist1 = Artist.objects.create(user=user1_artist1, rating=4.5, phone='600304999',
-                                    photo='https://upload.wikimedia.org/wikipedia/commons/e/e7/Robin_Clark_%28DJ%29_Live_at_Techno4ever_net_Bday_Rave.jpg',
-                                    iban='ES6621000418401234567891')
-    artist1.save()
-    artist2 = Artist.objects.create(user=user2_artist2, rating=4.9, phone='695099812',
-                                    photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/20953179_10155798140312625_5517808811547907373_n.jpg?_nc_cat=108&_nc_ht=scontent-mad1-1.xx&oh=78561ec93ba4604a3c5a570cbe101b40&oe=5D4D1ED1',
-                                    iban='ES1720852066623456789011')
-    artist2.save()
-    artist3 = Artist.objects.create(user=user3_artist3, rating=4.0, phone='695990241',
-                                    photo='https://cdn.pixabay.com/photo/2016/02/19/11/36/microphone-1209816_1280.jpg',
-                                    iban='ES6000491500051234567892')
-    artist3.save()
-    artist4 = Artist.objects.create(user=user4_artist4, rating=3.5, phone='610750391',
-                                    photo='https://www.billboard.com/files/media/Dani-Deahl-press-photo-2016-billboard-1000.jpg',
-                                    iban='ES9420805801101234567891')
-    artist4.save()
-    artist5 = Artist.objects.create(user=user5_artist5, rating=4.5, phone='675181175',
-                                    photo='https://carnaval.lavozdigital.es/wp-content/uploads/2019/01/chirigota-pasando-olimpicamente-recortada.jpg',
-                                    iban='ES9000246912501234567891')
-    artist5.save()
-    artist6 = Artist.objects.create(user=user6_artist6, rating=4.0, phone='673049277',
-                                    photo='https://carnaval.lavozdigital.es/wp-content/uploads/2019/01/chirigota-sin-clase.jpg',
-                                    iban='ES7100302053091234567895')
-    artist6.save()
-    artist7 = Artist.objects.create(user=user7_artist7, rating=4.75, phone='664196105',
-                                    photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/50732294_2114221071976992_2173326934371467264_o.jpg?_nc_cat=100&_nc_ht=scontent-mad1-1.xx&oh=dacf068903a3703434b52cfade783470&oe=5D09C938',
-                                    iban='ES1000492352082414205416')
-    artist7.save()
-    artist8 = Artist.objects.create(user=user8_artist8, rating=4.66666666, phone='664596466',
-                                    photo='http://medictum.es/wp-content/uploads/2017/03/p2-team-image-3.jpg',
-                                    iban='ES1720852066623456789011')
-    artist8.save()
-    artist9 = Artist.objects.create(user=user9_artist9, rating=3.75, phone='679739257',
-                                    photo='https://media.licdn.com/dms/image/C4E03AQFAONXIX44h6w/profile-displayphoto-shrink_800_800/0?e=1559174400&v=beta&t=eEhhR1sr9-p1fr1tREXmlXV6WAzPvNlFDHhlV8SNwRY',
-                                    iban='ES9420805801101234567891')
-    artist9.save()
-
-    # Customers with credit card
-
-    customer1 = Customer.objects.create(user=user10_customer1, phone='639154189', holder='Rafael Esquivias Ramírez',
-                                        expirationDate='2020-10-01', number='4651001401188232')
-    customer1.save()
-    customer2 = Customer.objects.create(user=user11_customer2, phone='664656659', holder='Jorge Jiménez del Corral',
-                                        expirationDate='2027-03-01', number='4934521448108546')
-    customer2.save()
-    customer3 = Customer.objects.create(user=user12_customer3, phone='678415820', holder='Juan Manuel Fernández',
-                                        expirationDate='2025-10-01', number='4656508395720981')
-    customer3.save()
-    customer4 = Customer.objects.create(user=user13_customer4, phone='627322721', holder='Miguel Romero Gutierrez',
-                                        expirationDate='2027-03-01', number='4826704855401486')
-    customer4.save()
+    artist13 = Artist.objects.create(user=user1_artist13,rating=5.0, portfolio=portfolio13, phone='600304999',
+                                     photo='https://data.whicdn.com/images/152059660/original.gif',
+                                     iban='ES6621000418401234567891')
+    artist13.save()
 
     # Portfolios with his modules
 
     portfolio1 = Portfolio.objects.create(artisticName='Carlos DJ',
-                                          artist=artist1,
                                           banner='https://c.pxhere.com/photos/52/a5/mixer_sound_board_sound_studio_broadcasting_radio_djs_music-1371930.jpg!d',
                                           biography='Musician, producer, DJ, pianist, promoter, and electronic music enthusiast alike, David Michael hails out of Dayton, Ohio.  When not performing, he spends his time in the studio creating his own music… aided by over a decade of piano lessons and an upbringing in a very musically-influenced home.  Having spent many years playing at all of the major local night clubs (alongside local hard-hitters and national acts alike), holding multiple residencies, DJing special events and promoting his own shows, David has had a lot of time to develop his sound.  For him, it’s all about mood and a deep, hypnotic groove… playing those tracks that get you tapping your feet and nodding your head without you realizing it, regardless of genre, tempo, style, or release date. Don’t be surprised when you suddenly find yourself dancing')
     portfolio1.artisticGender.add(artistic_gender2)
@@ -828,7 +703,6 @@ def save_data():
     # ----
 
     portfolio2 = Portfolio.objects.create(artisticName='From the noise',
-                                          artist=artist2,
                                           banner='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/1377395_756950037692403_4684275136466205538_n.jpg?_nc_cat=107&_nc_ht=scontent-mad1-1.xx&oh=452afbe02d9696047bad6af696ed1276&oe=5D47A9C6',
                                           biography='Somos un grupo de Sevilla, formado el 2010, somos 6 componentes y tocamos un estilo muy alternativo que mezcla hip hop con rock, electrónica y metal. Tenemos melodías y letras contudentes. Estamos bastante bien aceptados en nuestro entorno y nos gustaría expandirnos más. Queremos tocar allí donde sea posible y que nos ayude a darnos a conocer.')
     portfolio2.artisticGender.add(artistic_gender4)
@@ -854,7 +728,6 @@ def save_data():
     # ----
 
     portfolio3 = Portfolio.objects.create(artisticName='Los saraos',
-                                          artist=artist3,
                                           banner='https://c.pxhere.com/photos/9e/08/musicians_concert_flamenco_scene_music_art_scenario-1329878.jpg!d',
                                           biography='Considerados una de las principales figuras del flamenco actual, se le atribuye la responsabilidad de la reforma que llevó este arte a la escena musical internacional gracias a la inclusión de nuevos ritmos desde el jazz, la bossa nova y la música clásica. De este modo destacan sus colaboraciones con artistas internacionales como Carlos Santana, Al Di Meola o John McLaughlin, pero también con otras figuras del flamenco como Camarón de la Isla o Tomatito, con quienes modernizó el concepto de flamenco clásico.')
     portfolio3.artisticGender.add(artistic_gender5)
@@ -874,7 +747,6 @@ def save_data():
     # ----
 
     portfolio4 = Portfolio.objects.create(artisticName='Ana DJ',
-                                          artist=artist4,
                                           banner='https://c.pxhere.com/photos/52/a5/mixer_sound_board_sound_studio_broadcasting_radio_djs_music-1371930.jpg!d',
                                           biography='She may have been ‘born to be a DJ’, but sheer hard work and dedication are what’s brought ANNA success. In São Paulo, the traffic jams can stretch over a hundred miles on a bad day. Trapped under scorching sun or torrential rain, the air chewy and warm regardless, cars trudge along its roads and raised highways. Trees and shrubbery bring colour to the worn-out streets, sand-coloured and mirrored tower blocks looming large over the city. Beneath a concrete underpass in the north of the city, ANNA, aka DJ Ana Miranda, is making an emphatic return to the city that shaped her.')
     portfolio4.zone.add(zone4)
@@ -894,7 +766,6 @@ def save_data():
     # ----
 
     portfolio5 = Portfolio.objects.create(artisticName='Pasando olimpicamente',
-                                          artist=artist5,
                                           banner='https://c.pxhere.com/images/69/7e/d027d7ad8538be4686b3c4dc30ef-1457547.jpg!d',
                                           biography='En 1989 monta la chirigota Los sanmolontropos con una música y una letra muy extraña que llama la atención hasta el punto que entran en la Final, de manera inesperada, sorprendiendo a propios y extraños. Siguiendo con esa línea de locura y surrealismo, al año siguiente saca la chirigota Carnaval 2036 Piconeros Galácticos. Se pregunta si pueden salir los 18 amigos en el Falla y decide hacer dos chirigotas. Le supuso un grandísimo esfuerzo y crea Ballet zum zum malacatum y El que la lleva la entiende (Los borrachos), en las que lleva la misma línea de surrealismo, pero pide por favor que fuera una chirigota interpretada porque le gusta mucho hacerse el borracho.')
     portfolio5.artisticGender.add(artistic_gender8)
@@ -909,7 +780,6 @@ def save_data():
     # ----
 
     portfolio6 = Portfolio.objects.create(artisticName='Una chirigota sin clase',
-                                          artist=artist6,
                                           banner='https://c.pxhere.com/images/69/7e/d027d7ad8538be4686b3c4dc30ef-1457547.jpg!d',
                                           biography='En 1989 monta la chirigota Los sanmolontropos con una música y una letra muy extraña que llama la atención hasta el punto que entran en la Final, de manera inesperada, sorprendiendo a propios y extraños. Siguiendo con esa línea de locura y surrealismo, al año siguiente saca la chirigota Carnaval 2036 Piconeros Galácticos. Se pregunta si pueden salir los 18 amigos en el Falla y decide hacer dos chirigotas. Le supuso un grandísimo esfuerzo y crea Ballet zum zum malacatum y El que la lleva la entiende (Los borrachos), en las que lleva la misma línea de surrealismo, pero pide por favor que fuera una chirigota interpretada porque le gusta mucho hacerse el borracho.')
     portfolio6.artisticGender.add(artistic_gender8)
@@ -934,7 +804,6 @@ def save_data():
     # ----
 
     portfolio7 = Portfolio.objects.create(artisticName='Batracio',
-                                          artist=artist7,
                                           banner='https://yt3.ggpht.com/IER5btMSGSaLEXOs8QTppGpgNCAs_yboMZCiPfLazmHoIPgSYuHqoIsJ61gEo-l-xQZOjNiRpg=w2560-fcrop64=1,00005a57ffffa5a8-nd-c0xffffffff-rj-k-no',
                                           biography='Batracio nace en 2015, fruto de una reunión entre viejos amigos, Febes (voz) y José Alberto (guitarra) cansados de hacer en anteriores formaciones ḿúsica más genérica. De ahí no sólo nació una banda, sino que surgieron dos de sus temas más emblemáticos. La Charca y Pulgadas. Esto motivó a seguir adelante y continuar con un proyecto al que luego se sumarían Juan Bidegain (bajo), José Manuel Rodríguez “Negro” (teclado) y Javier Galliza (batería). Tras añadirse Domingo Muñoz (trombón) a la formación, sucedió el increíble debut en una mítica sala FunClub totalmente abarrotada. A partir de ese momento, las composiciones giraron hacia el Ska-funk característico de la banda. En 2016 la banda volvía al estudio para darle vida a Famelia y Souciedad.')
     portfolio7.artisticGender.add(artistic_gender3)
@@ -991,7 +860,6 @@ def save_data():
     # ----
 
     portfolio8 = Portfolio.objects.create(artisticName='Medictum',
-                                          artist=artist8,
                                           banner='https://yt3.ggpht.com/IHxxu82dBWN8emRrLgn81-pjIdB6Q1qHW575Gmyk6zoAGxHEIHgXEwpZSaKLFH1KI_WlaEzX=w2560-fcrop64=1,00005a57ffffa5a8-nd-c0xffffffff-rj-k-no',
                                           biography='MedictuM es una banda que surge en 2012 de la mano de los hermanos Antonio y Manuel Medina en su pueblo natal, Morón de la Frontera. Tras el paso de ambos por grupos locales, deciden crear su propio proyecto con toques de thrash metal, heavy metal clásico, pinceladas de hard rock y otros estilos.')
     portfolio8.artisticGender.add(artistic_gender3)
@@ -1045,7 +913,6 @@ def save_data():
     # ----
 
     portfolio9 = Portfolio.objects.create(artisticName='Waterdogs',
-                                          artist=artist9,
                                           banner='https://cdn.pixabay.com/photo/2016/02/15/12/54/banner-1201119_1280.jpg',
                                           biography='It all began in 1997 when Martin Ekelund met Patrik Berglin and started to discuss music. They soon found out that they share the same taste in music. And what was more obvious then to start the best rockband in the world? Excactly…nothing! They found the drummer P-O Borg and started to write songs and rehearse. After a while P-O dropped the band and Martin and Patrik stood without a drummer. One warm and shiny day when the sky was blue and the world, for once, was a friendly and peacefull place, Martin came up with the brilliant idea of asking an old childhood friend to join the band. Hard hitting Daniel Persson united their forces and Waterdog was a fact.')
     portfolio9.artisticGender.add(artistic_gender3)
@@ -1132,6 +999,126 @@ def save_data():
 
     calendar8 = Calendar.objects.create(days=availableDays8, portfolio=portfolio8)
     calendar8.save()
+
+    # Users...
+
+    # ,,,musician
+
+    user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
+                                        first_name='Carlos', last_name='Campos Cuesta',
+                                        email='Joseph.jmlc@gmail.com')  # 'infoaudiowar@gmail.com'
+    user1_artist1.save()
+    user2_artist2 = User.objects.create(username='artist2', password=make_password('artist2artist2'),
+                                        first_name='José Antonio', last_name='Granero Guzmán',
+                                        email='Joseph.jmlc@gmail.com')  # josegraneroguzman@gmail.com
+    user2_artist2.save()
+    user3_artist3 = User.objects.create(username='artist3', password=make_password('artist3artist3'),
+                                        first_name='Francisco', last_name='Martín',
+                                        email='Joseph.jmlc@gmail.com')  # saralcum@gmail.com
+    user3_artist3.save()
+    user4_artist4 = User.objects.create(username='artist4', password=make_password('artist4artist4'), first_name='Ana',
+                                        last_name='Mellado González',
+                                        email='Joseph.jmlc@gmail.com')  # mellizalez@hotmail.com
+    user4_artist4.save()
+    user5_artist5 = User.objects.create(username='artist5', password=make_password('artist5artist5'),
+                                        first_name='Alejandro', last_name='Arteaga Ramírez',
+                                        email='Joseph.jmlc@gmail.com')  # alejandroarteagaramirez@gmail.com
+    user5_artist5.save()
+    user6_artist6 = User.objects.create(username='artist6', password=make_password('artist6artist6'),
+                                        first_name='Pablo', last_name='Delgado Flores',
+                                        email='Joseph.jmlc@gmail.com')  # pabloj.df@gmail.com
+    user6_artist6.save()
+    user7_artist7 = User.objects.create(username='artist7', password=make_password('artist7artist7'),
+                                        first_name='Domingo', last_name='Muñoz Daza',
+                                        email='Joseph.jmlc@gmail.com')  # dmunnoz96@gmail.com
+    user7_artist7.save()
+    user8_artist8 = User.objects.create(username='artist8', password=make_password('artist8artist8'),
+                                        first_name='Rafael', last_name='Córdoba',
+                                        email='Joseph.jmlc@gmail.com')  # contacto@medictum.es
+    user8_artist8.save()
+    user9_artist9 = User.objects.create(username='artist9', password=make_password('artist9artist9'),
+                                        first_name='José Luis', last_name='Salvador Lauret',
+                                        email='Joseph.jmlc@gmail.com')  # joseluis.salvador@gmail.com
+    user9_artist9.save()
+
+    # ...customers
+
+    user10_customer1 = User.objects.create(username='customer1', password=make_password('customer1customer1'),
+                                           first_name='Rafael', last_name='Esquivias Ramírez',
+                                           email='Joseph.jmlc@gmail.com')  # resquiviasramirez@gmail.com
+    user10_customer1.save()
+    user11_customer2 = User.objects.create(username='customer2', password=make_password('customer2customer2'),
+                                           first_name='Jorge', last_name='Jimenez',
+                                           email='Joseph.jmlc@gmail.com')  # jorjicorral@gmail.com
+    user11_customer2.save()
+    user12_customer3 = User.objects.create(username='customer3', password=make_password('customer3customer3'),
+                                           first_name='Juan Manuel', last_name='Fernández',
+                                           email='Joseph.jmlc@gmail.com')  # surlive@imgempresas.com
+    user12_customer3.save()
+    user13_customer4 = User.objects.create(username='customer4', password=make_password('customer4customer4'),
+                                           first_name='Miguel', last_name='Romero Gutierrez',
+                                           email='Joseph.jmlc@gmail.com')  # La posada Sevilla
+    user13_customer4.save()
+
+    # ...admins
+
+    user14_admin = User.objects.create(username='admin', password=make_password('admin'), is_staff=True,
+                                       is_superuser=True)
+    user14_admin.save()
+
+    # Artists
+
+    artist1 = Artist.objects.create(user=user1_artist1, rating=4.5, portfolio=portfolio1, phone='600304999',
+                                    photo='https://upload.wikimedia.org/wikipedia/commons/e/e7/Robin_Clark_%28DJ%29_Live_at_Techno4ever_net_Bday_Rave.jpg',
+                                    iban='ES6621000418401234567891')
+    artist1.save()
+    artist2 = Artist.objects.create(user=user2_artist2, rating=4.9, portfolio=portfolio2, phone='695099812',
+                                    photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/20953179_10155798140312625_5517808811547907373_n.jpg?_nc_cat=108&_nc_ht=scontent-mad1-1.xx&oh=78561ec93ba4604a3c5a570cbe101b40&oe=5D4D1ED1',
+                                    iban='ES1720852066623456789011')
+    artist2.save()
+    artist3 = Artist.objects.create(user=user3_artist3, rating=4.0, portfolio=portfolio3, phone='695990241',
+                                    photo='https://cdn.pixabay.com/photo/2016/02/19/11/36/microphone-1209816_1280.jpg',
+                                    iban='ES6000491500051234567892')
+    artist3.save()
+    artist4 = Artist.objects.create(user=user4_artist4, rating=3.5, portfolio=portfolio4, phone='610750391',
+                                    photo='https://www.billboard.com/files/media/Dani-Deahl-press-photo-2016-billboard-1000.jpg',
+                                    iban='ES9420805801101234567891')
+    artist4.save()
+    artist5 = Artist.objects.create(user=user5_artist5, rating=4.5, portfolio=portfolio5, phone='675181175',
+                                    photo='https://carnaval.lavozdigital.es/wp-content/uploads/2019/01/chirigota-pasando-olimpicamente-recortada.jpg',
+                                    iban='ES9000246912501234567891')
+    artist5.save()
+    artist6 = Artist.objects.create(user=user6_artist6, rating=4.0, portfolio=portfolio6, phone='673049277',
+                                    photo='https://carnaval.lavozdigital.es/wp-content/uploads/2019/01/chirigota-sin-clase.jpg',
+                                    iban='ES7100302053091234567895')
+    artist6.save()
+    artist7 = Artist.objects.create(user=user7_artist7, rating=4.75, portfolio=portfolio7, phone='664196105',
+                                    photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/50732294_2114221071976992_2173326934371467264_o.jpg?_nc_cat=100&_nc_ht=scontent-mad1-1.xx&oh=dacf068903a3703434b52cfade783470&oe=5D09C938',
+                                    iban='ES1000492352082414205416')
+    artist7.save()
+    artist8 = Artist.objects.create(user=user8_artist8, rating=4.66666666, portfolio=portfolio8, phone='664596466',
+                                    photo='http://medictum.es/wp-content/uploads/2017/03/p2-team-image-3.jpg',
+                                    iban='ES1720852066623456789011')
+    artist8.save()
+    artist9 = Artist.objects.create(user=user9_artist9, rating=3.75, portfolio=portfolio9, phone='679739257',
+                                    photo='https://media.licdn.com/dms/image/C4E03AQFAONXIX44h6w/profile-displayphoto-shrink_800_800/0?e=1559174400&v=beta&t=eEhhR1sr9-p1fr1tREXmlXV6WAzPvNlFDHhlV8SNwRY',
+                                    iban='ES9420805801101234567891')
+    artist9.save()
+
+    # Customers with credit card
+
+    customer1 = Customer.objects.create(user=user10_customer1, phone='639154189', holder='Rafael Esquivias Ramírez',
+                                        expirationDate='2020-10-01', number='4651001401188232')
+    customer1.save()
+    customer2 = Customer.objects.create(user=user11_customer2, phone='664656659', holder='Jorge Jiménez del Corral',
+                                        expirationDate='2027-03-01', number='4934521448108546')
+    customer2.save()
+    customer3 = Customer.objects.create(user=user12_customer3, phone='678415820', holder='Juan Manuel Fernández',
+                                        expirationDate='2025-10-01', number='4656508395720981')
+    customer3.save()
+    customer4 = Customer.objects.create(user=user13_customer4, phone='627322721', holder='Miguel Romero Gutierrez',
+                                        expirationDate='2027-03-01', number='4826704855401486')
+    customer4.save()
 
     # Event location
 
