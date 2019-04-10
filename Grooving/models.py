@@ -96,15 +96,15 @@ class PortfolioModule(AbstractEntity):
 class Performance(AbstractEntity):
     info = models.TextField(max_length=1000)
     hours = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.5'))])
-    price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
+    price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('1.0'))])
 
 
 class Fare(AbstractEntity):
-    priceHour = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
+    priceHour = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('2.0'))])
 
 
 class Custom(AbstractEntity):
-    minimumPrice = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
+    minimumPrice = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('1.0'))])
 
 
 class PaymentPackage(AbstractEntity):
@@ -168,7 +168,7 @@ class Offer(AbstractEntity):
     status = models.CharField(choices=OfferStatusField, default='PENDING', max_length=50)
     date = models.DateTimeField(default=timezone.now)
     hours = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.5'))])
-    price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
+    price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('1.0'))])
     currency = models.CharField(default='EUR', max_length=3)
     paymentCode = models.CharField(max_length=10, unique=True, null=True, blank=True)
     paymentPackage = models.ForeignKey(PaymentPackage, on_delete=models.PROTECT)
@@ -184,7 +184,7 @@ class Offer(AbstractEntity):
 
 class SystemConfiguration(AbstractEntity):
     minimumPrice = models.DecimalField(default=0.0, max_digits=20, decimal_places=2,
-                                       validators=[MinValueValidator(Decimal('0.0'))])
+                                       validators=[MinValueValidator(Decimal('1.0'))])
     currency = models.CharField(default='EUR', max_length=3)
     paypalTax = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
     creditCardTax = models.DecimalField(max_digits=3, decimal_places=1,
