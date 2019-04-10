@@ -18,12 +18,11 @@ class GetPersonalInformationOfCustomer(generics.ListAPIView):
 
         user = get_logged_user(request)
         user_type = get_user_type(user)
-        if user_type == 'Customer':
-            customer = Customer.objects.get(user_id=user.user_id)
-            serializer = CustomerInfoSerializer(customer)
-            return Response(serializer.data)
-        else:
-            raise PermissionDenied()
+        Assertions.assert_true_raise403(user is not None, {'error': 'You must be logged in to access this page.'})
+        Assertions.assert_true_raise403(user_type == 'Customer', {'error': 'You are not a customer.'})
+        customer = Customer.objects.get(user_id=user.user_id)
+        serializer = CustomerInfoSerializer(customer)
+        return Response(serializer.data)
 
 
 class GetPublicInformationOfCustomer(generics.ListAPIView):
