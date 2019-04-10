@@ -59,7 +59,7 @@ urlpatterns = [
 #    url(r'^user/$', UserManage.as_view()),
     url(r'^artisticGender/$', CreateArtisticGender.as_view()),
     url(r'^artisticGenders/$', ListArtisticGenders.as_view()),
-    url(r'^artisticGender/(?P<pk>[0-9]+)/ ', ArtisticGenderManager.as_view()),
+    url(r'^artisticGender/(?P<pk>[0-9]+)/$', ArtisticGenderManager.as_view()),
     url(r'^zone/$', CreateZone.as_view()),
     url(r'^zone/(?P<pk>[0-9]+)/$', ZoneManager.as_view()),
     path('api/login/', LoginManager.as_view(), name='login'),
