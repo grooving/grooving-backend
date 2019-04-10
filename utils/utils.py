@@ -31,6 +31,13 @@ class Privacy(generics.GenericAPIView):
         return Response(SystemConfiguration.objects.all().first().privacyText)
 
 
+class AboutUs(generics.GenericAPIView):
+
+    @staticmethod
+    def get(request):
+        return Response(SystemConfiguration.objects.all().first().aboutUs)
+
+
 def isPositivefloat(string):
     try:
         float(string)
