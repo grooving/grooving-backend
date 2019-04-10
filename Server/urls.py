@@ -86,7 +86,7 @@ urlpatterns = [
 
     url(r'^numOffers/$', NumOffers.as_view()),
 
-    url(r'^braintree_token/$', BraintreeViews.as_view()),
-    url(r'^terms/$', TermsAndConditions.as_view()),
+	url(r'^terms/$', TermsAndConditions.as_view()),
+    url(r'^braintree_token/$', BraintreeViews.as_view())
 
 ]

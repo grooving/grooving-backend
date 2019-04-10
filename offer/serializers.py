@@ -261,7 +261,7 @@ class OfferSerializer(serializers.ModelSerializer):
                                                'CONTRACT_MADE': 'CANCELLED_ARTIST'}
                 if json_status == 'CONTRACT_MADE':
                     Assertions.assert_true_raise400(logged_user.iban is not None,
-                                                    {"ERROR_CODE:""You must introduce your bank account before"})
+                                                    {'error': "You must introduce your bank account before"})
                     offer_in_db.transaction.ibanArtist = logged_user.iban
                     offer_in_db.transaction.save()
 
@@ -378,7 +378,7 @@ class OfferSerializer(serializers.ModelSerializer):
         eventLocation = EventLocation.objects.filter(pk=attrs.data.get("eventLocation_id")).first()
 
         Assertions.assert_true_raise400(eventLocation,
-                                        {'error': 'eventLocation doesn\'t exist'})
+                                        {'error': 'eventLocation does not exist'})
 
         # User owner validation
 
@@ -387,12 +387,3 @@ class OfferSerializer(serializers.ModelSerializer):
 
         return True
 
-
-"""
-class CreateOfferRequest(serializers.ModelSerializer):
-
-    class Meta:
-        model = Offer
-        fields = ('description', 'date', 'hours', 'price', 'paymentPackage_id', 'eventLocation_id')
-
-"""

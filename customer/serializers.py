@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from Grooving.models import Customer
 from user.serializers import UserSerializer, ShortUserSerializer
@@ -56,9 +56,9 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         user = customer.user
 
         user.first_name = json.get('first_name')
-        Assertions.assert_true_raise400(user.first_name, {"First name can't be null"})
+        Assertions.assert_true_raise400(user.first_name, {'error': "First name can't be null"})
         user.last_name = json.get('last_name')
-        Assertions.assert_true_raise400(user.last_name, {"Last name can't be null"})
+        Assertions.assert_true_raise400(user.last_name, {'error': "Last name can't be null"})
 
         user.save()
         customer.user = user
@@ -72,7 +72,7 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
                                     last_name=json.get('last_name'),
                                     email=json.get('email'))
 
-        customer = Customer.objects.create(photo=json.get('photo'),phone = json.get('phone'),user = user1)
+        customer = Customer.objects.create(photo=json.get('photo'), phone=json.get('phone'), user=user1)
         customer.save()
 
         return customer
@@ -101,7 +101,7 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(password == confirm_password, {'error': "Password and confirmation must match"})
 
         # Email in use validation
-        Assertions.assert_true_raise400(not email in emails, {'error': "Email already in use"})
+        Assertions.assert_true_raise400(not(email in emails), {'error': "Email already in use"})
 
         # Password validations
         Assertions.assert_true_raise400(not (username in password or password in username),
@@ -124,11 +124,11 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(username not in user_names, {'error': "Username already in use"})
 
         if phone:
-            Assertions.assert_true_raise400(phone.isnumeric(), "Phone must be a number")
-            Assertions.assert_true_raise400(len(phone) == 9, "Phone length must be 9 digits")
+            Assertions.assert_true_raise400(phone.isnumeric(), {'error': "Phone must be a number"})
+            Assertions.assert_true_raise400(len(phone) == 9, {'error': "Phone length must be 9 digits"})
 
         Assertions.assert_true_raise400(len(first_name) > 1 and len(last_name) > 1,
-                                        "First or second name do not seem real")
-        Assertions.assert_true_raise400('@' in email and '.' in email, "Invalid email")
+                                        {'error': "First or second name do not seem real"})
+        Assertions.assert_true_raise400('@' in email and '.' in email, {'error': "Invalid email"})
 
         return True
