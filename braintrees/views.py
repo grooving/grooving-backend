@@ -86,7 +86,7 @@ class BraintreeViews(generics.GenericAPIView):
 
         customer = braintree.Customer.create(customer_kwargs)
 
-        if serializer.data['paypalCustomer'] is None:
+        if request.data['paypalCustomer'] is None or request.data['paypalCustomer'] == "":
 
             i = 0
             year = "20"
