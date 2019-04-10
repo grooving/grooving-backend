@@ -154,7 +154,7 @@ class BraintreeViews(generics.GenericAPIView):
             return Response(context)
 
         offer = Offer.objects.filter(id=serializer.data['id_offer']).first()
-        Assertions.assert_true_raise400(offer,{'error': 'No offer with this id'})
+        Assertions.assert_true_raise400(offer, {'error': 'No offer with this id'})
 
         offer.transaction.braintree_id = result.transaction.id
 
