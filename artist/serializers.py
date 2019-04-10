@@ -7,9 +7,7 @@ from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
 from utils.Assertions import Assertions
 from utils.notifications.notifications import Notifications
-from django.core.validators import URLValidator
-from django.core.validators import URLValidator,ValidationError
-from django import forms
+
 
 class ArtistInfoSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -93,11 +91,10 @@ class ArtistSerializer(serializers.ModelSerializer):
                                    first_name=json.get('first_name'), last_name=json.get('last_name'),
                                    email=json.get('email'))
 
-        portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'))
-
         artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'),
-                                       portfolio=portfolio1, user=user)
+                                    user=user)
 
+        Portfolio.objects.create(artisticName=json.get('artisticName'), artist=artist)
         return artist
 
     @staticmethod
