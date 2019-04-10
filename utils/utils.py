@@ -22,3 +22,14 @@ class TermsAndConditions(generics.GenericAPIView):
     @staticmethod
     def get(request):
         return Response(SystemConfiguration.objects.all().first().termsText)
+
+
+def isPositivefloat(string):
+    try:
+        float(string)
+        if '-' not in string:
+            return True
+        else:
+            return False
+    except ValueError:
+        return False
