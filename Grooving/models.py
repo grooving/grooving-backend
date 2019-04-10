@@ -28,7 +28,7 @@ class Actor(AbstractEntity):
 
 
 class UserAbstract(Actor):
-    photo = models.CharField(max_length=255, blank=True, null=True)
+    photo = models.CharField(max_length=500, blank=True, null=True)
     phone = models.CharField(max_length=12, blank=True, null=True)
     iban = models.CharField(max_length=34, blank=True, null=True)
     paypalAccount = models.EmailField(blank=True, null=True)
@@ -54,7 +54,7 @@ class Zone(AbstractEntity):
 
 
 class Portfolio(AbstractEntity):
-    banner = models.CharField(blank=True, null=True, max_length=300)
+    banner = models.CharField(blank=True, null=True, max_length=500)
     biography = models.TextField(blank=True, null=True)
     artisticName = models.CharField(blank=True, null=True, max_length=140)
     artist = models.OneToOneField('Artist', null=True, blank=True, related_name='portfolio', on_delete=models.SET_NULL)
@@ -84,9 +84,9 @@ ModuleTypeField = (
 
 
 class PortfolioModule(AbstractEntity):
-    type = models.CharField(max_length=20, choices=ModuleTypeField)
+    type = models.CharField(choices=ModuleTypeField, max_length=50)
     link = models.URLField(blank=True, null=True)
-    description = models.TextField(max_length=255, blank=True, null=True)
+    description = models.TextField(max_length=1000, blank=True, null=True)
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -94,17 +94,17 @@ class PortfolioModule(AbstractEntity):
 
 
 class Performance(AbstractEntity):
-    info = models.TextField(max_length=255)
+    info = models.TextField(max_length=1000)
     hours = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.5'))])
-    price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
+    price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('1.0'))])
 
 
 class Fare(AbstractEntity):
-    priceHour = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
+    priceHour = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('2.0'))])
 
 
 class Custom(AbstractEntity):
-    minimumPrice = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
+    minimumPrice = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('1.0'))])
 
 
 class PaymentPackage(AbstractEntity):
@@ -127,7 +127,8 @@ class EventLocation(AbstractEntity):
     address = models.CharField(max_length=255)
     equipment = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    customer = models.ForeignKey(Customer, null=True, related_name="eventLocations", blank=True, on_delete=models.SET_NULL)
+    customer = models.ForeignKey(Customer, null=True, related_name="eventLocations", blank=True,
+                                 on_delete=models.SET_NULL)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
 
     def __str__(self):
@@ -152,19 +153,20 @@ class Transaction(AbstractEntity):
     paypalArtist = models.EmailField(blank=True, null=True)
 
 
+
 class Rating(AbstractEntity):
     score = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField(blank=True, null=True)
 
 
 class Offer(AbstractEntity):
-    description = models.TextField(default='Description', max_length=255)
-    status = models.CharField(max_length=20, choices=OfferStatusField, default='PENDING')
+    description = models.TextField(default='Description')
+    status = models.CharField(choices=OfferStatusField, default='PENDING', max_length=50)
     date = models.DateTimeField(default=timezone.now)
     hours = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.5'))])
-    price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
+    price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('1.0'))])
     currency = models.CharField(default='EUR', max_length=3)
-    paymentCode = models.CharField(max_length=140, unique=True, null=True, blank=True)
+    paymentCode = models.CharField(max_length=10, unique=True, null=True, blank=True)
     paymentPackage = models.ForeignKey(PaymentPackage, on_delete=models.PROTECT)
     eventLocation = models.ForeignKey(EventLocation, on_delete=models.PROTECT)
     reason = models.TextField(blank=True, null=True)
@@ -178,7 +180,7 @@ class Offer(AbstractEntity):
 
 class SystemConfiguration(AbstractEntity):
     minimumPrice = models.DecimalField(default=0.0, max_digits=20, decimal_places=2,
-                                       validators=[MinValueValidator(Decimal('0.0'))])
+                                       validators=[MinValueValidator(Decimal('1.0'))])
     currency = models.CharField(default='EUR', max_length=3)
     paypalTax = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
     creditCardTax = models.DecimalField(max_digits=3, decimal_places=1,
@@ -187,16 +189,16 @@ class SystemConfiguration(AbstractEntity):
     profit = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
     corporateEmail = models.EmailField(default='info@grooving.com')
     reportEmail = models.EmailField(default='report@grooving.com')
-    logo = models.CharField(max_length=255)
+    logo = models.CharField(max_length=500)
     appName = models.CharField(max_length=255)
     slogan = models.CharField(max_length=255, blank=True, null=True)
-    termsText = models.TextField(default='Terms text', max_length=255)
-    privacyText = models.TextField(default='Privacy text', max_length=255)
+    termsText = models.TextField(default='Terms text')
+    privacyText = models.TextField(default='Privacy text')
 
 
 class EmailNotification(AbstractEntity):
     subject = models.CharField(max_length=255)
-    body = models.TextField
+    body = models.TextField(default='Body message')
 
     def __str__(self):
         return str(self.subject)
