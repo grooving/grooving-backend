@@ -103,10 +103,10 @@ class BraintreeViews(generics.GenericAPIView):
         #if request.data['paypalCustomer'] is None or request.data['paypalCustomer'] == "":
 
         customer = braintree.Customer.create(customer_kwargs)
-        Assertions.assert_true_raise400(serializer.data['payment_method_nonce'], {'error': 'No nounce was created'})
-        Assertions.assert_true_raise400(customer, {'error': 'No amount was given'})
+        Assertions.assert_true_raise400(serializer.data['payment_method_nonce'], {'error': 'No nounce was given'})
+        Assertions.assert_true_raise400(serializer.data['amount'], {'error': 'No amount was given'})
         Assertions.assert_true_raise400(customer.is_success(), {'error': 'No customer was created'})
-        Assertions.assert_true_raise400(serializer.data['id_offer'], {'error': 'No customer was created'})
+        Assertions.assert_true_raise400(serializer.data['id_offer'], {'error': 'No offer was given'})
 
         result = braintree.Transaction.sale({
             "customer_id": customer.customer.id,
@@ -164,4 +164,4 @@ class BraintreeViews(generics.GenericAPIView):
         # You definitely want to send it to your database
         # Now you can send out confirmation emails or update your metrics
         # or do whatever makes you and your customers happy :)
-        return Response(serializer.data)
+        return Response()
