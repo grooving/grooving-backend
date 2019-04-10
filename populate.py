@@ -1468,7 +1468,8 @@ def save_data():
     offer1_performance1 = Offer.objects.create(description='Oferta 1 to Carlos DJ by performance', status='CONTRACT_MADE',
                                                date='2019-04-29 12:00:00', hours=2.5, price='120', currency='EUR',
                                                appliedVAT=7, paymentPackage=paymentPackage1_performance1,
-                                               eventLocation=event_location1, transaction=transaction_offer1)
+                                               eventLocation=event_location1, transaction=transaction_offer1,
+                                               paymentCode=_service_generate_unique_payment_code())
     offer1_performance1.save()
 
     offer2_performance1 = Offer.objects.create(description='Oferta 2 to Carlos DJ by performance',
@@ -1594,7 +1595,7 @@ def save_data():
                                                 status='PAYMENT_MADE',
                                                 date='2019-03-14 08:00:00', hours=3, price='1000', currency='EUR',
                                                 appliedVAT=21, paymentPackage=paymentPackage4_performance2,
-                                                eventLocation=event_location1, transaction=transaction_offer17)
+                                                eventLocation=event_location1, transaction=transaction_offer17,paymentCode=_service_generate_unique_payment_code())
 
     offer17_performance1.save()
 
@@ -1602,7 +1603,7 @@ def save_data():
                                                 status='PAYMENT_MADE',
                                                 date='2019-03-14 12:00:00', hours=3.1, price='1200', currency='EUR',
                                                 appliedVAT=21, paymentPackage=paymentPackage4_performance2,
-                                                eventLocation=event_location1, transaction=transaction_offer18)
+                                                eventLocation=event_location1, transaction=transaction_offer18,paymentCode=_service_generate_unique_payment_code())
 
     offer18_performance1.save()
 
