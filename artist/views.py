@@ -12,7 +12,6 @@ from django.http import Http404
 from utils.whooshSearcher.searcher import search
 
 
-
 class GetPersonalInformationOfArtist(generics.ListAPIView):
 
     serializer_class = ArtistInfoSerializer
@@ -21,12 +20,11 @@ class GetPersonalInformationOfArtist(generics.ListAPIView):
 
         user = get_logged_user(self.request)
         user_type = get_user_type(user)
-        if user_type == 'Artist':
-            artist = Artist.objects.get(user_id=user.user_id)
-            serializer = ArtistInfoSerializer(artist)
-            return Response(serializer.data)
-        else:
-            raise PermissionDenied()
+        Assertions.assert_true_raise403(user is not None, {'error': 'You must be logged in to access this page.'})
+        Assertions.assert_true_raise403(user_type == 'Artist', {'error': 'You are not an artist.'})
+        artist = Artist.objects.get(user_id=user.user_id)
+        serializer = ArtistInfoSerializer(artist)
+        return Response(serializer.data)
 
 
 class ListArtist(generics.ListAPIView):
