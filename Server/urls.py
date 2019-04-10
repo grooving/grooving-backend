@@ -31,7 +31,7 @@ from zone.views import ZoneManager, CreateZone, ListZones
 from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
 from rest_framework.authtoken.views import obtain_auth_token
-from utils.utils import TermsAndConditions
+from utils.utils import TermsAndConditions, Privacy
 
 router = routers.DefaultRouter()
 
@@ -85,5 +85,5 @@ urlpatterns = [
 
     url(r'^numOffers/$', NumOffers.as_view()),
     url(r'^terms$', TermsAndConditions.as_view()),
-    url(r'^privacy', TermsAndConditions.as_view()),
+    url(r'^privacy', Privacy.as_view()),
 ]
