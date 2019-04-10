@@ -75,30 +75,6 @@ class BraintreeViews(generics.GenericAPIView):
         highly recommend to do that. It will help you to avoid any
         fraud issues, since some providers require matching addresses
         """
-        i = 0
-        year = "20"
-        month = ""
-        for char in serializer.data['expirationDate']:
-            if i < 2:
-                month += char
-            elif i > 2:
-                year += char
-            i = i + 1
-        print(month)
-        print(year)
-        number = ""
-        i = 0
-
-        for char in serializer.data['number']:
-            if i < 6:
-                number += char
-            elif i > 5 and i < (len(serializer.data['number']) - 4):
-                number += "*"
-            elif i > (len(serializer.data['number']) - 5):
-                number += char
-
-            i = i + 1
-
 
         # You can use the form to calculate a total or add a static total amount
         # I'll use a static amount in this example
@@ -109,30 +85,72 @@ class BraintreeViews(generics.GenericAPIView):
         }
 
         customer = braintree.Customer.create(customer_kwargs)
-        result = braintree.Transaction.sale({
-            "customer_id": customer.customer.id,
-            "amount": serializer.data['amount'],
-            "credit_card": {
-                "cardholder_name": serializer.data['holder'],
-                "expiration_month": month,
-                "expiration_year": year,
-                "number": serializer.data['number'],
-                "cvv": serializer.data['cvv']
-            },
-            "options":{
-                # Use this option to store the customer data, if successful
-                'store_in_vault_on_success': True,
-                # Use this option to directly settle the transaction
-                # If you want to settle the transaction later, use ``False`` and later on
-                # ``braintree.Transaction.submit_for_settlement("the_transaction_id")``
-                'submit_for_settlement': False,
-            }
-        })
+
+        if serializer.data['paypalCustomer'] is None:
+
+            i = 0
+            year = "20"
+            month = ""
+            for char in serializer.data['expirationDate']:
+                if i < 2:
+                    month += char
+                elif i >= 2:
+                    year += char
+                i = i + 1
+            print(month)
+            print(year)
+            number = ""
+            i = 0
+
+            for char in serializer.data['number']:
+                if i < 6:
+                    number += char
+                elif i > 5 and i < (len(serializer.data['number']) - 4):
+                    number += "*"
+                elif i > (len(serializer.data['number']) - 5):
+                    number += char
+
+                i = i + 1
+
+            result = braintree.Transaction.sale({
+                "customer_id": customer.customer.id,
+                "amount": serializer.data['amount'],
+                "credit_card": {
+                    "cardholder_name": serializer.data['holder'],
+                    "expiration_month": month,
+                    "expiration_year": year,
+                    "number": serializer.data['number'],
+                    "cvv": serializer.data['cvv']
+                },
+                "options":{
+                    # Use this option to store the customer data, if successful
+                    'store_in_vault_on_success': True,
+                    # Use this option to directly settle the transaction
+                    # If you want to settle the transaction later, use ``False`` and later on
+                    # ``braintree.Transaction.submit_for_settlement("the_transaction_id")``
+                    'submit_for_settlement': False,
+                }
+            })
+        else:
+            result = braintree.Transaction.sale({
+                "amount" : serializer.data["amount"],
+                "payment_method_nonce" : "fake-paypal-one-time-nonce",
+                "order_id" : "Mapped to PayPal Invoice Number",
+                "options" : {
+                    "submit_for_settlement": True,
+                    "paypal": {
+                        "payee_email": serializer.data['paypalCustomer'],
+                        "description" : "Description for PayPal email receipt",
+                        },
+                    },
+            })
         print(result.is_success)
+
         if not result.is_success:
             # Card could've been declined or whatever
             # I recommend to send an error report to all admins
             # , including ``result.message`` and ``self.user.email``
+            print(result.errors.deep_errors)
             context = {
                 'error': "Failed to validate",
                 'form': request.data,
