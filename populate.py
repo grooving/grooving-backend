@@ -11,7 +11,7 @@ from Grooving.models import ArtisticGender, Portfolio, Artist, Zone, PortfolioMo
 
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from utils.whooshSearcher.indexing import index_all
+
 
 
 def _service_generate_unique_payment_code():

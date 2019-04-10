@@ -45,7 +45,7 @@ class ArtistSerializer(serializers.ModelSerializer):
         depth = 2
         model = Artist
         user = UserRegisterSerializer()
-        fields = ('user', 'artisticName', 'phone', 'photo',)
+        fields = ('user', 'artisticName', 'phone', 'photo','paypalAccount')
 
     def save(self):
 
@@ -66,6 +66,10 @@ class ArtistSerializer(serializers.ModelSerializer):
         user = artist.user
         user.first_name = json.get('first_name')
         user.last_name = json.get('last_name')
+        artist.paypalAccount = json.get('paypalAccount')
+        Assertions.assert_true_raise400(artist.paypalAccount, {'error': "First name not provided"})
+        Assertions.assert_true_raise400('@' in artist.paypalAccount and '.' in artist.paypalAccount,
+                                        {'error': "Invalid paypalAccount"})
         photo = json.get('photo')
         Assertions.assert_true_raise400(user.first_name, {'error': "First name not provided"})
         Assertions.assert_true_raise400(user.last_name, {'error': "Last name not provided"})

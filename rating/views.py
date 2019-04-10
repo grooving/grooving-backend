@@ -55,39 +55,35 @@ class PostRating(generics.CreateAPIView):
         pk = self.kwargs['pk']
 
         serializer = CustomerRatingSerializer(data=request.data)
-        """if serializer.validate(request, pk): #  "Some of the conditions to do this action aren't fulfilled.")
+        serializer.validate(request, pk) #  "Some of the conditions to do this action aren't fulfilled.")
             
             #serializer.is_valid(request, pk)"""
-        if 1 == 1:
-            rating = serializer.save()
-            ratingChecked = CustomerRatingSerializer(rating)
-            offer = Offer.objects.get(id=pk)
-            offer.rating = rating
-            offer.save()
-            artist = offer.paymentPackage.portfolio.artist
+        rating = serializer.save()
+        ratingChecked = CustomerRatingSerializer(rating)
+        offer = Offer.objects.get(id=pk)
+        offer.rating = rating
+        offer.save()
+        artist = offer.paymentPackage.portfolio.artist
 
-            offersWithArtist = Offer.objects.filter(paymentPackage__portfolio__artist=artist)
-            numRaters = 0
+        offersWithArtist = Offer.objects.filter(paymentPackage__portfolio__artist=artist)
+        numRaters = 0
 
-            for offer in offersWithArtist:
+        for offer in offersWithArtist:
 
-                if offer.rating is not None:
+            if offer.rating is not None:
+                numRaters = numRaters + 1
+        #   totalRating = offersWithArtist.annotate(Sum('rating'))
 
-                    numRaters = numRaters + 1
-            #   totalRating = offersWithArtist.annotate(Sum('rating'))
+        #           Se comprueba que no sean 0 votos. No podemos dividir entre 0, o el universo explotará y los gatitos kawaiis
+        #           de internet morirán
 
-#           Se comprueba que no sean 0 votos. No podemos dividir entre 0, o el universo explotará y los gatitos kawaiis
-            #           de internet morirán
+        if (numRaters == 0):
 
-            if(numRaters == 0):
+            artist.rating = rating.score
+            artist.save()
 
-                artist.rating = rating.score
-                artist.save()
-
-            else:
-
-                artist.rating = (artist.rating*(numRaters-1)+rating.score)/numRaters
-                artist.save()
-            return Response(ratingChecked.data, status=status.HTTP_201_CREATED)
         else:
-            raise serializers.ValidationError("Invalid data")
+
+            artist.rating = (artist.rating * (numRaters - 1) + rating.score) / numRaters
+            artist.save()
+        return Response(ratingChecked.data, status=status.HTTP_201_CREATED)
