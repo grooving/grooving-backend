@@ -28,7 +28,7 @@ class PortfolioModuleSerializer(serializers.ModelSerializer):
 
     # Se pondrá service delante de nuestros métodos para no sobrescribir por error métodos del serializer
     @staticmethod
-    def _service_create(json: dict, module: PortfolioModule, logged_user: User):
+    def _service_create(json: dict, module: PortfolioModule):
         module.type = json.get('type')
         module.link = json.get('link')
         module.description = json.get('description')
@@ -89,13 +89,14 @@ class PortfolioModuleSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(portfolio,
                                         {'error': 'ERROR_NOTFOUND_PORTFOLIO'})
 
-        moduleTwitter = PortfolioModule.objects.filter(portfolio=portfolio, type='TWITTER').first()
-        Assertions.assert_true_raise400(moduleTwitter is None and json.get('type') == 'TWITTER',
-                                        {'error': 'ERROR_CREATEMODULE_TWITTER'})
-
-        moduleInstagram = PortfolioModule.objects.filter(portfolio=portfolio, type='INSTRAGRAM').first()
-        Assertions.assert_true_raise400(moduleInstagram is None and json.get('type') == 'INSTAGRAM',
-                                        {'error': 'ERROR_CREATEMODULE_INSTAGRAM'})
+        if json.get('type') == 'TWITTER':
+            moduleTwitter = PortfolioModule.objects.filter(portfolio=portfolio, type='TWITTER').first()
+            Assertions.assert_true_raise400(moduleTwitter is None,
+                                            {'error': 'ERROR_CREATEMODULE_TWITTER'})
+        if json.get('type') == 'INSTAGRAM':
+            moduleInstagram = PortfolioModule.objects.filter(portfolio=portfolio, type='INSTAGRAM').first()
+            Assertions.assert_true_raise400(moduleInstagram is None and json.get('type') == 'INSTAGRAM',
+                                            {'error': 'ERROR_CREATEMODULE_INSTAGRAM'})
 
         # User owner validation
 

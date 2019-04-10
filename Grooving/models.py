@@ -57,7 +57,7 @@ class Portfolio(AbstractEntity):
     banner = models.CharField(blank=True, null=True, max_length=300)
     biography = models.TextField(blank=True, null=True)
     artisticName = models.CharField(blank=True, null=True, max_length=140)
-    artist = models.OneToOneField('Artist', null=True, blank=True, related_name='artist', on_delete=models.SET_NULL)
+    artist = models.OneToOneField('Artist', null=True, blank=True, related_name='portfolio', on_delete=models.SET_NULL)
     artisticGender = models.ManyToManyField(ArtisticGender, blank=True)
     zone = models.ManyToManyField(Zone, blank=True)
 
