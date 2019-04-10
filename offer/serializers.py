@@ -14,6 +14,8 @@ from validate_email_address import validate_email
 from django.utils import timezone
 from utils.authentication_utils import get_logged_user, get_user_type
 from utils.notifications.notifications import Notifications
+from Server import settings
+import braintree
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -171,7 +173,22 @@ class OfferSerializer(serializers.ModelSerializer):
 
         offer.status = 'PAYMENT_MADE'
         # try:
-        # TODO: Pago por braintree
+        if settings.BRAINTREE_PRODUCTION:
+            braintree_env = braintree.Environment.Production
+        else:
+            braintree_env = braintree.Environment.Sandbox
+
+        Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+
+        # Configure Braintree
+        braintree.Configuration.configure(
+            environment=braintree_env,
+            merchant_id=settings.BRAINTREE_MERCHANT_ID,
+            public_key=settings.BRAINTREE_PUBLIC_KEY,
+            private_key=settings.BRAINTREE_PRIVATE_KEY,
+        )
+
+        braintree.Transaction.submit_for_settlement(offer.transaction.braintree_id)
         # except:
         # offer.status == 'CONTRACT_MADE'
         offer.save()
@@ -204,27 +221,23 @@ class OfferSerializer(serializers.ModelSerializer):
             offer.currency = offer.paymentPackage.currency
 
         transaction = Transaction()
-        if json.get('transaction').get('paypalCustomer') is not None:
-            transaction = Transaction.objects.create(
-                paypalCustomer=json.get('transaction').get('paypalCustomer'),
-            )
-            Customer.objects.filter(user_id=logged_user.id).update(
-                paypalAccount=transaction.paypalCustomer,
-            )
-        else:
-            transaction = Transaction.objects.create(
-                # ibanCustomer=json.get('transaction').get('ibanCustomer'),
-                holder=json.get('transaction').get('holder'),
-                number=json.get('transaction').get('number'),
-                expirationDate=datetime.datetime.strptime(json.get('transaction').get('expirationDate'), "%m%y").date(),
-                cvv=json.get('transaction').get('cvv')
-            )
-            Customer.objects.filter(user_id=logged_user.id).update(
-                # ibanCustomer=json.get('transaction').get('ibanCustomer'),
-                holder=transaction.holder,
-                number=transaction.number,
-                expirationDate=transaction.expirationDate
-            )
+        Assertions.assert_true_raise400(json.get('transaction').get('amount'), {'error' : 'No amount recieved'})
+        transaction.amount = json.get('transaction').get('amount')
+
+        transaction.save()
+        '''transaction = Transaction.objects.create(
+            # ibanCustomer=json.get('transaction').get('ibanCustomer'),
+            holder=json.get('transaction').get('holder'),
+            number=json.get('transaction').get('number'),
+            expirationDate=datetime.datetime.strptime(json.get('transaction').get('expirationDate'), "%m%y").date(),
+            cvv=json.get('transaction').get('cvv')
+        )
+        Customer.objects.filter(user_id=logged_user.id).update(
+            # ibanCustomer=json.get('transaction').get('ibanCustomer'),
+            holder=transaction.holder,
+            number=transaction.number,
+            expirationDate=transaction.expirationDate
+        )'''
         offer.transaction = transaction
         offer.appliedVAT = SystemConfiguration.objects.all().first().vat
         offer.save()
@@ -279,6 +292,7 @@ class OfferSerializer(serializers.ModelSerializer):
 
                     try:
                         offer_in_db.paymentCode = self._service_generate_unique_payment_code()
+
                         offer_in_db.save()
                         break
                     except IntegrityError:

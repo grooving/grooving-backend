@@ -146,12 +146,9 @@ OfferStatusField = (
 
 
 class Transaction(AbstractEntity):
-    holder = models.CharField(blank=True, null=True, max_length=255)
-    expirationDate = models.DateField(blank=True, null=True)
-    number = models.CharField(blank=True, null=True, max_length=16)
-    cvv = models.CharField(blank=True, null=True, max_length=3)
-    ibanCustomer = models.CharField(blank=True, null=True, max_length=34)
-    paypalCustomer = models.EmailField(blank=True, null=True)
+
+    amount = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.3'))])
+    braintree_id = models.IntegerField(blank=True)
     ibanArtist = models.CharField(max_length=34, blank=True, null=True)
     paypalArtist = models.EmailField(blank=True, null=True)
 

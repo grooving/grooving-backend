@@ -101,43 +101,13 @@ class BraintreeViews(generics.GenericAPIView):
         }
 
         #if request.data['paypalCustomer'] is None or request.data['paypalCustomer'] == "":
-        '''
-        i = 0
-        year = "20"
-        month = ""
-        for char in serializer.data['expirationDate']:
-            if i < 2:
-                month += char
-            elif i >= 2:
-                year += char
-            i = i + 1
-        number = ""
-        i = 0
 
-        Assertions.assert_true_raise400(len(year) == 4, {'error': 'Error  with the year pls try again'})
-        Assertions.assert_true_raise400(len(month) == 2, {'error': 'Error  with the month pls try again'})
-
-        for char in serializer.data['number']:
-            if i < 6:
-                number += char
-            elif i > 5 and i < (len(serializer.data['number']) - 4):
-                number += "*"
-            elif i > (len(serializer.data['number']) - 5):
-                number += char
-
-            i = i + 1
-
-        
-
-        Assertions.assert_true_raise400(customer, {'error': 'No customer was created'})
-
-        Assertions.assert_true_raise400(customer, {'error': 'No amount was given'})
-        Assertions.assert_true_raise400(customer, {'error': 'No card holder was given'})
-        Assertions.assert_true_raise400(customer, {'error': 'No card number was given'})
-        Assertions.assert_true_raise400(customer, {'error': 'No cvv was given'})
-        Assertions.assert_true_raise400(customer, {'error': 'No nounce was created'})
-        '''
         customer = braintree.Customer.create(customer_kwargs)
+        Assertions.assert_true_raise400(serializer.data['payment_method_nonce'], {'error': 'No nounce was created'})
+        Assertions.assert_true_raise400(customer, {'error': 'No amount was given'})
+        Assertions.assert_true_raise400(customer.is_success(), {'error': 'No customer was created'})
+        Assertions.assert_true_raise400(serializer.data['id_offer'], {'error': 'No customer was created'})
+
         result = braintree.Transaction.sale({
             "customer_id": customer.customer.id,
             "amount": serializer.data['amount'],
@@ -182,6 +152,13 @@ class BraintreeViews(generics.GenericAPIView):
                     ' input or use another payment method and try again.')
             }
             return Response(context)
+
+        offer = Offer.objects.filter(id=serializer.data['id_offer']).first()
+        Assertions.assert_true_raise400(offer,{'error': 'No offer with this id'})
+
+        offer.transaction.braintree_id = result.transaction.id
+
+        offer.save()
 
         # Finally there's the transaction ID
         # You definitely want to send it to your database
