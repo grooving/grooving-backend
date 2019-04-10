@@ -11,8 +11,8 @@ def search(artisticName="", categoria="", zone="", order=""):
                                                                    categoria=categoria, zone=zone)]
 
     rateDict = {}
-    for porfolio in filtersPortfolios:
-        rateDict.update({porfolio: calculate_rating(porfolio)})
+    for portfolio in filtersPortfolios:
+        rateDict.update({portfolio[0]: portfolio[0].artist.rating})
 
     if order == "asc":
         filtersPortfolios = sorted(rateDict.items(), key=lambda p: p[1], reverse=False)
@@ -23,15 +23,7 @@ def search(artisticName="", categoria="", zone="", order=""):
     return artists
 
 
-def calculate_rating(portfolio):
-    res = 0
-    ratings = Rating.objects.filter(offer__paymentPackage__portfolio=portfolio)
-    for rating in ratings:
-        res += rating.score
-    return round(res/len(ratings), ndigits=1) if len(ratings) != 0 else 0.0
-
-
-def compare(portfolio, artisticName="",categoria="",zone=""):
+def compare(portfolio, artisticName="", categoria="", zone=""):
     coincidencesNeeded = 0
     coincidencesFinded = 0
     if artisticName:
