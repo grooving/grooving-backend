@@ -1,3 +1,4 @@
+'''
 from Grooving.models import User, Artist, Customer, Portfolio, PortfolioModule, Calendar, EventLocation
 from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_user_type, get_customer, get_artist
@@ -36,3 +37,5 @@ class UserManage(generics.DestroyAPIView):
         except TypeError:
             Assertions.assert_true_raise401(False, {'error': 'ERROR_DELETE_USER'})
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    '''
