@@ -92,6 +92,7 @@ class ArtistRegister(generics.CreateAPIView):
             raise Http404
 
     def post(self, request, *args, **kwargs):
+        Assertions.assert_true_raise400(len(request.data) != 0, {'error': "Empty form is not valid"})
         user_type = None
         try:
             user = get_logged_user(request)
@@ -111,18 +112,16 @@ class ArtistRegister(generics.CreateAPIView):
     def put(self, request, pk=None):
         if pk is None:
             pk = self.kwargs['pk']
-        if len(request.data) == 0:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        else:
-            artist = Artist.objects.get(pk=pk)
-            articustomer = get_logged_user(request)
+        Assertions.assert_true_raise400(len(request.data) != 0, {'error': "Empty form is not valid"})
+        artist = Artist.objects.get(pk=pk)
+        articustomer = get_logged_user(request)
 
-            Assertions.assert_true_raise403(articustomer.user.id == artist.user.id, 
-                                            {'code': 'You can only change your personal info'})
-            serializer = ArtistSerializer(artist, data=request.data, partial=True)
-            Assertions.assert_true_raise400(serializer.is_valid(), {"code": "invalid data"})
-            artist = serializer.update(pk)
+        Assertions.assert_true_raise403(articustomer.user.id == artist.user.id,
+                                        {'code': 'You can only change your personal info'})
+        serializer = ArtistSerializer(artist, data=request.data, partial=True)
+        Assertions.assert_true_raise400(serializer.is_valid(), {"code": "invalid data"})
+        artist = serializer.update(pk)
 
-            artist.save()
-            return Response(status=status.HTTP_200_OK)
+        artist.save()
+        return Response(status=status.HTTP_200_OK)
 

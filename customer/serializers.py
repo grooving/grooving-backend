@@ -7,7 +7,9 @@ from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
 from utils.Assertions import Assertions
 from utils.notifications.notifications import Notifications
-from django.core.validators import URLValidator
+from django.core.validators import URLValidator,ValidationError
+from django import forms
+
 
 class CustomerInfoSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -51,27 +53,26 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
     @staticmethod
     def _service_update_customer(json: dict, pk):
-
+        Assertions.assert_true_raise400(json, {'error': "Empty form is not valid"})
         customer = Customer.objects.get(pk=pk)
         customer.phone = json.get('phone')
         customer.photo = json.get('photo')
         user = customer.user
         user.first_name = json.get('first_name')
         user.last_name = json.get('last_name')
-
+        photo = json.get('photo')
         Assertions.assert_true_raise400(user.first_name, {'error': "First name not provided"})
         Assertions.assert_true_raise400(user.last_name, {'error': "Last name not provided"})
-        if user.phone:
-            Assertions.assert_true_raise400(user.phone.isnumeric(), {'error': "Phone must be a number"})
-            Assertions.assert_true_raise400(len(user.phone) == 9, {'error': "Phone length must be 9 digits"})
+        if customer.phone:
+            Assertions.assert_true_raise400(customer.phone.isnumeric(), {'error': "Phone must be a number"})
+            Assertions.assert_true_raise400(len(customer.phone) == 9, {'error': "Phone length must be 9 digits"})
 
         Assertions.assert_true_raise400(len(user.first_name) > 1 and len(user.last_name) > 1,
                                         {'error': "First or second name do not seem real"})
-        if user.photo:
-
-            val = URLValidator(verify_exists=True)
-            Assertions.assert_true_raise400(val(user.photo), {'error': 'This photo url does not exist'})
-
+        if photo:
+            list = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
+            result = any(elem in photo for elem in list)
+            Assertions.assert_true_raise400(result, {'error': 'Invalid photo url'})
 
         user.save()
         customer.user = user
@@ -102,7 +103,7 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         first_name = request.data.get("first_name")
         last_name = request.data.get("last_name")
         phone = request.data.get("phone")
-
+        photo = request.data.get("photo")
         Assertions.assert_true_raise400(request.data, {'error': "Empty form is not valid"})
 
         # Empty validations
@@ -144,5 +145,8 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
                                         {'error': "First or second name do not seem real"})
         Assertions.assert_true_raise400('@' in email and '.' in email, {'error': "Invalid email"})
         Assertions.assert_true_raise400(len(email) > 5, {'error': "Invalid email"})
-
+        if photo:
+            list = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
+            result = any(elem in photo for elem in list)
+            Assertions.assert_true_raise400(result, {'error': 'Invalid photo url'})
         return True
