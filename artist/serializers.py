@@ -94,11 +94,10 @@ class ArtistSerializer(serializers.ModelSerializer):
         user = User.objects.create(username=json.get('username'), password=make_password(json.get('password')),
                                    first_name=json.get('first_name'), last_name=json.get('last_name'),
                                    email=json.get('email'))
+        portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'))
 
         artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'),
-                                    user=user)
-
-        Portfolio.objects.create(artisticName=json.get('artisticName'), artist=artist)
+                                       portfolio=portfolio1, user=user)
         return artist
 
     @staticmethod

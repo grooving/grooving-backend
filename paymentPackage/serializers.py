@@ -1,12 +1,11 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from Grooving.models import PaymentPackage, Custom, Fare, Performance,Portfolio
-from decimal import Decimal
 from utils.Assertions import assert_true
-from django.core.exceptions import PermissionDenied
 from utils.Assertions import Assertions
 from utils.utils import isPositivefloat
-from decimal import Decimal
+
+
 class CurrencySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -33,6 +32,7 @@ class PerformancePaymentPackageSerializer(serializers.HyperlinkedModelSerializer
     class Meta:
         model = Performance
         fields = ('info', 'hours', 'price')
+
 
 class PaymentPackageListSerializer(serializers.ModelSerializer):
     custom = CustomPaymentPackageSerializer(read_only=True)
@@ -168,15 +168,14 @@ class FareSerializer(serializers.ModelSerializer):
 
         priceHour = json.get('priceHour')
         description = json.get('description')
-
+        portfolio_id = logged_user.portfolio.id
         Assertions.assert_true_raise400(priceHour, {'error': "Price not provided"})
 
         Assertions.assert_true_raise400(isPositivefloat(priceHour), {'error': "Invalid price"})
 
-        portfolio = Portfolio.objects.filter(artist_id=logged_user.id).first()
-        fare = Fare.objects.create(priceHour=json.get('priceHour'))
-        PaymentPackage.objects.create(description=json.get('description'),
-                                      portfolio_id=portfolio.id, fare=fare)
+        fare = Fare.objects.create(priceHour=priceHour)
+        PaymentPackage.objects.create(description=description,
+                                      portfolio_id=portfolio_id, fare=fare)
 
         return fare
 
@@ -187,10 +186,11 @@ class FareSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(priceHour, {'error': "Price not provided"})
         Assertions.assert_true_raise400(isPositivefloat(priceHour), {'error': "Invalid price"})
 
-        fare.priceHour=json.get('priceHour')
-        fare.paymentpackage.description=json.get('description')
+        fare.priceHour = json.get('priceHour')
+        fare.paymentpackage.description = json.get('description')
         fare.save()
         return fare
+
 
 class CustomSerializer(serializers.ModelSerializer):
 
@@ -215,15 +215,14 @@ class CustomSerializer(serializers.ModelSerializer):
 
         minimumPrice = json.get('minimumPrice')
         description = json.get('description')
-
+        portfolio_id = logged_user.portfolio.id
         Assertions.assert_true_raise400(minimumPrice, {'error': "Minimum price not provided"})
 
         Assertions.assert_true_raise400(isPositivefloat(minimumPrice), {'error': "Invalid price"})
 
-        portfolio = Portfolio.objects.filter(artist_id=logged_user.id).first()
         custom = Custom.objects.create(minimumPrice=minimumPrice)
         PaymentPackage.objects.create(description=description,
-                                      portfolio_id=portfolio.id, custom=custom)
+                                      portfolio_id=portfolio_id, custom=custom)
 
         return custom
 
@@ -262,6 +261,7 @@ class PerformanceSerializer(serializers.ModelSerializer):
         description = json.get('description')
         info = json.get('info')
         price = json.get('price')
+        portfolio_id = logged_user.portfolio.id
         Assertions.assert_true_raise400(hours, {'error': "Hours not provided"})
         Assertions.assert_true_raise400(info, {'error': "Info not provided"})
         Assertions.assert_true_raise400(price, {'error': "Price not provided"})
@@ -269,10 +269,9 @@ class PerformanceSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(isPositivefloat(hours), {'error': "Invalid hours"})
         Assertions.assert_true_raise400(isPositivefloat(price), {'error': "Invalid price"})
 
-        portfolio = Portfolio.objects.filter(artist_id=logged_user.id).first()
         performance = Performance.objects.create(hours=json.get('hours'), info=json.get('info'), price=json.get('price'))
         PaymentPackage.objects.create(description=json.get('description'),
-                                      portfolio_id=portfolio.id, performance=performance)
+                                      portfolio_id=portfolio_id, performance=performance)
 
         return performance
 
