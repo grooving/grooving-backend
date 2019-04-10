@@ -130,7 +130,9 @@ class CreateCustomPackage(generics.CreateAPIView):
 
         if pk:
             package = PaymentPackage.objects.filter(custom_id=pk).first()
-            Assertions.assert_true_raise403(logged_user.user.id == package.portfolio.artist.user.id)
+
+            owner = package.portfolio.artist
+            Assertions.assert_true_raise403(logged_user.user.id == owner.user.id, {'error': "You are not the owner"})
 
         if user_type == "Artist":
             serializer = CustomSerializer(data=request.data,partial=True)
@@ -162,7 +164,9 @@ class CreatePerformancePackage(generics.CreateAPIView):
 
         if pk:
             package = PaymentPackage.objects.filter(performance_id=pk).first()
-            Assertions.assert_true_raise403(logged_user.user.id == package.portfolio.artist.user.id)
+
+            owner = package.portfolio.artist
+            Assertions.assert_true_raise403(logged_user.user.id == owner.user.id, {'error': "You are not the owner"})
 
         if user_type == "Artist":
             serializer = PerformanceSerializer(data=request.data, partial=True)
@@ -194,7 +198,9 @@ class CreateFarePackage(generics.CreateAPIView):
 
         if pk:
             package = PaymentPackage.objects.filter(fare_id=pk).first()
-            Assertions.assert_true_raise403(logged_user.user.id == package.portfolio.artist.user.id)
+
+            owner = package.portfolio.artist
+            Assertions.assert_true_raise403(logged_user.user.id == owner.user.id, {'error': "You are not the owner"})
 
         if user_type == "Artist":
             serializer = FareSerializer(data=request.data, partial=True)
@@ -204,5 +210,7 @@ class CreateFarePackage(generics.CreateAPIView):
 
         else:
             raise PermissionDenied("You have no permissions to do this action")
+
+
 
 

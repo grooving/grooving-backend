@@ -79,6 +79,8 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
                         return Response(status=status.HTTP_200_OK)
                     else:
                         return Response(status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return Response(status=status.HTTP_403_FORBIDDEN)
 
     def delete(self, request, pk=None, format=None):
         if pk is None:
