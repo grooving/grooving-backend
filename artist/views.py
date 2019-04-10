@@ -9,7 +9,7 @@ from rest_framework import status
 from utils.Assertions import Assertions
 from artist.serializers import ArtistSerializer
 from django.http import Http404
-from utils.whooshSearcher.searcher import search
+from utils.searcher.searcher import search
 
 
 
@@ -77,7 +77,7 @@ class ListArtist(generics.ListAPIView):
         else:
             queryset = Artist.objects.all()
         """
-        queryset = search(busqueda=artisticname, categoria=artisticgender, zone=zone, order=order)
+        queryset = search(artisticName=artisticname, categoria=artisticgender, zone=zone, order=order)
         return queryset
 
 
