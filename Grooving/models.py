@@ -147,8 +147,8 @@ OfferStatusField = (
 
 class Transaction(AbstractEntity):
 
-    amount = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.3'))])
-    braintree_id = models.IntegerField(blank=True)
+    amount = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.3'))], null=True)
+    braintree_id = models.IntegerField(blank=True, null=True)
     ibanArtist = models.CharField(max_length=34, blank=True, null=True)
     paypalArtist = models.EmailField(blank=True, null=True)
 
