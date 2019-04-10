@@ -78,7 +78,7 @@ ModuleTypeField = (
     ('PHOTO', 'PHOTO'),
     ('VIDEO', 'VIDEO'),
     ('AUDIO', 'AUDIO'),
-    ('FACEBOOK', 'FACEBOOK'),
+    ('TWITTER', 'TWITTER'),
     ('INSTAGRAM', 'INSTRAGRAM'),
     ('MEMBER', 'MEMBER'))
 
