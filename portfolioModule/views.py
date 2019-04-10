@@ -6,6 +6,7 @@ from rest_framework import status
 from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
 class PortfolioModuleManager(generics.RetrieveUpdateDestroyAPIView):
@@ -55,19 +56,11 @@ class PortfolioModuleManager(generics.RetrieveUpdateDestroyAPIView):
 class CreatePortfolioModule(generics.CreateAPIView):
     queryset = PortfolioModule.objects.all()
     serializer_class = PortfolioModuleSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
-        loggedUser = get_logged_user(request)
-        type = get_user_type(loggedUser)
-        if loggedUser is not None and type == "Artist":
-            serializer = PortfolioModuleSerializer(data=request.data, partial=True)
-            if serializer.validate(request.data):
-                serializer.is_valid()
-                if request.data["portfolio"] == loggedUser.portfolio_id:
-                    portfolioModule = serializer.save()
-                    serialized = PortfolioModuleSerializer(portfolioModule)
-                    return Response(serialized.data, status=status.HTTP_201_CREATED)
-                else:
-                    raise PermissionDenied("The artisticGender is not for yourself")
-        else:
-            raise PermissionDenied("The artisticGender is not for yourself")
+        serializer = PortfolioModuleSerializer(data=request.data, partial=True)
+        if serializer.validate(request):
+            module = serializer.save(logged_user=request.user)
+            serialized = PortfolioModuleSerializer(module)
+            return Response(serialized.data, status=status.HTTP_201_CREATED)
