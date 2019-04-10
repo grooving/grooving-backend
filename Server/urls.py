@@ -84,5 +84,6 @@ urlpatterns = [
     url(r'^zones/$', ListZones.as_view()),
 
     url(r'^numOffers/$', NumOffers.as_view()),
-    url(r'^terms/$', TermsAndConditions.as_view()),
+    url(r'^terms$', TermsAndConditions.as_view()),
+    url(r'^privacy', TermsAndConditions.as_view()),
 ]

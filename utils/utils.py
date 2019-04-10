@@ -24,6 +24,13 @@ class TermsAndConditions(generics.GenericAPIView):
         return Response(SystemConfiguration.objects.all().first().termsText)
 
 
+class Privacy(generics.GenericAPIView):
+
+    @staticmethod
+    def get(request):
+        return Response(SystemConfiguration.objects.all().first().privacyText)
+
+
 def isPositivefloat(string):
     try:
         float(string)
