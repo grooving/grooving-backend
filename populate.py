@@ -11,7 +11,7 @@ from Grooving.models import ArtisticGender, Portfolio, Artist, Zone, PortfolioMo
 
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from utils.whooshSearcher.indexing import index_all
+
 
 
 def _service_generate_unique_payment_code():
@@ -766,7 +766,7 @@ def save_data():
     # ----
 
     portfolio5 = Portfolio.objects.create(artisticName='Pasando olimpicamente',
-                                          banner='https://c.pxhere.com/images/69/7e/d027d7ad8538be4686b3c4dc30ef-1457547.jpg!d',
+                                          banner='https://live.staticflickr.com/2307/32502135310_db786fc360_k.jpg',
                                           biography='En 1989 monta la chirigota Los sanmolontropos con una música y una letra muy extraña que llama la atención hasta el punto que entran en la Final, de manera inesperada, sorprendiendo a propios y extraños. Siguiendo con esa línea de locura y surrealismo, al año siguiente saca la chirigota Carnaval 2036 Piconeros Galácticos. Se pregunta si pueden salir los 18 amigos en el Falla y decide hacer dos chirigotas. Le supuso un grandísimo esfuerzo y crea Ballet zum zum malacatum y El que la lleva la entiende (Los borrachos), en las que lleva la misma línea de surrealismo, pero pide por favor que fuera una chirigota interpretada porque le gusta mucho hacerse el borracho.')
     portfolio5.artisticGender.add(artistic_gender8)
     portfolio5.zone.add(zone4)
@@ -780,7 +780,7 @@ def save_data():
     # ----
 
     portfolio6 = Portfolio.objects.create(artisticName='Una chirigota sin clase',
-                                          banner='https://c.pxhere.com/images/69/7e/d027d7ad8538be4686b3c4dc30ef-1457547.jpg!d',
+                                          banner='https://live.staticflickr.com/2307/32502135310_db786fc360_k.jpg',
                                           biography='En 1989 monta la chirigota Los sanmolontropos con una música y una letra muy extraña que llama la atención hasta el punto que entran en la Final, de manera inesperada, sorprendiendo a propios y extraños. Siguiendo con esa línea de locura y surrealismo, al año siguiente saca la chirigota Carnaval 2036 Piconeros Galácticos. Se pregunta si pueden salir los 18 amigos en el Falla y decide hacer dos chirigotas. Le supuso un grandísimo esfuerzo y crea Ballet zum zum malacatum y El que la lleva la entiende (Los borrachos), en las que lleva la misma línea de surrealismo, pero pide por favor que fuera una chirigota interpretada porque le gusta mucho hacerse el borracho.')
     portfolio6.artisticGender.add(artistic_gender8)
     portfolio6.zone.add(zone2)
@@ -1070,7 +1070,7 @@ def save_data():
 
     artist1 = Artist.objects.create(user=user1_artist1, rating=4.5, portfolio=portfolio1, phone='600304999',
                                     photo='https://upload.wikimedia.org/wikipedia/commons/e/e7/Robin_Clark_%28DJ%29_Live_at_Techno4ever_net_Bday_Rave.jpg',
-                                    iban='ES6621000418401234567891')
+                                    iban='ES6621000418401234567891', paypalAccount='bwer0192@gmail.com')
     artist1.save()
     artist2 = Artist.objects.create(user=user2_artist2, rating=4.9, portfolio=portfolio2, phone='695099812',
                                     photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/20953179_10155798140312625_5517808811547907373_n.jpg?_nc_cat=108&_nc_ht=scontent-mad1-1.xx&oh=78561ec93ba4604a3c5a570cbe101b40&oe=5D4D1ED1',
@@ -1399,94 +1399,64 @@ def save_data():
                                                              custom=custom9_paymentPackage27)
     paymentPackage27_custom9.save()
 
+
+
     # Transactions
-    transaction_offer1 = Transaction.objects.create(holder="Visa", expirationDate='2020-02-01',
-                                                    number='1111222233334444', cvv='111')
+    transaction_offer1 = Transaction.objects.create(paypalArtist='bwer0192@gmail.com', amount="120")
     transaction_offer1.save()
 
-    transaction_offer2 = Transaction.objects.create(holder="Visa", expirationDate='2024-04-01',
-                                                    number='1111222233334444', cvv='111',
-                                                    ibanArtist='ES9420805801101234567891')
+    transaction_offer2 = Transaction.objects.create()
     transaction_offer2.save()
 
-    transaction_offer3 = Transaction.objects.create(holder="Visa", expirationDate='2026-06-01',
-                                                    number='1111222233334444', cvv='111',
-                                                    ibanArtist='ES6000491500051234567892')
+    transaction_offer3 = Transaction.objects.create()
     transaction_offer3.save()
 
-    transaction_offer4 = Transaction.objects.create(holder="Visa", expirationDate='2028-08-01',
-                                                    number='1111222233334444', cvv='111',
-                                                    ibanArtist='ES9000246912501234567891')
+    transaction_offer4 = Transaction.objects.create()
     transaction_offer4.save()
 
-    transaction_offer5 = Transaction.objects.create(holder="Visa", expirationDate='2020-02-01',
-                                                    number='1111222233334444', cvv='111',
-                                                    ibanArtist='ES7100302053091234567895')
+    transaction_offer5 = Transaction.objects.create()
     transaction_offer5.save()
 
-    transaction_offer6 = Transaction.objects.create(holder="Visa", expirationDate='2020-02-01',
-                                                    number='1111222233334444', cvv='111',
-                                                    ibanArtist='ES1000492352082414205416')
+    transaction_offer6 = Transaction.objects.create()
     transaction_offer6.save()
 
-    transaction_offer7 = Transaction.objects.create(holder="Visa", expirationDate='2020-02-01',
-                                                    number='1111222233334444', cvv='111')
+    transaction_offer7 = Transaction.objects.create()
     transaction_offer7.save()
 
-    transaction_offer8 = Transaction.objects.create(holder="Visa", expirationDate='2024-04-01',
-                                                    number='1111222233334444', cvv='111',
-                                                    ibanArtist='ES9420805801101234567891')
+    transaction_offer8 = Transaction.objects.create()
     transaction_offer8.save()
 
-    transaction_offer9 = Transaction.objects.create(holder="Visa", expirationDate='2020-02-01',
-                                                    number='1111222233334444', cvv='111',
-                                                    ibanArtist='ES1000492352082414205416')
+    transaction_offer9 = Transaction.objects.create()
     transaction_offer9.save()
 
-    transaction_offer10 = Transaction.objects.create(holder="Visa", expirationDate='2026-06-01',
-                                                     number='1111222233334444', cvv='111',
-                                                     ibanArtist='ES6000491500051234567892')
+    transaction_offer10 = Transaction.objects.create()
     transaction_offer10.save()
 
-    transaction_offer11 = Transaction.objects.create(holder="Visa", expirationDate='2028-08-01',
-                                                     number='1111222233334444', cvv='111',
-                                                     ibanArtist='ES9000246912501234567891')
+    transaction_offer11 = Transaction.objects.create()
     transaction_offer11.save()
 
-    transaction_offer12 = Transaction.objects.create(holder="Visa", expirationDate='2020-02-01',
-                                                     number='1111222233334444', cvv='111',
-                                                     ibanArtist='ES7100302053091234567895')
+    transaction_offer12 = Transaction.objects.create()
     transaction_offer12.save()
 
-    transaction_offer13 = Transaction.objects.create(holder="Visa", expirationDate='2020-02-01',
-                                                     number='1111222233334444', cvv='111',
-                                                     ibanArtist='ES1000492352082414205416')
+    transaction_offer13 = Transaction.objects.create()
     transaction_offer13.save()
 
-    transaction_offer14 = Transaction.objects.create(holder="Visa", expirationDate='2020-02-01',
-                                                     number='1111222233334444', cvv='111')
+    transaction_offer14 = Transaction.objects.create()
     transaction_offer14.save()
 
-    transaction_offer15 = Transaction.objects.create(holder="Visa", expirationDate='2024-04-01',
-                                                     number='1111222233334444', cvv='111')
+    transaction_offer15 = Transaction.objects.create()
     transaction_offer15.save()
 
-    transaction_offer16 = Transaction.objects.create(holder="Visa", expirationDate='2026-06-01',
-                                                     number='1111222233334444', cvv='111')
+    transaction_offer16 = Transaction.objects.create()
     transaction_offer16.save()
 
-    transaction_offer17 = Transaction.objects.create(holder="Visa", expirationDate='2028-08-01',
-                                                     number='1111222233334444', cvv='111',
-                                                     ibanArtist='ES9000246912501234567891')
+    transaction_offer17 = Transaction.objects.create()
     transaction_offer17.save()
 
-    transaction_offer18 = Transaction.objects.create(holder="Visa", expirationDate='2020-02-01',
-                                                     number='1111222233334444', cvv='111',
-                                                     ibanArtist='ES7100302053091234567895')
+    transaction_offer18 = Transaction.objects.create()
     transaction_offer18.save()
 
-    transaction_offer19 = Transaction.objects.create(holder="Visa", expirationDate='2020-02-01',
-                                                     number='1111222233334444', cvv='111')
+    transaction_offer19 = Transaction.objects.create()
     transaction_offer19.save()
 
     # Rating
@@ -1495,10 +1465,11 @@ def save_data():
 
     # Offers
 
-    offer1_performance1 = Offer.objects.create(description='Oferta 1 to Carlos DJ by performance', status='PENDING',
-                                               date='2019-04-25 12:00:00', hours=2.5, price='120', currency='EUR',
+    offer1_performance1 = Offer.objects.create(description='Oferta 1 to Carlos DJ by performance', status='CONTRACT_MADE',
+                                               date='2019-04-29 12:00:00', hours=2.5, price='120', currency='EUR',
                                                appliedVAT=7, paymentPackage=paymentPackage1_performance1,
-                                               eventLocation=event_location1, transaction=transaction_offer1)
+                                               eventLocation=event_location1, transaction=transaction_offer1,
+                                               paymentCode=_service_generate_unique_payment_code())
     offer1_performance1.save()
 
     offer2_performance1 = Offer.objects.create(description='Oferta 2 to Carlos DJ by performance',
@@ -1624,7 +1595,7 @@ def save_data():
                                                 status='PAYMENT_MADE',
                                                 date='2019-03-14 08:00:00', hours=3, price='1000', currency='EUR',
                                                 appliedVAT=21, paymentPackage=paymentPackage4_performance2,
-                                                eventLocation=event_location1, transaction=transaction_offer17)
+                                                eventLocation=event_location1, transaction=transaction_offer17,paymentCode=_service_generate_unique_payment_code())
 
     offer17_performance1.save()
 
@@ -1632,7 +1603,7 @@ def save_data():
                                                 status='PAYMENT_MADE',
                                                 date='2019-03-14 12:00:00', hours=3.1, price='1200', currency='EUR',
                                                 appliedVAT=21, paymentPackage=paymentPackage4_performance2,
-                                                eventLocation=event_location1, transaction=transaction_offer18)
+                                                eventLocation=event_location1, transaction=transaction_offer18,paymentCode=_service_generate_unique_payment_code())
 
     offer18_performance1.save()
 
