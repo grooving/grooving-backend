@@ -27,6 +27,13 @@ class Actor(AbstractEntity):
         abstract = True
 
 
+class Admin(Actor):
+    pass
+
+    def __str__(self):
+        return str(self.user.username)
+
+
 class UserAbstract(Actor):
     photo = models.CharField(max_length=500, blank=True, null=True)
     phone = models.CharField(max_length=12, blank=True, null=True)
