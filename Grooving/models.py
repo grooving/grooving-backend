@@ -57,7 +57,6 @@ class Portfolio(AbstractEntity):
     banner = models.CharField(blank=True, null=True, max_length=300)
     biography = models.TextField(blank=True, null=True)
     artisticName = models.CharField(blank=True, null=True, max_length=140)
-    artist = models.OneToOneField('Artist', null=True, blank=True, related_name='portfolio', on_delete=models.SET_NULL)
     artisticGender = models.ManyToManyField(ArtisticGender, blank=True)
     zone = models.ManyToManyField(Zone, blank=True)
 
@@ -73,6 +72,8 @@ class Calendar(AbstractEntity):
 class Artist(UserAbstract):
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=0.0,
                                  validators=[MinValueValidator(Decimal('0.0')), MaxValueValidator(Decimal('5.0'))])
+    portfolio = models.OneToOneField(Portfolio, default=None, on_delete=models.CASCADE)
+
 
 ModuleTypeField = (
     ('PHOTO', 'PHOTO'),
@@ -146,12 +147,8 @@ OfferStatusField = (
 
 
 class Transaction(AbstractEntity):
-    holder = models.CharField(blank=True, null=True, max_length=255)
-    expirationDate = models.DateField(blank=True, null=True)
-    number = models.CharField(blank=True, null=True, max_length=16)
-    cvv = models.CharField(blank=True, null=True, max_length=3)
-    ibanCustomer = models.CharField(blank=True, null=True, max_length=34)
-    paypalCustomer = models.EmailField(blank=True, null=True)
+    amount = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.3'))], null=True)
+    braintree_id = models.IntegerField(blank=True, null=True)
     ibanArtist = models.CharField(max_length=34, blank=True, null=True)
     paypalArtist = models.EmailField(blank=True, null=True)
 
@@ -166,7 +163,7 @@ class Offer(AbstractEntity):
     status = models.CharField(max_length=20, choices=OfferStatusField, default='PENDING')
     date = models.DateTimeField(default=timezone.now)
     hours = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.5'))])
-    price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.0'))])
+    price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('1.0'))])
     currency = models.CharField(default='EUR', max_length=3)
     paymentCode = models.CharField(max_length=140, unique=True, null=True, blank=True)
     paymentPackage = models.ForeignKey(PaymentPackage, on_delete=models.PROTECT)
