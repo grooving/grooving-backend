@@ -1,11 +1,11 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from Grooving.models import PaymentPackage, Custom, Fare, Performance
+from Grooving.models import PaymentPackage, Custom, Fare, Performance,Portfolio
 from decimal import Decimal
 from utils.Assertions import assert_true
 from django.core.exceptions import PermissionDenied
 from utils.Assertions import Assertions
-
+from utils.utils import isPositivefloat
 from decimal import Decimal
 class CurrencySerializer(serializers.HyperlinkedModelSerializer):
 
@@ -153,7 +153,7 @@ class FareSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Fare
-        fields = ('priceHour','paymentPackage')
+        fields = ('priceHour', 'paymentPackage')
 
     def save(self, pk=None, logged_user=None):
         if pk is None:
@@ -166,16 +166,26 @@ class FareSerializer(serializers.ModelSerializer):
     @staticmethod
     def _service_create_package(json: dict, logged_user):
 
-        portfolio_id = logged_user.portfolio.id
+        priceHour = json.get('priceHour')
+        description = json.get('description')
+
+        Assertions.assert_true_raise400(priceHour, {'error': "Price not provided"})
+
+        Assertions.assert_true_raise400(isPositivefloat(priceHour), {'error': "Invalid price"})
+
+        portfolio = Portfolio.objects.filter(artist_id=logged_user.id).first()
         fare = Fare.objects.create(priceHour=json.get('priceHour'))
         PaymentPackage.objects.create(description=json.get('description'),
-                                      portfolio_id=portfolio_id, fare=fare)
+                                      portfolio_id=portfolio.id, fare=fare)
 
         return fare
 
     @staticmethod
     def _service_update_package(json: dict, fare: Fare, logged_user: User):
         assert_true(fare, "This offer does not exist")
+        priceHour = json.get('priceHour')
+        Assertions.assert_true_raise400(priceHour, {'error': "Price not provided"})
+        Assertions.assert_true_raise400(isPositivefloat(priceHour), {'error': "Invalid price"})
 
         fare.priceHour=json.get('priceHour')
         fare.paymentpackage.description=json.get('description')
@@ -203,21 +213,32 @@ class CustomSerializer(serializers.ModelSerializer):
     @staticmethod
     def _service_create_package(json: dict, logged_user):
 
-        portfolio_id = logged_user.portfolio.id
-        custom = Custom.objects.create(minimumPrice=json.get('minimumPrice'))
-        PaymentPackage.objects.create(description=json.get('description'),
-                                      portfolio_id=portfolio_id, custom=custom)
+        minimumPrice = json.get('minimumPrice')
+        description = json.get('description')
+
+        Assertions.assert_true_raise400(minimumPrice, {'error': "Minimum price not provided"})
+
+        Assertions.assert_true_raise400(isPositivefloat(minimumPrice), {'error': "Invalid price"})
+
+        portfolio = Portfolio.objects.filter(artist_id=logged_user.id).first()
+        custom = Custom.objects.create(minimumPrice=minimumPrice)
+        PaymentPackage.objects.create(description=description,
+                                      portfolio_id=portfolio.id, custom=custom)
 
         return custom
 
     @staticmethod
     def _service_update_package(json: dict, custom: Custom, logged_user: User):
         assert_true(custom, "This offer does not exist")
+        minimumPrice = json.get('minimumPrice')
+        Assertions.assert_true_raise400(minimumPrice, {'error': "Minimum price not provided"})
 
+        Assertions.assert_true_raise400(isPositivefloat(minimumPrice), {'error': "Invalid price"})
         custom.minimumPrice = json.get('minimumPrice')
         custom.paymentpackage.description = json.get('description')
         custom.save()
         return custom
+
 
 class PerformanceSerializer(serializers.ModelSerializer):
 
@@ -225,7 +246,7 @@ class PerformanceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Performance
-        fields = ('info', 'hours', 'price','paymentPackage')
+        fields = ('info', 'hours', 'price', 'paymentPackage')
 
     def save(self, pk=None, logged_user=None):
         if pk is None:
@@ -237,10 +258,21 @@ class PerformanceSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def _service_create_package(json: dict, logged_user):
-        portfolio_id = logged_user.portfolio.id
-        performance = Performance.objects.create(hours=json.get('hours'),info=json.get('info'),price=json.get('price'))
+        hours = json.get('hours')
+        description = json.get('description')
+        info = json.get('info')
+        price = json.get('price')
+        Assertions.assert_true_raise400(hours, {'error': "Hours not provided"})
+        Assertions.assert_true_raise400(info, {'error': "Info not provided"})
+        Assertions.assert_true_raise400(price, {'error': "Price not provided"})
+
+        Assertions.assert_true_raise400(isPositivefloat(hours), {'error': "Invalid hours"})
+        Assertions.assert_true_raise400(isPositivefloat(price), {'error': "Invalid price"})
+
+        portfolio = Portfolio.objects.filter(artist_id=logged_user.id).first()
+        performance = Performance.objects.create(hours=json.get('hours'), info=json.get('info'), price=json.get('price'))
         PaymentPackage.objects.create(description=json.get('description'),
-                                      portfolio_id=portfolio_id, performance=performance)
+                                      portfolio_id=portfolio.id, performance=performance)
 
         return performance
 
@@ -248,12 +280,22 @@ class PerformanceSerializer(serializers.ModelSerializer):
     def _service_update_package(json: dict, performance: Performance, logged_user: User):
         assert_true(performance, "This offer does not exist")
 
+        hours = json.get('hours')
+        description = json.get('description')
+        info = json.get('info')
+        price = json.get('price')
+        Assertions.assert_true_raise400(hours, {'error': "Hours not provided"})
+        Assertions.assert_true_raise400(info, {'error': "Info not provided"})
+        Assertions.assert_true_raise400(price, {'error': "Price not provided"})
+        Assertions.assert_true_raise400(isPositivefloat(hours), {'error': "Invalid hours"})
+        Assertions.assert_true_raise400(isPositivefloat(price), {'error': "Invalid price"})
         performance.hours = json.get('hours')
         performance.info = json.get('info')
         performance.price = json.get('price')
         performance.paymentpackage.description = json.get('description')
         performance.save()
         return performance
+
 
 class PaymentPackageSerializerShort(serializers.ModelSerializer):
 

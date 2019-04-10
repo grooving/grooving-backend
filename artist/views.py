@@ -1,8 +1,7 @@
-from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import generics
 from .serializers import ArtistInfoSerializer
 from django.core.exceptions import PermissionDenied
-from Grooving.models import Artist, ArtisticGender
+from Grooving.models import Artist
 from utils.authentication_utils import get_user_type, get_logged_user
 from .serializers import ListArtistSerializer
 from rest_framework.response import Response
@@ -11,6 +10,9 @@ from utils.Assertions import Assertions
 from artist.serializers import ArtistSerializer
 from django.http import Http404
 from utils.whooshSearcher.searcher import search
+
+
+
 class GetPersonalInformationOfArtist(generics.ListAPIView):
 
     serializer_class = ArtistInfoSerializer
@@ -79,8 +81,6 @@ class ListArtist(generics.ListAPIView):
         return queryset
 
 
-
-
 class ArtistRegister(generics.CreateAPIView):
 
     serializer_class = ArtistSerializer
@@ -92,6 +92,7 @@ class ArtistRegister(generics.CreateAPIView):
             raise Http404
 
     def post(self, request, *args, **kwargs):
+        Assertions.assert_true_raise400(len(request.data) != 0, {'error': "Empty form is not valid"})
         user_type = None
         try:
             user = get_logged_user(request)
@@ -102,6 +103,7 @@ class ArtistRegister(generics.CreateAPIView):
             serializer = ArtistSerializer(data=request.data, partial=True)
             if serializer.validate_artist(request):
                 serializer.save()
+
                 return Response(status=status.HTTP_201_CREATED)
 
         else:
@@ -110,18 +112,16 @@ class ArtistRegister(generics.CreateAPIView):
     def put(self, request, pk=None):
         if pk is None:
             pk = self.kwargs['pk']
-        if len(request.data) == 0:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        else:
-            artist = Artist.objects.get(pk=pk)
-            articustomer = get_logged_user(request)
+        Assertions.assert_true_raise400(len(request.data) != 0, {'error': "Empty form is not valid"})
+        artist = Artist.objects.get(pk=pk)
+        articustomer = get_logged_user(request)
 
-            Assertions.assert_true_raise403(articustomer.user.id == artist.user.id, 
-                                            {'code': 'You can only change your personal info'})
-            serializer = ArtistSerializer(artist, data=request.data, partial=True)
-            Assertions.assert_true_raise400(serializer.is_valid(), {"code": "invalid data"})
-            artist = serializer.update(pk)
+        Assertions.assert_true_raise403(articustomer.user.id == artist.user.id,
+                                        {'code': 'You can only change your personal info'})
+        serializer = ArtistSerializer(artist, data=request.data, partial=True)
+        Assertions.assert_true_raise400(serializer.is_valid(), {"code": "invalid data"})
+        artist = serializer.update(pk)
 
-            artist.save()
-            return Response(status=status.HTTP_200_OK)
+        artist.save()
+        return Response(status=status.HTTP_200_OK)
 

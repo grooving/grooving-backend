@@ -1,0 +1,15 @@
+{
+  "ERROR_USER_FORBIDDEN": "User has forbidden this action",
+  "ERROR_FIELD_TYPE": "Type field not provided",
+  "ERROR_FIELD_LINK": "Link field not provided",
+  "ERROR_FIELD_DESCRIPTION": "Description field not provided",
+  "ERROR_FIELD_PORTFOLIO": "Portfolio field not provided",
+  "ERROR_NOTFOUND_TYPE": "Type hasn't been found",
+  "ERROR_NOTFOUND_PORTFOLIO": "Portfolio hasn't been found",
+  "ERROR_NOTVALID_LINK": "Link not valid",
+  "ERROR_CREATEMODULE_TWITTER": "Can't create another Twitter module",
+  "ERROR_CREATEMODULE_INSTAGRAM": "Can't create another Instagram module",
+  "ERROR_REFERENCE_PORTFOLIO": "Can't reference this portfolio",
+  "ERROR_DELETE_USER_UNKNOWN": "Commit error to delete an unknown user",
+  "ERROR_DELETE_USER": "Commit error to delete user"
+}
