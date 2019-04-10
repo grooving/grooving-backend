@@ -57,7 +57,6 @@ class Portfolio(AbstractEntity):
     banner = models.CharField(blank=True, null=True, max_length=500)
     biography = models.TextField(blank=True, null=True)
     artisticName = models.CharField(blank=True, null=True, max_length=140)
-    artist = models.OneToOneField('Artist', null=True, blank=True, related_name='portfolio', on_delete=models.SET_NULL)
     artisticGender = models.ManyToManyField(ArtisticGender, blank=True)
     zone = models.ManyToManyField(Zone, blank=True)
 
@@ -73,6 +72,7 @@ class Calendar(AbstractEntity):
 class Artist(UserAbstract):
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=0.0,
                                  validators=[MinValueValidator(Decimal('0.0')), MaxValueValidator(Decimal('5.0'))])
+    portfolio = models.OneToOneField(Portfolio, on_delete=models.CASCADE)
 
 ModuleTypeField = (
     ('PHOTO', 'PHOTO'),
