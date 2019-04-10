@@ -39,13 +39,15 @@ class CodeSerializer(serializers.ModelSerializer):
 
 class TransactionSerializer(serializers.ModelSerializer):
 
-    expirationDate = serializers.DateField(input_formats='%m%y', format='%Y-%m')
+    payment_method_nonce = serializers.CharField()
+    amount = serializers.DecimalField(max_digits=20, decimal_places=2)
+    #expirationDate = serializers.DateField(input_formats='%m%y', format='%Y-%m')
 
     class Meta:
         model = Transaction
-        fields = ('id', 'holder', 'expirationDate', 'number', 'cvv', 'paypalCustomer')
+        fields = ('id', 'amount', 'paypalArtist', 'payment_method_nonce')
 
-    def validate(self, attrs):
+    '''def validate(self, attrs):
         # if attrs.get('ibanCustomer') is not None:
         if attrs.get('paypalCustomer') is None:
             Assertions.assert_true_raise400(
@@ -101,7 +103,7 @@ class TransactionSerializer(serializers.ModelSerializer):
             Assertions.assert_true_raise400(validate_email(attrs.get('paypalCustomer')),
                                             {'error': 'paypal account provided isn\'t valid'})
 
-        return True
+        return True'''
 
 
 class RatingSerializer(serializers.ModelSerializer):
