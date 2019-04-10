@@ -30,9 +30,9 @@ class BraintreeViews(generics.GenericAPIView):
         # Ha! There it is. This allows you to switch theself.braintree_client_token
         # Braintree environments by changing one setting
 
-        logged_user = get_logged_user(request)
+        #logged_user = get_logged_user(request)
 
-        Assertions.assert_true_raise401(logged_user, {'error': 'You are not logged in'})
+        #Assertions.assert_true_raise401(logged_user, {'error': 'You are not logged in'})
 
         if settings.BRAINTREE_PRODUCTION:
             braintree_env = braintree.Environment.Production
@@ -66,7 +66,7 @@ class BraintreeViews(generics.GenericAPIView):
 
         logged_user = get_logged_user(request)
 
-        Assertions.assert_true_raise401(logged_user, {'error': 'You are not logged in'})
+        #Assertions.assert_true_raise401(logged_user, {'error': 'You are not logged in'})
 
         if settings.BRAINTREE_PRODUCTION:
             braintree_env = braintree.Environment.Production
@@ -100,62 +100,58 @@ class BraintreeViews(generics.GenericAPIView):
             "email": logged_user.user.email,
         }
 
-        if request.data['paypalCustomer'] is None or request.data['paypalCustomer'] == "":
+        #if request.data['paypalCustomer'] is None or request.data['paypalCustomer'] == "":
+        '''
+        i = 0
+        year = "20"
+        month = ""
+        for char in serializer.data['expirationDate']:
+            if i < 2:
+                month += char
+            elif i >= 2:
+                year += char
+            i = i + 1
+        number = ""
+        i = 0
 
-            i = 0
-            year = "20"
-            month = ""
-            for char in serializer.data['expirationDate']:
-                if i < 2:
-                    month += char
-                elif i >= 2:
-                    year += char
-                i = i + 1
-            number = ""
-            i = 0
+        Assertions.assert_true_raise400(len(year) == 4, {'error': 'Error  with the year pls try again'})
+        Assertions.assert_true_raise400(len(month) == 2, {'error': 'Error  with the month pls try again'})
 
-            Assertions.assert_true_raise400(len(year) == 4, {'error': 'Error  with the year pls try again'})
-            Assertions.assert_true_raise400(len(month) == 2, {'error': 'Error  with the month pls try again'})
+        for char in serializer.data['number']:
+            if i < 6:
+                number += char
+            elif i > 5 and i < (len(serializer.data['number']) - 4):
+                number += "*"
+            elif i > (len(serializer.data['number']) - 5):
+                number += char
 
-            for char in serializer.data['number']:
-                if i < 6:
-                    number += char
-                elif i > 5 and i < (len(serializer.data['number']) - 4):
-                    number += "*"
-                elif i > (len(serializer.data['number']) - 5):
-                    number += char
+            i = i + 1
 
-                i = i + 1
+        
 
-            customer = braintree.Customer.create(customer_kwargs)
+        Assertions.assert_true_raise400(customer, {'error': 'No customer was created'})
 
-            Assertions.assert_true_raise400(customer, {'error': 'No customer was created'})
-
-            Assertions.assert_true_raise400(customer, {'error': 'No amount was given'})
-            Assertions.assert_true_raise400(customer, {'error': 'No card holder was given'})
-            Assertions.assert_true_raise400(customer, {'error': 'No card number was given'})
-            Assertions.assert_true_raise400(customer, {'error': 'No cvv was given'})
-            Assertions.assert_true_raise400(customer, {'error': 'No nounce was created'})
-
-            result = braintree.Transaction.sale({
-                "customer_id": customer.customer.id,
-                "amount": serializer.data['amount'],
-                "credit_card": {
-                    "cardholder_name": serializer.data['holder'],
-                    "expiration_month": month,
-                    "expiration_year": year,
-                    "number": serializer.data['number'],
-                    "cvv": serializer.data['cvv']
-                },
-                "options":{
-                    # Use this option to store the customer data, if successful
-                    'store_in_vault_on_success': True,
-                    # Use this option to directly settle the transaction
-                    # If you want to settle the transaction later, use ``False`` and later on
-                    # ``braintree.Transaction.submit_for_settlement("the_transaction_id")``
-                    'submit_for_settlement': False,
-                }
-            })
+        Assertions.assert_true_raise400(customer, {'error': 'No amount was given'})
+        Assertions.assert_true_raise400(customer, {'error': 'No card holder was given'})
+        Assertions.assert_true_raise400(customer, {'error': 'No card number was given'})
+        Assertions.assert_true_raise400(customer, {'error': 'No cvv was given'})
+        Assertions.assert_true_raise400(customer, {'error': 'No nounce was created'})
+        '''
+        customer = braintree.Customer.create(customer_kwargs)
+        result = braintree.Transaction.sale({
+            "customer_id": customer.customer.id,
+            "amount": serializer.data['amount'],
+            "payment_method_nonce": serializer.data['payment_method_nonce'],
+            "options": {
+                # Use this option to store the customer data, if successful
+                'store_in_vault_on_success': True,
+                # Use this option to directly settle the transaction
+                # If you want to settle the transaction later, use ``False`` and later on
+                # ``braintree.Transaction.submit_for_settlement("the_transaction_id")``
+                'submit_for_settlement': False,
+            }
+        })
+        '''
         else:
             customer = braintree.Customer.create(customer_kwargs)
             result = braintree.Transaction.sale({
@@ -171,7 +167,7 @@ class BraintreeViews(generics.GenericAPIView):
                     },
             })
         print(result.is_success)
-
+        '''
 
         if not result.is_success:
             # Card could've been declined or whatever

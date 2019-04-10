@@ -9,14 +9,14 @@ from django.core.exceptions import FieldError
 class TransactionSerializer(serializers.ModelSerializer):
 
     payment_method_nonce = serializers.CharField()
-    amount = serializers.FloatField()
-    expirationDate = serializers.DateField(input_formats='%m%y', format='%Y-%m')
+    amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    #expirationDate = serializers.DateField(input_formats='%m%y', format='%Y-%m')
 
     class Meta:
         model = Transaction
-        fields = ('id', 'amount', 'holder', 'expirationDate', 'number', 'cvv', 'paypalCustomer', 'payment_method_nonce')
+        fields = ('id', 'amount', 'paypalCustomer', 'payment_method_nonce')
 
-    def validate(self, attrs):
+    '''def validate(self, attrs):
         # if attrs.get('ibanCustomer') is not None:
         if attrs.get('paypalCustomer') is None:
             Assertions.assert_true_raise400(
@@ -75,7 +75,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 
             # Email validation
 
-            Assertions.assert_true_raise400(validate_email(attrs.get('paypalCustomer')),
+        Assertions.assert_true_raise400(validate_email(attrs.get('paypalCustomer')),
                                             {'error': 'paypal account provided isn\'t valid'})
 
-        return True
+        return True'''
