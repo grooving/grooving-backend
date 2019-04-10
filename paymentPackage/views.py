@@ -127,6 +127,11 @@ class CreateCustomPackage(generics.CreateAPIView):
             user_type = get_user_type(logged_user)
         except:
             pass
+
+        if pk:
+            package = PaymentPackage.objects.filter(custom_id=pk).first()
+            Assertions.assert_true_raise403(logged_user.user.id == package.portfolio.artist.user.id)
+
         if user_type == "Artist":
             serializer = CustomSerializer(data=request.data,partial=True)
             if serializer.is_valid:
@@ -154,6 +159,11 @@ class CreatePerformancePackage(generics.CreateAPIView):
             user_type = get_user_type(logged_user)
         except:
             pass
+
+        if pk:
+            package = PaymentPackage.objects.filter(performance_id=pk).first()
+            Assertions.assert_true_raise403(logged_user.user.id == package.portfolio.artist.user.id)
+
         if user_type == "Artist":
             serializer = PerformanceSerializer(data=request.data, partial=True)
             if serializer.is_valid:
@@ -181,6 +191,11 @@ class CreateFarePackage(generics.CreateAPIView):
             user_type = get_user_type(logged_user)
         except:
             pass
+
+        if pk:
+            package = PaymentPackage.objects.filter(fare_id=pk).first()
+            Assertions.assert_true_raise403(logged_user.user.id == package.portfolio.artist.user.id)
+
         if user_type == "Artist":
             serializer = FareSerializer(data=request.data, partial=True)
             if serializer.is_valid:
