@@ -17,6 +17,8 @@ from utils.notifications.notifications import Notifications
 from Server import settings
 import requests
 import braintree
+import json
+from requests.auth import HTTPBasicAuth
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -177,20 +179,23 @@ class OfferSerializer(serializers.ModelSerializer):
         offer.status = 'PAYMENT_MADE'
 
         # Configure Paypal
-        response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token', auth=(
-            'AZUNfuWGR6SWVjXJo82ariPtUrGOgA7L_QP2sxe8_QHaBuQ2JUT7AN9KnQKTpjT20yOr8l4G_3zlvx3B',
-            'EPyiDZA9P9vGWLXihX-p5qTfVBZRtMvE1gCV5G2eLHgzbZXWo5VlctjQgIIUr1WPZT-haW5Db_pDJ-3t'))
+        response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
+                      headers={'Accept': 'application/json', 'Accept-Language': 'en_US', 'content-type': 'application/x-www-form-urlencoded'},
+                      params={'grant_type':'client_credentials'},
+                      auth=HTTPBasicAuth('AZUNfuWGR6SWVjXJo82ariPtUrGOgA7L_QP2sxe8_QHaBuQ2JUT7AN9KnQKTpjT20yOr8l4G_3zlvx3B',
+                                         'EPyiDZA9P9vGWLXihX-p5qTfVBZRtMvE1gCV5G2eLHgzbZXWo5VlctjQgIIUr1WPZT-haW5Db_pDJ-3t'))
 
-        Assertions.assert_true_raise400(response, {'error': 'No hay respuesta'})
+        Assertions.assert_true_raise400(response, {'error': 'No hay respuesta desde Paypal'})
 
-        access_token = response.get('access_token')
+        access_token = json.loads(response.content.decode("utf-8"))['access_token']
 
+        Assertions.assert_true_raise400(response, {'error': 'No coge el token'})
         post_data = {"sender_batch_header": {
-                            "sender_batch_id": "Pay_From_Act",
+                            "sender_batch_id": "Pay_From_Offer_" + str(paymentCode),
                             "email_subject": "You have a payout!",
                             "email_message": "You have received a payout! Thanks for using our service!"
                             },
-                            "items": [
+                     "items": [
                             {
                               "recipient_type": "EMAIL",
                               "amount": {
@@ -198,15 +203,15 @@ class OfferSerializer(serializers.ModelSerializer):
                                 "currency": "EUR"
                               },
                               "note": "Thanks for your patronage!",
-                              "receiver": offer.transaction.paypalArtist
+                              "receiver": str(offer.transaction.paypalArtist)
                             }
                         ]
                     }
+        response = requests.post('https://api.sandbox.paypal.com/v1/payments/payouts', data='{"sender_batch_header": {"sender_batch_id": "Payment_Offer_'+str(paymentCode)+'","email_subject": "You have a payout!","email_message": "You have received a payout! Thanks for using our service!"},"items": [{"recipient_type": "EMAIL","amount": {"value": "'+str(offer.price)+'","currency": "EUR"},"note": "Thanks for your patronage!","receiver": "'+str(offer.transaction.paypalArtist)+'"}]}',
+                                 headers={'content-type': 'application/json',
+                                          'authorization': 'Bearer ' + access_token})
 
-        response = requests.post('https://api.sandbox.paypal.com/v1/payments/payouts',data=post_data,
-                                 HTTP_AUTHORIZATION='Basic ' + access_token)
-
-        Assertions.assert_true_raise400(response, {'error': 'No hay respuesta'})
+        Assertions.assert_true_raise400(response, {'error': 'No hay respuesta AL PAGAR'})
         # except:
         # offer.status == 'CONTRACT_MADE'
         offer.save()
