@@ -835,9 +835,6 @@ def save_data():
     availableDays13 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
                        '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
 
-    calendar13 = Calendar.objects.create(days=availableDays13, portfolio=portfolio13)
-    calendar13.save()
-
     user1_artist13 = User.objects.create(username='charli', password=make_password('charli'),
                                          first_name='Charlotte Emma',
                                          last_name='Aitchison', email='Joseph.jmlc@gmail.com')
