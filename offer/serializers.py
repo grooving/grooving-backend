@@ -41,13 +41,12 @@ class CodeSerializer(serializers.ModelSerializer):
 
 class TransactionSerializer(serializers.ModelSerializer):
 
-    payment_method_nonce = serializers.CharField()
     amount = serializers.DecimalField(max_digits=20, decimal_places=2)
     #expirationDate = serializers.DateField(input_formats='%m%y', format='%Y-%m')
 
     class Meta:
         model = Transaction
-        fields = ('id', 'amount', 'paypalArtist', 'payment_method_nonce')
+        fields = ('id', 'amount', 'paypalArtist')
 
     '''def validate(self, attrs):
         # if attrs.get('ibanCustomer') is not None:

@@ -14,7 +14,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transaction
-        fields = ('id', 'amount', 'paypalCustomer', 'payment_method_nonce')
+        fields = ('id', 'amount', 'payment_method_nonce')
 
     '''def validate(self, attrs):
         # if attrs.get('ibanCustomer') is not None:
