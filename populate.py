@@ -35,27 +35,32 @@ def save_data():
                     "information that is collected and recorded by Grooving and how we use it.</p>" +
                     "<p>If you have additional questions or require more information about our Privacy Policy, " +
                     "do not hesitate to contact us through email at grupogrooving@gmail.com</p>" +
+
                     "<h2>Log Files</h2>" +
                     "<p>Grooving follows a standard procedure of using log files. These files log visitors when  " +
-                    "they visit websites. All hosting companies do this and a part of hosting services analytics." +
-                    " The information collected by log files include internet protocol (IP) addresses, browser type, " +
+                    "they visit websites. All hosting companies do this and a part of hosting services analytics. " +
+                    "The information collected by log files include internet protocol (IP) addresses, browser type, " +
                     "Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the " +
                     "number of clicks. These are not linked to any information that is personally identifiable. " +
                     "The purpose of the information is for analyzing trends, administering the site, tracking users' " +
                     "movement on the website, and gathering demographic information.</p>" +
+
                     "<h2>Cookies and Web Beacons</h2>" +
                     "<p>Like any other website, Grooving uses cookies. These cookies are used to store information " +
                     "including visitors' preferences, and the pages on the website that the visitor " +
                     "accessed or visited. The information is used to optimize the users' experience by customizing " +
                     "our web page content based on visitors' browser type and/or other information.</p>" +
+
                     "<h2>Our Advertising Partners</h2>" +
                     "<p>Some of advertisers on our site may use cookies. Our advertising partners are listed below. "
                     "Each of our advertising partners has their own Privacy Policy for their policies on user data. "
                     "For easier access, we hyperlinked to their Privacy Policies below.</p>" +
-                    "<h2>Braintree</h2>" +
+
+                    "<h3>Braintree</h3>" +
                     "<a href=”https://www.braintreepayments.com/legal/acceptable-use-policy”>Braintree</a>" +
-                    "<h2>Heroku</h2>" +
+                    "<h3>Heroku</h3>" +
                     "<a href=”https://www.heroku.com/policy/security”>Heroku</a>" +
+
                     "<h2>Privacy Policies</h2>" +
                     "<p>Third-party ad servers or ad networks uses technologies like cookies, JavaScript, or Web " +
                     "Beacons that are used in their respective advertisements and links that appear on Grooving, " +
@@ -65,6 +70,7 @@ def save_data():
                     "that you visit.</p>" +
                     "<p>Note that Grooving has no access to or control over these cookies that are used by " +
                     "third-party advertisers.</p>" +
+
                     "<h2>Third Party Privacy Policies</h2>" +
                     "<p>Grooving's Privacy Policy does not apply to other advertisers or websites. Thus, we are " +
                     "advising you to consult the respective Privacy Policies of these third-party ad servers for " +
@@ -73,18 +79,25 @@ def save_data():
                     "<p>You can choose to disable cookies through your individual browser options. To know more "
                     "detailed information about cookie management with specific web browsers, it can be found at "
                     "the browsers' respective websites.</p>" +
+
                     "<h2>Online Privacy Policy Only</h2>" +
                     "<p>This Privacy Policy applies only to our online activities and is valid for visitors to " +
                     "our website with regards to the information that they shared and/or collect in Grooving. " +
                     "This policy is not applicable to any information collected offline or via channels other than " +
                     "this website.</p>" +
+
                     "<h2>Consent</h2>" +
                     "<p>By using our website, you hereby consent to our Privacy Policy and agree to its Terms and " +
                     "Conditions.</p>",
+
                     logo='',
+
                     aboutUs="<h1>About us</h1>" +
-							"<p> At Grooving, we all come to work every day because we want to solve the biggest problems for the artists: empower artists by giving visibility and improving their monetization. What is our mission? Simplifying the search and hiring made easy.</p>" +
+							"<p> At Grooving, we all come to work every day because we want to solve the biggest " +
+                            "problems for the artists: empower artists by giving visibility and improving their " +
+                            "monetization. What is our mission? Simplifying the search and hiring made easy.</p>" +
 							"<p>With all this, we can ensure that <b>Grooving makes the difference</b>.</p> ",
+
                     termsText="<h1>Terms & conditions</h1>" +
                               "<p>The conditions of use of the web page, the rules of use and the use of " +
                               "grooving.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
