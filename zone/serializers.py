@@ -28,6 +28,26 @@ class SearchZoneSerializer(serializers.ModelSerializer):
         return SearchZoneSerializer._get_childs_zone(parent, [])[0]
 
     @staticmethod
+    def get_base_childs(zone, total=[]):
+        total = total
+        total.append(zone)
+        base_childs = []
+        for child_zone in zone.zone_set.all():
+            if child_zone not in total:
+                recursive_data = SearchZoneSerializer.get_base_childs(child_zone, total)
+
+                total = recursive_data[1]
+                if child_zone.zone_set.all().count() == 0:
+                    base_childs.append(child_zone)
+                else:
+                    base_childs.extend(recursive_data[0])
+
+        if len(base_childs) == 0:
+            base_childs.append(zone)
+
+        return base_childs, total
+
+    @staticmethod
     def _get_childs_zone(zone, total=[]):
         total = total
         total.append(zone)

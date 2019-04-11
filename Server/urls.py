@@ -30,6 +30,8 @@ from artistGender.views import ArtisticGenderManager, CreateArtisticGender, List
 from zone.views import ZoneManager, CreateZone, ListZones
 from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
+from utils.utils import TermsAndConditions, Privacy, AboutUs
+from braintrees.views import BraintreeViews
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
 
@@ -84,5 +86,8 @@ urlpatterns = [
     url(r'^zones/$', ListZones.as_view()),
 
     url(r'^numOffers/$', NumOffers.as_view()),
-    url(r'^terms/$', TermsAndConditions.as_view()),
+    url(r'^terms$', TermsAndConditions.as_view()),
+    url(r'^privacy$', Privacy.as_view()),
+    url(r'^about$', AboutUs.as_view()),
+    url(r'^braintree_token/$', BraintreeViews.as_view())
 ]

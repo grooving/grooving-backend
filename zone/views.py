@@ -105,9 +105,19 @@ class ListZones(generics.RetrieveAPIView):
             except ValueError:
                 Assertions.assert_true_raise400(False, {"error": "Incorrect format for id"})
 
-            zones = list(Portfolio.objects.filter(pk=portfolio).first().zone.all())
-            Assertions.assert_true_raise404(zones is not None)
-            serializer = SearchZoneSerializer(zones, many=True)
+            portfolio = Portfolio.objects.filter(pk=portfolio).first()
+            Assertions.assert_true_raise404(portfolio is not None)
+            zones = portfolio.zone.all()
+            count = zones.count()
+            child_zones = []
+            for zone in zones:
+                childs = SearchZoneSerializer.get_base_childs(zone, [])[0]
+                if len(child_zones) == 0:
+                    child_zones = childs
+                else:
+                    child_zones.extend(childs)
+
+            serializer = SearchZoneSerializer(child_zones, many=True)
             zones = serializer.data
 
         return Response(zones, status=status.HTTP_200_OK)

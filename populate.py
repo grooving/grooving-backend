@@ -11,7 +11,6 @@ from Grooving.models import ArtisticGender, Portfolio, Artist, Zone, PortfolioMo
 
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from utils.whooshSearcher.indexing import index_all
 
 
 def _service_generate_unique_payment_code():
@@ -23,14 +22,183 @@ def _service_generate_unique_payment_code():
 def save_data():
     # System configuration
     system_configuration1 = SystemConfiguration.objects.create(minimumPrice='20', currency='EUR', paypalTax='2.9',
-                                                               creditCardTax='1.9',
-                                                               vat='21', profit='7',
-                                                               corporateEmail='grupogrooving@gmail.com',
-                                                               reportEmail='grupogrooving@gmail.com',
-                                                               appName='Grooving',
-                                                               slogan='Connecting artist with you',
-                                                               termsText='Terms & conditions',
-                                                               privacyText='Privacy text', logo='')
+        creditCardTax='1.9',
+        vat='21', profit='7',
+        corporateEmail='grupogrooving@gmail.com',
+        reportEmail='grupogrooving@gmail.com',
+        appName='Grooving',
+        slogan='Connecting artist with you',
+        privacyText="<h2>Introduction</h2>" +
+                    "<p>At Grooving, accessible from https://grooving-frontend-d3.herokuapp.com, one of our main " +
+                    "priorities is the privacy of our visitors. This Privacy Policy document contains types of " +
+                    "information that is collected and recorded by Grooving and how we use it.</p>" +
+                    "<p>If you have additional questions or require more information about our Privacy Policy, " +
+                    "do not hesitate to contact us through email at grupogrooving@gmail.com</p>" +
+
+                    "<h2>Log Files</h2>" +
+                    "<p>Grooving follows a standard procedure of using log files. These files log visitors when  " +
+                    "they visit websites. All hosting companies do this and a part of hosting services analytics. " +
+                    "The information collected by log files include internet protocol (IP) addresses, browser type, " +
+                    "Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the " +
+                    "number of clicks. These are not linked to any information that is personally identifiable. " +
+                    "The purpose of the information is for analyzing trends, administering the site, tracking users' " +
+                    "movement on the website, and gathering demographic information.</p>" +
+
+                    "<h2>Cookies and Web Beacons</h2>" +
+                    "<p>Like any other website, Grooving uses cookies. These cookies are used to store information " +
+                    "including visitors' preferences, and the pages on the website that the visitor " +
+                    "accessed or visited. The information is used to optimize the users' experience by customizing " +
+                    "our web page content based on visitors' browser type and/or other information.</p>" +
+
+                    "<h2>Our Advertising Partners</h2>" +
+                    "<p>Some of advertisers on our site may use cookies. Our advertising partners are listed below. "
+                    "Each of our advertising partners has their own Privacy Policy for their policies on user data. "
+                    "For easier access, we hyperlinked to their Privacy Policies below.</p>" +
+
+                    "<h3>Braintree</h3>" +
+                    "<a href=”https://www.braintreepayments.com/legal/acceptable-use-policy”>Braintree</a>" +
+                    "<h3>Heroku</h3>" +
+                    "<a href=”https://www.heroku.com/policy/security”>Heroku</a>" +
+
+                    "<h2>Privacy Policies</h2>" +
+                    "<p>Third-party ad servers or ad networks uses technologies like cookies, JavaScript, or Web " +
+                    "Beacons that are used in their respective advertisements and links that appear on Grooving, " +
+                    "which are sent directly to users' browser. They automatically receive your IP address when " +
+                    "this occurs. These technologies are used to measure the effectiveness of their advertising " +
+                    "campaigns and/or to personalize the advertising content that you see on websites " +
+                    "that you visit.</p>" +
+                    "<p>Note that Grooving has no access to or control over these cookies that are used by " +
+                    "third-party advertisers.</p>" +
+
+                    "<h2>Third Party Privacy Policies</h2>" +
+                    "<p>Grooving's Privacy Policy does not apply to other advertisers or websites. Thus, we are " +
+                    "advising you to consult the respective Privacy Policies of these third-party ad servers for " +
+                    "more detailed information. It may include their practices and instructions about how to opt-out" +
+                    " of certain options.</p>" +
+                    "<p>You can choose to disable cookies through your individual browser options. To know more "
+                    "detailed information about cookie management with specific web browsers, it can be found at "
+                    "the browsers' respective websites.</p>" +
+
+                    "<h2>Online Privacy Policy Only</h2>" +
+                    "<p>This Privacy Policy applies only to our online activities and is valid for visitors to " +
+                    "our website with regards to the information that they shared and/or collect in Grooving. " +
+                    "This policy is not applicable to any information collected offline or via channels other than " +
+                    "this website.</p>" +
+
+                    "<h2>Consent</h2>" +
+                    "<p>By using our website, you hereby consent to our Privacy Policy and agree to its Terms and " +
+                    "Conditions.</p>",
+
+                    logo='',
+                    aboutUs="<p> At Grooving, we all come to work every day because we want to solve the biggest " +
+                            "problems for the artists: empower artists by giving visibility and improving their " +
+                            "monetization. What is our mission? Simplifying the search and hiring made easy.</p>" +
+							"<p>With all this, we can ensure that <b>Grooving makes the difference</b>.</p> ",
+
+                    termsText="<p>The conditions of use of the web page, the rules of use and the use of " +
+                              "grooving.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
+                              " hereinafter, Grooving, that the user of the portal must accept to use all the " +
+                              "services and information that are provided from the portal.</p>" +
+                              "<p>The user as well as Grooving, owner of the portal, have become the parties. " +
+                              "Access to the use of the portal, the part of its contents and services means full " +
+                              "acceptance of these conditions of use. The implementation of the provision and use " +
+                              "of the portal refers to the strict application of the terms recognized in these " +
+                              "terms of use of the portal.</p>" +
+
+                              "<h2>Use conditions regulation</h2>" +
+                              "<p>The general conditions of use of the portal regulate the access and use of the " +
+                              "portal, the contents and services, the disposition of the users and / or through " +
+                              "the portal, either through the portal, either by the users or by any third party. " +
+                              "However, access and use of the content and / or services may be used in certain " +
+                              "specific conditions.</p>" +
+
+                              "<h2>Modifications</h2>" +
+                              "<p>The company reserves the right to modify at any time the general conditions of " +
+                              "use of the portal. In any case, we recommend that you periodically consult the " +
+                              "general conditions of use of the portal, and that they can be modified.</p>" +
+
+                              "<h2>Information and services</h2>" +
+                              "<p>Users can access a different type of information and services through the portal. " +
+                              "The portal reserves the right to modify, at any time, and without prior notice, the " +
+                              "presentation and configuration of information and services from the portal. The user " +
+                              "expressly acknowledges and accepts that at any time the portal may interrupt, " +
+                              "deactivate and / or cancel any information or service. The portal is not available. " +
+                              "However, sometimes, for reasons of maintenance, updating, change of location, etc., " +
+                              "may mean the interruption of access to the portal.</p>" +
+
+                              "<h2>Portal information and services availability</h2>" +
+                              "<p>The portal does not guarantee the continuous and permanent availability of the " +
+                              "services being in this way exempt from any responsibility for possible damages such "+
+                              "as the lack of availability of the service due to force majeure or errors in the " +
+                              "telematic data transfer networks, works at will, or disconnections made for " +
+                              "improvement or maintenance of computer equipment and systems. In these cases, the " +
+                              "portal will be announced 24 hours before the interruption.  The portal will not be " +
+                              "responsible for the interruption, suspension or termination of the information " +
+                              "or services</p>" 
+                    
+                              "<h2>Portal contents responsibility</h2>" +
+                              "<p>The portal will control the license of those services provided through the " +
+                              "platform by third parties. In the event that the user as a result of the use of the " +
+                              "portal suffers or will harm the communication and the appropriate measures will be " +
+                              "taken to solve it.</p>" +
+                              "<p>The portal does not intervene in the creation of the contents and / or services " +
+                              "provided or provided by third parties in and / or through the application, in the " +
+                              "same way that it does not control its legality either. In any case, we do not offer " +
+                              "any kind of guarantee on them. The user acknowledges that the portal is not and is " +
+                              "not responsible for the contents and / or services provided or provided by third " +
+                              "parties in and / or through the portal.</p>" +
+                              "<p>In any case, the portal excludes any liability for damages and losses that may be " +
+                              "due to information and / or services provided or provided by third parties other " +
+                              "than the Company. All responsibility will be the third party, " +
+                              "whether provider, collaborator or other.</p>" +
+
+                              "<h2>User’s obligations</h2>" +
+                              "<p>The user must respect at all times the terms and conditions established in this " +
+                              "legal notice. The user expresses expressly that he will use the portal diligently " +
+                              "and assuming any responsibility that may arise from the breach of the rules.</p>" +
+                              "<p>Likewise, the user may not use the portal to transmit, store, disclose, promote " +
+                              "or distribute data or contents that are carriers of viruses or any other computer " +
+                              "code, files or programs designed to interrupt, destroy or impair the operation of " +
+                              "any program or equipment. IT or telecommunications. </p>"
+                              "<p>The user undertakes to indemnify and hold harmless the portal for any damage, " +
+                              "prejudice, penalty, fine, penalty or compensation that the portal has to face.</p>" +
+
+                              "<h2>Cookies</h2>" +
+                              "<p>We employ the use of cookies. By accessing Grooving group, you agreed to use " +
+                              "cookies in agreement with the Grooving's Privacy Policy.</p>" +
+                              "<p>Most interactive websites use cookies to let us retrieve the user's details for " +
+                              "each visit. Cookies are used by our website to enable the functionality of certain " +
+                              "areas to make it easier for people visiting our website.</p>" +
+
+                              "<h2>iFrames</h2>" +
+                              "<p>Without prior approval and written permission, you may not create frames around " +
+                              "our Webpages that alter in any way the visual presentation or appearance of our " +
+                              "Website.</p>" +
+
+                              "<h2>License</h2>"
+                              "<p>Unless otherwise stated, Grooving and/or its licensors own the intellectual "
+                              "property rights for all material on Grooving. All intellectual property rights are " +
+                              "reserved. You may access this from Grooving for your own personal use subjected to " +
+                              "restrictions set in these terms and conditions.</p>" +
+
+                              "<h2>Removal of links from our website</h2>" +
+                              "<p>If you find any link on our Website that is offensive for any reason, you are " +
+                              "free to contact and inform us any moment. We will consider requests to remove links " +
+                              "but we are not obligated to or so or to respond to you directly.</p>" +
+                              "<p>We do not ensure that the information on this website is correct, we do not " +
+                              "warrant its completeness or accuracy; nor do we promise to ensure that the " +
+                              "website remains available or that the material on the website is kept up to date.</p>" +
+
+                              "<h2>GPDR - General Data Protection Regulation</h2>" +
+                              "<p>Grooving complies with the regulations of the European Union since the company " +
+                              "birth, complying with each of its articles and subjecting audits on a " +
+                              "regular basis.</p>" +
+                              "<h3>Right to be informed with breaches</h3>"+
+                              "<p>All those users who use Grooving can request to delete their data by sending an " +
+                              "email to <b>grupogrooving@gmail.com</b></p>" +
+                              "<h3>Right to port data</h3>" +
+                              "<p>All those users who use Grooving can request their data that our company has about " +
+                              "them by sending an email to <b>grupogrooving@gmail.com</b></p>")
     system_configuration1.save()
 
     # ArtisticGenders
@@ -461,10 +629,9 @@ def save_data():
                                      iban='ES6621000418401234567891')
     artist11.save()
 
-
-    performance1_paymentPackageFamous2 = Performance.objects.create(info='I begin with mi new 7 songs and end with Malamente',
-                                                              hours=2, price=500000)
-
+    performance1_paymentPackageFamous2 = Performance.objects.create(
+        info='I begin with mi new 7 songs and end with Malamente',
+        hours=2, price=500000)
 
     performance1_paymentPackageFamous2.save()
 
@@ -474,23 +641,22 @@ def save_data():
         performance=performance1_paymentPackageFamous2)
     paymentPackage1_performanceFamous2.save()
 
-
     fare1_paymentPackageFamous2 = Fare.objects.create(priceHour=100000)
     fare1_paymentPackageFamous2.save()
 
     paymentPackage2_fareFamous2 = PaymentPackage.objects.create(description='Fare Payment Package Type from Rosalía',
-                                                          portfolio=portfolio11,
-                                                          fare=fare1_paymentPackageFamous2)
+                                                                portfolio=portfolio11,
+                                                                fare=fare1_paymentPackageFamous2)
     paymentPackage2_fareFamous2.save()
 
     custom1_paymentPackageFamous2 = Custom.objects.create(minimumPrice=100000)
     custom1_paymentPackageFamous2.save()
 
-    paymentPackage3_customFamous2 = PaymentPackage.objects.create(description='Custom Payment Package Type from Rosalía',
-                                                            portfolio=portfolio11,
-                                                            custom=custom1_paymentPackageFamous2)
+    paymentPackage3_customFamous2 = PaymentPackage.objects.create(
+        description='Custom Payment Package Type from Rosalía',
+        portfolio=portfolio11,
+        custom=custom1_paymentPackageFamous2)
     paymentPackage3_customFamous2.save()
-
 
     # Taylor Swift
     portfolio12 = Portfolio.objects.create(artisticName='Taylor Swift',
@@ -573,7 +739,7 @@ def save_data():
                                          last_name='Swift', email='Joseph.jmlc@gmail.com')
     user1_artist12.save()
 
-    artist12 = Artist.objects.create(user=user1_artist12,rating=5.0, portfolio=portfolio12, phone='600304999',
+    artist12 = Artist.objects.create(user=user1_artist12, rating=5.0, portfolio=portfolio12, phone='600304999',
                                      photo='https://los40es00.epimg.net/los40/imagenes/2018/08/18/actualidad/1534605895_686141_1534606292_noticia_normal.jpg',
                                      iban='ES6621000418401234567891')
     artist12.save()
@@ -593,9 +759,10 @@ def save_data():
     fare1_paymentPackageFamous3 = Fare.objects.create(priceHour=75000)
     fare1_paymentPackageFamous3.save()
 
-    paymentPackage2_fareFamous3 = PaymentPackage.objects.create(description='Fare Payment Package Type from Taylor Swift',
-                                                                portfolio=portfolio12,
-                                                                fare=fare1_paymentPackageFamous3)
+    paymentPackage2_fareFamous3 = PaymentPackage.objects.create(
+        description='Fare Payment Package Type from Taylor Swift',
+        portfolio=portfolio12,
+        fare=fare1_paymentPackageFamous3)
     paymentPackage2_fareFamous3.save()
 
     custom1_paymentPackageFamous3 = Custom.objects.create(minimumPrice=100000)
@@ -676,7 +843,7 @@ def save_data():
                                          last_name='Aitchison', email='Joseph.jmlc@gmail.com')
     user1_artist13.save()
 
-    artist13 = Artist.objects.create(user=user1_artist13,rating=5.0, portfolio=portfolio13, phone='600304999',
+    artist13 = Artist.objects.create(user=user1_artist13, rating=5.0, portfolio=portfolio13, phone='600304999',
                                      photo='https://data.whicdn.com/images/152059660/original.gif',
                                      iban='ES6621000418401234567891')
     artist13.save()
@@ -687,7 +854,7 @@ def save_data():
                                           banner='https://c.pxhere.com/photos/52/a5/mixer_sound_board_sound_studio_broadcasting_radio_djs_music-1371930.jpg!d',
                                           biography='Musician, producer, DJ, pianist, promoter, and electronic music enthusiast alike, David Michael hails out of Dayton, Ohio.  When not performing, he spends his time in the studio creating his own music… aided by over a decade of piano lessons and an upbringing in a very musically-influenced home.  Having spent many years playing at all of the major local night clubs (alongside local hard-hitters and national acts alike), holding multiple residencies, DJing special events and promoting his own shows, David has had a lot of time to develop his sound.  For him, it’s all about mood and a deep, hypnotic groove… playing those tracks that get you tapping your feet and nodding your head without you realizing it, regardless of genre, tempo, style, or release date. Don’t be surprised when you suddenly find yourself dancing')
     portfolio1.artisticGender.add(artistic_gender2)
-    portfolio1.zone.add(zone2)
+    portfolio1.zone.add(zone23)
     portfolio1.save()
 
     portfolio1_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio1,
@@ -771,6 +938,8 @@ def save_data():
     portfolio5.artisticGender.add(artistic_gender8)
     portfolio5.zone.add(zone4)
     portfolio5.save()
+    portfolio5.zone.add(zone1_10)
+    portfolio5.save()
 
     portfolio5_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio5,
                                                         description='ANNA Live from DJ Mag HQ',
@@ -785,7 +954,8 @@ def save_data():
     portfolio6.artisticGender.add(artistic_gender8)
     portfolio6.zone.add(zone2)
     portfolio6.save()
-
+    portfolio6.zone.add(zone29)
+    portfolio6.save()
     portfolio6_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio6,
                                                         description='Una chirigota sin clase - Preliminares',
                                                         link='https://www.youtube.com/watch?v=zm6JyvxOcd8')
@@ -809,6 +979,8 @@ def save_data():
     portfolio7.artisticGender.add(artistic_gender3)
     portfolio7.artisticGender.add(artistic_gender4)
     portfolio7.zone.add(zone2)
+    portfolio7.save()
+    portfolio7.zone.add(zone1_13)
     portfolio7.save()
 
     portfolio7_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio7, description='Group photo',
@@ -918,6 +1090,8 @@ def save_data():
     portfolio9.artisticGender.add(artistic_gender3)
     portfolio9.artisticGender.add(artistic_gender4)
     portfolio9.zone.add(zone4)
+    portfolio9.save()
+    portfolio9.zone.add(zone22)
     portfolio9.save()
 
     portfolio9_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio9,
@@ -1399,8 +1573,6 @@ def save_data():
                                                              custom=custom9_paymentPackage27)
     paymentPackage27_custom9.save()
 
-
-
     # Transactions
     transaction_offer1 = Transaction.objects.create(paypalArtist='bwer0192@gmail.com', amount="120")
     transaction_offer1.save()
@@ -1465,7 +1637,8 @@ def save_data():
 
     # Offers
 
-    offer1_performance1 = Offer.objects.create(description='Oferta 1 to Carlos DJ by performance', status='CONTRACT_MADE',
+    offer1_performance1 = Offer.objects.create(description='Oferta 1 to Carlos DJ by performance',
+                                               status='CONTRACT_MADE',
                                                date='2019-04-29 12:00:00', hours=2.5, price='120', currency='EUR',
                                                appliedVAT=7, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location1, transaction=transaction_offer1,
@@ -1595,7 +1768,8 @@ def save_data():
                                                 status='PAYMENT_MADE',
                                                 date='2019-03-14 08:00:00', hours=3, price='1000', currency='EUR',
                                                 appliedVAT=21, paymentPackage=paymentPackage4_performance2,
-                                                eventLocation=event_location1, transaction=transaction_offer17,paymentCode=_service_generate_unique_payment_code())
+                                                eventLocation=event_location1, transaction=transaction_offer17,
+                                                paymentCode=_service_generate_unique_payment_code())
 
     offer17_performance1.save()
 
@@ -1603,12 +1777,12 @@ def save_data():
                                                 status='PAYMENT_MADE',
                                                 date='2019-03-14 12:00:00', hours=3.1, price='1200', currency='EUR',
                                                 appliedVAT=21, paymentPackage=paymentPackage4_performance2,
-                                                eventLocation=event_location1, transaction=transaction_offer18,paymentCode=_service_generate_unique_payment_code())
+                                                eventLocation=event_location1, transaction=transaction_offer18,
+                                                paymentCode=_service_generate_unique_payment_code())
 
     offer18_performance1.save()
 
 
-
 os.system('python3 manage.py sqlflush | python3 manage.py dbshell')
 save_data()
-#index_all()
+# index_all()

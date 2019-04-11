@@ -80,7 +80,7 @@ ModuleTypeField = (
     ('VIDEO', 'VIDEO'),
     ('AUDIO', 'AUDIO'),
     ('TWITTER', 'TWITTER'),
-    ('INSTAGRAM', 'INSTRAGRAM'),
+    ('INSTAGRAM', 'INSTAGRAM'),
     ('MEMBER', 'MEMBER'))
 
 
@@ -148,11 +148,10 @@ OfferStatusField = (
 
 
 class Transaction(AbstractEntity):
-    amount = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.3'))], null=True)
-    braintree_id = models.IntegerField(blank=True, null=True)
-    ibanArtist = models.CharField(max_length=34, blank=True, null=True)
-    paypalArtist = models.EmailField(blank=True, null=True)
 
+    amount = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.3'))], null=True)
+    braintree_id = models.CharField(blank=True, null=True, max_length=70)
+    paypalArtist = models.EmailField(blank=True, null=True)
 
 
 class Rating(AbstractEntity):
@@ -195,11 +194,4 @@ class SystemConfiguration(AbstractEntity):
     slogan = models.CharField(max_length=255, blank=True, null=True)
     termsText = models.TextField(default='Terms text')
     privacyText = models.TextField(default='Privacy text')
-
-
-class EmailNotification(AbstractEntity):
-    subject = models.CharField(max_length=255)
-    body = models.TextField(default='Body message')
-
-    def __str__(self):
-        return str(self.subject)
+    aboutUs = models.TextField(default='About Us')
