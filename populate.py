@@ -28,8 +28,7 @@ def save_data():
         reportEmail='grupogrooving@gmail.com',
         appName='Grooving',
         slogan='Connecting artist with you',
-        privacyText="<h1>Privacy policy</h1>" +
-                    "<h2>Introduction</h2>" +
+        privacyText="<h2>Introduction</h2>" +
                     "<p>At Grooving, accessible from https://grooving-frontend-d3.herokuapp.com, one of our main " +
                     "priorities is the privacy of our visitors. This Privacy Policy document contains types of " +
                     "information that is collected and recorded by Grooving and how we use it.</p>" +
@@ -91,14 +90,12 @@ def save_data():
                     "Conditions.</p>",
 
                     logo='',
-                    aboutUs="<h1>About us</h1>" +
-							"<p> At Grooving, we all come to work every day because we want to solve the biggest " +
+                    aboutUs="<p> At Grooving, we all come to work every day because we want to solve the biggest " +
                             "problems for the artists: empower artists by giving visibility and improving their " +
                             "monetization. What is our mission? Simplifying the search and hiring made easy.</p>" +
 							"<p>With all this, we can ensure that <b>Grooving makes the difference</b>.</p> ",
 
-                    termsText="<h1>Terms & conditions</h1>" +
-                              "<p>The conditions of use of the web page, the rules of use and the use of " +
+                    termsText="<p>The conditions of use of the web page, the rules of use and the use of " +
                               "grooving.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
                               " hereinafter, Grooving, that the user of the portal must accept to use all the " +
                               "services and information that are provided from the portal.</p>" +
