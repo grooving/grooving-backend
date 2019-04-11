@@ -37,5 +37,4 @@ class UserManage(generics.DestroyAPIView):
         except TypeError:
             Assertions.assert_true_raise401(False, {'error': 'ERROR_DELETE_USER'})
         return Response(status=status.HTTP_204_NO_CONTENT)
-
     '''

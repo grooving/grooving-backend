@@ -9,8 +9,7 @@ from rest_framework import status
 from utils.Assertions import Assertions
 from artist.serializers import ArtistSerializer
 from django.http import Http404
-from utils.whooshSearcher.searcher import search
-
+from utils.searcher.searcher import search
 
 
 class GetPersonalInformationOfArtist(generics.ListAPIView):
@@ -21,12 +20,11 @@ class GetPersonalInformationOfArtist(generics.ListAPIView):
 
         user = get_logged_user(self.request)
         user_type = get_user_type(user)
-        if user_type == 'Artist':
-            artist = Artist.objects.get(user_id=user.user_id)
-            serializer = ArtistInfoSerializer(artist)
-            return Response(serializer.data)
-        else:
-            raise PermissionDenied()
+        Assertions.assert_true_raise403(user is not None, {'error': 'You must be logged in to access this page.'})
+        Assertions.assert_true_raise403(user_type == 'Artist', {'error': 'You are not an artist.'})
+        artist = Artist.objects.get(user_id=user.user_id)
+        serializer = ArtistInfoSerializer(artist)
+        return Response(serializer.data)
 
 
 class ListArtist(generics.ListAPIView):
@@ -77,7 +75,7 @@ class ListArtist(generics.ListAPIView):
         else:
             queryset = Artist.objects.all()
         """
-        queryset = search(busqueda=artisticname, categoria=artisticgender, zone=zone, order=order)
+        queryset = search(artisticName=artisticname, categoria=artisticgender, zone=zone, order=order)
         return queryset
 
 

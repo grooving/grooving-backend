@@ -24,4 +24,4 @@ class UserRegisterSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         depth = 1
         model = User
-        fields = ('first_name', 'last_name', 'username', 'email', 'password', 'confirm_password')
+        fields = ('first_name', 'last_name', 'username', 'email', 'password', 'confirm_password', 'paypalAccount')

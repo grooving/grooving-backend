@@ -195,6 +195,7 @@ class SystemConfiguration(AbstractEntity):
     slogan = models.CharField(max_length=255, blank=True, null=True)
     termsText = models.TextField(default='Terms text')
     privacyText = models.TextField(default='Privacy text')
+    aboutUs = models.TextField(default='About Us')
 
 
 class EmailNotification(AbstractEntity):
