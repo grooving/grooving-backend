@@ -14,6 +14,11 @@ from validate_email_address import validate_email
 from django.utils import timezone
 from utils.authentication_utils import get_user_type
 from utils.notifications.notifications import Notifications
+from Server import settings
+import requests
+import braintree
+import json
+from requests.auth import HTTPBasicAuth
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -36,13 +41,15 @@ class CodeSerializer(serializers.ModelSerializer):
 
 class TransactionSerializer(serializers.ModelSerializer):
 
-    expirationDate = serializers.DateField(input_formats='%m%y', format='%Y-%m')
+    payment_method_nonce = serializers.CharField()
+    amount = serializers.DecimalField(max_digits=20, decimal_places=2)
+    #expirationDate = serializers.DateField(input_formats='%m%y', format='%Y-%m')
 
     class Meta:
         model = Transaction
-        fields = ('id', 'holder', 'expirationDate', 'number', 'cvv', 'paypalCustomer')
+        fields = ('id', 'amount', 'paypalArtist', 'payment_method_nonce')
 
-    def validate(self, attrs):
+    '''def validate(self, attrs):
         # if attrs.get('ibanCustomer') is not None:
         if attrs.get('paypalCustomer') is None:
             Assertions.assert_true_raise400(
@@ -98,7 +105,7 @@ class TransactionSerializer(serializers.ModelSerializer):
             Assertions.assert_true_raise400(validate_email(attrs.get('paypalCustomer')),
                                             {'error': 'paypal account provided isn\'t valid'})
 
-        return True
+        return True'''
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -170,8 +177,41 @@ class OfferSerializer(serializers.ModelSerializer):
                                         {"status": 'El pago ya se ha hecho o no se puede realizar ya'})
 
         offer.status = 'PAYMENT_MADE'
-        # try:
-        # TODO: Pago por braintree
+
+        # Configure Paypal
+        response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
+                      headers={'Accept': 'application/json', 'Accept-Language': 'en_US', 'content-type': 'application/x-www-form-urlencoded'},
+                      params={'grant_type':'client_credentials'},
+                      auth=HTTPBasicAuth('AZUNfuWGR6SWVjXJo82ariPtUrGOgA7L_QP2sxe8_QHaBuQ2JUT7AN9KnQKTpjT20yOr8l4G_3zlvx3B',
+                                         'EPyiDZA9P9vGWLXihX-p5qTfVBZRtMvE1gCV5G2eLHgzbZXWo5VlctjQgIIUr1WPZT-haW5Db_pDJ-3t'))
+
+        Assertions.assert_true_raise400(response, {'error': 'No hay respuesta desde Paypal'})
+
+        access_token = json.loads(response.content.decode("utf-8"))['access_token']
+
+        Assertions.assert_true_raise400(response, {'error': 'No coge el token'})
+        post_data = {"sender_batch_header": {
+                            "sender_batch_id": "Pay_From_Offer_" + str(paymentCode),
+                            "email_subject": "You have a payout!",
+                            "email_message": "You have received a payout! Thanks for using our service!"
+                            },
+                     "items": [
+                            {
+                              "recipient_type": "EMAIL",
+                              "amount": {
+                                "value": str(offer.price),
+                                "currency": "EUR"
+                              },
+                              "note": "Thanks for your patronage!",
+                              "receiver": str(offer.transaction.paypalArtist)
+                            }
+                        ]
+                    }
+        response = requests.post('https://api.sandbox.paypal.com/v1/payments/payouts', data='{"sender_batch_header": {"sender_batch_id": "Payment_Offer_'+str(paymentCode)+'","email_subject": "You have a payout!","email_message": "You have received a payout! Thanks for using our service!"},"items": [{"recipient_type": "EMAIL","amount": {"value": "'+str(offer.price)+'","currency": "EUR"},"note": "Thanks for your patronage!","receiver": "'+str(offer.transaction.paypalArtist)+'"}]}',
+                                 headers={'content-type': 'application/json',
+                                          'authorization': 'Bearer ' + access_token})
+
+        Assertions.assert_true_raise400(response, {'error': 'No hay respuesta AL PAGAR'})
         # except:
         # offer.status == 'CONTRACT_MADE'
         offer.save()
@@ -204,27 +244,23 @@ class OfferSerializer(serializers.ModelSerializer):
             offer.currency = offer.paymentPackage.currency
 
         transaction = Transaction()
-        if json.get('transaction').get('paypalCustomer') is not None:
-            transaction = Transaction.objects.create(
-                paypalCustomer=json.get('transaction').get('paypalCustomer'),
-            )
-            Customer.objects.filter(user_id=logged_user.id).update(
-                paypalAccount=transaction.paypalCustomer,
-            )
-        else:
-            transaction = Transaction.objects.create(
-                # ibanCustomer=json.get('transaction').get('ibanCustomer'),
-                holder=json.get('transaction').get('holder'),
-                number=json.get('transaction').get('number'),
-                expirationDate=datetime.datetime.strptime(json.get('transaction').get('expirationDate'), "%m%y").date(),
-                cvv=json.get('transaction').get('cvv')
-            )
-            Customer.objects.filter(user_id=logged_user.id).update(
-                # ibanCustomer=json.get('transaction').get('ibanCustomer'),
-                holder=transaction.holder,
-                number=transaction.number,
-                expirationDate=transaction.expirationDate
-            )
+        Assertions.assert_true_raise400(json.get('transaction').get('amount'), {'error' : 'No amount recieved'})
+        transaction.amount = json.get('transaction').get('amount')
+
+        transaction.save()
+        '''transaction = Transaction.objects.create(
+            # ibanCustomer=json.get('transaction').get('ibanCustomer'),
+            holder=json.get('transaction').get('holder'),
+            number=json.get('transaction').get('number'),
+            expirationDate=datetime.datetime.strptime(json.get('transaction').get('expirationDate'), "%m%y").date(),
+            cvv=json.get('transaction').get('cvv')
+        )
+        Customer.objects.filter(user_id=logged_user.id).update(
+            # ibanCustomer=json.get('transaction').get('ibanCustomer'),
+            holder=transaction.holder,
+            number=transaction.number,
+            expirationDate=transaction.expirationDate
+        )'''
         offer.transaction = transaction
         offer.appliedVAT = SystemConfiguration.objects.all().first().vat
         offer.save()
@@ -263,7 +299,25 @@ class OfferSerializer(serializers.ModelSerializer):
                     Assertions.assert_true_raise400(logged_user.iban is not None,
                                                     {'error': "You must introduce your bank account before"})
                     offer_in_db.transaction.ibanArtist = logged_user.iban
+
                     offer_in_db.transaction.save()
+
+                    if settings.BRAINTREE_PRODUCTION:
+                        braintree_env = braintree.Environment.Production
+                    else:
+                        braintree_env = braintree.Environment.Sandbox
+
+                    Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+
+                    # Configure Braintree
+                    braintree.Configuration.configure(
+                        environment=braintree_env,
+                        merchant_id=settings.BRAINTREE_MERCHANT_ID,
+                        public_key=settings.BRAINTREE_PUBLIC_KEY,
+                        private_key=settings.BRAINTREE_PRIVATE_KEY,
+                    )
+
+                    braintree.Transaction.submit_for_settlement(offer_in_db.transaction.braintree_id)
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
                                   or artist_flowstop_transitions.get(status_in_db) == json_status
@@ -279,6 +333,7 @@ class OfferSerializer(serializers.ModelSerializer):
 
                     try:
                         offer_in_db.paymentCode = self._service_generate_unique_payment_code()
+
                         offer_in_db.save()
                         break
                     except IntegrityError:
