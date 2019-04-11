@@ -54,7 +54,8 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
-        calendar = self.get_object(pk)
+        calendar = Calendar.objects.filter(pk=pk).first()
+        Assertions.assert_true_raise404(calendar is not None, {'error': 'No calendar with that id'})
         serializer = CalendarSerializer(calendar)
         return Response(serializer.data)
 

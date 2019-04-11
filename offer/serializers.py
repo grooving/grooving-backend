@@ -305,6 +305,24 @@ class OfferSerializer(serializers.ModelSerializer):
                     Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id,{'error':
                     'La oferta no posee los credenciales de Braintree'})
                     braintree.Transaction.submit_for_settlement(offer_in_db.transaction.braintree_id)
+                elif json_status == 'REJECTED':
+
+                    if settings.BRAINTREE_PRODUCTION:
+                        braintree_env = braintree.Environment.Production
+                    else:
+                        braintree_env = braintree.Environment.Sandbox
+
+                    Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+
+                    # Configure Braintree
+                    braintree.Configuration.configure(
+                        environment=braintree_env,
+                        merchant_id=settings.BRAINTREE_MERCHANT_ID,
+                        public_key=settings.BRAINTREE_PUBLIC_KEY,
+                        private_key=settings.BRAINTREE_PRIVATE_KEY,
+                    )
+
+                    braintree.Transaction.settlement_decline_transaction(offer_in_db.transaction.braintree_id)
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
                                   or artist_flowstop_transitions.get(status_in_db) == json_status
