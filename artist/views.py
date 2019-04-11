@@ -22,9 +22,13 @@ class GetPersonalInformationOfArtist(generics.ListAPIView):
         user_type = get_user_type(user)
         Assertions.assert_true_raise403(user is not None, {'error': 'You must be logged in to access this page.'})
         Assertions.assert_true_raise403(user_type == 'Artist', {'error': 'You are not an artist.'})
-        artist = Artist.objects.get(user_id=user.user_id)
-        serializer = ArtistInfoSerializer(artist)
-        return Response(serializer.data)
+        try:
+            artist = Artist.objects.get(user_id=user.user_id)
+            serializer = ArtistInfoSerializer(artist)
+            return Response(serializer.data)
+        except Artist.DoesNotExist:
+            booleano = False
+            Assertions.assert_true_raise400(booleano, {'error': 'The requested artist does not exist.'})
 
 
 class ListArtist(generics.ListAPIView):
