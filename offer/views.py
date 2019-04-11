@@ -20,8 +20,9 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
             pk = self.kwargs['pk']
         try:
             return Offer.objects.get(pk=pk)
-        except Offer.DoesNotExist:
-            raise Http404
+        except Customer.DoesNotExist:
+            Assertions.assert_true_raise404(False,
+                                            {'error': 'Offer not found'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:
