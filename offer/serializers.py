@@ -138,15 +138,14 @@ class OfferSerializer(serializers.ModelSerializer):
     eventLocation = EventLocationSerializer(read_only=True)
     eventLocation_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=EventLocation.objects.all(),
                                                               source='eventLocation')
-    transaction = TransactionSerializer()
+    #transaction = TransactionSerializer()
 
     rating = RatingSerializer(read_only=True)
 
     class Meta:
         model = Offer
         fields = ('id', 'reason', 'appliedVAT', 'description', 'status', 'date', 'hours', 'price', 'currency',
-                      'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id',
-                      'transaction', 'rating')
+                      'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id','rating')
 
     # Esto sobrescribe una función heredada del serializer.
     def save(self, pk=None, logged_user=None):
@@ -243,8 +242,8 @@ class OfferSerializer(serializers.ModelSerializer):
             offer.currency = offer.paymentPackage.currency
 
         transaction = Transaction()
-        Assertions.assert_true_raise400(json.get('transaction').get('amount'), {'error' : 'No amount recieved'})
-        transaction.amount = json.get('transaction').get('amount')
+        #Assertions.assert_true_raise400(json.get('transaction').get('amount'), {'error' : 'No amount recieved'})
+        #transaction.amount = json.get('transaction').get('amount')
 
         transaction.save()
         '''transaction = Transaction.objects.create(
@@ -295,11 +294,13 @@ class OfferSerializer(serializers.ModelSerializer):
                 artist_flowstop_transitions = {'PENDING': 'REJECTED',
                                                'CONTRACT_MADE': 'CANCELLED_ARTIST'}
                 if json_status == 'CONTRACT_MADE':
-                    Assertions.assert_true_raise400(logged_user.iban is not None,
+                    Assertions.assert_true_raise400(logged_user.paypalAccount is not None,
                                                     {'error': "You must introduce your bank account before"})
-                    offer_in_db.transaction.ibanArtist = logged_user.iban
+                    transaccion = offer_in_db.transaction
 
-                    offer_in_db.transaction.save()
+                    transaccion.paypalArtist = logged_user.paypalAccount
+
+                    transaccion.save()
 
                     if settings.BRAINTREE_PRODUCTION:
                         braintree_env = braintree.Environment.Production
@@ -383,10 +384,10 @@ class OfferSerializer(serializers.ModelSerializer):
                                         {'error': 'description field not provided'})
         Assertions.assert_true_raise400(json.get("date"),
                                         {'error': 'date field not provided'})
-        Assertions.assert_true_raise400(json.get("transaction"),
-                                        {'error': 'transaction field not provided'})
+        #Assertions.assert_true_raise400(json.get("transaction"),
+        #                                {'error': 'transaction field not provided'})
 
-        TransactionSerializer.validate(self, json.get("transaction"))
+        #TransactionSerializer.validate(self, json.get("transaction"))
 
         # Past date value validation
 

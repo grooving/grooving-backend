@@ -150,7 +150,7 @@ OfferStatusField = (
 class Transaction(AbstractEntity):
 
     amount = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.3'))], null=True)
-    braintree_id = models.IntegerField(blank=True, null=True)
+    braintree_id = models.CharField(blank=True, null=True, max_length=70)
     paypalArtist = models.EmailField(blank=True, null=True)
 
 

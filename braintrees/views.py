@@ -108,6 +108,12 @@ class BraintreeViews(generics.GenericAPIView):
         Assertions.assert_true_raise400(customer, {'error': 'No customer was created'})
         Assertions.assert_true_raise400(request.data['id_offer'], {'error': 'No offer was given'})
 
+        offer = Offer.objects.filter(id=request.data['id_offer']).first()
+        Assertions.assert_true_raise400(offer, {'error': 'No offer with this id'})
+
+        transaction = offer.transaction
+        Assertions.assert_true_raise400(transaction, {'error': 'This offer has no transaction associated'})
+
         result = braintree.Transaction.sale({
             "customer_id": customer.customer.id,
             "amount": serializer.data['amount'],
@@ -153,13 +159,10 @@ class BraintreeViews(generics.GenericAPIView):
             }
             return Response(context)
 
-        offer = Offer.objects.filter(id=request.data['id_offer']).first()
-        Assertions.assert_true_raise400(offer, {'error': 'No offer with this id'})
-
-        transaction = offer.transaction
-        Assertions.assert_true_raise400(transaction, {'error': 'This offer has no transaction associated'})
         transaction.braintree_id = result.transaction.id
+        transaction.amount = serializer.data['amount']
         transaction.save()
+
 
         # Finally there's the transaction ID
         # You definitely want to send it to your database
