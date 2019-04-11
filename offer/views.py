@@ -16,8 +16,6 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = OfferSerializer
 
     def get_object(self, pk=None):
-        if pk is None:
-            pk = self.kwargs['pk']
         try:
             return Offer.objects.get(pk=pk)
         except Customer.DoesNotExist:

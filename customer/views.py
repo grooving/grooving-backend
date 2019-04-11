@@ -40,9 +40,6 @@ class GetPublicInformationOfCustomer(generics.ListAPIView):
 
     def get(self, request, pk=None, format=None):
 
-        if pk is None:
-            pk = self.kwargs['pk']
-
         try:
             customer = self.get_object(pk)
             serializer = PublicCustomerInfoSerializer(customer)
