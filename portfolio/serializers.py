@@ -71,7 +71,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
 
     artisticName = serializers.CharField()
     biography = serializers.CharField()
-    banner = serializers.CharField()
+    banner = serializers.CharField(allow_blank=True)
     images = serializers.SerializerMethodField('list_images')
     videos = serializers.SerializerMethodField('list_videos')
     main_photo = serializers.SerializerMethodField('list_photo')
