@@ -188,24 +188,9 @@ class OfferSerializer(serializers.ModelSerializer):
         access_token = json.loads(response.content.decode("utf-8"))['access_token']
 
         Assertions.assert_true_raise400(response, {'error': 'No coge el token'})
-        post_data = {"sender_batch_header": {
-                            "sender_batch_id": "Pay_From_Offer_" + str(paymentCode),
-                            "email_subject": "You have a payout!",
-                            "email_message": "You have received a payout! Thanks for using our service!"
-                            },
-                     "items": [
-                            {
-                              "recipient_type": "EMAIL",
-                              "amount": {
-                                "value": str(offer.price),
-                                "currency": "EUR"
-                              },
-                              "note": "Thanks for your patronage!",
-                              "receiver": str(offer.transaction.paypalArtist)
-                            }
-                        ]
-                    }
-        response = requests.post('https://api.sandbox.paypal.com/v1/payments/payouts', data='{"sender_batch_header": {"sender_batch_id": "Payment_Offer_'+str(paymentCode)+'","email_subject": "You have a payout!","email_message": "You have received a payout! Thanks for using our service!"},"items": [{"recipient_type": "EMAIL","amount": {"value": "'+str(offer.price)+'","currency": "EUR"},"note": "Thanks for your patronage!","receiver": "'+str(offer.transaction.paypalArtist)+'"}]}',
+        Assertions.assert_true_raise401(user_logged.paypalAccount, {'error': 'NO tiene cuenta de Paypal'})
+
+        response = requests.post('https://api.sandbox.paypal.com/v1/payments/payouts', data='{"sender_batch_header": {"sender_batch_id": "Payment_Offer_'+str(paymentCode)+'","email_subject": "You have a payout!","email_message": "You have received a payout! Thanks for using our service!"},"items": [{"recipient_type": "EMAIL","amount": {"value": "'+str(offer.transaction.amount)+'","currency": "EUR"},"note": "Thanks for your patronage!","receiver": "'+str(user_logged.paypalAccount)+'"}]}',
                                  headers={'content-type': 'application/json',
                                           'authorization': 'Bearer ' + access_token})
 
