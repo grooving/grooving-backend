@@ -56,8 +56,7 @@ class PostRating(generics.CreateAPIView):
 
         serializer = CustomerRatingSerializer(data=request.data)
         serializer.validate(request, pk) #  "Some of the conditions to do this action aren't fulfilled.")
-            
-            #serializer.is_valid(request, pk)"""
+
         rating = serializer.save()
         ratingChecked = CustomerRatingSerializer(rating)
         offer = Offer.objects.get(id=pk)

@@ -20,9 +20,12 @@ class GetPersonalInformationOfCustomer(generics.ListAPIView):
         user_type = get_user_type(user)
         Assertions.assert_true_raise403(user is not None, {'error': 'You must be logged in to access this page.'})
         Assertions.assert_true_raise403(user_type == 'Customer', {'error': 'You are not a customer.'})
-        customer = Customer.objects.get(user_id=user.user_id)
-        serializer = CustomerInfoSerializer(customer)
-        return Response(serializer.data)
+        try:
+            customer = Customer.objects.get(user_id=user.user_id)
+            serializer = CustomerInfoSerializer(customer)
+            return Response(serializer.data)
+        except Customer.DoesNotExist:
+            Assertions.assert_true_raise404(False, {'error': 'This customer does not exist.'})
 
 
 class GetPublicInformationOfCustomer(generics.ListAPIView):
@@ -32,11 +35,12 @@ class GetPublicInformationOfCustomer(generics.ListAPIView):
     def get_object(self, pk=None):
         if pk is None:
             pk = self.kwargs['pk']
+
         try:
             return Customer.objects.get(pk=pk)
         except Customer.DoesNotExist:
             Assertions.assert_true_raise404(False,
-                                            {'error': 'Customer not found'})
+                                            {'error': 'The customer you want to view does not exist.'})
 
     def get(self, request, pk=None, format=None):
 
@@ -45,7 +49,8 @@ class GetPublicInformationOfCustomer(generics.ListAPIView):
             serializer = PublicCustomerInfoSerializer(customer)
             return Response(serializer.data)
         except Customer.DoesNotExist:
-            raise Http404
+            Assertions.assert_true_raise404(False,
+                                            {'error': 'The customer you want to view does not exist.'})
 
 
 class CustomerRegister(generics.CreateAPIView):
