@@ -92,12 +92,6 @@ def save_data():
 
                     logo='',
 
-                    aboutUs="<h1>About us</h1>" +
-							"<p> At Grooving, we all come to work every day because we want to solve the biggest " +
-                            "problems for the artists: empower artists by giving visibility and improving their " +
-                            "monetization. What is our mission? Simplifying the search and hiring made easy.</p>" +
-							"<p>With all this, we can ensure that <b>Grooving makes the difference</b>.</p> ",
-
                     termsText="<h1>Terms & conditions</h1>" +
                               "<p>The conditions of use of the web page, the rules of use and the use of " +
                               "grooving.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
