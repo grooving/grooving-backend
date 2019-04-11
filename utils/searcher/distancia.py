@@ -1,6 +1,5 @@
 from distance import levenshtein
-from stop_words import get_stop_words
-from unidecode import unidecode
+
 
 def artisticNameCompare(porfolioArtisticName, searchArtisticName):
     porfolioArtisticName = format(porfolioArtisticName)
