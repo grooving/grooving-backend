@@ -48,7 +48,7 @@ def compare(portfolio, artisticName="", categoria="", zone=""):
 
 def gender_to_string(portfolio):
     genders = portfolio.artisticGender.all()
-    all_child = get_childs_gender(genders, [])
+    all_child = get_parents_gender(genders)
     string = array_to_string(all_child)
     return string
 
@@ -60,7 +60,7 @@ def zone_to_string(portfolio):
     string = array_to_string(all_childs) + array_to_string(all_parents)
     return string
 
-
+"""
 def get_childs_gender(queryset, total=[]):
     total = total
     for gender in queryset:
@@ -69,6 +69,19 @@ def get_childs_gender(queryset, total=[]):
             child_genders = gender.artisticgender_set.all()
             total = get_childs_gender(child_genders, total)
     return total
+"""
+
+
+def get_parents_gender(genders):
+    parent_gender = []
+    genders = list(genders)
+    for gender in genders:
+        parent = gender.parentGender
+        while parent is not None:
+            if parent not in parent_gender:
+                genders.append(parent)
+                parent = parent.parentGender
+    return genders
 
 
 def get_parents_zone(zones):
