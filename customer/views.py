@@ -35,7 +35,8 @@ class GetPublicInformationOfCustomer(generics.ListAPIView):
         try:
             return Customer.objects.get(pk=pk)
         except Customer.DoesNotExist:
-            raise Http404
+            Assertions.assert_true_raise404(False,
+                                            {'error': 'Customer not found'})
 
     def get(self, request, pk=None, format=None):
 
@@ -56,10 +57,13 @@ class CustomerRegister(generics.CreateAPIView):
     serializer_class = CustomerSerializer
 
     def get_object(self, pk=None):
+        if pk is None:
+            pk = self.kwargs['pk']
         try:
             return Customer.objects.get(pk=pk)
         except Customer.DoesNotExist:
-            raise Http404
+            Assertions.assert_true_raise404(False,
+                                            {'error': 'Customer not found'})
 
     def post(self, request, *args, **kwargs):
         Assertions.assert_true_raise400(len(request.data) != 0, {'error': "Empty form is not valid"})
@@ -84,7 +88,7 @@ class CustomerRegister(generics.CreateAPIView):
 
         customer = Customer.objects.get(pk=pk)
         articustomer = get_logged_user(request)
-
+        Assertions.assert_true_raise403(articustomer, "Denied permission")
         Assertions.assert_true_raise403(articustomer.id == customer.id,
                                         {'error':  "You can only change your personal info"})
         serializer = CustomerSerializer(customer, data=request.data, partial=True)

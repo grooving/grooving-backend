@@ -301,7 +301,8 @@ class OfferSerializer(serializers.ModelSerializer):
                         public_key=settings.BRAINTREE_PUBLIC_KEY,
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
-
+                    Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id,{'error':
+                    'La oferta no posee los credenciales de Braintree'})
                     braintree.Transaction.submit_for_settlement(offer_in_db.transaction.braintree_id)
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
