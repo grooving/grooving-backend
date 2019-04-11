@@ -13,7 +13,7 @@ from Server import settings
 from rest_framework.response import Response
 from Grooving.models import Transaction
 from .serializers import TransactionSerializer
-from utils.authentication_utils import get_logged_user
+from utils.authentication_utils import get_logged_user,get_user_type
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from utils.Assertions import Assertions
 from Grooving.models import Offer, Customer
@@ -65,8 +65,10 @@ class BraintreeViews(generics.GenericAPIView):
         # For now, we'll simply use the given data of the user instance
 
         logged_user = get_logged_user(request)
+        type = get_user_type(logged_user)
 
-        #Assertions.assert_true_raise401(logged_user, {'error': 'You are not logged in'})
+        Assertions.assert_true_raise401(logged_user, {'error': 'You are not logged in'})
+        Assertions.assert_true_raise401(type == "Customer", {'error': 'You are not customer'})
 
         if settings.BRAINTREE_PRODUCTION:
             braintree_env = braintree.Environment.Production
@@ -104,19 +106,24 @@ class BraintreeViews(generics.GenericAPIView):
 
         customer = braintree.Customer.create(customer_kwargs)
         Assertions.assert_true_raise400(serializer.data['payment_method_nonce'], {'error': 'No nounce was given'})
-        Assertions.assert_true_raise400(serializer.data['amount'], {'error': 'No amount was given'})
         Assertions.assert_true_raise400(customer, {'error': 'No customer was created'})
-        Assertions.assert_true_raise400(request.data['id_offer'], {'error': 'No offer was given'})
+        Assertions.assert_true_raise400(serializer.data['id_offer'], {'error': 'No offer was given'})
 
-        offer = Offer.objects.filter(id=request.data['id_offer']).first()
+        offer = Offer.objects.filter(id=serializer.data['id_offer']).first()
         Assertions.assert_true_raise400(offer, {'error': 'No offer with this id'})
 
-        transaction = offer.transaction
-        Assertions.assert_true_raise400(transaction, {'error': 'This offer has no transaction associated'})
+        Assertions.assert_true_raise401(offer.eventLocation.customer.user_id == logged_user.user_id, {'error': 'Offer not from this customer'})
+
+        if offer.paymentPackage.performance:
+            amount = offer.paymentPackage.performance.price
+        else:
+            amount = offer.price * offer.hours
+        print(amount)
+        Assertions.assert_true_raise400(amount > 0, {'error': 'Error in the amount'})
 
         result = braintree.Transaction.sale({
             "customer_id": customer.customer.id,
-            "amount": serializer.data['amount'],
+            "amount": str(amount),
             "payment_method_nonce": serializer.data['payment_method_nonce'],
             "options": {
                 # Use this option to store the customer data, if successful
@@ -159,10 +166,10 @@ class BraintreeViews(generics.GenericAPIView):
             }
             return Response(context)
 
-        transaction.braintree_id = result.transaction.id
-        transaction.amount = serializer.data['amount']
-        transaction.save()
-
+        offer.transaction.braintree_id = result.transaction.id
+        offer.transaction.amount = amount
+        offer.transaction.save()
+        offer.save()
 
         # Finally there's the transaction ID
         # You definitely want to send it to your database
