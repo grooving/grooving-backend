@@ -131,7 +131,7 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(not(username in password or password in username),
                                         {'error': "Password can't be similar to the username"})
 
-        Assertions.assert_true_raise400(not (email in password or password in username),
+        Assertions.assert_true_raise400(not (email in password or password in email),
                                         {'error': "Password can't be similar to the email"})
 
         Assertions.assert_true_raise400(not (first_name in password or password in first_name),
@@ -151,13 +151,20 @@ class ArtistSerializer(serializers.ModelSerializer):
             Assertions.assert_true_raise400(phone.isnumeric(), {'error': "Phone must be a number"})
             Assertions.assert_true_raise400(len(phone) == 9, {'error': "Phone length must be 9 digits"})
 
-        Assertions.assert_true_raise400(len(first_name) > 1 and len(last_name) > 1,
-                                        {'error': "First or second name do not seem real"})
+        Assertions.assert_true_raise400(len(first_name) > 1,
+                                        {'error': "First name is too short"})
+        Assertions.assert_true_raise400(len(last_name) > 1,
+                                        {'error': "Last name is too short"})
+
+        Assertions.assert_true_raise400(len(email) > 5, {'error': "Email is too short"})
         Assertions.assert_true_raise400('@' in email and '.' in email, {'error': "Invalid email"})
 
         if photo:
-                list = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
-                result = any(elem in photo for elem in list)
-                Assertions.assert_true_raise400(result, {'error': 'Invalid photo url'})
+            list = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
+            result = any(photo.endswith(elem) for elem in list)
+            Assertions.assert_true_raise400(photo.startsWith('http'), {'error': 'Invalid photo url,'
+                                                                       ' the photo must start with http'})
+            Assertions.assert_true_raise400(result, {'error': 'Invalid photo url,'
+                                                              ' the photo must end with an image extension'})
         return True
 

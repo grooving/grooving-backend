@@ -260,9 +260,9 @@ class OfferSerializer(serializers.ModelSerializer):
                 artist_flowstop_transitions = {'PENDING': 'REJECTED',
                                                'CONTRACT_MADE': 'CANCELLED_ARTIST'}
                 if json_status == 'CONTRACT_MADE':
-                    Assertions.assert_true_raise400(logged_user.iban is not None,
+                    Assertions.assert_true_raise400(logged_user.paypalAccount is not None,
                                                     {'error': "You must introduce your bank account before"})
-                    offer_in_db.transaction.ibanArtist = logged_user.iban
+                    offer_in_db.transaction.paypalArtist = logged_user.paypalAccount
                     offer_in_db.transaction.save()
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
