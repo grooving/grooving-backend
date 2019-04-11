@@ -59,8 +59,6 @@ class CustomerRegister(generics.CreateAPIView):
     serializer_class = CustomerSerializer
 
     def get_object(self, pk=None):
-        if pk is None:
-            pk = self.kwargs['pk']
         try:
             return Customer.objects.get(pk=pk)
         except Customer.DoesNotExist:

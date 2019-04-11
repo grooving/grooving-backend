@@ -164,7 +164,7 @@ class ArtistSerializer(serializers.ModelSerializer):
         if photo:
             extensions = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
             result = any(photo.endswith(elem) for elem in extensions)
-            Assertions.assert_true_raise400(photo.startsWith('http'), {'error': 'Invalid photo url,'
+            Assertions.assert_true_raise400(photo.startswith('http'), {'error': 'Invalid photo url,'
                                                                        ' the photo must start with http'})
             Assertions.assert_true_raise400(result, {'error': 'Invalid photo url,'
                                                               ' the photo must end with an image extension'})

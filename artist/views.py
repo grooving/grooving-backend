@@ -88,8 +88,6 @@ class ArtistRegister(generics.CreateAPIView):
     serializer_class = ArtistSerializer
 
     def get_object(self, pk=None):
-        if pk is None:
-            pk = self.kwargs['pk']
         try:
             return Artist.objects.get(pk=pk)
         except Artist.DoesNotExist:
