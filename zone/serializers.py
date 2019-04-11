@@ -34,11 +34,16 @@ class SearchZoneSerializer(serializers.ModelSerializer):
         base_childs = []
         for child_zone in zone.zone_set.all():
             if child_zone not in total:
-                recursive_data = SearchZoneSerializer._get_base_childs(child_zone, total)
-                base_childs.extend(recursive_data[0])
+                recursive_data = SearchZoneSerializer.get_base_childs(child_zone, total)
+
                 total = recursive_data[1]
-                if child_zone.zone.set.all().count() == 0:
+                if child_zone.zone_set.all().count() == 0:
                     base_childs.append(child_zone)
+                else:
+                    base_childs.extend(recursive_data[0])
+
+        if len(base_childs) == 0:
+            base_childs.append(zone)
 
         return base_childs, total
 

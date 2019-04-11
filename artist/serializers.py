@@ -94,11 +94,10 @@ class ArtistSerializer(serializers.ModelSerializer):
         user = User.objects.create(username=json.get('username'), password=make_password(json.get('password')),
                                    first_name=json.get('first_name'), last_name=json.get('last_name'),
                                    email=json.get('email'))
+        portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'))
 
         artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'),
-                                    user=user)
-
-        Portfolio.objects.create(artisticName=json.get('artisticName'), artist=artist)
+                                       portfolio=portfolio1, user=user)
         return artist
 
     @staticmethod
@@ -106,12 +105,12 @@ class ArtistSerializer(serializers.ModelSerializer):
 
         user_names = User.objects.values_list('username', flat=True)
         emails = User.objects.values_list('email', flat=True)
-        password = request.data.get("password")
+        password = request.data.get("password").replace(" ","")
         username = request.data.get("username")
-        confirm_password = request.data.get("confirm_password")
+        confirm_password = request.data.get("confirm_password").replace(" ","")
         email = request.data.get("email")
-        first_name = request.data.get("first_name")
-        last_name = request.data.get("last_name")
+        first_name = request.data.get("first_name").replace('', ' ')
+        last_name = request.data.get("last_name").replace('', ' ')
         phone = request.data.get("phone")
         photo = request.data.get("photo")
         Assertions.assert_true_raise400(request.data, {'error': "Empty form is not valid"})

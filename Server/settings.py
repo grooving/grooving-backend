@@ -171,3 +171,8 @@ EMAIL_HOST_USER = 'grupogrooving@gmail.com'
 EMAIL_HOST_PASSWORD = '94TDtF4zG2t4Cxy'
 
 django_heroku.settings(locals())
+
+BRAINTREE_PRODUCTION = False  # We'll need this later to switch between the sandbox and live account
+BRAINTREE_MERCHANT_ID = "2jr4z6qz4rf4n5xt"
+BRAINTREE_PUBLIC_KEY = "dqgwkcsmb7j68wf7"
+BRAINTREE_PRIVATE_KEY = "7d71536e5952a2a492855762b66ba75d"
