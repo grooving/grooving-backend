@@ -114,7 +114,7 @@ class BraintreeViews(generics.GenericAPIView):
 
         Assertions.assert_true_raise401(offer.eventLocation.customer.user_id == logged_user.user_id, {'error': 'Offer not from this customer'})
 
-        if offer.paymentPackage.performance:
+        if offer.paymentPackage.performance is not None:
             amount = offer.paymentPackage.performance.price
         else:
             amount = offer.price * offer.hours
