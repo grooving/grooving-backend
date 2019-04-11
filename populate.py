@@ -925,6 +925,8 @@ def save_data():
     portfolio5.artisticGender.add(artistic_gender8)
     portfolio5.zone.add(zone4)
     portfolio5.save()
+    portfolio5.zone.add(zone1_10)
+    portfolio5.save()
 
     portfolio5_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio5,
                                                         description='ANNA Live from DJ Mag HQ',
@@ -939,7 +941,8 @@ def save_data():
     portfolio6.artisticGender.add(artistic_gender8)
     portfolio6.zone.add(zone2)
     portfolio6.save()
-
+    portfolio6.zone.add(zone29)
+    portfolio6.save()
     portfolio6_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio6,
                                                         description='Una chirigota sin clase - Preliminares',
                                                         link='https://www.youtube.com/watch?v=zm6JyvxOcd8')
@@ -963,6 +966,8 @@ def save_data():
     portfolio7.artisticGender.add(artistic_gender3)
     portfolio7.artisticGender.add(artistic_gender4)
     portfolio7.zone.add(zone2)
+    portfolio7.save()
+    portfolio7.zone.add(zone1_13)
     portfolio7.save()
 
     portfolio7_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio7, description='Group photo',
@@ -1072,6 +1077,8 @@ def save_data():
     portfolio9.artisticGender.add(artistic_gender3)
     portfolio9.artisticGender.add(artistic_gender4)
     portfolio9.zone.add(zone4)
+    portfolio9.save()
+    portfolio9.zone.add(zone22)
     portfolio9.save()
 
     portfolio9_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio9,
