@@ -56,6 +56,7 @@ class PaymentPackageListSerializer(serializers.ModelSerializer):
             package = "Fare"
         return package
 
+
 class PaymentPackageSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -165,6 +166,10 @@ class FareSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def _service_create_package(json: dict, logged_user):
+        packages = PaymentPackage.objects.filter(portfolio_id=logged_user.portfolio.id)
+        if packages:
+            for package in packages:
+                Assertions.assert_true_raise400(not package.fare_id, {'error': "You already have a fare package"})
 
         priceHour = json.get('priceHour')
         description = json.get('description')
@@ -213,6 +218,11 @@ class CustomSerializer(serializers.ModelSerializer):
     @staticmethod
     def _service_create_package(json: dict, logged_user):
 
+        packages = PaymentPackage.objects.filter(portfolio_id=logged_user.portfolio.id)
+        if packages:
+            for package in packages:
+                Assertions.assert_true_raise400(not package.custom_id, {'error': "You already have a custom package"})
+
         minimumPrice = json.get('minimumPrice')
         description = json.get('description')
         portfolio_id = logged_user.portfolio.id
@@ -249,7 +259,7 @@ class PerformanceSerializer(serializers.ModelSerializer):
 
     def save(self, pk=None, logged_user=None):
         if pk is None:
-            performance= self._service_create_package(self.initial_data, logged_user)
+            performance = self._service_create_package(self.initial_data, logged_user)
         else:
             performance = Performance.objects.filter(pk=pk).first()
             performance = self._service_update_package(self.initial_data, performance, logged_user)
