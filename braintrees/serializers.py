@@ -9,12 +9,12 @@ from django.core.exceptions import FieldError
 class TransactionSerializer(serializers.ModelSerializer):
 
     payment_method_nonce = serializers.CharField()
-    amount = serializers.DecimalField(max_digits=20, decimal_places=2)
+    id_offer = serializers.CharField()
     #expirationDate = serializers.DateField(input_formats='%m%y', format='%Y-%m')
 
     class Meta:
         model = Transaction
-        fields = ('id', 'amount', 'payment_method_nonce')
+        fields = ('id_offer', 'payment_method_nonce')
 
     '''def validate(self, attrs):
         # if attrs.get('ibanCustomer') is not None:
