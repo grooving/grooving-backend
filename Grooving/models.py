@@ -154,7 +154,6 @@ class Transaction(AbstractEntity):
     paypalArtist = models.EmailField(blank=True, null=True)
 
 
-
 class Rating(AbstractEntity):
     score = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField(blank=True, null=True)
@@ -196,11 +195,3 @@ class SystemConfiguration(AbstractEntity):
     termsText = models.TextField(default='Terms text')
     privacyText = models.TextField(default='Privacy text')
     aboutUs = models.TextField(default='About Us')
-
-
-class EmailNotification(AbstractEntity):
-    subject = models.CharField(max_length=255)
-    body = models.TextField(default='Body message')
-
-    def __str__(self):
-        return str(self.subject)
