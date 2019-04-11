@@ -28,3 +28,4 @@ Weasyprint==46
 Distance
 stop-words
 Unidecode
+braintree==3.52.0
