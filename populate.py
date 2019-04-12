@@ -6,9 +6,7 @@ import string
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'Server.settings')
 django.setup()
 
-from Grooving.models import ArtisticGender, Portfolio, Artist, Zone, PortfolioModule, Calendar, PaymentPackage, \
-    Performance, Fare, Custom, Offer, Customer, EventLocation, SystemConfiguration, Rating, Transaction
-
+from Grooving.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
@@ -1000,7 +998,7 @@ def save_data():
     portfolio7.save()
 
     portfolio7_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio7, description='Group photo',
-                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/22089933_1594772467232483_3080874756432701823_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=def5d818429407165ba36763b4d352d6&oe=5D41A03B')
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/32283709_1827850047258056_483833859805282304_n.jpg?_nc_cat=111&_nc_ht=scontent-mad1-1.xx&oh=9577b1cab7bee4693041f7f50191d4fb&oe=5D4F7722')
     portfolio7_module1.save()
 
     portfolio7_module2 = PortfolioModule.objects.create(type='SOCIAL', portfolio=portfolio7,
@@ -1044,6 +1042,14 @@ def save_data():
                                                          description='Moskojonera',
                                                          link='https://www.youtube.com/watch?v=9i2rM6dd5yA')
     portfolio7_module10.save()
+
+    portfolio7_module11 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio7, description='Group 1',
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/45395830_2080950905281301_5436388291232399360_o.jpg?_nc_cat=101&_nc_ht=scontent-mad1-1.xx&oh=160e1cec32bfa6879664097de6c61fcd&oe=5D420292')
+    portfolio7_module11.save()
+
+    portfolio7_module12 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio7, description='Group 2',
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10268635_918911371485266_3335589384646467009_n.jpg?_nc_cat=110&_nc_ht=scontent-mad1-1.xx&oh=6d7c9fcba3af3e599331903ede8898f4&oe=5D2E4B74')
+    portfolio7_module12.save()
 
     # ----
 
@@ -1101,14 +1107,36 @@ def save_data():
     # ----
 
     portfolio9 = Portfolio.objects.create(artisticName='Waterdogs',
-                                          banner='https://cdn.pixabay.com/photo/2016/02/15/12/54/banner-1201119_1280.jpg',
-                                          biography='It all began in 1997 when Martin Ekelund met Patrik Berglin and started to discuss music. They soon found out that they share the same taste in music. And what was more obvious then to start the best rockband in the world? Excactly…nothing! They found the drummer P-O Borg and started to write songs and rehearse. After a while P-O dropped the band and Martin and Patrik stood without a drummer. One warm and shiny day when the sky was blue and the world, for once, was a friendly and peacefull place, Martin came up with the brilliant idea of asking an old childhood friend to join the band. Hard hitting Daniel Persson united their forces and Waterdog was a fact.')
+                                          banner='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/46501037_1930071163750453_486418618368655360_o.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=80cd1e477f4d35ac00f739775e7d5753&oe=5D40F966',
+                                          biography='Un potente trío de Rock-Blues nacido a orillas del delta del Piedras')
     portfolio9.artisticGender.add(artistic_gender3)
     portfolio9.artisticGender.add(artistic_gender4)
     portfolio9.zone.add(zone4)
     portfolio9.save()
     portfolio9.zone.add(zone22)
     portfolio9.save()
+
+    portfolio9_module1 = PortfolioModule.objects.create(type='SOCIAL', portfolio=portfolio9,
+                                                        description='Canal de Facebook',
+                                                        link='https://www.facebook.com/WATERDOGS.BLUES/')
+    portfolio9_module1.save()
+
+    portfolio9_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio9,
+                                                        description='Foto 1',
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/46501037_1930071163750453_486418618368655360_o.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=80cd1e477f4d35ac00f739775e7d5753&oe=5D40F966')
+    portfolio9_module2.save()
+
+    portfolio9_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio9,
+                                                        description='Foto 2',
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/15442339_1177989115625332_9202300312226810278_n.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=fcdebb55b60831cbd08d81f60e58dc97&oe=5D3936D9')
+    portfolio9_module2.save()
+
+    portfolio9_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio9,
+                                                        description='Foto 3',
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/14519937_1111631358927775_3967127956346645930_n.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=b1fd94a5cb7933883de0e6e6d34672b9&oe=5D39423E')
+    portfolio9_module3.save()
+
+    #
 
     portfolio9_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio9,
                                                         description='Van Hallen - Dirty Water dog',
@@ -1255,6 +1283,7 @@ def save_data():
     user14_admin = User.objects.create(username='admin', password=make_password('admin'), is_staff=True,
                                        is_superuser=True)
     user14_admin.save()
+    Admin.objects.create(user=user14_admin)
 
     # Artists
 
@@ -1283,7 +1312,7 @@ def save_data():
                                     iban='ES7100302053091234567895', paypalAccount='chirigotasinclase@yahoo.com')
     artist6.save()
     artist7 = Artist.objects.create(user=user7_artist7, rating=4.75, portfolio=portfolio7, phone='664196105',
-                                    photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/50732294_2114221071976992_2173326934371467264_o.jpg?_nc_cat=100&_nc_ht=scontent-mad1-1.xx&oh=dacf068903a3703434b52cfade783470&oe=5D09C938',
+                                    photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/22089933_1594772467232483_3080874756432701823_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=def5d818429407165ba36763b4d352d6&oe=5D41A03B',
                                     iban='ES1000492352082414205416', paypalAccount='batracio-info@hotmail.com')
     artist7.save()
     artist8 = Artist.objects.create(user=user8_artist8, rating=4.66666666, portfolio=portfolio8, phone='664596466',
@@ -1291,7 +1320,7 @@ def save_data():
                                     iban='ES1720852066623456789011', paypalAccount='medictum.bussiness@gmail.com')
     artist8.save()
     artist9 = Artist.objects.create(user=user9_artist9, rating=3.75, portfolio=portfolio9, phone='679739257',
-                                    photo='https://media.licdn.com/dms/image/C4E03AQFAONXIX44h6w/profile-displayphoto-shrink_800_800/0?e=1559174400&v=beta&t=eEhhR1sr9-p1fr1tREXmlXV6WAzPvNlFDHhlV8SNwRY',
+                                    photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/46501037_1930071163750453_486418618368655360_o.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=80cd1e477f4d35ac00f739775e7d5753&oe=5D40F966',
                                     iban='ES9420805801101234567891', paypalAccount='infowaterdogs@outlook.com')
     artist9.save()
     artist9.save()

@@ -138,7 +138,7 @@ class OfferSerializer(serializers.ModelSerializer):
     eventLocation = EventLocationSerializer(read_only=True)
     eventLocation_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=EventLocation.objects.all(),
                                                               source='eventLocation')
-    #transaction = TransactionSerializer()
+    # transaction = TransactionSerializer()
 
     rating = RatingSerializer(read_only=True)
 
@@ -262,8 +262,10 @@ class OfferSerializer(serializers.ModelSerializer):
 
     def _service_update_status(self, json: dict, offer_in_db: Offer, logged_user: User):
         json_status = json.get('status')
+        Assertions.assert_true_raise400(json_status, {'error': 'status field not provided'})
         if json_status:
             status_in_db = offer_in_db.status
+            Assertions.assert_true_raise400(json_status != status_in_db, {'error': 'status provided isn\'t changed'})
             normal_transitions = {}
             artist_flowstop_transitions = {}
             customer_flowstop_transitions = {}
@@ -405,12 +407,12 @@ class OfferSerializer(serializers.ModelSerializer):
                                                                    '%Y-%m-%dT%H:%M:%S') > datetime.datetime.now(),
                                         {'error': 'date value is past'})
         Assertions.assert_true_raise400(json.get("paymentPackage_id"),
-                                        {'error': 'paymentPackage_id field not provided'})
+                                        {'error': 'payment package field not provided'})
 
         paymentPackage = PaymentPackage.objects.filter(pk=json.get("paymentPackage_id")).first()
 
         Assertions.assert_true_raise400(paymentPackage,
-                                        {'error': 'paymentPackage doesn\'t exist'})
+                                        {'error': 'payment package doesn\'t exist'})
 
         # Custom offer properties for each paymentPackage type
 
@@ -427,18 +429,18 @@ class OfferSerializer(serializers.ModelSerializer):
         elif paymentPackage.custom is not None:
             Assertions.assert_true_raise400(json.get("price"),
                                             {'error': 'price field not provided'})
-            Assertions.assert_true_raise400(Decimal(json.get("price")) > paymentPackage.custom.minimumPrice,
+            Assertions.assert_true_raise400(Decimal(0.0 < json.get("price")) > paymentPackage.custom.minimumPrice,
                                             {'error': 'price entered it\'s below of minimum price'})
             Assertions.assert_true_raise400(json.get('hours'),
                                             {'error': 'hours field not provided'})
 
         Assertions.assert_true_raise400(json.get("eventLocation_id"),
-                                        {'error': 'eventLocation_id field not provided'})
+                                        {'error': 'event location field not provided'})
 
         eventLocation = EventLocation.objects.filter(pk=attrs.data.get("eventLocation_id")).first()
 
         Assertions.assert_true_raise400(eventLocation,
-                                        {'error': 'eventLocation does not exist'})
+                                        {'error': 'event location does not exist'})
 
         # User owner validation
 
