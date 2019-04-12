@@ -122,7 +122,7 @@ class ArtistRegister(generics.CreateAPIView):
         Assertions.assert_true_raise403(articustomer.user.id == artist.user.id,
                                         {'error': 'You can only change your personal info'})
         serializer = ArtistSerializer(artist, data=request.data, partial=True)
-        Assertions.assert_true_raise400(serializer.is_valid(), {"code": "invalid data"})
+        serializer.is_valid(True)
         artist = serializer.update(pk)
 
         artist.save()

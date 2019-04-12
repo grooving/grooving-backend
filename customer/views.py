@@ -92,7 +92,7 @@ class CustomerRegister(generics.CreateAPIView):
         Assertions.assert_true_raise403(articustomer.id == customer.id,
                                         {'error':  "You can only change your personal info"})
         serializer = CustomerSerializer(customer, data=request.data, partial=True)
-        Assertions.assert_true_raise400(serializer.is_valid(), {'error': "invalid data"})
+        serializer.is_valid(True)
         customer = serializer.update(pk)
 
         customer.save()
