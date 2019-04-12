@@ -131,7 +131,6 @@ class BraintreeViews(generics.GenericAPIView):
             # Card could've been declined or whatever
             # I recommend to send an error report to all admins
             # , including ``result.message`` and ``self.user.email``
-            print(result.errors.deep_errors)
             context = {
                 'error': "Failed to validate",
                 'form': request.data,
