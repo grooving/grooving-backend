@@ -62,90 +62,6 @@ class PaymentPackageSerializer(serializers.ModelSerializer):
     class Meta:
         model = PaymentPackage
         fields = ('description', 'custom', 'fare', 'performance')
-'''
-    @staticmethod
-    def list_payment(self):
-
-        paymentPackage = PaymentPackage.objects.get(pk=self.id)
-        package = ""
-        if paymentPackage.performance is not None:
-            package = package + "{type: Performance,"
-        elif paymentPackage.custom is not None:
-            package = "Custom"
-        elif paymentPackage.fare is not None:
-            package = "Fare"
-        return package
-
-    def save(self):
-        if self.initial_data.get('id') is None:
-            # creation
-            paymentPackage = PaymentPackage()
-            paymentPackage = self._service_create(self.initial_data, paymentPackage)
-        else:
-            # edit
-            print("Clave primaria:" + str(self.initial_data.get('id')))
-            paymentPackage = PaymentPackage.objects.get(pk=self.initial_data.get('id'))
-            paymentPackage = self._service_update(self.initial_data, paymentPackage)
-            print(paymentPackage)
-        paymentPackage.save()
-        return paymentPackage
-
-    @staticmethod
-    def _service_create(json: dict, paymentPackage: PaymentPackage):
-        paymentPackage.description = json.get('description')
-        paymentPackage.appliedVAT = json.get('appliedVAT')
-        paymentPackage.portfolio_id = json.get('portfolio_id')
-
-        if json['performance'] is not None:
-            performance = Performance()
-            performance.hours = Decimal(json['performance']['hours'])
-            performance.price = Decimal(json['performance']['price'])
-            performance.currency = json['performance']['currency']
-            performance.save()
-            paymentPackage.performance_id = performance.id
-        elif json['fare'] is not None:
-            fare = Fare()
-            fare.priceHour = Decimal(json['fare']['priceHour'])
-            fare.currency = json['fare']['currency']
-            fare.save()
-            paymentPackage.fare_id = fare.id
-        elif json['custom'] is not None:
-            custom = Custom()
-            custom.price = Decimal(json['custom']['price'])
-            custom.currency = json['custom']['currency']
-            custom.save()
-            paymentPackage.custom_id = custom.id
-
-        return paymentPackage
-
-    @staticmethod
-    def _service_update(json: dict, paymentPackage_in_db):
-
-        print(paymentPackage_in_db)
-        assert_true(paymentPackage_in_db, "No existe un paquete con esa id")
-
-        paymentPackage_in_db.description = json.get('description')
-        paymentPackage_in_db.appliedVAT = Decimal(json.get('appliedVAT'))
-
-        if json['performance'] is not None:
-            performance = Performance.objects.get(pk=json['performance']['id'])
-            performance.hours = Decimal(json['performance']['hours'])
-            performance.price = Decimal(json['performance']['price'])
-            performance.currency = json['performance']['currency']
-            performance.save()
-        elif json['fare'] is not None:
-            fare = Fare.objects.get(pk=json['fare']['id'])
-            fare.priceHour = Decimal(json['fare']['priceHour'])
-            fare.currency = json['fare']['currency']
-            fare.save()
-        elif json['custom'] is not None:
-            custom = Custom.objects.get(pk=json['custom']['id'])
-            custom.price = Decimal(json['custom']['price'])
-            custom.currency = json['custom']['currency']
-            custom.save()
-
-        return paymentPackage_in_db
-'''
 
 
 class FareSerializer(serializers.ModelSerializer):
@@ -301,7 +217,7 @@ class PerformanceSerializer(serializers.ModelSerializer):
         performance.hours = json.get('hours')
         performance.info = json.get('info')
         performance.price = json.get('price')
-        performance.paymentpackage.description = json.get('description')
+        performance.paymentpackage.description = description
         performance.save()
         return performance
 

@@ -38,8 +38,6 @@ class CalendarSerializer(serializers.ModelSerializer):
 
 class ArtisticGenderSerializer(serializers.ModelSerializer):
 
-    #parentGender = ParentGenderSerializer(read_only=True)
-
     class Meta:
         model = ArtisticGender
         fields = ('id', 'name', 'parentGender')
@@ -76,7 +74,6 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
     images = serializers.SerializerMethodField('list_images')
     videos = serializers.SerializerMethodField('list_videos')
     main_photo = serializers.SerializerMethodField('list_photo')
-    #artisticGenders = serializers.SerializerMethodField('list_genders')
     artist = ArtistSerializer(read_only=True)
     artisticGender = ArtisticGenderSerializer(read_only=True, many=True)
     zone = ZoneSerializer(read_only=True, many=True)

@@ -1,11 +1,9 @@
 from Grooving.models import Offer, Artist, Customer
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from rest_framework import generics
 from .serializers import ListArtistOffersSerializer, ListCustomerOffersSerializer
 from utils.authentication_utils import get_user_type, get_logged_user
 from utils.utils import auto_update_old_offers
 from utils.Assertions import Assertions
-from django.http import Http404
 
 
 class ListArtistOffers(generics.ListAPIView):

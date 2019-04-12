@@ -1,3 +1,4 @@
+'''
 from Grooving.models import Offer, Artist, Portfolio, User, Calendar, PaymentPackage, Customer
 from Grooving.models import EventLocation, Zone, Performance, ArtisticGender, PortfolioModule
 from django.contrib.auth.hashers import make_password
@@ -62,3 +63,4 @@ class ArtistGenderTestCase(APITestCase):
         print(response1)
         print(PortfolioModule.objects.filter(pk=portfolioModule1.id).first())
 
+'''

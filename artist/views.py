@@ -40,44 +40,7 @@ class ListArtist(generics.ListAPIView):
         artisticgender = self.request.query_params.get('artisticGender')
         zone = self.request.query_params.get('zone')
         order = self.request.query_params.get('order')
-        """
-        if artisticname or artisticgender:
-            if artisticname:
-                queryset = Artist.objects.filter(portfolio__artisticName__icontains=artisticname)
-            if artisticgender:
-                try:
-                    artgen = ArtisticGender.objects.filter(name__icontains=artisticgender)
-                    artists = []
-                    artistasEncontrados = Artist.objects.filter(portfolio__artisticGender=artgen)
-                    artists.append(artistasEncontrados)
-                    if len(ArtisticGender.objects.filter(parentGender__in=artgen)) != 0 and artgen is not None:
-                        # Se busca los artistas cuyos estilos artisticos coinciden con el padre
 
-                        children = []
-                        children.extend(list(ArtisticGender.objects.filter(parentGender__in=artgen)))
-
-                        # se hace el mismo proceso en bucle
-                        for gender in children:
-                            artists.extend(Artist.objects.filter(portfolio__artisticGender=gender).distinct('portfolio'))
-                            numChildren = []
-                            numChildren.extend(ArtisticGender.objects.filter(parentGender__name__icontains=gender.name))
-                            # Si tiene hijos, se añaden
-                            if len(numChildren) != 0:
-                                children.extend(numChildren)
-                        queryset = artists
-                    else:
-                        artgen = ArtisticGender.objects.filter(name__icontains=artisticgender)
-                        queryset = Artist.objects.filter(portfolio__artisticGender__in=artgen).distinct(
-                            'portfolio')
-                # Si el padre no existe:
-                except ObjectDoesNotExist:
-                    queryset = []
-                    return queryset
-                if artisticname:
-                    queryset = queryset.filter(portfolio__artisticName__icontains=artisticname)
-        else:
-            queryset = Artist.objects.all()
-        """
         queryset = search(artisticName=artisticname, categoria=artisticgender, zone=zone, order=order)
         return queryset
 
@@ -117,7 +80,7 @@ class ArtistRegister(generics.CreateAPIView):
         Assertions.assert_true_raise400(len(request.data) != 0, {'error': "Empty form is not valid"})
         artist = self.get_object(pk)
         articustomer = get_logged_user(request)
-        Assertions.assert_true_raise403(articustomer,"Denied permission")
+        Assertions.assert_true_raise403(articustomer, "Denied permission")
         Assertions.assert_true_raise403(articustomer.user.id == artist.user.id,
                                         {'error': 'You can only change your personal info'})
         serializer = ArtistSerializer(artist, data=request.data, partial=True)

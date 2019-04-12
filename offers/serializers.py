@@ -1,9 +1,9 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from rest_framework import serializers
-from Grooving.models import Offer, PaymentPackage, Customer,Zone, EventLocation, Artist, Portfolio, Rating
+from Grooving.models import Offer, PaymentPackage, Customer,Zone, EventLocation, Artist, Portfolio
 from eventLocation.serializers import ZoneSerializer
 from rating.serializers import ListRatingSerializer
-from portfolio.serializers import PortfolioSerializer, ArtistSerializer
+from portfolio.serializers import PortfolioSerializer
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):

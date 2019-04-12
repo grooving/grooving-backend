@@ -3,6 +3,7 @@
 from Grooving.models import Portfolio, Rating, Artist
 from utils.searcher.distancia import artisticNameCompare, categoriaCompare, zoneCompare
 
+
 def search(artisticName="", categoria="", zone="", order=""):
 
 
@@ -60,17 +61,6 @@ def zone_to_string(portfolio):
     string = array_to_string(all_childs) + array_to_string(all_parents)
     return string
 
-"""
-def get_childs_gender(queryset, total=[]):
-    total = total
-    for gender in queryset:
-        if gender not in total:
-            total.append(gender)
-            child_genders = gender.artisticgender_set.all()
-            total = get_childs_gender(child_genders, total)
-    return total
-"""
-
 
 def get_parents_gender(genders):
     parent_gender = []
@@ -112,6 +102,7 @@ def array_to_string(array):
         result = result + " " +str(a.name.replace(" ", "#").lower())
 
     return result
+
 
 def array_of_id_to_string(array):
     result = ""

@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework import generics
 from .serializers import OfferSerializer, GetOfferSerializer
 from rest_framework import status
-from django.http import Http404
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from utils.Assertions import Assertions
 
@@ -124,6 +123,7 @@ class NumOffers(generics.GenericAPIView):
         else:
             return Response({'error': 'user isn\'t authorized'}, status=status.HTTP_403_FORBIDDEN)
 
+
 class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
@@ -139,8 +139,6 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
         Assertions.assert_true_raise404(offer is not None)
         Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id)
 
-        #serializer = CodeSerializer(offer)
-        #code = serializer.data.get("paymentCode")
         return Response({"paymentCode": str(offer.paymentCode)}, status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):

@@ -1,10 +1,7 @@
-from Grooving.models import Rating, Artist, Offer
-from utils.authentication_utils import get_logged_user,get_user_type
+from Grooving.models import Rating, Offer
 from rest_framework.response import Response
-from rest_framework import generics, status, serializers
-from django.http import Http404
+from rest_framework import generics, status
 from rating.serializers import CustomerRatingSerializer, ListRatingSerializer
-from django.db.models import Count, Sum
 
 
 class GetRatings(generics.ListAPIView):
@@ -12,17 +9,7 @@ class GetRatings(generics.ListAPIView):
     model = Rating
     serializer_class = ListRatingSerializer
     authentication_classes = []
-    """
-    def get_object(self, pk=None):
 
-        if pk is None:
-            pk = self.kwargs['pk']
-        try:
-            rating = Rating.objects.filter(id=pk)
-            return rating
-        except Rating.DoesNotExist:
-            raise Http404
-    """
     def get_queryset(self, pk=None):
 
         #   el PK es de un artist cuyos ratings queremos obtener
