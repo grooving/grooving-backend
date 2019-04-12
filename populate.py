@@ -1372,11 +1372,11 @@ def save_data():
     # ...artists from teachers
 
     artist10_prof = Artist.objects.create(user=user15_artist10_prof, rating=1, portfolio=portfolio14_prof,
-                                          photo='https://cdn.pixabay.com/photo/2015/07/25/05/48/magician-859303_1280.jpg')
+                                          photo='https://raw.githubusercontent.com/Iriabow/pepe/master/magician-circus-ladies-b75b24-1024.jpg')
     artist10_prof.save()
 
     artist11_prof = Artist.objects.create(user=user16_artist11_prof, rating=1, portfolio=portfolio15_prof,
-                                          photo='https://cdn.pixabay.com/photo/2018/02/24/08/26/people-3177507_1280.jpg')
+                                          photo='https://raw.githubusercontent.com/Iriabow/pepe/master/pianista.jpg')
     artist11_prof.save()
 
     # Customers with credit card & paypal account
