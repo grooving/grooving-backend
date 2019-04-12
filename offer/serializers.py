@@ -153,7 +153,7 @@ class OfferSerializer(serializers.ModelSerializer):
             # creation
             offer = Offer()
             offer = self._service_create(self.initial_data, offer, logged_user)
-            # Notifications.send_email_create_an_offer(offer.id) # TODO
+            Notifications.send_email_create_an_offer(offer.id) # TODO
         else:
             # edit
             id = (self.initial_data, pk)[pk is not None]
@@ -201,7 +201,7 @@ class OfferSerializer(serializers.ModelSerializer):
         offer.save()
 
         # Notification by email
-        # Notifications.send_email_contract_made_to_payment_made(offer.id) TODO
+        Notifications.send_email_contract_made_to_payment_made(offer.id)
 
         return offer
 
@@ -354,7 +354,7 @@ class OfferSerializer(serializers.ModelSerializer):
             offer_in_db.save()
 
             # Sending email notifications
-            ''' TODO
+
             if offer_in_db.status == 'CONTRACT_MADE':
                 Notifications.send_email_pending_to_contract_made(offer_in_db.id)
             elif offer_in_db.status == 'REJECTED':
@@ -365,7 +365,7 @@ class OfferSerializer(serializers.ModelSerializer):
                 Notifications.send_email_contract_made_to_cancelled_artist(offer_in_db.id)
             elif offer_in_db.status == 'CANCELLED_CUSTOMER':
                 Notifications.send_email_contract_made_to_cancelled_customer(offer_in_db.id)
-            '''
+
             print("ESTADO DB DESPUES:" + offer_in_db.status)
             return offer_in_db
 
