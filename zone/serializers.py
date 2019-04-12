@@ -53,6 +53,10 @@ class SearchZoneSerializer(serializers.ModelSerializer):
         total.append(zone)
         id = str(zone.id)
         name = zone.name
+        parentZone = None
+        if zone.parentZone is not None:
+            parentZone = str(zone.parentZone.id)
+
         child_dicts_list = []
         for child_zone in zone.zone_set.all():
             if child_zone not in total:
@@ -60,7 +64,7 @@ class SearchZoneSerializer(serializers.ModelSerializer):
                 total = recursive_data[1]
                 child_dicts_list.append(recursive_data[0])
 
-        dictionary = {"id": id, "name": name, "children": child_dicts_list}
+        dictionary = {"id": id, "name": name, "parent": parentZone, "children": child_dicts_list}
 
         return dictionary, total
 
