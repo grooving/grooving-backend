@@ -3,6 +3,7 @@ from rest_framework import serializers
 from Grooving.models import Portfolio, Calendar, ArtisticGender, PortfolioModule, PaymentPackage, Artist, Zone
 from utils.Assertions import Assertions
 import re
+from utils.strings import Strings
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -149,7 +150,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
     @staticmethod
     def _service_update(json: dict, portfolio_in_db):
 
-        Assertions.assert_true_raise400(portfolio_in_db is not None, {'error' : 'Portfolio not in database'})
+        Assertions.assert_true_raise400(portfolio_in_db is not None, {'error': 'Portfolio not in database'})
 
         if json['artisticName'] is not None:
             Assertions.assert_true_raise400(isinstance(json['artisticName'], str), {'error', 'Artistic Name must be a string'})
@@ -159,10 +160,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
             Assertions.assert_true_raise400(isinstance(json['banner'], str), {'error', 'Banner must be a string'})
             Assertions.assert_true_raise400(json['banner'].startswith('http'), {'error': 'Invalid banner url,'
                                                                                 ' the banner must start with http'})
-            Assertions.assert_true_raise400(
-                json['banner'].endswith(".png") or json['banner'].endswith(".gif") or json[
-                    'banner'].endswith(".jpg") or json['banner'].endswith(".jpeg"),
-                {'error': 'Formato de imagen banner erroneo.'})
+            Assertions.assert_true_raise400(Strings.url_is_an_image(json['banner']), {'error': 'Invalid image format banner.'})
             portfolio_in_db.banner = json.get('banner')
 
         if json['biography'] is not None:
@@ -187,7 +185,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                     if image_db.link == image:
                         aux = False
                 if aux:
-                    Assertions.assert_true_raise400(image.endswith(".png") or image.endswith(".gif") or image.endswith(".jpg") or image.endswith(".jpeg"), {'error': 'Formato imagen erroneo'})
+                    Assertions.assert_true_raise400(Strings.url_is_an_image(image), {'error': 'Invalid format image'})
                     module = PortfolioModule()
                     module.type = 'PHOTO'
                     module.link = image
@@ -244,9 +242,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
             Assertions.assert_true_raise400(isinstance(json['main_photo'], str), {'error', 'Main_photo must be a string'})
             Assertions.assert_true_raise400(json['main_photo'].startswith('http'), {'error': 'Invalid main_photo url,'
                                                                                 ' the photo must start with http'})
-            Assertions.assert_true_raise400(
-                json['main_photo'].endswith(".png") or json['main_photo'].endswith(".gif") or json['main_photo'].endswith(".jpg") or json['main_photo'].endswith(".jpeg"),
-                {'error': 'Formato de imagen main_photo erroneo.'})
+            Assertions.assert_true_raise400(Strings.url_is_an_image(json['main_photo']), {'error': 'Invalid image format main_photo'})
             artist = Artist.objects.get(portfolio=portfolio_in_db)
             artist.photo = json['main_photo']
             artist.save()

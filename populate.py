@@ -515,7 +515,7 @@ def save_data():
 
     artist10 = Artist.objects.create(user=user1_artist10, rating=5.0, portfolio=portfolio10, phone='600304999',
                                      photo='https://img.discogs.com/jgyNBtPsY4DiLegwMrOC9N_yOc4=/600x600/smart/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/A-1452461-1423476836-6354.jpeg.jpg',
-                                     iban='ES6621000418401234567891')
+                                     iban='ES6621000418401234567891', paypalAccount='tamta.info@gmail.com')
     artist10.save()
 
     performance1_paymentPackageFamous1 = Performance.objects.create(info='This is only mi pay for mi top 8 songs',
@@ -624,7 +624,7 @@ def save_data():
 
     artist11 = Artist.objects.create(user=user1_artist11, rating=5.0, portfolio=portfolio11, phone='600304999',
                                      photo='http://vein.es/wp-content/uploads/2018/11/cap5-lamento.gif',
-                                     iban='ES6621000418401234567891')
+                                     iban='ES6621000418401234567891', paypalAccount='rosalia.info@gmail.com')
     artist11.save()
 
     performance1_paymentPackageFamous2 = Performance.objects.create(
@@ -740,7 +740,7 @@ def save_data():
 
     artist12 = Artist.objects.create(user=user1_artist12, rating=5.0, portfolio=portfolio12, phone='600304999',
                                      photo='https://los40es00.epimg.net/los40/imagenes/2018/08/18/actualidad/1534605895_686141_1534606292_noticia_normal.jpg',
-                                     iban='ES6621000418401234567891')
+                                     iban='ES6621000418401234567891', paypalAccount='taylor.info@gmail.com')
     artist12.save()
 
     performance1_paymentPackageFamous3 = Performance.objects.create(
@@ -843,7 +843,7 @@ def save_data():
 
     artist13 = Artist.objects.create(user=user1_artist13, rating=5.0, portfolio=portfolio13, phone='600304999',
                                      photo='https://data.whicdn.com/images/152059660/original.gif',
-                                     iban='ES6621000418401234567891')
+                                     iban='ES6621000418401234567891', paypalAccount='charli.info@gmail.com')
     artist13.save()
 
     # Portfolios with his modules
@@ -1314,7 +1314,7 @@ def save_data():
                                     iban='ES1720852066623456789011', paypalAccount='medictum.bussiness@gmail.com')
     artist8.save()
     artist9 = Artist.objects.create(user=user9_artist9, rating=3.75, portfolio=portfolio9, phone='679739257',
-                                    photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/46501037_1930071163750453_486418618368655360_o.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=80cd1e477f4d35ac00f739775e7d5753&oe=5D40F966',
+                                    photo='https://scontent-mad1-1.xx.fbcdn.net/v/t31.0-8/11059552_830536237037290_7347492083988165469_o.jpg?_nc_cat=105&_nc_ht=scontent-mad1-1.xx&oh=8986cc38e030cc73367ea008fc76810a&oe=5D47832C',
                                     iban='ES9420805801101234567891', paypalAccount='infowaterdogs@outlook.com')
     artist9.save()
     artist9.save()
@@ -1618,62 +1618,62 @@ def save_data():
     paymentPackage27_custom9.save()
 
     # Transactions
-    transaction_offer1 = Transaction.objects.create(paypalArtist='bwer0192@gmail.com', amount="120")
-    transaction_offer1.save()
+    transaction_offer1 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com', braintree_id='4578eph3', amount="120")
+    transaction_offer1.save() # CONTRACT_MADE - OK
 
-    transaction_offer2 = Transaction.objects.create()
-    transaction_offer2.save()
+    transaction_offer2 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com', braintree_id='ew0ayqav', amount='120')
+    transaction_offer2.save() # PAYMENT_MADE - OK
 
-    transaction_offer3 = Transaction.objects.create()
-    transaction_offer3.save()
+    transaction_offer3 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com', braintree_id='8tyxeyhk', amount='120')
+    transaction_offer3.save() # PAYMENT_MADE - OK
 
-    transaction_offer4 = Transaction.objects.create()
-    transaction_offer4.save()
+    transaction_offer4 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com', braintree_id='crt7p01k', amount='120')
+    transaction_offer4.save() # CANCELLED_ARTIST - OK
 
-    transaction_offer5 = Transaction.objects.create()
-    transaction_offer5.save()
+    transaction_offer5 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com', braintree_id='50vckfr9', amount='120')
+    transaction_offer5.save() # PENDING - OK
 
-    transaction_offer6 = Transaction.objects.create()
-    transaction_offer6.save()
+    transaction_offer6 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com', braintree_id='fwzysehd', amount='115')
+    transaction_offer6.save() # CONTRACT_MADE - OK
 
-    transaction_offer7 = Transaction.objects.create()
-    transaction_offer7.save()
+    transaction_offer7 = Transaction.objects.create(braintree_id='28msg07g', amount='100')
+    transaction_offer7.save() # REJECTED - OK
 
-    transaction_offer8 = Transaction.objects.create()
-    transaction_offer8.save()
+    transaction_offer8 = Transaction.objects.create(braintree_id='fj58887s', amount='140')
+    transaction_offer8.save() # REJECTED - OK
 
-    transaction_offer9 = Transaction.objects.create()
-    transaction_offer9.save()
+    transaction_offer9 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='pkjqy7p1', amount='140')
+    transaction_offer9.save() # CONTRACT_MADE - OK
 
-    transaction_offer10 = Transaction.objects.create()
-    transaction_offer10.save()
+    transaction_offer10 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='amwhkx1j', amount='140')
+    transaction_offer10.save() # CANCELLED_ARTIST - OK
 
-    transaction_offer11 = Transaction.objects.create()
-    transaction_offer11.save()
+    transaction_offer11 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='r3ca6wjr', amount='140')
+    transaction_offer11.save() # CONTRACT_MADE - OK
 
-    transaction_offer12 = Transaction.objects.create()
-    transaction_offer12.save()
+    transaction_offer12 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='gtfcqq8k', amount='140')
+    transaction_offer12.save() # CONTRACT_MADE - OK
 
-    transaction_offer13 = Transaction.objects.create()
-    transaction_offer13.save()
+    transaction_offer13 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='ewzr056h', amount='140')
+    transaction_offer13.save() # CANCELLED_CUSTOMER - OK
 
-    transaction_offer14 = Transaction.objects.create()
-    transaction_offer14.save()
+    transaction_offer14 = Transaction.objects.create(braintree_id='23dnh3xq', amount='115')
+    transaction_offer14.save() # PENDING - OK
 
-    transaction_offer15 = Transaction.objects.create()
-    transaction_offer15.save()
+    transaction_offer15 = Transaction.objects.create(braintree_id='8xqp595r', amount='80')
+    transaction_offer15.save() # PENDING - OK
 
-    transaction_offer16 = Transaction.objects.create()
-    transaction_offer16.save()
+    transaction_offer16 = Transaction.objects.create(braintree_id='9r2rt4pz', amount='160')
+    transaction_offer16.save() # PENDING - OK
 
-    transaction_offer17 = Transaction.objects.create()
-    transaction_offer17.save()
+    transaction_offer17 = Transaction.objects.create(braintree_id='670zzdqz', amount='800')
+    transaction_offer17.save() # PENDING - OK
 
-    transaction_offer18 = Transaction.objects.create()
-    transaction_offer18.save()
+    transaction_offer18 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='4nzgyn9a', amount='1000')
+    transaction_offer18.save() #PAYMENT_MADE - OK
 
-    transaction_offer19 = Transaction.objects.create()
-    transaction_offer19.save()
+    transaction_offer19 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='800rh4t1', amount='1200')
+    transaction_offer19.save() # PAYMENT_MADE - OK
 
     # Rating
     rating_offer2 = Rating.objects.create(score=5, comment="Lo ha hecho explendido")
@@ -1786,45 +1786,45 @@ def save_data():
 
     offer14_performance2.save()
 
-    offer19_performance2 = Offer.objects.create(description='Oferta 15 to From the noise by performance',
+    offer15_performance2 = Offer.objects.create(description='Oferta 15 to From the noise by performance',
                                                 status='PENDING',
                                                 date='2019-07-11 15:00:00', hours=1.5, price='80', currency='EUR',
                                                 appliedVAT=7, paymentPackage=paymentPackage4_performance2,
                                                 eventLocation=event_location2, transaction=transaction_offer19)
 
-    offer19_performance2.save()
+    offer15_performance2.save()
 
-    offer15_performance1 = Offer.objects.create(description='Oferta 16 to Carlos DJ by performance', status='PENDING',
+    offer16_performance1 = Offer.objects.create(description='Oferta 16 to Carlos DJ by performance', status='PENDING',
                                                 date='2019-07-11 15:00:00', hours=2.5, price='160', currency='EUR',
                                                 appliedVAT=7, paymentPackage=paymentPackage1_performance1,
                                                 eventLocation=event_location1, transaction=transaction_offer15)
 
-    offer15_performance1.save()
+    offer16_performance1.save()
 
-    offer16_performance1 = Offer.objects.create(description='Oferta 17 to Carlos DJ by performance', status='PENDING',
+    offer17_performance1 = Offer.objects.create(description='Oferta 17 to Carlos DJ by performance', status='PENDING',
                                                 date='2019-07-14 08:00:00', hours=1.5, price='800', currency='EUR',
                                                 appliedVAT=7, paymentPackage=paymentPackage1_performance1,
                                                 eventLocation=event_location2, transaction=transaction_offer16)
 
-    offer16_performance1.save()
+    offer17_performance1.save()
 
-    offer17_performance1 = Offer.objects.create(description='Oferta 18 to From the noise by performance',
+    offer18_performance1 = Offer.objects.create(description='Oferta 18 to From the noise by performance',
                                                 status='PAYMENT_MADE',
                                                 date='2019-03-14 08:00:00', hours=3, price='1000', currency='EUR',
                                                 appliedVAT=21, paymentPackage=paymentPackage4_performance2,
                                                 eventLocation=event_location1, transaction=transaction_offer17,
                                                 paymentCode=_service_generate_unique_payment_code())
 
-    offer17_performance1.save()
+    offer18_performance1.save()
 
-    offer18_performance1 = Offer.objects.create(description='Oferta 19 to From the noise by performance',
+    offer19_performance1 = Offer.objects.create(description='Oferta 19 to From the noise by performance',
                                                 status='PAYMENT_MADE',
                                                 date='2019-03-14 12:00:00', hours=3.1, price='1200', currency='EUR',
                                                 appliedVAT=21, paymentPackage=paymentPackage4_performance2,
                                                 eventLocation=event_location1, transaction=transaction_offer18,
                                                 paymentCode=_service_generate_unique_payment_code())
 
-    offer18_performance1.save()
+    offer19_performance1.save()
 
 
 os.system('python3 manage.py sqlflush | python3 manage.py dbshell')

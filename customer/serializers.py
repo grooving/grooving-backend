@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
 from utils.Assertions import Assertions
 from utils.notifications.notifications import Notifications
+from utils.strings import Strings
 
 
 class CustomerInfoSerializer(serializers.HyperlinkedModelSerializer):
@@ -74,11 +75,9 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(len(user.first_name) > 1 and len(user.last_name) > 1,
                                         {'error': "First or second name do not seem real"})
         if photo:
-            extensions = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
-            result = any(photo.endswith(elem) for elem in extensions)
             Assertions.assert_true_raise400(photo.startswith('http'), {'error': 'Invalid photo url,'
                                                                                 ' the photo must start with http'})
-            Assertions.assert_true_raise400(result, {'error': 'Invalid photo url,'
+            Assertions.assert_true_raise400(Strings.url_is_an_image(photo), {'error': 'Invalid photo url,'
                                                               ' the photo must end with an image extension'})
 
         user.save()
@@ -151,11 +150,10 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
                                         {'error': "Last name is too short"})
         Assertions.assert_true_raise400('@' in email and '.' in email, {'error': "Invalid email"})
         Assertions.assert_true_raise400(len(email) > 5, {'error': "Email is too short"})
+
         if photo:
-            extensions = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
-            result = any(photo.endswith(elem) for elem in extensions)
             Assertions.assert_true_raise400(photo.startswith('http'),
                                             {'error': 'Invalid photo url, the photo must start with http'})
-            Assertions.assert_true_raise400(result, {'error': 'Invalid photo url,'
+            Assertions.assert_true_raise400(Strings.url_is_an_image(photo), {'error': 'Invalid photo url,'
                                                               ' the photo must end with an image extension'})
         return True
