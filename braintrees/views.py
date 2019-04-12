@@ -164,7 +164,7 @@ class BraintreeViews(generics.GenericAPIView):
                     'Your payment could not be processed. Please check your'
                     ' input or use another payment method and try again.')
             }
-            return Response(context)
+            Assertions.assert_true_raise400(result.is_success, {'error': 'Your payment could not be processed. Please check your input or use another payment method and try again.'})
 
         offer.transaction.braintree_id = result.transaction.id
         offer.transaction.amount = amount
@@ -175,4 +175,4 @@ class BraintreeViews(generics.GenericAPIView):
         # You definitely want to send it to your database
         # Now you can send out confirmation emails or update your metrics
         # or do whatever makes you and your customers happy :)
-        return Response()
+        return Response('Fofito')
