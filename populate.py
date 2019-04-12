@@ -1000,7 +1000,7 @@ def save_data():
     portfolio7.save()
 
     portfolio7_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio7, description='Group photo',
-                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/22089933_1594772467232483_3080874756432701823_n.jpg?_nc_cat=106&_nc_ht=scontent-mad1-1.xx&oh=def5d818429407165ba36763b4d352d6&oe=5D41A03B')
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/32283709_1827850047258056_483833859805282304_n.jpg?_nc_cat=111&_nc_ht=scontent-mad1-1.xx&oh=9577b1cab7bee4693041f7f50191d4fb&oe=5D4F7722')
     portfolio7_module1.save()
 
     portfolio7_module2 = PortfolioModule.objects.create(type='SOCIAL', portfolio=portfolio7,
@@ -1044,6 +1044,14 @@ def save_data():
                                                          description='Moskojonera',
                                                          link='https://www.youtube.com/watch?v=9i2rM6dd5yA')
     portfolio7_module10.save()
+
+    portfolio7_module11 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio7, description='Group 1',
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/45395830_2080950905281301_5436388291232399360_o.jpg?_nc_cat=101&_nc_ht=scontent-mad1-1.xx&oh=160e1cec32bfa6879664097de6c61fcd&oe=5D420292')
+    portfolio7_module11.save()
+
+    portfolio7_module12 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio7, description='Group 2',
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10268635_918911371485266_3335589384646467009_n.jpg?_nc_cat=110&_nc_ht=scontent-mad1-1.xx&oh=6d7c9fcba3af3e599331903ede8898f4&oe=5D2E4B74')
+    portfolio7_module12.save()
 
     # ----
 
