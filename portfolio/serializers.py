@@ -65,7 +65,7 @@ class ZoneSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Zone
-        fields = ('parentZone_id', 'name')
+        fields = ('id', 'parentZone_id', 'name')
 
 
 class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
