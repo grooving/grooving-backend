@@ -51,7 +51,7 @@ class ArtistSerializer(serializers.ModelSerializer):
     def save(self):
 
         artist = self._service_create_artist(self.initial_data)
-        Notifications.send_email_welcome(artist.user.id)
+        # Notifications.send_email_welcome(artist.user.id) TODO
         return artist
 
     def update(self, pk):
