@@ -150,4 +150,4 @@ class BraintreeViews(generics.GenericAPIView):
         # You definitely want to send it to your database
         # Now you can send out confirmation emails or update your metrics
         # or do whatever makes you and your customers happy :)
-        return Response('Fofito')
+        return Response()
