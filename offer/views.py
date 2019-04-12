@@ -20,7 +20,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
             pk = self.kwargs['pk']
         try:
             return Offer.objects.get(pk=pk)
-        except Customer.DoesNotExist:
+        except Offer.DoesNotExist:
             Assertions.assert_true_raise404(False,
                                             {'error': 'Offer not found'})
 

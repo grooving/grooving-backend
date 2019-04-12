@@ -8,7 +8,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from utils.Assertions import Assertions
 from artist.serializers import ArtistSerializer
-from django.http import Http404
 from utils.searcher.searcher import search
 
 
