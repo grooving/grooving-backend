@@ -357,7 +357,7 @@ class OfferSerializer(serializers.ModelSerializer):
         elif paymentPackage.custom is not None:
             Assertions.assert_true_raise400(json.get("price"),
                                             {'error': 'price field not provided'})
-            Assertions.assert_true_raise400(Decimal(0.0 < json.get("price")) > paymentPackage.custom.minimumPrice,
+            Assertions.assert_true_raise400(Decimal(0.0 < json.get("price")) >= paymentPackage.custom.minimumPrice,
                                             {'error': 'price entered it\'s below of minimum price'})
             Assertions.assert_true_raise400(json.get('hours'),
                                             {'error': 'hours field not provided'})

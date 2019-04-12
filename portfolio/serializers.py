@@ -236,6 +236,24 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                 else:
                     portfolio_in_db.artisticGender.add(genre_db.id)
 
+        if json['zone'] is not None:
+
+            for zone in portfolio_in_db.zone.all():
+                if zone.name in json['zone']:
+                    None
+                else:
+                    portfolio_in_db.zone.remove(zone.id)
+
+            for zone in json['zone']:
+                try:
+                    zone_db = Zone.objects.get(name=zone)
+                except:
+                    return Assertions.assert_true_raise400(False, {'error': 'Zone not in database'})
+                if portfolio_in_db.id in zone_db.portfolio_set.all():
+                    None
+                else:
+                    portfolio_in_db.zone.add(zone_db.id)
+
         if json['main_photo'] is not None:
             Assertions.assert_true_raise400(isinstance(json['main_photo'], str), {'error', 'Main_photo must be a string'})
             Assertions.assert_true_raise400(json['main_photo'].startswith('http'), {'error': 'Invalid main_photo url,'

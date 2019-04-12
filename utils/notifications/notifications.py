@@ -171,7 +171,6 @@ class Notifications:
 
         context_body['title'] = 'Congratulations! You have been hired by ' + \
                                 offer.eventLocation.customer.user.get_full_name()
-        context_body['event_payment_code'] = offer.paymentCode
         # email.to = ['utri1990@gmail.com']
         email.to = [offer.paymentPackage.portfolio.artist.user.email]
         email.body = render_to_string("body_pending_to_contract_made.html", context_body) + Notifications.footer()
@@ -180,7 +179,7 @@ class Notifications:
         # Customer mail
 
         context_body['title'] = 'Done! You have hired ' + offer.paymentPackage.portfolio.artisticName
-
+        context_body['event_payment_code'] = offer.paymentCode
         # email.to = ['utri1990@gmail.com']
         email.to = [offer.eventLocation.customer.user.email]
         email.body = render_to_string("body_pending_to_contract_made.html", context_body) + Notifications.footer()
