@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
 from utils.Assertions import Assertions
 from utils.strings import Strings
+from utils.notifications.notifications import Notifications
 
 
 class ArtistInfoSerializer(serializers.HyperlinkedModelSerializer):

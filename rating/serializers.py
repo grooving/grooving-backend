@@ -3,7 +3,6 @@ from Grooving.models import Rating, Artist, Offer
 from portfolio.serializers import UserSerializer
 from utils.authentication_utils import get_logged_user, get_user_type
 from utils.Assertions import assert_true
-from django.http import Http404
 from django.core.exceptions import ValidationError
 from utils.Assertions import Assertions
 

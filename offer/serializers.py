@@ -107,13 +107,14 @@ class OfferSerializer(serializers.ModelSerializer):
     @staticmethod
     def service_made_payment_artist(paymentCode, user_logged):
         Assertions.assert_true_raise403(user_logged is not None)
-        Assertions.assert_true_raise400(paymentCode is not None, {"paymentCode": "null payment code"})
+        Assertions.assert_true_raise400(paymentCode is not None, {"error": "null payment code"})
 
         offer = Offer.objects.filter(paymentCode=paymentCode).first()
-        Assertions.assert_true_raise404(offer is not None)
-        Assertions.assert_true_raise403(offer.paymentPackage.portfolio.artist.id == user_logged.id)
+        Assertions.assert_true_raise404(offer, {'error': 'Offer not found'})
+        Assertions.assert_true_raise403(offer.paymentPackage.portfolio.artist.id == user_logged.id,
+                                            {'error': 'You are not the owner of the offer'})
         Assertions.assert_true_raise400(offer.status == 'CONTRACT_MADE',
-                                        {"status": 'El pago ya se ha hecho o no se puede realizar ya'})
+                                        {"error": 'The payment has already been made or is outdated'})
 
         offer.status = 'PAYMENT_MADE'
 

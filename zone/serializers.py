@@ -24,7 +24,7 @@ class SearchZoneSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_tree():
         parent = SearchZoneSerializer._get_parent_of_all()
-        Assertions.assert_true_raise404(parent is not None)
+        Assertions.assert_true_raise404(parent,"Parent zone not found")
         return SearchZoneSerializer._get_childs_zone(parent, [])[0]
 
     @staticmethod

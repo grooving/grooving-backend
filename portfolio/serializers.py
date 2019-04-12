@@ -142,7 +142,8 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
             else:
                 return Assertions.assert_true_raise403(False, {'error': 'User doesnt own this portfolio'})
         else:
-            return Assertions.assert_true_raise404(False)
+            return Assertions.assert_true_raise404(False,
+                                            {'error': 'Portfolio not found'})
 
     @staticmethod
     def _service_update(json: dict, portfolio_in_db):
