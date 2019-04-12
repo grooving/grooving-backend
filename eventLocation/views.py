@@ -32,10 +32,9 @@ class EventLocationManager(generics.RetrieveUpdateDestroyAPIView):
         articustomer = get_logged_user(request)
         user_type = get_user_type(articustomer)
         if user_type == "Artist":
-            offer = Offer.objects.all.filter(eventLocation_id=eventLocation.id)
-            portfolio = Portfolio.objects.get(paymentPackage_id=offer.paymentPackage_id)
-            artist = Artist.objects.get(portfolio_id=portfolio.id)
-            if articustomer.user_id == artist.user_id:
+            offers = Offer.objects.filter(eventLocation=eventLocation)
+            offers_artist = Offer.objects.filter(paymentPackage__portfolio=articustomer.portfolio)
+            if any(item in offers for item in offers_artist):
                 serializer = EventLocationSerializer(eventLocation)
                 return Response(serializer.data)
             else:
