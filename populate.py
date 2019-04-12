@@ -991,7 +991,7 @@ def save_data():
     # ----
 
     portfolio7 = Portfolio.objects.create(artisticName='Batracio',
-                                          banner='https://yt3.ggpht.com/IER5btMSGSaLEXOs8QTppGpgNCAs_yboMZCiPfLazmHoIPgSYuHqoIsJ61gEo-l-xQZOjNiRpg=w2560-fcrop64=1,00005a57ffffa5a8-nd-c0xffffffff-rj-k-no',
+                                          banner='https://scontent-mad1-1.xx.fbcdn.net/v/t31.0-8/30425588_1815972151779179_2454502520470495337_o.jpg?_nc_cat=107&_nc_ht=scontent-mad1-1.xx&oh=9271d0967897149eb9335295d13edadd&oe=5D45BC91',
                                           biography='Batracio nace en 2015, fruto de una reunión entre viejos amigos, Febes (voz) y José Alberto (guitarra) cansados de hacer en anteriores formaciones ḿúsica más genérica. De ahí no sólo nació una banda, sino que surgieron dos de sus temas más emblemáticos. La Charca y Pulgadas. Esto motivó a seguir adelante y continuar con un proyecto al que luego se sumarían Juan Bidegain (bajo), José Manuel Rodríguez “Negro” (teclado) y Javier Galliza (batería). Tras añadirse Domingo Muñoz (trombón) a la formación, sucedió el increíble debut en una mítica sala FunClub totalmente abarrotada. A partir de ese momento, las composiciones giraron hacia el Ska-funk característico de la banda. En 2016 la banda volvía al estudio para darle vida a Famelia y Souciedad.')
     portfolio7.artisticGender.add(artistic_gender3)
     portfolio7.artisticGender.add(artistic_gender4)
