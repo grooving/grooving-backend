@@ -27,6 +27,13 @@ class Actor(AbstractEntity):
         abstract = True
 
 
+class Admin(Actor):
+    pass
+
+    def __str__(self):
+        return str(self.user.username)
+
+
 class UserAbstract(Actor):
     photo = models.CharField(max_length=500, blank=True, null=True)
     phone = models.CharField(max_length=12, blank=True, null=True)
@@ -72,7 +79,7 @@ class Calendar(AbstractEntity):
 class Artist(UserAbstract):
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=0.0,
                                  validators=[MinValueValidator(Decimal('0.0')), MaxValueValidator(Decimal('5.0'))])
-    portfolio = models.OneToOneField(Portfolio, default=None, on_delete=models.CASCADE)
+    portfolio = models.OneToOneField(Portfolio, default=None, related_name='artist', on_delete=models.CASCADE)
 
 
 ModuleTypeField = (
