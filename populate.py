@@ -854,7 +854,7 @@ def save_data():
     portfolio1.zone.add(zone23)
     portfolio1.save()
 
-    portfolio1_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio1,
+    portfolio1_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio1,
                                                         description='It was a great festival',
                                                         link='https://www.youtube.com/watch?v=xAzWJCwZY6w')
     portfolio1_module1.save()
