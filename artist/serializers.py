@@ -64,11 +64,11 @@ class ArtistSerializer(serializers.ModelSerializer):
         artist = Artist.objects.get(pk=pk)
         artist.phone = json.get('phone')
         user = artist.user
-        user.first_name = json.get('first_name')
-        user.last_name = json.get('last_name')
+        user.first_name = json.get('first_name').strip()
+        user.last_name = json.get('last_name').strip()
         artist.paypalAccount = json.get('paypalAccount')
-        Assertions.assert_true_raise400(artist.paypalAccount, {'error': "First name not provided"})
-        Assertions.assert_true_raise400('@' in artist.paypalAccount and '.' in artist.paypalAccount,
+        if artist.paypalAccount:
+            Assertions.assert_true_raise400('@' in artist.paypalAccount and '.' in artist.paypalAccount,
                                         {'error': "Invalid paypalAccount"})
         photo = json.get('photo')
         Assertions.assert_true_raise400(user.first_name, {'error': "First name not provided"})
@@ -80,9 +80,12 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(len(user.first_name) > 1 and len(user.last_name) > 1,
                                         {'error': "First or second name do not seem real"})
         if photo:
-            list = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
-            result = any(elem in photo for elem in list)
-            Assertions.assert_true_raise400(result, {'error': 'Invalid photo url'})
+            extensions = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
+            result = any(photo.endswith(elem) for elem in extensions)
+            Assertions.assert_true_raise400(photo.startswith('http'), {'error': 'Invalid photo url,'
+                                                                                ' the photo must start with http'})
+            Assertions.assert_true_raise400(result, {'error': 'Invalid photo url,'
+                                                              ' the photo must end with an image extension'})
 
         user.save()
         artist.user = user
@@ -105,12 +108,12 @@ class ArtistSerializer(serializers.ModelSerializer):
 
         user_names = User.objects.values_list('username', flat=True)
         emails = User.objects.values_list('email', flat=True)
-        password = request.data.get("password").replace(" ","")
-        username = request.data.get("username")
-        confirm_password = request.data.get("confirm_password").replace(" ","")
-        email = request.data.get("email")
-        first_name = request.data.get("first_name").replace('', ' ')
-        last_name = request.data.get("last_name").replace('', ' ')
+        password = request.data.get("password").strip()
+        username = request.data.get("username").strip()
+        confirm_password = request.data.get("confirm_password").strip()
+        email = request.data.get("email").strip()
+        first_name = request.data.get("first_name").strip()
+        last_name = request.data.get("last_name").strip()
         phone = request.data.get("phone")
         photo = request.data.get("photo")
         Assertions.assert_true_raise400(request.data, {'error': "Empty form is not valid"})
@@ -159,9 +162,9 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400('@' in email and '.' in email, {'error': "Invalid email"})
 
         if photo:
-            list = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
-            result = any(photo.endswith(elem) for elem in list)
-            Assertions.assert_true_raise400(photo.startsWith('http'), {'error': 'Invalid photo url,'
+            extensions = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
+            result = any(photo.endswith(elem) for elem in extensions)
+            Assertions.assert_true_raise400(photo.startswith('http'), {'error': 'Invalid photo url,'
                                                                        ' the photo must start with http'})
             Assertions.assert_true_raise400(result, {'error': 'Invalid photo url,'
                                                               ' the photo must end with an image extension'})

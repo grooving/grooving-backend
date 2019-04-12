@@ -188,7 +188,8 @@ class OfferSerializer(serializers.ModelSerializer):
         access_token = json.loads(response.content.decode("utf-8"))['access_token']
 
         Assertions.assert_true_raise400(response, {'error': 'No coge el token'})
-        Assertions.assert_true_raise401(user_logged.paypalAccount, {'error': 'NO tiene cuenta de Paypal'})
+        Assertions.assert_true_raise401(user_logged.paypalAccount,
+                                        {'paypal': ' You need to provide a PayPal account to perform this action' })
 
         response = requests.post('https://api.sandbox.paypal.com/v1/payments/payouts', data='{"sender_batch_header": {"sender_batch_id": "Payment_Offer_'+str(paymentCode)+'","email_subject": "You have a payout!","email_message": "You have received a payout! Thanks for using our service!"},"items": [{"recipient_type": "EMAIL","amount": {"value": "'+str(offer.transaction.amount)+'","currency": "EUR"},"note": "Thanks for your patronage!","receiver": "'+str(user_logged.paypalAccount)+'"}]}',
                                  headers={'content-type': 'application/json',
@@ -280,7 +281,7 @@ class OfferSerializer(serializers.ModelSerializer):
                                                'CONTRACT_MADE': 'CANCELLED_ARTIST'}
                 if json_status == 'CONTRACT_MADE':
                     Assertions.assert_true_raise400(logged_user.paypalAccount is not None,
-                                                    {'error': "You must introduce your bank account before"})
+                                        {'paypal': ' You need to provide a PayPal account to perform this action' })
                     transaccion = offer_in_db.transaction
 
                     transaccion.paypalArtist = logged_user.paypalAccount
@@ -301,8 +302,27 @@ class OfferSerializer(serializers.ModelSerializer):
                         public_key=settings.BRAINTREE_PUBLIC_KEY,
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
-
+                    Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id,{'error':
+                    'La oferta no posee los credenciales de Braintree'})
                     braintree.Transaction.submit_for_settlement(offer_in_db.transaction.braintree_id)
+                elif json_status == 'REJECTED':
+
+                    if settings.BRAINTREE_PRODUCTION:
+                        braintree_env = braintree.Environment.Production
+                    else:
+                        braintree_env = braintree.Environment.Sandbox
+
+                    Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+
+                    # Configure Braintree
+                    braintree.Configuration.configure(
+                        environment=braintree_env,
+                        merchant_id=settings.BRAINTREE_MERCHANT_ID,
+                        public_key=settings.BRAINTREE_PUBLIC_KEY,
+                        private_key=settings.BRAINTREE_PRIVATE_KEY,
+                    )
+
+                    braintree.Transaction.settlement_decline_transaction(offer_in_db.transaction.braintree_id)
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
                                   or artist_flowstop_transitions.get(status_in_db) == json_status
