@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect, render
-from Grooving.models import Calendar, Artist
+from Grooving.models import Calendar,Portfolio,Artist
 from django.contrib import messages
 from django.db.utils import IntegrityError
 
@@ -24,16 +24,17 @@ class CalendarByArtist(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         try:
-            portfolio = Artist.objects.get(id=pk).portfolio
-            return Calendar.objects.get(portfolio=portfolio)
+            artist = Artist.objects.get(id=pk)
+            calendar= Calendar.objects.get(portfolio_id=artist.portfolio.id)
+            return calendar
         except Calendar.DoesNotExist:
             raise Http404
 
     def get(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
-        portfolio = Artist.objects.get(id=pk).portfolio
-        calendar = Calendar.objects.filter(portfolio=portfolio)
+        artist = Artist.objects.get(id=pk)
+        calendar = Calendar.objects.filter(portfolio_id=artist.portfolio.id)
         serializer = CalendarSerializer(calendar, many=True)
         return Response(serializer.data)
 
@@ -47,14 +48,14 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         try:
-            return Calendar.objects.get(portfolio_id=pk)
+            return Calendar.objects.get(portfolio__artist_id=pk)
         except Calendar.DoesNotExist:
             raise Http404
 
     def get(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
-        calendar = Calendar.objects.filter(portfolio_id=pk).first()
+        calendar = Calendar.objects.filter(portfolio__artist__id=pk).first()
         Assertions.assert_true_raise404(calendar is not None, {'error': 'No calendar with that id'})
         serializer = CalendarSerializer(calendar)
         return Response(serializer.data)
@@ -62,7 +63,7 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
     def put(self, request, pk=None):
         if pk is None:
             pk = self.kwargs['pk']
-        calendar = Calendar.objects.filter(portfolio_id=pk).first()
+        calendar = Calendar.objects.filter(portfolio___artist__id=pk).first()
 
         Assertions.assert_true_raise400(len(request.data) != 0, {'error': 'No fields were given'})
         Assertions.assert_true_raise400(calendar is not None, {'error': 'Calendar does not exist'})
