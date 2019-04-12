@@ -3,10 +3,14 @@ import django
 import random
 import string
 
+from utils.searcher.distancia import artisticNameCompare
+
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'Server.settings')
 django.setup()
 
-from Grooving.models import *
+from Grooving.models import ArtisticGender, Portfolio, Artist, Zone, PortfolioModule, Calendar, PaymentPackage, \
+    Performance, Fare, Custom, Offer, Customer, EventLocation, SystemConfiguration, Rating, Transaction
+
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
@@ -18,185 +22,187 @@ def _service_generate_unique_payment_code():
 
 
 def save_data():
+    email_to_send_mail_pilot_users = 'ispp.principal@gmail.com'
+
     # System configuration
     system_configuration1 = SystemConfiguration.objects.create(minimumPrice='20', currency='EUR', paypalTax='2.9',
-        creditCardTax='1.9',
-        vat='21', profit='7',
-        corporateEmail='grupogrooving@gmail.com',
-        reportEmail='grupogrooving@gmail.com',
-        appName='Grooving',
-        slogan='Connecting artist with you',
-        privacyText="<h2>Introduction</h2>" +
-                    "<p>At Grooving, accessible from https://grooving-frontend-d3.herokuapp.com, one of our main " +
-                    "priorities is the privacy of our visitors. This Privacy Policy document contains types of " +
-                    "information that is collected and recorded by Grooving and how we use it.</p>" +
-                    "<p>If you have additional questions or require more information about our Privacy Policy, " +
-                    "do not hesitate to contact us through email at grupogrooving@gmail.com</p>" +
+                                                               creditCardTax='1.9',
+                                                               vat='21', profit='7',
+                                                               corporateEmail='grupogrooving@gmail.com',
+                                                               reportEmail='grupogrooving@gmail.com',
+                                                               appName='Grooving',
+                                                               slogan='Connecting artist with you',
+                                                               privacyText="<h2>Introduction</h2>" +
+                                                                           "<p>At Grooving, accessible from https://grooving-frontend-d3.herokuapp.com, one of our main " +
+                                                                           "priorities is the privacy of our visitors. This Privacy Policy document contains types of " +
+                                                                           "information that is collected and recorded by Grooving and how we use it.</p>" +
+                                                                           "<p>If you have additional questions or require more information about our Privacy Policy, " +
+                                                                           "do not hesitate to contact us through email at grupogrooving@gmail.com</p>" +
 
-                    "<h2>Log Files</h2>" +
-                    "<p>Grooving follows a standard procedure of using log files. These files log visitors when  " +
-                    "they visit websites. All hosting companies do this and a part of hosting services analytics. " +
-                    "The information collected by log files include internet protocol (IP) addresses, browser type, " +
-                    "Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the " +
-                    "number of clicks. These are not linked to any information that is personally identifiable. " +
-                    "The purpose of the information is for analyzing trends, administering the site, tracking users' " +
-                    "movement on the website, and gathering demographic information.</p>" +
+                                                                           "<h2>Log Files</h2>" +
+                                                                           "<p>Grooving follows a standard procedure of using log files. These files log visitors when  " +
+                                                                           "they visit websites. All hosting companies do this and a part of hosting services analytics. " +
+                                                                           "The information collected by log files include internet protocol (IP) addresses, browser type, " +
+                                                                           "Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the " +
+                                                                           "number of clicks. These are not linked to any information that is personally identifiable. " +
+                                                                           "The purpose of the information is for analyzing trends, administering the site, tracking users' " +
+                                                                           "movement on the website, and gathering demographic information.</p>" +
 
-                    "<h2>Cookies and Web Beacons</h2>" +
-                    "<p>Like any other website, Grooving uses cookies. These cookies are used to store information " +
-                    "including visitors' preferences, and the pages on the website that the visitor " +
-                    "accessed or visited. The information is used to optimize the users' experience by customizing " +
-                    "our web page content based on visitors' browser type and/or other information.</p>" +
+                                                                           "<h2>Cookies and Web Beacons</h2>" +
+                                                                           "<p>Like any other website, Grooving uses cookies. These cookies are used to store information " +
+                                                                           "including visitors' preferences, and the pages on the website that the visitor " +
+                                                                           "accessed or visited. The information is used to optimize the users' experience by customizing " +
+                                                                           "our web page content based on visitors' browser type and/or other information.</p>" +
 
-                    "<h2>Our Advertising Partners</h2>" +
-                    "<p>Some of advertisers on our site may use cookies. Our advertising partners are listed below. "
-                    "Each of our advertising partners has their own Privacy Policy for their policies on user data. "
-                    "For easier access, we hyperlinked to their Privacy Policies below.</p>" +
+                                                                           "<h2>Our Advertising Partners</h2>" +
+                                                                           "<p>Some of advertisers on our site may use cookies. Our advertising partners are listed below. "
+                                                                           "Each of our advertising partners has their own Privacy Policy for their policies on user data. "
+                                                                           "For easier access, we hyperlinked to their Privacy Policies below.</p>" +
 
-                    "<h3>Braintree</h3>" +
-                    "<a href=”https://www.braintreepayments.com/legal/acceptable-use-policy”>Braintree</a>" +
-                    "<h3>Heroku</h3>" +
-                    "<a href=”https://www.heroku.com/policy/security”>Heroku</a>" +
+                                                                           "<h3>Braintree</h3>" +
+                                                                           "<a href=”https://www.braintreepayments.com/legal/acceptable-use-policy”>Braintree</a>" +
+                                                                           "<h3>Heroku</h3>" +
+                                                                           "<a href=”https://www.heroku.com/policy/security”>Heroku</a>" +
 
-                    "<h2>Privacy Policies</h2>" +
-                    "<p>Third-party ad servers or ad networks uses technologies like cookies, JavaScript, or Web " +
-                    "Beacons that are used in their respective advertisements and links that appear on Grooving, " +
-                    "which are sent directly to users' browser. They automatically receive your IP address when " +
-                    "this occurs. These technologies are used to measure the effectiveness of their advertising " +
-                    "campaigns and/or to personalize the advertising content that you see on websites " +
-                    "that you visit.</p>" +
-                    "<p>Note that Grooving has no access to or control over these cookies that are used by " +
-                    "third-party advertisers.</p>" +
+                                                                           "<h2>Privacy Policies</h2>" +
+                                                                           "<p>Third-party ad servers or ad networks uses technologies like cookies, JavaScript, or Web " +
+                                                                           "Beacons that are used in their respective advertisements and links that appear on Grooving, " +
+                                                                           "which are sent directly to users' browser. They automatically receive your IP address when " +
+                                                                           "this occurs. These technologies are used to measure the effectiveness of their advertising " +
+                                                                           "campaigns and/or to personalize the advertising content that you see on websites " +
+                                                                           "that you visit.</p>" +
+                                                                           "<p>Note that Grooving has no access to or control over these cookies that are used by " +
+                                                                           "third-party advertisers.</p>" +
 
-                    "<h2>Third Party Privacy Policies</h2>" +
-                    "<p>Grooving's Privacy Policy does not apply to other advertisers or websites. Thus, we are " +
-                    "advising you to consult the respective Privacy Policies of these third-party ad servers for " +
-                    "more detailed information. It may include their practices and instructions about how to opt-out" +
-                    " of certain options.</p>" +
-                    "<p>You can choose to disable cookies through your individual browser options. To know more "
-                    "detailed information about cookie management with specific web browsers, it can be found at "
-                    "the browsers' respective websites.</p>" +
+                                                                           "<h2>Third Party Privacy Policies</h2>" +
+                                                                           "<p>Grooving's Privacy Policy does not apply to other advertisers or websites. Thus, we are " +
+                                                                           "advising you to consult the respective Privacy Policies of these third-party ad servers for " +
+                                                                           "more detailed information. It may include their practices and instructions about how to opt-out" +
+                                                                           " of certain options.</p>" +
+                                                                           "<p>You can choose to disable cookies through your individual browser options. To know more "
+                                                                           "detailed information about cookie management with specific web browsers, it can be found at "
+                                                                           "the browsers' respective websites.</p>" +
 
-                    "<h2>Online Privacy Policy Only</h2>" +
-                    "<p>This Privacy Policy applies only to our online activities and is valid for visitors to " +
-                    "our website with regards to the information that they shared and/or collect in Grooving. " +
-                    "This policy is not applicable to any information collected offline or via channels other than " +
-                    "this website.</p>" +
+                                                                           "<h2>Online Privacy Policy Only</h2>" +
+                                                                           "<p>This Privacy Policy applies only to our online activities and is valid for visitors to " +
+                                                                           "our website with regards to the information that they shared and/or collect in Grooving. " +
+                                                                           "This policy is not applicable to any information collected offline or via channels other than " +
+                                                                           "this website.</p>" +
 
-                    "<h2>Consent</h2>" +
-                    "<p>By using our website, you hereby consent to our Privacy Policy and agree to its Terms and " +
-                    "Conditions.</p>",
+                                                                           "<h2>Consent</h2>" +
+                                                                           "<p>By using our website, you hereby consent to our Privacy Policy and agree to its Terms and " +
+                                                                           "Conditions.</p>",
 
-                    logo='',
-                    aboutUs="<p> At Grooving, we all come to work every day because we want to solve the biggest " +
-                            "problems for the artists: empower artists by giving visibility and improving their " +
-                            "monetization. What is our mission? Simplifying the search and hiring made easy.</p>" +
-							"<p>With all this, we can ensure that <b>Grooving makes the difference</b>.</p> ",
+                                                               logo='',
+                                                               aboutUs="<p> At Grooving, we all come to work every day because we want to solve the biggest " +
+                                                                       "problems for the artists: empower artists by giving visibility and improving their " +
+                                                                       "monetization. What is our mission? Simplifying the search and hiring made easy.</p>" +
+                                                                       "<p>With all this, we can ensure that <b>Grooving makes the difference</b>.</p> ",
 
-                    termsText="<p>The conditions of use of the web page, the rules of use and the use of " +
-                              "grooving.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
-                              " hereinafter, Grooving, that the user of the portal must accept to use all the " +
-                              "services and information that are provided from the portal.</p>" +
-                              "<p>The user as well as Grooving, owner of the portal, have become the parties. " +
-                              "Access to the use of the portal, the part of its contents and services means full " +
-                              "acceptance of these conditions of use. The implementation of the provision and use " +
-                              "of the portal refers to the strict application of the terms recognized in these " +
-                              "terms of use of the portal.</p>" +
+                                                               termsText="<p>The conditions of use of the web page, the rules of use and the use of " +
+                                                                         "grooving.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
+                                                                         " hereinafter, Grooving, that the user of the portal must accept to use all the " +
+                                                                         "services and information that are provided from the portal.</p>" +
+                                                                         "<p>The user as well as Grooving, owner of the portal, have become the parties. " +
+                                                                         "Access to the use of the portal, the part of its contents and services means full " +
+                                                                         "acceptance of these conditions of use. The implementation of the provision and use " +
+                                                                         "of the portal refers to the strict application of the terms recognized in these " +
+                                                                         "terms of use of the portal.</p>" +
 
-                              "<h2>Use conditions regulation</h2>" +
-                              "<p>The general conditions of use of the portal regulate the access and use of the " +
-                              "portal, the contents and services, the disposition of the users and / or through " +
-                              "the portal, either through the portal, either by the users or by any third party. " +
-                              "However, access and use of the content and / or services may be used in certain " +
-                              "specific conditions.</p>" +
+                                                                         "<h2>Use conditions regulation</h2>" +
+                                                                         "<p>The general conditions of use of the portal regulate the access and use of the " +
+                                                                         "portal, the contents and services, the disposition of the users and / or through " +
+                                                                         "the portal, either through the portal, either by the users or by any third party. " +
+                                                                         "However, access and use of the content and / or services may be used in certain " +
+                                                                         "specific conditions.</p>" +
 
-                              "<h2>Modifications</h2>" +
-                              "<p>The company reserves the right to modify at any time the general conditions of " +
-                              "use of the portal. In any case, we recommend that you periodically consult the " +
-                              "general conditions of use of the portal, and that they can be modified.</p>" +
+                                                                         "<h2>Modifications</h2>" +
+                                                                         "<p>The company reserves the right to modify at any time the general conditions of " +
+                                                                         "use of the portal. In any case, we recommend that you periodically consult the " +
+                                                                         "general conditions of use of the portal, and that they can be modified.</p>" +
 
-                              "<h2>Information and services</h2>" +
-                              "<p>Users can access a different type of information and services through the portal. " +
-                              "The portal reserves the right to modify, at any time, and without prior notice, the " +
-                              "presentation and configuration of information and services from the portal. The user " +
-                              "expressly acknowledges and accepts that at any time the portal may interrupt, " +
-                              "deactivate and / or cancel any information or service. The portal is not available. " +
-                              "However, sometimes, for reasons of maintenance, updating, change of location, etc., " +
-                              "may mean the interruption of access to the portal.</p>" +
+                                                                         "<h2>Information and services</h2>" +
+                                                                         "<p>Users can access a different type of information and services through the portal. " +
+                                                                         "The portal reserves the right to modify, at any time, and without prior notice, the " +
+                                                                         "presentation and configuration of information and services from the portal. The user " +
+                                                                         "expressly acknowledges and accepts that at any time the portal may interrupt, " +
+                                                                         "deactivate and / or cancel any information or service. The portal is not available. " +
+                                                                         "However, sometimes, for reasons of maintenance, updating, change of location, etc., " +
+                                                                         "may mean the interruption of access to the portal.</p>" +
 
-                              "<h2>Portal information and services availability</h2>" +
-                              "<p>The portal does not guarantee the continuous and permanent availability of the " +
-                              "services being in this way exempt from any responsibility for possible damages such "+
-                              "as the lack of availability of the service due to force majeure or errors in the " +
-                              "telematic data transfer networks, works at will, or disconnections made for " +
-                              "improvement or maintenance of computer equipment and systems. In these cases, the " +
-                              "portal will be announced 24 hours before the interruption.  The portal will not be " +
-                              "responsible for the interruption, suspension or termination of the information " +
-                              "or services</p>" 
-                    
-                              "<h2>Portal contents responsibility</h2>" +
-                              "<p>The portal will control the license of those services provided through the " +
-                              "platform by third parties. In the event that the user as a result of the use of the " +
-                              "portal suffers or will harm the communication and the appropriate measures will be " +
-                              "taken to solve it.</p>" +
-                              "<p>The portal does not intervene in the creation of the contents and / or services " +
-                              "provided or provided by third parties in and / or through the application, in the " +
-                              "same way that it does not control its legality either. In any case, we do not offer " +
-                              "any kind of guarantee on them. The user acknowledges that the portal is not and is " +
-                              "not responsible for the contents and / or services provided or provided by third " +
-                              "parties in and / or through the portal.</p>" +
-                              "<p>In any case, the portal excludes any liability for damages and losses that may be " +
-                              "due to information and / or services provided or provided by third parties other " +
-                              "than the Company. All responsibility will be the third party, " +
-                              "whether provider, collaborator or other.</p>" +
+                                                                         "<h2>Portal information and services availability</h2>" +
+                                                                         "<p>The portal does not guarantee the continuous and permanent availability of the " +
+                                                                         "services being in this way exempt from any responsibility for possible damages such " +
+                                                                         "as the lack of availability of the service due to force majeure or errors in the " +
+                                                                         "telematic data transfer networks, works at will, or disconnections made for " +
+                                                                         "improvement or maintenance of computer equipment and systems. In these cases, the " +
+                                                                         "portal will be announced 24 hours before the interruption.  The portal will not be " +
+                                                                         "responsible for the interruption, suspension or termination of the information " +
+                                                                         "or services</p>"
 
-                              "<h2>User’s obligations</h2>" +
-                              "<p>The user must respect at all times the terms and conditions established in this " +
-                              "legal notice. The user expresses expressly that he will use the portal diligently " +
-                              "and assuming any responsibility that may arise from the breach of the rules.</p>" +
-                              "<p>Likewise, the user may not use the portal to transmit, store, disclose, promote " +
-                              "or distribute data or contents that are carriers of viruses or any other computer " +
-                              "code, files or programs designed to interrupt, destroy or impair the operation of " +
-                              "any program or equipment. IT or telecommunications. </p>"
-                              "<p>The user undertakes to indemnify and hold harmless the portal for any damage, " +
-                              "prejudice, penalty, fine, penalty or compensation that the portal has to face.</p>" +
+                                                                         "<h2>Portal contents responsibility</h2>" +
+                                                                         "<p>The portal will control the license of those services provided through the " +
+                                                                         "platform by third parties. In the event that the user as a result of the use of the " +
+                                                                         "portal suffers or will harm the communication and the appropriate measures will be " +
+                                                                         "taken to solve it.</p>" +
+                                                                         "<p>The portal does not intervene in the creation of the contents and / or services " +
+                                                                         "provided or provided by third parties in and / or through the application, in the " +
+                                                                         "same way that it does not control its legality either. In any case, we do not offer " +
+                                                                         "any kind of guarantee on them. The user acknowledges that the portal is not and is " +
+                                                                         "not responsible for the contents and / or services provided or provided by third " +
+                                                                         "parties in and / or through the portal.</p>" +
+                                                                         "<p>In any case, the portal excludes any liability for damages and losses that may be " +
+                                                                         "due to information and / or services provided or provided by third parties other " +
+                                                                         "than the Company. All responsibility will be the third party, " +
+                                                                         "whether provider, collaborator or other.</p>" +
 
-                              "<h2>Cookies</h2>" +
-                              "<p>We employ the use of cookies. By accessing Grooving group, you agreed to use " +
-                              "cookies in agreement with the Grooving's Privacy Policy.</p>" +
-                              "<p>Most interactive websites use cookies to let us retrieve the user's details for " +
-                              "each visit. Cookies are used by our website to enable the functionality of certain " +
-                              "areas to make it easier for people visiting our website.</p>" +
+                                                                         "<h2>User’s obligations</h2>" +
+                                                                         "<p>The user must respect at all times the terms and conditions established in this " +
+                                                                         "legal notice. The user expresses expressly that he will use the portal diligently " +
+                                                                         "and assuming any responsibility that may arise from the breach of the rules.</p>" +
+                                                                         "<p>Likewise, the user may not use the portal to transmit, store, disclose, promote " +
+                                                                         "or distribute data or contents that are carriers of viruses or any other computer " +
+                                                                         "code, files or programs designed to interrupt, destroy or impair the operation of " +
+                                                                         "any program or equipment. IT or telecommunications. </p>"
+                                                                         "<p>The user undertakes to indemnify and hold harmless the portal for any damage, " +
+                                                                         "prejudice, penalty, fine, penalty or compensation that the portal has to face.</p>" +
 
-                              "<h2>iFrames</h2>" +
-                              "<p>Without prior approval and written permission, you may not create frames around " +
-                              "our Webpages that alter in any way the visual presentation or appearance of our " +
-                              "Website.</p>" +
+                                                                         "<h2>Cookies</h2>" +
+                                                                         "<p>We employ the use of cookies. By accessing Grooving group, you agreed to use " +
+                                                                         "cookies in agreement with the Grooving's Privacy Policy.</p>" +
+                                                                         "<p>Most interactive websites use cookies to let us retrieve the user's details for " +
+                                                                         "each visit. Cookies are used by our website to enable the functionality of certain " +
+                                                                         "areas to make it easier for people visiting our website.</p>" +
 
-                              "<h2>License</h2>"
-                              "<p>Unless otherwise stated, Grooving and/or its licensors own the intellectual "
-                              "property rights for all material on Grooving. All intellectual property rights are " +
-                              "reserved. You may access this from Grooving for your own personal use subjected to " +
-                              "restrictions set in these terms and conditions.</p>" +
+                                                                         "<h2>iFrames</h2>" +
+                                                                         "<p>Without prior approval and written permission, you may not create frames around " +
+                                                                         "our Webpages that alter in any way the visual presentation or appearance of our " +
+                                                                         "Website.</p>" +
 
-                              "<h2>Removal of links from our website</h2>" +
-                              "<p>If you find any link on our Website that is offensive for any reason, you are " +
-                              "free to contact and inform us any moment. We will consider requests to remove links " +
-                              "but we are not obligated to or so or to respond to you directly.</p>" +
-                              "<p>We do not ensure that the information on this website is correct, we do not " +
-                              "warrant its completeness or accuracy; nor do we promise to ensure that the " +
-                              "website remains available or that the material on the website is kept up to date.</p>" +
+                                                                         "<h2>License</h2>"
+                                                                         "<p>Unless otherwise stated, Grooving and/or its licensors own the intellectual "
+                                                                         "property rights for all material on Grooving. All intellectual property rights are " +
+                                                                         "reserved. You may access this from Grooving for your own personal use subjected to " +
+                                                                         "restrictions set in these terms and conditions.</p>" +
 
-                              "<h2>GPDR - General Data Protection Regulation</h2>" +
-                              "<p>Grooving complies with the regulations of the European Union since the company " +
-                              "birth, complying with each of its articles and subjecting audits on a " +
-                              "regular basis.</p>" +
-                              "<h3>Right to be informed with breaches</h3>"+
-                              "<p>All those users who use Grooving can request to delete their data by sending an " +
-                              "email to <b>grupogrooving@gmail.com</b></p>" +
-                              "<h3>Right to port data</h3>" +
-                              "<p>All those users who use Grooving can request their data that our company has about " +
-                              "them by sending an email to <b>grupogrooving@gmail.com</b></p>")
+                                                                         "<h2>Removal of links from our website</h2>" +
+                                                                         "<p>If you find any link on our Website that is offensive for any reason, you are " +
+                                                                         "free to contact and inform us any moment. We will consider requests to remove links " +
+                                                                         "but we are not obligated to or so or to respond to you directly.</p>" +
+                                                                         "<p>We do not ensure that the information on this website is correct, we do not " +
+                                                                         "warrant its completeness or accuracy; nor do we promise to ensure that the " +
+                                                                         "website remains available or that the material on the website is kept up to date.</p>" +
+
+                                                                         "<h2>GPDR - General Data Protection Regulation</h2>" +
+                                                                         "<p>Grooving complies with the regulations of the European Union since the company " +
+                                                                         "birth, complying with each of its articles and subjecting audits on a " +
+                                                                         "regular basis.</p>" +
+                                                                         "<h3>Right to be informed with breaches</h3>" +
+                                                                         "<p>All those users who use Grooving can request to delete their data by sending an " +
+                                                                         "email to <b>grupogrooving@gmail.com</b></p>" +
+                                                                         "<h3>Right to port data</h3>" +
+                                                                         "<p>All those users who use Grooving can request their data that our company has about " +
+                                                                         "them by sending an email to <b>grupogrooving@gmail.com</b></p>")
     system_configuration1.save()
 
     # ArtisticGenders
@@ -509,38 +515,38 @@ def save_data():
     calendar10 = Calendar.objects.create(days=availableDays10, portfolio=portfolio10)
     calendar10.save()
 
-    user1_artist10 = User.objects.create(username='tamta', password=make_password('tamta'), first_name='Tamta',
-                                         last_name='Goduadze', email='Joseph.jmlc@gmail.com')
+    user1_artist10 = User.objects.create(username='tamta', password=make_password('1daf86d4c5b00ce4374e2c745371a842'),
+                                         first_name='Tamta',
+                                         last_name='Goduadze', email=email_to_send_mail_pilot_users)
     user1_artist10.save()
 
     artist10 = Artist.objects.create(user=user1_artist10, rating=5.0, portfolio=portfolio10, phone='600304999',
                                      photo='https://img.discogs.com/jgyNBtPsY4DiLegwMrOC9N_yOc4=/600x600/smart/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/A-1452461-1423476836-6354.jpeg.jpg',
-                                     iban='ES6621000418401234567891', paypalAccount='tamta.info@gmail.com')
+                                     iban='ES6621000418401234567891')
     artist10.save()
 
-    performance1_paymentPackageFamous1 = Performance.objects.create(info='This is only mi pay for mi top 8 songs',
-                                                                    hours=1.5, price=200000)
+    performance1_paymentPackageFamous1 = Performance.objects.create(info='This is only my pay for my top 8 songs',
+                                                                    hours=1.5, price=200)
     performance1_paymentPackageFamous1.save()
 
-    paymentPackage1_performanceFamous1 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from Tamta',
-        portfolio=portfolio10,
-        performance=performance1_paymentPackageFamous1)
+    paymentPackage1_performanceFamous1 = PaymentPackage.objects.create(description='Performance Package',
+                                                                       portfolio=portfolio10,
+                                                                       performance=performance1_paymentPackageFamous1)
     paymentPackage1_performanceFamous1.save()
 
-    fare1_paymentPackageFamous1 = Fare.objects.create(priceHour=50000)
+    fare1_paymentPackageFamous1 = Fare.objects.create(priceHour=250)
 
     fare1_paymentPackageFamous1.save()
 
-    paymentPackage2_fareFamous1 = PaymentPackage.objects.create(description='Fare Payment Package Type from Tamta',
+    paymentPackage2_fareFamous1 = PaymentPackage.objects.create(description='Fare Package',
                                                                 portfolio=portfolio10,
                                                                 fare=fare1_paymentPackageFamous1)
     paymentPackage2_fareFamous1.save()
 
-    custom1_paymentPackageFamous1 = Custom.objects.create(minimumPrice=50000)
+    custom1_paymentPackageFamous1 = Custom.objects.create(minimumPrice=150)
     custom1_paymentPackageFamous1.save()
 
-    paymentPackage3_customFamous1 = PaymentPackage.objects.create(description='Custom Payment Package Type from Tamta',
+    paymentPackage3_customFamous1 = PaymentPackage.objects.create(description='Custom Package',
                                                                   portfolio=portfolio10,
                                                                   custom=custom1_paymentPackageFamous1)
     paymentPackage3_customFamous1.save()
@@ -618,40 +624,41 @@ def save_data():
     calendar11 = Calendar.objects.create(days=availableDays11, portfolio=portfolio11)
     calendar11.save()
 
-    user1_artist11 = User.objects.create(username='rosalia', password=make_password('rosalia'), first_name='Rosalía ',
-                                         last_name='Vila Tobella', email='Joseph.jmlc@gmail.com')
+    user1_artist11 = User.objects.create(username='rosalia', password=make_password('05a1e379e057d61c93884b389d23563b'),
+                                         first_name='Rosalía',
+                                         last_name='Vila Tobella', email=email_to_send_mail_pilot_users)
     user1_artist11.save()
 
     artist11 = Artist.objects.create(user=user1_artist11, rating=5.0, portfolio=portfolio11, phone='600304999',
                                      photo='http://vein.es/wp-content/uploads/2018/11/cap5-lamento.gif',
-                                     iban='ES6621000418401234567891', paypalAccount='rosalia.info@gmail.com')
+                                     iban='ES6621000418401234567891')
     artist11.save()
 
     performance1_paymentPackageFamous2 = Performance.objects.create(
-        info='I begin with mi new 7 songs and end with Malamente',
-        hours=2, price=500000)
+        info='I begin with my new 7 songs with Malamente',
+        hours=2, price=500)
 
     performance1_paymentPackageFamous2.save()
 
     paymentPackage1_performanceFamous2 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from Rosalía',
+        description='Performance Package',
         portfolio=portfolio11,
         performance=performance1_paymentPackageFamous2)
     paymentPackage1_performanceFamous2.save()
 
-    fare1_paymentPackageFamous2 = Fare.objects.create(priceHour=100000)
+    fare1_paymentPackageFamous2 = Fare.objects.create(priceHour=250)
     fare1_paymentPackageFamous2.save()
 
-    paymentPackage2_fareFamous2 = PaymentPackage.objects.create(description='Fare Payment Package Type from Rosalía',
+    paymentPackage2_fareFamous2 = PaymentPackage.objects.create(description='Fare payment',
                                                                 portfolio=portfolio11,
                                                                 fare=fare1_paymentPackageFamous2)
     paymentPackage2_fareFamous2.save()
 
-    custom1_paymentPackageFamous2 = Custom.objects.create(minimumPrice=100000)
+    custom1_paymentPackageFamous2 = Custom.objects.create(minimumPrice=350)
     custom1_paymentPackageFamous2.save()
 
     paymentPackage3_customFamous2 = PaymentPackage.objects.create(
-        description='Custom Payment Package Type from Rosalía',
+        description='Custom Package',
         portfolio=portfolio11,
         custom=custom1_paymentPackageFamous2)
     paymentPackage3_customFamous2.save()
@@ -685,7 +692,7 @@ def save_data():
                                                          link='https://em.wattpad.com/67028e42a9ebd5c53342cae98d2082deb0d12424/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f51387a68664f58415a73575937773d3d2d32372e313536343431653536393831363236393135363633353535333030392e676966?s=fit&w=720&h=720')
     portfolio12_module3.save()
 
-    
+
     portfolio12_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
                                                          description='Videoclip rainbow',
                                                          link='https://www.nacionrex.com/__export/1548185009356/sites/debate/img/2019/01/22/taylor_swift_cats_bombalurina_personaje_quien_es_foto_instagram_2019_crop1548184963929.jpg_1834093470.jpg')
@@ -733,42 +740,42 @@ def save_data():
     calendar12 = Calendar.objects.create(days=availableDays12, portfolio=portfolio12)
     calendar12.save()
 
-    user1_artist12 = User.objects.create(username='taylor', password=make_password('taylor'),
-                                         first_name='Taylor Alison ',
-                                         last_name='Swift', email='Joseph.jmlc@gmail.com')
+    user1_artist12 = User.objects.create(username='taylor', password=make_password('c8c7afe225a5f142f33f38da472081c5'),
+                                         first_name='Taylor Alison',
+                                         last_name='Swift', email=email_to_send_mail_pilot_users)
     user1_artist12.save()
 
     artist12 = Artist.objects.create(user=user1_artist12, rating=5.0, portfolio=portfolio12, phone='600304999',
                                      photo='https://los40es00.epimg.net/los40/imagenes/2018/08/18/actualidad/1534605895_686141_1534606292_noticia_normal.jpg',
-                                     iban='ES6621000418401234567891', paypalAccount='taylor.info@gmail.com')
+                                     iban='ES6621000418401234567891')
     artist12.save()
 
     performance1_paymentPackageFamous3 = Performance.objects.create(
         info='I only play my songs of Reputation',
-        hours=2, price=400000)
+        hours=2, price=325)
 
     performance1_paymentPackageFamous3.save()
 
     paymentPackage1_performanceFamous3 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from  Taylor Swift',
+        description='Performance payment',
         portfolio=portfolio12,
         performance=performance1_paymentPackageFamous3)
     paymentPackage1_performanceFamous3.save()
 
-    fare1_paymentPackageFamous3 = Fare.objects.create(priceHour=75000)
+    fare1_paymentPackageFamous3 = Fare.objects.create(priceHour=231)
     fare1_paymentPackageFamous3.save()
 
     paymentPackage2_fareFamous3 = PaymentPackage.objects.create(
-        description='Fare Payment Package Type from Taylor Swift',
+        description='Fare payment',
         portfolio=portfolio12,
         fare=fare1_paymentPackageFamous3)
     paymentPackage2_fareFamous3.save()
 
-    custom1_paymentPackageFamous3 = Custom.objects.create(minimumPrice=100000)
+    custom1_paymentPackageFamous3 = Custom.objects.create(minimumPrice=763)
     custom1_paymentPackageFamous3.save()
 
     paymentPackage3_customFamous3 = PaymentPackage.objects.create(
-        description='Custom Payment Package Type from Rosalía',
+        description='Custom payment',
         portfolio=portfolio12,
         custom=custom1_paymentPackageFamous3)
     paymentPackage3_customFamous3.save()
@@ -824,26 +831,23 @@ def save_data():
     portfolio13_module8.save()
 
     portfolio13_module9 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio13,
-                                                         description='Backseat ',
+                                                         description='Backseat',
                                                          link='https://www.youtube.com/watch?v=hiGqKwy4yM0')
     portfolio13_module9.save()
 
     portfolio13_module10 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio13,
-                                                          description=' I Love It ',
+                                                          description='I Love It',
                                                           link='https://www.youtube.com/watch?v=UxxajLWwzqY')
     portfolio13_module10.save()
 
-    availableDays13 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
-                       '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
-
-    user1_artist13 = User.objects.create(username='charli', password=make_password('charli'),
+    user1_artist13 = User.objects.create(username='charli', password=make_password('76734a16cd99ce80128ab37468d353d2'),
                                          first_name='Charlotte Emma',
-                                         last_name='Aitchison', email='Joseph.jmlc@gmail.com')
+                                         last_name='Aitchison', email=email_to_send_mail_pilot_users)
     user1_artist13.save()
 
     artist13 = Artist.objects.create(user=user1_artist13, rating=5.0, portfolio=portfolio13, phone='600304999',
                                      photo='https://data.whicdn.com/images/152059660/original.gif',
-                                     iban='ES6621000418401234567891', paypalAccount='charli.info@gmail.com')
+                                     iban='ES6621000418401234567891')
     artist13.save()
 
     # Portfolios with his modules
@@ -951,7 +955,6 @@ def save_data():
                                           biography='En 1989 monta la chirigota Los sanmolontropos con una música y una letra muy extraña que llama la atención hasta el punto que entran en la Final, de manera inesperada, sorprendiendo a propios y extraños. Siguiendo con esa línea de locura y surrealismo, al año siguiente saca la chirigota Carnaval 2036 Piconeros Galácticos. Se pregunta si pueden salir los 18 amigos en el Falla y decide hacer dos chirigotas. Le supuso un grandísimo esfuerzo y crea Ballet zum zum malacatum y El que la lleva la entiende (Los borrachos), en las que lleva la misma línea de surrealismo, pero pide por favor que fuera una chirigota interpretada porque le gusta mucho hacerse el borracho.')
     portfolio5.artisticGender.add(artistic_gender8)
     portfolio5.zone.add(zone4)
-    portfolio5.save()
     portfolio5.zone.add(zone1_10)
     portfolio5.save()
 
@@ -967,9 +970,9 @@ def save_data():
                                           biography='En 1989 monta la chirigota Los sanmolontropos con una música y una letra muy extraña que llama la atención hasta el punto que entran en la Final, de manera inesperada, sorprendiendo a propios y extraños. Siguiendo con esa línea de locura y surrealismo, al año siguiente saca la chirigota Carnaval 2036 Piconeros Galácticos. Se pregunta si pueden salir los 18 amigos en el Falla y decide hacer dos chirigotas. Le supuso un grandísimo esfuerzo y crea Ballet zum zum malacatum y El que la lleva la entiende (Los borrachos), en las que lleva la misma línea de surrealismo, pero pide por favor que fuera una chirigota interpretada porque le gusta mucho hacerse el borracho.')
     portfolio6.artisticGender.add(artistic_gender8)
     portfolio6.zone.add(zone2)
-    portfolio6.save()
     portfolio6.zone.add(zone29)
     portfolio6.save()
+
     portfolio6_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio6,
                                                         description='Una chirigota sin clase - Preliminares',
                                                         link='https://www.youtube.com/watch?v=zm6JyvxOcd8')
@@ -993,7 +996,6 @@ def save_data():
     portfolio7.artisticGender.add(artistic_gender3)
     portfolio7.artisticGender.add(artistic_gender4)
     portfolio7.zone.add(zone2)
-    portfolio7.save()
     portfolio7.zone.add(zone1_13)
     portfolio7.save()
 
@@ -1044,11 +1046,11 @@ def save_data():
     portfolio7_module10.save()
 
     portfolio7_module11 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio7, description='Group 1',
-                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/45395830_2080950905281301_5436388291232399360_o.jpg?_nc_cat=101&_nc_ht=scontent-mad1-1.xx&oh=160e1cec32bfa6879664097de6c61fcd&oe=5D420292')
+                                                         link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/45395830_2080950905281301_5436388291232399360_o.jpg?_nc_cat=101&_nc_ht=scontent-mad1-1.xx&oh=160e1cec32bfa6879664097de6c61fcd&oe=5D420292')
     portfolio7_module11.save()
 
     portfolio7_module12 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio7, description='Group 2',
-                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10268635_918911371485266_3335589384646467009_n.jpg?_nc_cat=110&_nc_ht=scontent-mad1-1.xx&oh=6d7c9fcba3af3e599331903ede8898f4&oe=5D2E4B74')
+                                                         link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10268635_918911371485266_3335589384646467009_n.jpg?_nc_cat=110&_nc_ht=scontent-mad1-1.xx&oh=6d7c9fcba3af3e599331903ede8898f4&oe=5D2E4B74')
     portfolio7_module12.save()
 
     # ----
@@ -1112,7 +1114,6 @@ def save_data():
     portfolio9.artisticGender.add(artistic_gender3)
     portfolio9.artisticGender.add(artistic_gender4)
     portfolio9.zone.add(zone4)
-    portfolio9.save()
     portfolio9.zone.add(zone22)
     portfolio9.save()
 
@@ -1126,16 +1127,29 @@ def save_data():
                                                         link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/46501037_1930071163750453_486418618368655360_o.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=80cd1e477f4d35ac00f739775e7d5753&oe=5D40F966')
     portfolio9_module2.save()
 
-    portfolio9_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio9,
+    portfolio9_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio9,
                                                         description='Foto 2',
                                                         link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/15442339_1177989115625332_9202300312226810278_n.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=fcdebb55b60831cbd08d81f60e58dc97&oe=5D3936D9')
-    portfolio9_module3.save()
+    portfolio9_module2.save()
 
-    portfolio9_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio9,
+    portfolio9_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio9,
                                                         description='Foto 3',
                                                         link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/14519937_1111631358927775_3967127956346645930_n.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=b1fd94a5cb7933883de0e6e6d34672b9&oe=5D39423E')
-    portfolio9_module4.save()
+    portfolio9_module3.save()
 
+    # Portfolio from teachers
+
+    portfolio14_prof = Portfolio.objects.create(artisticName='The great magician')
+    portfolio14_prof.save()
+
+    calendar14 = Calendar.objects.create(portfolio=portfolio14_prof)
+    calendar14.save()
+
+    portfolio15_prof = Portfolio.objects.create(artisticName='The pianist')
+    portfolio15_prof.save()
+
+    calendar15 = Calendar.objects.create(portfolio=portfolio15_prof)
+    calendar15.save()
 
     # Calendar
 
@@ -1216,68 +1230,105 @@ def save_data():
 
     # ,,,musician
 
-    user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
+    user1_artist1 = User.objects.create(username='carlosdj', password=make_password('0b10a1e2c186b89a0e15f4b1a84bac20'),
                                         first_name='Carlos', last_name='Campos Cuesta',
-                                        email='Joseph.jmlc@gmail.com')  # 'infoaudiowar@gmail.com'
+                                        email=email_to_send_mail_pilot_users)
     user1_artist1.save()
-    user2_artist2 = User.objects.create(username='artist2', password=make_password('artist2artist2'),
+    user2_artist2 = User.objects.create(username='fromthenoise',
+                                        password=make_password('b0190558c7add4f8f8067907d372cbc0'),
                                         first_name='José Antonio', last_name='Granero Guzmán',
-                                        email='Joseph.jmlc@gmail.com')  # josegraneroguzman@gmail.com
+                                        email=email_to_send_mail_pilot_users)
     user2_artist2.save()
-    user3_artist3 = User.objects.create(username='artist3', password=make_password('artist3artist3'),
+    user3_artist3 = User.objects.create(username='lossaraos',
+                                        password=make_password('e8b86eae8ad14c1520bfdc0a4781fb79'),
                                         first_name='Francisco', last_name='Martín',
-                                        email='Joseph.jmlc@gmail.com')  # saralcum@gmail.com
+                                        email=email_to_send_mail_pilot_users)
     user3_artist3.save()
-    user4_artist4 = User.objects.create(username='artist4', password=make_password('artist4artist4'), first_name='Ana',
+    user4_artist4 = User.objects.create(username='anadj', password=make_password('fe6a8fd16a97020ca074b1fa00eda0d3'),
+                                        first_name='Ana',
                                         last_name='Mellado González',
-                                        email='Joseph.jmlc@gmail.com')  # mellizalez@hotmail.com
+                                        email=email_to_send_mail_pilot_users)
     user4_artist4.save()
-    user5_artist5 = User.objects.create(username='artist5', password=make_password('artist5artist5'),
+    user5_artist5 = User.objects.create(username='pasando', password=make_password('33fab3ca79958b5d59c3ac5781fac357'),
                                         first_name='Alejandro', last_name='Arteaga Ramírez',
-                                        email='Joseph.jmlc@gmail.com')  # alejandroarteagaramirez@gmail.com
+                                        email=email_to_send_mail_pilot_users)
     user5_artist5.save()
-    user6_artist6 = User.objects.create(username='artist6', password=make_password('artist6artist6'),
+    user6_artist6 = User.objects.create(username='sinclase', password=make_password('dc58c65d968ce4aec9e5f20a41a349ed'),
                                         first_name='Pablo', last_name='Delgado Flores',
-                                        email='Joseph.jmlc@gmail.com')  # pabloj.df@gmail.com
+                                        email=email_to_send_mail_pilot_users)
     user6_artist6.save()
-    user7_artist7 = User.objects.create(username='artist7', password=make_password('artist7artist7'),
+    user7_artist7 = User.objects.create(username='batracio', password=make_password('0bb2adacaa1cbdab1878f9dfafd509df'),
                                         first_name='Domingo', last_name='Muñoz Daza',
-                                        email='Joseph.jmlc@gmail.com')  # dmunnoz96@gmail.com
+                                        email=email_to_send_mail_pilot_users)
     user7_artist7.save()
-    user8_artist8 = User.objects.create(username='artist8', password=make_password('artist8artist8'),
+    user8_artist8 = User.objects.create(username='medictum', password=make_password('a2ff5e4313effd9f4326ff851835cc1c'),
                                         first_name='Rafael', last_name='Córdoba',
-                                        email='Joseph.jmlc@gmail.com')  # contacto@medictum.es
+                                        email=email_to_send_mail_pilot_users)
     user8_artist8.save()
-    user9_artist9 = User.objects.create(username='artist9', password=make_password('artist9artist9'),
+    user9_artist9 = User.objects.create(username='waterdogs',
+                                        password=make_password('22e07e6035d5d1f27f3234da8623a149'),
                                         first_name='José Luis', last_name='Salvador Lauret',
-                                        email='Joseph.jmlc@gmail.com')  # joseluis.salvador@gmail.com
+                                        email=email_to_send_mail_pilot_users)
     user9_artist9.save()
 
     # ...customers
 
-    user10_customer1 = User.objects.create(username='customer1', password=make_password('customer1customer1'),
+    user10_customer1 = User.objects.create(username='rafesqram',
+                                           password=make_password('ef3e7a1268790f2adb70a89d4918310f'),
                                            first_name='Rafael', last_name='Esquivias Ramírez',
-                                           email='Joseph.jmlc@gmail.com')  # resquiviasramirez@gmail.com
+                                           email=email_to_send_mail_pilot_users)
     user10_customer1.save()
-    user11_customer2 = User.objects.create(username='customer2', password=make_password('customer2customer2'),
+    user11_customer2 = User.objects.create(username='jorjimcor',
+                                           password=make_password('d54d4c790733f33dba91a68b099f401e'),
                                            first_name='Jorge', last_name='Jimenez',
-                                           email='Joseph.jmlc@gmail.com')  # jorjicorral@gmail.com
+                                           email=email_to_send_mail_pilot_users)
     user11_customer2.save()
-    user12_customer3 = User.objects.create(username='customer3', password=make_password('customer3customer3'),
+    user12_customer3 = User.objects.create(username='juamanfer',
+                                           password=make_password('108832878f600d74fcc5053dc8ff8ffc'),
                                            first_name='Juan Manuel', last_name='Fernández',
-                                           email='Joseph.jmlc@gmail.com')  # surlive@imgempresas.com
+                                           email=email_to_send_mail_pilot_users)
     user12_customer3.save()
-    user13_customer4 = User.objects.create(username='customer4', password=make_password('customer4customer4'),
+    user13_customer4 = User.objects.create(username='migromgut',
+                                           password=make_password('933c6c464ab272bf6241be38f6801826'),
                                            first_name='Miguel', last_name='Romero Gutierrez',
-                                           email='Joseph.jmlc@gmail.com')  # La posada Sevilla
+                                           email=email_to_send_mail_pilot_users)
     user13_customer4.save()
 
     # ...admins
 
-    user14_admin = User.objects.create(username='admin', password=make_password('admin'), is_staff=True,
-                                       is_superuser=True)
+    user14_admin = User.objects.create(username='admin', password=make_password('c8fe937c00274ff314ad36912e8444bc'),
+                                       is_staff=True, is_superuser=True)
     user14_admin.save()
-    Admin.objects.create(user=user14_admin)
+
+    # ...user artist from teachers
+
+    email_to_send_mail_teachers = 'ispp.profesores@gmail.com'
+
+    user15_artist10_prof = User.objects.create(username='rafael',
+                                               password=make_password('6b6a2d865234cb0842cca59871ff3e46'),
+                                               first_name='Rafael', last_name='Corchuelo',
+                                               email=email_to_send_mail_teachers)
+    user15_artist10_prof.save()
+
+    user16_artist11_prof = User.objects.create(username='pablito',
+                                               password=make_password('c6e3122a5020a4cec3a82c921763925a'),
+                                               first_name='Pablo', last_name='Trinidad',
+                                               email=email_to_send_mail_teachers)
+    user16_artist11_prof.save()
+
+    # ...user customer from teachers
+
+    user17_customer5_prof = User.objects.create(username='patri',
+                                                password=make_password('3ecf3c908f9a8fc6355646c02f98d477'),
+                                                first_name='Patricia', last_name='Jimenez',
+                                                email=email_to_send_mail_teachers)
+    user17_customer5_prof.save()
+
+    user18_customer6_prof = User.objects.create(username='inma',
+                                                password=make_password('882f5de131863d23436309cbc362db34'),
+                                                first_name='Inmaculada', last_name='Hernández',
+                                                email=email_to_send_mail_teachers)
+    user18_customer6_prof.save()
 
     # Artists
 
@@ -1317,9 +1368,18 @@ def save_data():
                                     photo='https://scontent-mad1-1.xx.fbcdn.net/v/t31.0-8/11059552_830536237037290_7347492083988165469_o.jpg?_nc_cat=105&_nc_ht=scontent-mad1-1.xx&oh=8986cc38e030cc73367ea008fc76810a&oe=5D47832C',
                                     iban='ES9420805801101234567891', paypalAccount='infowaterdogs@outlook.com')
     artist9.save()
-    artist9.save()
 
-    # Customers with credit card
+    # ...artists from teachers
+
+    artist10_prof = Artist.objects.create(user=user15_artist10_prof, rating=1, portfolio=portfolio14_prof,
+                                          photo='https://cdn.pixabay.com/photo/2015/07/25/05/48/magician-859303_1280.jpg')
+    artist10_prof.save()
+
+    artist11_prof = Artist.objects.create(user=user16_artist11_prof, rating=1, portfolio=portfolio15_prof,
+                                          photo='https://cdn.pixabay.com/photo/2018/02/24/08/26/people-3177507_1280.jpg')
+    artist11_prof.save()
+
+    # Customers with credit card & paypal account
 
     customer1 = Customer.objects.create(user=user10_customer1, phone='639154189', holder='Rafael Esquivias Ramírez',
                                         expirationDate='2020-10-01', number='4651001401188232',
@@ -1338,34 +1398,42 @@ def save_data():
                                         paypalAccount='migromgut@gmail.com')
     customer4.save()
 
+    # ...customer from teachers
+
+    artist15_prof = Customer.objects.create(user=user17_customer5_prof)
+    artist15_prof.save()
+
+    artist16_prof = Customer.objects.create(user=user18_customer6_prof)
+    artist16_prof.save()
+
     # Event location
 
-    event_location1 = EventLocation.objects.create(name='Event 1 - Festival Rockupo',
+    event_location1 = EventLocation.objects.create(name='Festival Rockupo',
                                                    address='Universidad Pablo de Olavide', equipment='No', zone=zone2,
                                                    customer=customer1)
     event_location1.save()
-    event_location2 = EventLocation.objects.create(name='Event 2 - La Posada Sevilla',
+    event_location2 = EventLocation.objects.create(name='Flamenco fusión',
                                                    address='C/Astronomía, 42, 41015',
                                                    equipment='Yes, we have al equipment necesary, we have concerts every week, we have all you need for this job.',
                                                    zone=zone2,
                                                    customer=customer2)
     event_location2.save()
-    event_location3 = EventLocation.objects.create(name='Event 3 - Rosalia en vivo', address='C/Sol, 45, 41652',
+    event_location3 = EventLocation.objects.create(name='Rosalia en vivo', address='C/Sol, 45, 41652',
                                                    equipment='No', zone=zone2, customer=customer3)
     event_location3.save()
-    event_location4 = EventLocation.objects.create(name='Event 4 - Charlie XCX', address='C/Amalgama, 2, 41609',
+    event_location4 = EventLocation.objects.create(name='Charlie XCX en directo', address='C/Amalgama, 2, 41609',
                                                    equipment='Yes, we have a stage of 30 square meters, a system of loudspeakers distributed by the local, with a total of 16 loudspeakers and a complete system of LED lights that can be adjusted to the intensity and color desired.',
                                                    zone=zone4, customer=customer4)
     event_location4.save()
 
     # Payment packages with Payment types
 
-    performance1_paymentPackage1 = Performance.objects.create(info='Performance Payment Type from Carlos DJ',
+    performance1_paymentPackage1 = Performance.objects.create(info='Performance Package',
                                                               hours=1.5, price=50)
     performance1_paymentPackage1.save()
 
     paymentPackage1_performance1 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from Carlos DJ',
+        description='Performance Package',
         portfolio=portfolio1,
         performance=performance1_paymentPackage1)
     paymentPackage1_performance1.save()
@@ -1373,7 +1441,7 @@ def save_data():
     fare1_paymentPackage2 = Fare.objects.create(priceHour=45)
     fare1_paymentPackage2.save()
 
-    paymentPackage2_fare1 = PaymentPackage.objects.create(description='Fare Payment Package Type from Carlos DJ',
+    paymentPackage2_fare1 = PaymentPackage.objects.create(description='Fare Package',
                                                           portfolio=portfolio1,
                                                           fare=fare1_paymentPackage2)
     paymentPackage2_fare1.save()
@@ -1381,19 +1449,19 @@ def save_data():
     custom1_paymentPackage3 = Custom.objects.create(minimumPrice=60)
     custom1_paymentPackage3.save()
 
-    paymentPackage3_custom1 = PaymentPackage.objects.create(description='Custom Payment Package Type from Carlos DJ',
+    paymentPackage3_custom1 = PaymentPackage.objects.create(description='Custom Package',
                                                             portfolio=portfolio1,
                                                             custom=custom1_paymentPackage3)
     paymentPackage3_custom1.save()
 
     # ----
 
-    performance2_paymentPackage4 = Performance.objects.create(info='Performance Payment Type from From the noise',
+    performance2_paymentPackage4 = Performance.objects.create(info='Performance Package',
                                                               hours=1.5, price=50)
     performance2_paymentPackage4.save()
 
     paymentPackage4_performance2 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from From the noise',
+        description='Performance Package',
         portfolio=portfolio2,
         performance=performance2_paymentPackage4)
     paymentPackage4_performance2.save()
@@ -1401,7 +1469,7 @@ def save_data():
     fare2_paymentPackage5 = Fare.objects.create(priceHour=45)
     fare2_paymentPackage5.save()
 
-    paymentPackage5_fare2 = PaymentPackage.objects.create(description='Fare Payment Package Type from From the noise',
+    paymentPackage5_fare2 = PaymentPackage.objects.create(description='Fare Package',
                                                           portfolio=portfolio2,
                                                           fare=fare2_paymentPackage5)
     paymentPackage5_fare2.save()
@@ -1410,19 +1478,19 @@ def save_data():
     custom2_paymentPackage6.save()
 
     paymentPackage6_custom2 = PaymentPackage.objects.create(
-        description='Custom Payment Package Type from From the noise',
+        description='Custom Package',
         portfolio=portfolio2,
         custom=custom2_paymentPackage6)
     paymentPackage6_custom2.save()
 
     # ----
 
-    performance3_paymentPackage7 = Performance.objects.create(info='Performance Payment Type from Los saraos',
+    performance3_paymentPackage7 = Performance.objects.create(info='Performance Package',
                                                               hours=1.5, price=50)
     performance3_paymentPackage7.save()
 
     paymentPackage7_performance3 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from Los saraos',
+        description='Performance Package',
         portfolio=portfolio3,
         performance=performance3_paymentPackage7)
     paymentPackage7_performance3.save()
@@ -1430,7 +1498,7 @@ def save_data():
     fare3_paymentPackage8 = Fare.objects.create(priceHour=45)
     fare3_paymentPackage8.save()
 
-    paymentPackage8_fare3 = PaymentPackage.objects.create(description='Fare Payment Package Type from Los saraos',
+    paymentPackage8_fare3 = PaymentPackage.objects.create(description='Fare Package',
                                                           portfolio=portfolio3,
                                                           fare=fare3_paymentPackage8)
     paymentPackage8_fare3.save()
@@ -1438,19 +1506,19 @@ def save_data():
     custom3_paymentPackage9 = Custom.objects.create(minimumPrice=60)
     custom3_paymentPackage9.save()
 
-    paymentPackage9_custom3 = PaymentPackage.objects.create(description='Custom Payment Package Type from Los saraos',
+    paymentPackage9_custom3 = PaymentPackage.objects.create(description='Custom Package',
                                                             portfolio=portfolio3,
                                                             custom=custom3_paymentPackage9)
     paymentPackage9_custom3.save()
 
     # ----
 
-    performance4_paymentPackage10 = Performance.objects.create(info='Performance Payment Type from Ana DJ',
+    performance4_paymentPackage10 = Performance.objects.create(info='Performance Package',
                                                                hours=1.5, price=50)
     performance4_paymentPackage10.save()
 
     paymentPackage10_performance4 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from Ana DJ',
+        description='Performance Package',
         portfolio=portfolio4,
         performance=performance4_paymentPackage10)
     paymentPackage10_performance4.save()
@@ -1458,7 +1526,7 @@ def save_data():
     fare4_paymentPackage11 = Fare.objects.create(priceHour=45)
     fare4_paymentPackage11.save()
 
-    paymentPackage11_fare3 = PaymentPackage.objects.create(description='Fare Payment Package Type from Ana DJ',
+    paymentPackage11_fare3 = PaymentPackage.objects.create(description='Fare Package',
                                                            portfolio=portfolio4,
                                                            fare=fare4_paymentPackage11)
     paymentPackage11_fare3.save()
@@ -1466,7 +1534,7 @@ def save_data():
     custom4_paymentPackage12 = Custom.objects.create(minimumPrice=60)
     custom4_paymentPackage12.save()
 
-    paymentPackage12_custom4 = PaymentPackage.objects.create(description='Custom Payment Package Type from Ana DJ',
+    paymentPackage12_custom4 = PaymentPackage.objects.create(description='Custom Package',
                                                              portfolio=portfolio4,
                                                              custom=custom4_paymentPackage12)
     paymentPackage12_custom4.save()
@@ -1474,12 +1542,12 @@ def save_data():
     # ----
 
     performance5_paymentPackage13 = Performance.objects.create(
-        info='Performance Payment Type from Pasando olimpicamente',
+        info='Performance Package',
         hours=1.5, price=50)
     performance5_paymentPackage13.save()
 
     paymentPackage13_performance5 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from Pasando olimpicamente',
+        description='Performance Package',
         portfolio=portfolio5,
         performance=performance5_paymentPackage13)
     paymentPackage13_performance5.save()
@@ -1488,7 +1556,7 @@ def save_data():
     fare5_paymentPackage14.save()
 
     paymentPackage14_fare5 = PaymentPackage.objects.create(
-        description='Fare Payment Package Type from Pasando olimpicamente',
+        description='Fare Package',
         portfolio=portfolio5,
         fare=fare5_paymentPackage14)
     paymentPackage14_fare5.save()
@@ -1497,7 +1565,7 @@ def save_data():
     custom5_paymentPackage15.save()
 
     paymentPackage15_custom5 = PaymentPackage.objects.create(
-        description='Custom Payment Package Type from Pasando olimpicamente',
+        description='Custom Package',
         portfolio=portfolio5,
         custom=custom5_paymentPackage15)
     paymentPackage15_custom5.save()
@@ -1505,12 +1573,12 @@ def save_data():
     # ----
 
     performance6_paymentPackage16 = Performance.objects.create(
-        info='Performance Payment Type from Una chirigota con clase',
+        info='Performance Package',
         hours=1.5, price=50)
     performance6_paymentPackage16.save()
 
     paymentPackage16_performance6 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from Una chirigota con clase',
+        description='Performance Package',
         portfolio=portfolio6,
         performance=performance6_paymentPackage16)
     paymentPackage16_performance6.save()
@@ -1519,7 +1587,7 @@ def save_data():
     fare6_paymentPackage17.save()
 
     paymentPackage17_fare6 = PaymentPackage.objects.create(
-        description='Fare Payment Package Type from Una chirigota con clase',
+        description='Fare Package',
         portfolio=portfolio6,
         fare=fare6_paymentPackage17)
     paymentPackage17_fare6.save()
@@ -1528,19 +1596,19 @@ def save_data():
     custom6_paymentPackage18.save()
 
     paymentPackage18_custom6 = PaymentPackage.objects.create(
-        description='Custom Payment Package Type from Una chirigota con clase',
+        description='Custom Package',
         portfolio=portfolio6,
         custom=custom6_paymentPackage18)
     paymentPackage18_custom6.save()
 
     # ----
 
-    performance7_paymentPackage19 = Performance.objects.create(info='Performance Payment Type from Batracio',
+    performance7_paymentPackage19 = Performance.objects.create(info='Performance Package',
                                                                hours=1.5, price=50)
     performance7_paymentPackage19.save()
 
     paymentPackage19_performance7 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from Batracio',
+        description='Performance Package',
         portfolio=portfolio7,
         performance=performance7_paymentPackage19)
     paymentPackage19_performance7.save()
@@ -1548,7 +1616,7 @@ def save_data():
     fare7_paymentPackage20 = Fare.objects.create(priceHour=45)
     fare7_paymentPackage20.save()
 
-    paymentPackage20_fare7 = PaymentPackage.objects.create(description='Fare Payment Package Type from Batracio',
+    paymentPackage20_fare7 = PaymentPackage.objects.create(description='Fare Package',
                                                            portfolio=portfolio7,
                                                            fare=fare7_paymentPackage20)
     paymentPackage20_fare7.save()
@@ -1556,19 +1624,19 @@ def save_data():
     custom7_paymentPackage21 = Custom.objects.create(minimumPrice=60)
     custom7_paymentPackage21.save()
 
-    paymentPackage21_custom7 = PaymentPackage.objects.create(description='Custom Payment Package Type from Batracio',
+    paymentPackage21_custom7 = PaymentPackage.objects.create(description='Custom Package',
                                                              portfolio=portfolio7,
                                                              custom=custom7_paymentPackage21)
     paymentPackage21_custom7.save()
 
     # ----
 
-    performance8_paymentPackage22 = Performance.objects.create(info='Performance Payment Type from Medictum',
+    performance8_paymentPackage22 = Performance.objects.create(info='Performance Package',
                                                                hours=1.5, price=50)
     performance8_paymentPackage22.save()
 
     paymentPackage22_performance8 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from Medictum',
+        description='Performance Package',
         portfolio=portfolio8,
         performance=performance8_paymentPackage22)
     paymentPackage22_performance8.save()
@@ -1576,7 +1644,7 @@ def save_data():
     fare8_paymentPackage23 = Fare.objects.create(priceHour=45)
     fare8_paymentPackage23.save()
 
-    paymentPackage23_fare8 = PaymentPackage.objects.create(description='Fare Payment Package Type from Medictum',
+    paymentPackage23_fare8 = PaymentPackage.objects.create(description='Fare Package',
                                                            portfolio=portfolio8,
                                                            fare=fare8_paymentPackage23)
     paymentPackage23_fare8.save()
@@ -1584,19 +1652,19 @@ def save_data():
     custom8_paymentPackage24 = Custom.objects.create(minimumPrice=60)
     custom8_paymentPackage24.save()
 
-    paymentPackage24_custom8 = PaymentPackage.objects.create(description='Custom Payment Package Type from Medictum',
+    paymentPackage24_custom8 = PaymentPackage.objects.create(description='Custom Package',
                                                              portfolio=portfolio8,
                                                              custom=custom8_paymentPackage24)
     paymentPackage24_custom8.save()
 
     # ----
 
-    performance9_paymentPackage25 = Performance.objects.create(info='Performance Payment Type from Waterdogs',
+    performance9_paymentPackage25 = Performance.objects.create(info='Performance Package',
                                                                hours=1.5, price=50)
     performance9_paymentPackage25.save()
 
     paymentPackage25_performance9 = PaymentPackage.objects.create(
-        description='Performance Payment Package Type from Waterdogs',
+        description='Performance Package',
         portfolio=portfolio9,
         performance=performance9_paymentPackage25)
     paymentPackage25_performance9.save()
@@ -1604,7 +1672,7 @@ def save_data():
     fare9_paymentPackage26 = Fare.objects.create(priceHour=45)
     fare9_paymentPackage26.save()
 
-    paymentPackage26_fare9 = PaymentPackage.objects.create(description='Fare Payment Package Type from Waterdogs',
+    paymentPackage26_fare9 = PaymentPackage.objects.create(description='Fare Package',
                                                            portfolio=portfolio9,
                                                            fare=fare9_paymentPackage26)
     paymentPackage26_fare9.save()
@@ -1612,76 +1680,89 @@ def save_data():
     custom9_paymentPackage27 = Custom.objects.create(minimumPrice=60)
     custom9_paymentPackage27.save()
 
-    paymentPackage27_custom9 = PaymentPackage.objects.create(description='Custom Payment Package Type from Waterdogs',
+    paymentPackage27_custom9 = PaymentPackage.objects.create(description='Custom Package',
                                                              portfolio=portfolio9,
                                                              custom=custom9_paymentPackage27)
     paymentPackage27_custom9.save()
 
     # Transactions
-    transaction_offer1 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com', braintree_id='4578eph3', amount="120")
-    transaction_offer1.save() # CONTRACT_MADE - OK
+    transaction_offer1 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com',
+                                                    braintree_id='4578eph3', amount="120")
+    transaction_offer1.save()  # CONTRACT_MADE
 
-    transaction_offer2 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com', braintree_id='ew0ayqav', amount='120')
-    transaction_offer2.save() # PAYMENT_MADE - OK
+    transaction_offer2 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com',
+                                                    braintree_id='ew0ayqav', amount='120')
+    transaction_offer2.save()  # PAYMENT_MADE
 
-    transaction_offer3 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com', braintree_id='8tyxeyhk', amount='120')
-    transaction_offer3.save() # PAYMENT_MADE - OK
+    transaction_offer3 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com',
+                                                    braintree_id='8tyxeyhk', amount='120')
+    transaction_offer3.save()  # PAYMENT_MADE
 
-    transaction_offer4 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com', braintree_id='crt7p01k', amount='120')
-    transaction_offer4.save() # CANCELLED_ARTIST - OK
+    transaction_offer4 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com',
+                                                    braintree_id='crt7p01k', amount='120')
+    transaction_offer4.save()  # CANCELLED_ARTIST
 
-    transaction_offer5 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com', braintree_id='50vckfr9', amount='120')
-    transaction_offer5.save() # PENDING - OK
+    transaction_offer5 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com',
+                                                    braintree_id='50vckfr9', amount='120')
+    transaction_offer5.save()  # PENDING
 
-    transaction_offer6 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com', braintree_id='fwzysehd', amount='115')
-    transaction_offer6.save() # CONTRACT_MADE - OK
+    transaction_offer6 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com',
+                                                    braintree_id='fwzysehd', amount='115')
+    transaction_offer6.save()  # CONTRACT_MADE
 
     transaction_offer7 = Transaction.objects.create(braintree_id='28msg07g', amount='100')
-    transaction_offer7.save() # REJECTED - OK
+    transaction_offer7.save()  # REJECTED
 
     transaction_offer8 = Transaction.objects.create(braintree_id='fj58887s', amount='140')
-    transaction_offer8.save() # REJECTED - OK
+    transaction_offer8.save()  # REJECTED
 
-    transaction_offer9 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='pkjqy7p1', amount='140')
-    transaction_offer9.save() # CONTRACT_MADE - OK
+    transaction_offer9 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='pkjqy7p1',
+                                                    amount='140')
+    transaction_offer9.save()  # CONTRACT_MADE
 
-    transaction_offer10 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='amwhkx1j', amount='140')
-    transaction_offer10.save() # CANCELLED_ARTIST - OK
+    transaction_offer10 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='amwhkx1j',
+                                                     amount='140')
+    transaction_offer10.save()  # CANCELLED_ARTIST
 
-    transaction_offer11 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='r3ca6wjr', amount='140')
-    transaction_offer11.save() # CONTRACT_MADE - OK
+    transaction_offer11 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='r3ca6wjr',
+                                                     amount='140')
+    transaction_offer11.save()  # CONTRACT_MADE
 
-    transaction_offer12 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='gtfcqq8k', amount='140')
-    transaction_offer12.save() # CONTRACT_MADE - OK
+    transaction_offer12 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='gtfcqq8k',
+                                                     amount='140')
+    transaction_offer12.save()  # CONTRACT_MADE
 
-    transaction_offer13 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='ewzr056h', amount='140')
-    transaction_offer13.save() # CANCELLED_CUSTOMER - OK
+    transaction_offer13 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='ewzr056h',
+                                                     amount='140')
+    transaction_offer13.save()  # CANCELLED_CUSTOMER
 
     transaction_offer14 = Transaction.objects.create(braintree_id='23dnh3xq', amount='115')
-    transaction_offer14.save() # PENDING - OK
+    transaction_offer14.save()  # PENDING
 
     transaction_offer15 = Transaction.objects.create(braintree_id='8xqp595r', amount='80')
-    transaction_offer15.save() # PENDING - OK
+    transaction_offer15.save()  # PENDING
 
     transaction_offer16 = Transaction.objects.create(braintree_id='9r2rt4pz', amount='160')
-    transaction_offer16.save() # PENDING - OK
+    transaction_offer16.save()  # PENDING
 
     transaction_offer17 = Transaction.objects.create(braintree_id='670zzdqz', amount='800')
-    transaction_offer17.save() # PENDING - OK
+    transaction_offer17.save()  # PENDING
 
-    transaction_offer18 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='4nzgyn9a', amount='1000')
-    transaction_offer18.save() #PAYMENT_MADE - OK
+    transaction_offer18 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='4nzgyn9a',
+                                                     amount='1000')
+    transaction_offer18.save()  # PAYMENT_MADE
 
-    transaction_offer19 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='800rh4t1', amount='1200')
-    transaction_offer19.save() # PAYMENT_MADE - OK
+    transaction_offer19 = Transaction.objects.create(paypalArtist='fromthenois3@gmail.com', braintree_id='800rh4t1',
+                                                     amount='1200')
+    transaction_offer19.save()  # PAYMENT_MADE
 
     # Rating
-    rating_offer2 = Rating.objects.create(score=5, comment="Lo ha hecho explendido")
-    rating_offer3 = Rating.objects.create(score=4, comment="Lo ha hecho muy bien")
+    rating_offer2 = Rating.objects.create(score=5, comment="A great show!")
+    rating_offer3 = Rating.objects.create(score=4, comment="It's a magnificant show!")
 
     # Offers
 
-    offer1_performance1 = Offer.objects.create(description='Oferta 1 to Carlos DJ by performance',
+    offer1_performance1 = Offer.objects.create(description='This offer interests you',
                                                status='CONTRACT_MADE',
                                                date='2019-04-29 12:00:00', hours=2.5, price='120', currency='EUR',
                                                appliedVAT=7, paymentPackage=paymentPackage1_performance1,
@@ -1689,7 +1770,7 @@ def save_data():
                                                paymentCode=_service_generate_unique_payment_code())
     offer1_performance1.save()
 
-    offer2_performance1 = Offer.objects.create(description='Oferta 2 to Carlos DJ by performance',
+    offer2_performance1 = Offer.objects.create(description='Can you make a performance for me?',
                                                status='PAYMENT_MADE',
                                                date='2019-07-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
@@ -1698,7 +1779,7 @@ def save_data():
                                                rating=rating_offer2)
     offer2_performance1.save()
 
-    offer3_performance1 = Offer.objects.create(description='Oferta 3 to Carlos DJ by performance',
+    offer3_performance1 = Offer.objects.create(description='A need a DJ in my bar',
                                                status='PAYMENT_MADE',
                                                date='2019-08-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
@@ -1707,7 +1788,7 @@ def save_data():
                                                rating=rating_offer3)
     offer3_performance1.save()
 
-    offer4_performance1 = Offer.objects.create(description='Oferta 4 to Carlos DJ by performance',
+    offer4_performance1 = Offer.objects.create(description='Can you come this day?',
                                                status='CANCELLED_ARTIST',
                                                date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
@@ -1715,33 +1796,33 @@ def save_data():
                                                eventLocation=event_location2, transaction=transaction_offer4)
     offer4_performance1.save()
 
-    offer5_fare1 = Offer.objects.create(description='Oferta 5 to Carlos DJ by fare', status='PENDING',
+    offer5_fare1 = Offer.objects.create(description='Rave party at my place', status='PENDING',
                                         date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                         appliedVAT=7, paymentPackage=paymentPackage2_fare1,
                                         eventLocation=event_location2, transaction=transaction_offer5)
     offer5_fare1.save()
 
-    offer6_custom1 = Offer.objects.create(description='Oferta 6 to Carlos DJ by custom', status='CONTRACT_MADE',
+    offer6_custom1 = Offer.objects.create(description='You cannot miss this opportunity', status='CONTRACT_MADE',
                                           date='2019-8-25 12:00:00', hours=1.5, price='115', currency='EUR',
                                           appliedVAT=7, paymentCode=_service_generate_unique_payment_code(),
                                           paymentPackage=paymentPackage3_custom1,
                                           eventLocation=event_location1, transaction=transaction_offer6)
     offer6_custom1.save()
 
-    offer7_custom1 = Offer.objects.create(description='Oferta 7 to Carlos DJ by custom', status='REJECTED',
+    offer7_custom1 = Offer.objects.create(description='I need a DJ for my sisters weeding', status='REJECTED',
                                           date='2019-10-25 19:00:00', hours=1.5, price='100', currency='EUR',
                                           appliedVAT=7, paymentPackage=paymentPackage3_custom1,
                                           eventLocation=event_location1, transaction=transaction_offer7)
     offer7_custom1.save()
 
-    offer8_performance2 = Offer.objects.create(description='Oferta 8 to From the noise by performance',
+    offer8_performance2 = Offer.objects.create(description='I want you to my event!',
                                                status='REJECTED',
                                                date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
                                                appliedVAT=7, paymentPackage=paymentPackage4_performance2,
                                                eventLocation=event_location1, transaction=transaction_offer8)
     offer8_performance2.save()
 
-    offer9_performance2 = Offer.objects.create(description='Oferta 9 to From the noise by performance',
+    offer9_performance2 = Offer.objects.create(description='Come on!',
                                                status='CONTRACT_MADE',
                                                date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
@@ -1749,28 +1830,28 @@ def save_data():
                                                eventLocation=event_location1, transaction=transaction_offer9)
     offer9_performance2.save()
 
-    offer10_fare2 = Offer.objects.create(description='Oferta 10 to From the noise by fare', status='CANCELLED_ARTIST',
+    offer10_fare2 = Offer.objects.create(description='Can you make me very happy?', status='CANCELLED_ARTIST',
                                          date='2019-03-27 00:00:00', hours=1.5, price='140', currency='EUR',
                                          paymentCode=_service_generate_unique_payment_code(),
                                          appliedVAT=7, paymentPackage=paymentPackage5_fare2,
                                          eventLocation=event_location4, transaction=transaction_offer10)
     offer10_fare2.save()
 
-    offer11_fare2 = Offer.objects.create(description='Oferta 11 to From the noise by fare', status='CONTRACT_MADE',
+    offer11_fare2 = Offer.objects.create(description='Please, I need you for my birthday', status='CONTRACT_MADE',
                                          date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                          paymentCode=_service_generate_unique_payment_code(),
                                          appliedVAT=7, paymentPackage=paymentPackage5_fare2,
                                          eventLocation=event_location4, transaction=transaction_offer11)
     offer11_fare2.save()
 
-    offer12_custom2 = Offer.objects.create(description='Oferta 12 to From the noise by fare', status='CONTRACT_MADE',
+    offer12_custom2 = Offer.objects.create(description='Wow, I want to see you again in my place', status='CONTRACT_MADE',
                                            date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                            paymentCode=_service_generate_unique_payment_code(),
                                            appliedVAT=7, paymentPackage=paymentPackage5_fare2,
                                            eventLocation=event_location3, transaction=transaction_offer12)
     offer12_custom2.save()
 
-    offer13_custom2 = Offer.objects.create(description='Oferta 13 to From the noise by fare',
+    offer13_custom2 = Offer.objects.create(description='Formal contract',
                                            status='CANCELLED_CUSTOMER',
                                            date='2017-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                            paymentCode=_service_generate_unique_payment_code(),
@@ -1778,7 +1859,7 @@ def save_data():
                                            eventLocation=event_location3, transaction=transaction_offer13)
     offer13_custom2.save()
 
-    offer14_performance2 = Offer.objects.create(description='Oferta 14 to From the noise by performance',
+    offer14_performance2 = Offer.objects.create(description='Can you miss this opportunity?',
                                                 status='PENDING',
                                                 date='2019-07-07 15:00:00', hours=2.5, price='115', currency='EUR',
                                                 appliedVAT=7, paymentPackage=paymentPackage4_performance2,
@@ -1786,45 +1867,45 @@ def save_data():
 
     offer14_performance2.save()
 
-    offer15_performance2 = Offer.objects.create(description='Oferta 15 to From the noise by performance',
+    offer19_performance2 = Offer.objects.create(description='I want to hear us again!',
                                                 status='PENDING',
                                                 date='2019-07-11 15:00:00', hours=1.5, price='80', currency='EUR',
                                                 appliedVAT=7, paymentPackage=paymentPackage4_performance2,
                                                 eventLocation=event_location2, transaction=transaction_offer19)
 
-    offer15_performance2.save()
+    offer19_performance2.save()
 
-    offer16_performance1 = Offer.objects.create(description='Oferta 16 to Carlos DJ by performance', status='PENDING',
+    offer15_performance1 = Offer.objects.create(description='Come on!', status='PENDING',
                                                 date='2019-07-11 15:00:00', hours=2.5, price='160', currency='EUR',
                                                 appliedVAT=7, paymentPackage=paymentPackage1_performance1,
                                                 eventLocation=event_location1, transaction=transaction_offer15)
 
-    offer16_performance1.save()
+    offer15_performance1.save()
 
-    offer17_performance1 = Offer.objects.create(description='Oferta 17 to Carlos DJ by performance', status='PENDING',
+    offer16_performance1 = Offer.objects.create(description='I want a great party to my friend', status='PENDING',
                                                 date='2019-07-14 08:00:00', hours=1.5, price='800', currency='EUR',
                                                 appliedVAT=7, paymentPackage=paymentPackage1_performance1,
                                                 eventLocation=event_location2, transaction=transaction_offer16)
 
-    offer17_performance1.save()
+    offer16_performance1.save()
 
-    offer18_performance1 = Offer.objects.create(description='Oferta 18 to From the noise by performance',
+    offer17_performance1 = Offer.objects.create(description='Can you interested to my offer?',
                                                 status='PAYMENT_MADE',
                                                 date='2019-03-14 08:00:00', hours=3, price='1000', currency='EUR',
                                                 appliedVAT=21, paymentPackage=paymentPackage4_performance2,
                                                 eventLocation=event_location1, transaction=transaction_offer17,
                                                 paymentCode=_service_generate_unique_payment_code())
 
-    offer18_performance1.save()
+    offer17_performance1.save()
 
-    offer19_performance1 = Offer.objects.create(description='Oferta 19 to From the noise by performance',
+    offer18_performance1 = Offer.objects.create(description='The best opportunity for your group',
                                                 status='PAYMENT_MADE',
                                                 date='2019-03-14 12:00:00', hours=3.1, price='1200', currency='EUR',
                                                 appliedVAT=21, paymentPackage=paymentPackage4_performance2,
                                                 eventLocation=event_location1, transaction=transaction_offer18,
                                                 paymentCode=_service_generate_unique_payment_code())
 
-    offer19_performance1.save()
+    offer18_performance1.save()
 
 
 os.system('python3 manage.py sqlflush | python3 manage.py dbshell')
