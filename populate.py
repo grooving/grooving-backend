@@ -1121,27 +1121,21 @@ def save_data():
                                                         link='https://www.facebook.com/WATERDOGS.BLUES/')
     portfolio9_module1.save()
 
-    portfolio9_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio9,
+    portfolio9_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio9,
                                                         description='Foto 1',
                                                         link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/46501037_1930071163750453_486418618368655360_o.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=80cd1e477f4d35ac00f739775e7d5753&oe=5D40F966')
     portfolio9_module2.save()
 
-    portfolio9_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio9,
+    portfolio9_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio9,
                                                         description='Foto 2',
                                                         link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/15442339_1177989115625332_9202300312226810278_n.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=fcdebb55b60831cbd08d81f60e58dc97&oe=5D3936D9')
-    portfolio9_module2.save()
-
-    portfolio9_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio9,
-                                                        description='Foto 3',
-                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/14519937_1111631358927775_3967127956346645930_n.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=b1fd94a5cb7933883de0e6e6d34672b9&oe=5D39423E')
     portfolio9_module3.save()
 
-    #
+    portfolio9_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio9,
+                                                        description='Foto 3',
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/14519937_1111631358927775_3967127956346645930_n.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=b1fd94a5cb7933883de0e6e6d34672b9&oe=5D39423E')
+    portfolio9_module4.save()
 
-    portfolio9_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio9,
-                                                        description='Van Hallen - Dirty Water dog',
-                                                        link='https://www.youtube.com/watch?v=30joGa9FhDw')
-    portfolio9_module1.save()
 
     # Calendar
 

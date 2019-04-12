@@ -47,14 +47,14 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         try:
-            return Calendar.objects.get(pk=pk)
+            return Calendar.objects.get(portfolio_id=pk)
         except Calendar.DoesNotExist:
             raise Http404
 
     def get(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
-        calendar = Calendar.objects.filter(pk=pk).first()
+        calendar = Calendar.objects.filter(portfolio_id=pk).first()
         Assertions.assert_true_raise404(calendar is not None, {'error': 'No calendar with that id'})
         serializer = CalendarSerializer(calendar)
         return Response(serializer.data)
@@ -62,7 +62,7 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
     def put(self, request, pk=None):
         if pk is None:
             pk = self.kwargs['pk']
-        calendar = Calendar.objects.filter(pk=pk).first()
+        calendar = Calendar.objects.filter(portfolio_id=pk).first()
 
         Assertions.assert_true_raise400(len(request.data) != 0, {'error': 'No fields were given'})
         Assertions.assert_true_raise400(calendar is not None, {'error': 'Calendar does not exist'})
@@ -74,9 +74,8 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
         Assertions.assert_true_raise400(serializer.is_valid(),{'error': 'Data in serializer is not valid'})
         serializer.save(pk,loggedUser)
         calendar = self.get_object(pk)
-        serializer = CalendarSerializer(calendar, data=serializer.data, partial=True)
-        serializer.is_valid()
 
+        return Response(status=status.HTTP_200_OK)
 
     def delete(self, request, pk=None, format=None):
         if pk is None:

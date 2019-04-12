@@ -19,7 +19,7 @@ class CalendarSerializer(serializers.ModelSerializer):
         else:
             # edit
             id = (self.initial_data, pk)[pk is not None]
-            calendar = Calendar.objects.filter(pk=id).first()
+            calendar = Calendar.objects.filter(portfolio_id=id).first()
             calendar = self._service_update(self.initial_data, calendar, logged_user)
         calendar.save()
         return calendar

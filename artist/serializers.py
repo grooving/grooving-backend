@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from Grooving.models import Artist, Portfolio
+from Grooving.models import Artist, Portfolio,Calendar
 from user.serializers import UserSerializer
 from portfolio.serializers import ArtisticGenderSerializer
 from django.contrib.auth.hashers import make_password
@@ -97,7 +97,10 @@ class ArtistSerializer(serializers.ModelSerializer):
         user = User.objects.create(username=json.get('username'), password=make_password(json.get('password')),
                                    first_name=json.get('first_name'), last_name=json.get('last_name'),
                                    email=json.get('email'))
+
         portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'))
+
+        Calendar.objects.create(days=[], portfolio=portfolio1)
 
         artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'),
                                        portfolio=portfolio1, user=user)
