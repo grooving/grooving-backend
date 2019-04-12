@@ -255,7 +255,7 @@ class OfferSerializer(serializers.ModelSerializer):
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
 
-                    braintree.Transaction.settlement_decline_transaction(offer_in_db.transaction.braintree_id)
+                    #braintree.Transaction.settlement_decline_transaction(offer_in_db.transaction.braintree_id)
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
                                   or artist_flowstop_transitions.get(status_in_db) == json_status
