@@ -1320,7 +1320,7 @@ def save_data():
                                     iban='ES1720852066623456789011', paypalAccount='medictum.bussiness@gmail.com')
     artist8.save()
     artist9 = Artist.objects.create(user=user9_artist9, rating=3.75, portfolio=portfolio9, phone='679739257',
-                                    photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/46501037_1930071163750453_486418618368655360_o.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=80cd1e477f4d35ac00f739775e7d5753&oe=5D40F966',
+                                    photo='https://scontent-mad1-1.xx.fbcdn.net/v/t31.0-8/11059552_830536237037290_7347492083988165469_o.jpg?_nc_cat=105&_nc_ht=scontent-mad1-1.xx&oh=8986cc38e030cc73367ea008fc76810a&oe=5D47832C',
                                     iban='ES9420805801101234567891', paypalAccount='infowaterdogs@outlook.com')
     artist9.save()
     artist9.save()
