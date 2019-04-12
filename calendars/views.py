@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework import generics
 from .serializers import CalendarSerializer
 from rest_framework import status
-from django.http import Http404
 from utils.authentication_utils import get_logged_user,get_user_type
 from utils.Assertions import Assertions
 
@@ -44,13 +43,14 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
         try:
             return Calendar.objects.get(portfolio__artist__id=pk)
         except Calendar.DoesNotExist:
-            raise Http404
+            raise Assertions.assert_true_raise404(False,
+                                            {'error': 'Calendar not found'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
         calendar = Calendar.objects.filter(portfolio__artist__id=pk).first()
-        Assertions.assert_true_raise404(calendar is not None, {'error': 'No calendar with that id'})
+        Assertions.assert_true_raise404(calendar, {'error': 'No calendar with that id'})
         serializer = CalendarSerializer(calendar)
         return Response(serializer.data)
 

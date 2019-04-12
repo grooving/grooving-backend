@@ -3,11 +3,10 @@ from rest_framework.response import Response
 from rest_framework import generics
 from .serializers import PortfolioModuleSerializer
 from rest_framework import status
-from django.http import Http404
 from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
+from utils.Assertions import Assertions
 
 class PortfolioModuleManager(generics.RetrieveUpdateDestroyAPIView):
 
@@ -20,7 +19,8 @@ class PortfolioModuleManager(generics.RetrieveUpdateDestroyAPIView):
         try:
             return PortfolioModule.objects.get(pk=pk)
         except PortfolioModule.DoesNotExist:
-            raise Http404
+            raise Assertions.assert_true_raise404(False,
+                                            {'error': 'Portfolio module not found'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:

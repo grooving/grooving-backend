@@ -6,9 +6,8 @@ from rest_framework.response import Response
 from rest_framework import generics
 from .serializers import EventLocationSerializer
 from rest_framework import status
-from django.http import Http404
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
+from utils.Assertions import Assertions
 # Create your views here.
 
 
@@ -23,7 +22,8 @@ class EventLocationManager(generics.RetrieveUpdateDestroyAPIView):
         try:
             return EventLocation.objects.get(pk=pk)
         except EventLocation.DoesNotExist:
-            raise Http404
+            raise Assertions.assert_true_raise404(False,
+                                            {'error': 'Event location not found'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:

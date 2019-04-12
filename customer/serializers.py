@@ -72,13 +72,15 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
             Assertions.assert_true_raise400(customer.phone.isnumeric(), {'error': "Phone must be a number"})
             Assertions.assert_true_raise400(len(customer.phone) == 9, {'error': "Phone length must be 9 digits"})
 
-        Assertions.assert_true_raise400(len(user.first_name) > 1 and len(user.last_name) > 1,
-                                        {'error': "First or second name do not seem real"})
+        Assertions.assert_true_raise400(len(user.first_name) > 1,
+                                        {'error': "First name is too short"})
+        Assertions.assert_true_raise400(len(user.last_name) > 1,
+                                        {'error': "Last name is too short"})
         if photo:
             Assertions.assert_true_raise400(photo.startswith('http'), {'error': 'Invalid photo url,'
                                                                                 ' the photo must start with http'})
-            Assertions.assert_true_raise400(Strings.url_is_an_image(photo), {'error': 'Invalid photo url,'
-                                                              ' the photo must end with an image extension'})
+            Assertions.assert_true_raise400(Strings.url_is_an_image(photo),
+                                            {'error': 'Invalid photo url, the photo must end with an image extension'})
 
         user.save()
         customer.user = user
@@ -154,6 +156,6 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         if photo:
             Assertions.assert_true_raise400(photo.startswith('http'),
                                             {'error': 'Invalid photo url, the photo must start with http'})
-            Assertions.assert_true_raise400(Strings.url_is_an_image(photo), {'error': 'Invalid photo url,'
-                                                              ' the photo must end with an image extension'})
+            Assertions.assert_true_raise400(Strings.url_is_an_image(photo),
+                                            {'error': 'Invalid photo url, the photo must end with an image extension'})
         return True

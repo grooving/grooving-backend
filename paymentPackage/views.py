@@ -1,12 +1,11 @@
-from Grooving.models import PaymentPackage,Artist,Custom,Performance,Fare
-from utils.Assertions import Assertions
+from Grooving.models import PaymentPackage, Artist, Custom, Performance, Fare
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import PaymentPackageSerializer,PaymentPackageListSerializer, PaymentPackageSerializerShort, FareSerializer,CustomSerializer,PerformanceSerializer
+from .serializers import PaymentPackageSerializer, PaymentPackageListSerializer, PaymentPackageSerializerShort, FareSerializer,CustomSerializer,PerformanceSerializer
 from rest_framework import status
-from django.http import Http404
 from django.core.exceptions import PermissionDenied
-from utils.authentication_utils import get_logged_user,get_user_type
+from utils.authentication_utils import get_logged_user, get_user_type
+from utils.Assertions import Assertions
 
 
 class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
@@ -20,8 +19,9 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
         try:
             portfolio = Artist.objects.get(id=pk).portfolio
             return PaymentPackage.objects.filter(portfolio=portfolio)
-        except Artist.DoesNotExist:
-            raise Http404
+        except PaymentPackage.DoesNotExist:
+            raise Assertions.assert_true_raise404(False,
+                                            {'error': 'Payment Package not found'})
 
     def get(self, request, pk=None, format= None):
         if pk is None:
@@ -37,8 +37,9 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
             paymentPackage = PaymentPackage.objects.filter(portfolio=portfolio)
             serializer = PaymentPackageListSerializer(paymentPackage, many=True)
             return Response(serializer.data)
-        except Artist.DoesNotExist:
-            raise Http404
+        except PaymentPackage.DoesNotExist:
+            raise Assertions.assert_true_raise404(False,
+                                            {'error': 'Payment package not found'})
 
 
 class PaymentPackageManager(generics.RetrieveUpdateDestroyAPIView):
@@ -52,7 +53,8 @@ class PaymentPackageManager(generics.RetrieveUpdateDestroyAPIView):
         try:
             return PaymentPackage.objects.get(pk=pk)
         except PaymentPackage.DoesNotExist:
-            raise Http404
+            raise Assertions.assert_true_raise404(False,
+                                            {'error': 'Payment package not found'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:

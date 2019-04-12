@@ -134,10 +134,10 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         customer = get_customer(request)
-        Assertions.assert_true_raise403(customer is not None)
+        Assertions.assert_true_raise403(customer,{'error': 'Customer not found'})
         offer = self.get_object().first()
-        Assertions.assert_true_raise404(offer is not None)
-        Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id)
+        Assertions.assert_true_raise404(offer,'Customer not found')
+        Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id,'You are not the owner of the offer')
 
         return Response({"paymentCode": str(offer.paymentCode)}, status.HTTP_200_OK)
 
