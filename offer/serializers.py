@@ -213,8 +213,9 @@ class OfferSerializer(serializers.ModelSerializer):
                 artist_flowstop_transitions = {'PENDING': 'REJECTED',
                                                'CONTRACT_MADE': 'CANCELLED_ARTIST'}
                 if json_status == 'CONTRACT_MADE':
-                    Assertions.assert_true_raise400(logged_user.paypalAccount is not None,
-                                        {'paypal': ' You need to provide a PayPal account to perform this action' })
+                    print(logged_user.paypalAccount)
+                    Assertions.assert_true_raise400(logged_user.paypalAccount,
+                                        {'error': ' You need to provide a PayPal account to perform this action' })
                     transaccion = offer_in_db.transaction
 
                     transaccion.paypalArtist = logged_user.paypalAccount
@@ -354,9 +355,10 @@ class OfferSerializer(serializers.ModelSerializer):
                 raise Assertions.assert_true_raise400(False, {'error': 'hours value bad provided'})
 
         elif paymentPackage.custom is not None:
+            price = json.get('price')
             Assertions.assert_true_raise400(json.get("price"),
                                             {'error': 'price field not provided'})
-            Assertions.assert_true_raise400(Decimal(0.0 < json.get("price")) >= paymentPackage.custom.minimumPrice,
+            Assertions.assert_true_raise400(0.0 < price and price >= paymentPackage.custom.minimumPrice,
                                             {'error': 'price entered it\'s below of minimum price'})
             Assertions.assert_true_raise400(json.get('hours'),
                                             {'error': 'hours field not provided'})
