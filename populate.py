@@ -686,12 +686,13 @@ def save_data():
                                                          description='Smile',
                                                          link='https://em.wattpad.com/67028e42a9ebd5c53342cae98d2082deb0d12424/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f51387a68664f58415a73575937773d3d2d32372e313536343431653536393831363236393135363633353535333030392e676966?s=fit&w=720&h=720')
     portfolio12_module3.save()
-    '''
 
+    
     portfolio12_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
                                                          description='Videoclip rainbow',
                                                          link='https://www.nacionrex.com/__export/1548185009356/sites/debate/img/2019/01/22/taylor_swift_cats_bombalurina_personaje_quien_es_foto_instagram_2019_crop1548184963929.jpg_1834093470.jpg')
     portfolio12_module4.save()
+    '''
 
     portfolio12_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio12,
                                                          description='Concert',
@@ -787,10 +788,12 @@ def save_data():
     portfolio13.zone.add(zone0)
     portfolio13.save()
 
+    '''
     portfolio13_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio13,
                                                          description='Road',
                                                          link='https://www.musicmundial.com/wp-content/uploads/2018/02/charli-xcx.jpg')
     portfolio13_module1.save()
+    '''
 
     portfolio13_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio13,
                                                          description='Paper',
@@ -835,9 +838,6 @@ def save_data():
     availableDays13 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
                        '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
 
-    calendar13 = Calendar.objects.create(days=availableDays13, portfolio=portfolio13)
-    calendar13.save()
-
     user1_artist13 = User.objects.create(username='charli', password=make_password('charli'),
                                          first_name='Charlotte Emma',
                                          last_name='Aitchison', email='Joseph.jmlc@gmail.com')
@@ -857,7 +857,7 @@ def save_data():
     portfolio1.zone.add(zone23)
     portfolio1.save()
 
-    portfolio1_module1 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio1,
+    portfolio1_module1 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio1,
                                                         description='It was a great festival',
                                                         link='https://www.youtube.com/watch?v=xAzWJCwZY6w')
     portfolio1_module1.save()
@@ -880,17 +880,33 @@ def save_data():
                                                         link='https://www.facebook.com/fromthenoise/')
     portfolio2_module1.save()
 
-    portfolio2_module2 = PortfolioModule.objects.create(type='SOCIAL', portfolio=portfolio2,
-                                                        link='https://www.facebook.com/batraciosvq/')
+    portfolio2_module2 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio2,
+                                                        link='https://www.youtube.com/watch?v=CEaJ-COP9Rs')
     portfolio2_module2.save()
 
     portfolio2_module3 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio2,
-                                                        link='https://www.youtube.com/watch?v=CEaJ-COP9Rs')
+                                                        link='https://www.youtube.com/watch?v=hWAO0tHxqLo')
     portfolio2_module3.save()
 
     portfolio2_module4 = PortfolioModule.objects.create(type='VIDEO', portfolio=portfolio2,
-                                                        link='https://www.youtube.com/watch?v=g43nbmB1cD8')
+                                                        link='https://www.youtube.com/watch?v=OnuzoSXS4_c')
     portfolio2_module4.save()
+
+    portfolio2_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio2,
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10458332_694712853916122_7917866018249497277_n.jpg?_nc_cat=107&_nc_ht=scontent-mad1-1.xx&oh=f3dcdf661a480c02db78c044412faf51&oe=5D2C3A31')
+    portfolio2_module5.save()
+
+    portfolio2_module6 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio2,
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10513258_689432264444181_1670876619223048853_n.jpg?_nc_cat=109&_nc_ht=scontent-mad1-1.xx&oh=daed7174a26a256491cf41893f4925ff&oe=5D3D5767')
+    portfolio2_module6.save()
+
+    portfolio2_module7 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio2,
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10424365_692021830851891_1483585037082186387_n.jpg?_nc_cat=105&_nc_ht=scontent-mad1-1.xx&oh=d116b1c6073b84d21fbd1db57eb47a7b&oe=5D304B02')
+    portfolio2_module7.save()
+
+    portfolio2_module8 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio2,
+                                                        link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/20953179_10155798140312625_5517808811547907373_n.jpg?_nc_cat=108&_nc_ht=scontent-mad1-1.xx&oh=78561ec93ba4604a3c5a570cbe101b40&oe=5D4D1ED1')
+    portfolio2_module8.save()
 
     # ----
 
@@ -1244,54 +1260,59 @@ def save_data():
 
     artist1 = Artist.objects.create(user=user1_artist1, rating=4.5, portfolio=portfolio1, phone='600304999',
                                     photo='https://upload.wikimedia.org/wikipedia/commons/e/e7/Robin_Clark_%28DJ%29_Live_at_Techno4ever_net_Bday_Rave.jpg',
-                                    iban='ES6621000418401234567891', paypalAccount='bwer0192@gmail.com')
+                                    iban='ES6621000418401234567891', paypalAccount='carlosdj.espectaculos@gmail.com')
     artist1.save()
     artist2 = Artist.objects.create(user=user2_artist2, rating=4.9, portfolio=portfolio2, phone='695099812',
-                                    photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/20953179_10155798140312625_5517808811547907373_n.jpg?_nc_cat=108&_nc_ht=scontent-mad1-1.xx&oh=78561ec93ba4604a3c5a570cbe101b40&oe=5D4D1ED1',
-                                    iban='ES1720852066623456789011')
+                                    photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/10385415_661741233879951_1187489641070312189_n.jpg?_nc_cat=100&_nc_ht=scontent-mad1-1.xx&oh=c57e8b85648484d2ae0c3eb560a1b881&oe=5D2E5C65',
+                                    iban='ES1720852066623456789011', paypalAccount='fromthenois3@gmail.com')
     artist2.save()
     artist3 = Artist.objects.create(user=user3_artist3, rating=4.0, portfolio=portfolio3, phone='695990241',
                                     photo='https://cdn.pixabay.com/photo/2016/02/19/11/36/microphone-1209816_1280.jpg',
-                                    iban='ES6000491500051234567892')
+                                    iban='ES6000491500051234567892', paypalAccount='saraos.flamenco@gmail.com')
     artist3.save()
     artist4 = Artist.objects.create(user=user4_artist4, rating=3.5, portfolio=portfolio4, phone='610750391',
                                     photo='https://www.billboard.com/files/media/Dani-Deahl-press-photo-2016-billboard-1000.jpg',
-                                    iban='ES9420805801101234567891')
+                                    iban='ES9420805801101234567891', paypalAccount='anadj.session@outlook.com')
     artist4.save()
     artist5 = Artist.objects.create(user=user5_artist5, rating=4.5, portfolio=portfolio5, phone='675181175',
                                     photo='https://carnaval.lavozdigital.es/wp-content/uploads/2019/01/chirigota-pasando-olimpicamente-recortada.jpg',
-                                    iban='ES9000246912501234567891')
+                                    iban='ES9000246912501234567891', paypalAccount='chirigota_pasando@hotmail.com')
     artist5.save()
     artist6 = Artist.objects.create(user=user6_artist6, rating=4.0, portfolio=portfolio6, phone='673049277',
                                     photo='https://carnaval.lavozdigital.es/wp-content/uploads/2019/01/chirigota-sin-clase.jpg',
-                                    iban='ES7100302053091234567895')
+                                    iban='ES7100302053091234567895', paypalAccount='chirigotasinclase@yahoo.com')
     artist6.save()
     artist7 = Artist.objects.create(user=user7_artist7, rating=4.75, portfolio=portfolio7, phone='664196105',
                                     photo='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/50732294_2114221071976992_2173326934371467264_o.jpg?_nc_cat=100&_nc_ht=scontent-mad1-1.xx&oh=dacf068903a3703434b52cfade783470&oe=5D09C938',
-                                    iban='ES1000492352082414205416')
+                                    iban='ES1000492352082414205416', paypalAccount='batracio-info@hotmail.com')
     artist7.save()
     artist8 = Artist.objects.create(user=user8_artist8, rating=4.66666666, portfolio=portfolio8, phone='664596466',
                                     photo='http://medictum.es/wp-content/uploads/2017/03/p2-team-image-3.jpg',
-                                    iban='ES1720852066623456789011')
+                                    iban='ES1720852066623456789011', paypalAccount='medictum.bussiness@gmail.com')
     artist8.save()
     artist9 = Artist.objects.create(user=user9_artist9, rating=3.75, portfolio=portfolio9, phone='679739257',
                                     photo='https://media.licdn.com/dms/image/C4E03AQFAONXIX44h6w/profile-displayphoto-shrink_800_800/0?e=1559174400&v=beta&t=eEhhR1sr9-p1fr1tREXmlXV6WAzPvNlFDHhlV8SNwRY',
-                                    iban='ES9420805801101234567891')
+                                    iban='ES9420805801101234567891', paypalAccount='infowaterdogs@outlook.com')
+    artist9.save()
     artist9.save()
 
     # Customers with credit card
 
     customer1 = Customer.objects.create(user=user10_customer1, phone='639154189', holder='Rafael Esquivias Ramírez',
-                                        expirationDate='2020-10-01', number='4651001401188232')
+                                        expirationDate='2020-10-01', number='4651001401188232',
+                                        paypalAccount='rafesqram@gmail.com')
     customer1.save()
     customer2 = Customer.objects.create(user=user11_customer2, phone='664656659', holder='Jorge Jiménez del Corral',
-                                        expirationDate='2027-03-01', number='4934521448108546')
+                                        expirationDate='2027-03-01', number='4934521448108546',
+                                        paypalAccount='jorjimcor@gmail.com')
     customer2.save()
     customer3 = Customer.objects.create(user=user12_customer3, phone='678415820', holder='Juan Manuel Fernández',
-                                        expirationDate='2025-10-01', number='4656508395720981')
+                                        expirationDate='2025-10-01', number='4656508395720981',
+                                        paypalAccount='juamarfer@gmail.com')
     customer3.save()
     customer4 = Customer.objects.create(user=user13_customer4, phone='627322721', holder='Miguel Romero Gutierrez',
-                                        expirationDate='2027-03-01', number='4826704855401486')
+                                        expirationDate='2027-03-01', number='4826704855401486',
+                                        paypalAccount='migromgut@gmail.com')
     customer4.save()
 
     # Event location

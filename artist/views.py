@@ -22,9 +22,13 @@ class GetPersonalInformationOfArtist(generics.ListAPIView):
         user_type = get_user_type(user)
         Assertions.assert_true_raise403(user is not None, {'error': 'You must be logged in to access this page.'})
         Assertions.assert_true_raise403(user_type == 'Artist', {'error': 'You are not an artist.'})
-        artist = Artist.objects.get(user_id=user.user_id)
-        serializer = ArtistInfoSerializer(artist)
-        return Response(serializer.data)
+        try:
+            artist = Artist.objects.get(user_id=user.user_id)
+            serializer = ArtistInfoSerializer(artist)
+            return Response(serializer.data)
+        except Artist.DoesNotExist:
+            booleano = False
+            Assertions.assert_true_raise400(booleano, {'error': 'The requested artist does not exist.'})
 
 
 class ListArtist(generics.ListAPIView):
@@ -87,7 +91,8 @@ class ArtistRegister(generics.CreateAPIView):
         try:
             return Artist.objects.get(pk=pk)
         except Artist.DoesNotExist:
-            raise Http404
+            Assertions.assert_true_raise404(False,
+                                            {'error': 'Artist not found'})
 
     def post(self, request, *args, **kwargs):
         Assertions.assert_true_raise400(len(request.data) != 0, {'error': "Empty form is not valid"})
@@ -111,13 +116,13 @@ class ArtistRegister(generics.CreateAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         Assertions.assert_true_raise400(len(request.data) != 0, {'error': "Empty form is not valid"})
-        artist = Artist.objects.get(pk=pk)
+        artist = self.get_object(pk)
         articustomer = get_logged_user(request)
-
+        Assertions.assert_true_raise403(articustomer,"Denied permission")
         Assertions.assert_true_raise403(articustomer.user.id == artist.user.id,
-                                        {'code': 'You can only change your personal info'})
+                                        {'error': 'You can only change your personal info'})
         serializer = ArtistSerializer(artist, data=request.data, partial=True)
-        Assertions.assert_true_raise400(serializer.is_valid(), {"code": "invalid data"})
+        serializer.is_valid(True)
         artist = serializer.update(pk)
 
         artist.save()

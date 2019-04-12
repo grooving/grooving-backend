@@ -1,6 +1,6 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 from rest_framework import serializers
-from Grooving.models import PaymentPackage, Custom, Fare, Performance,Portfolio
+from Grooving.models import PaymentPackage, Custom, Fare, Performance
 from utils.Assertions import assert_true
 from utils.Assertions import Assertions
 from utils.utils import isPositivefloat
@@ -171,14 +171,14 @@ class FareSerializer(serializers.ModelSerializer):
             for package in packages:
                 Assertions.assert_true_raise400(not package.fare_id, {'error': "You already have a fare package"})
 
-        priceHour = json.get('priceHour')
+        price_hour = json.get('priceHour')
         description = json.get('description')
         portfolio_id = logged_user.portfolio.id
-        Assertions.assert_true_raise400(priceHour, {'error': "Price not provided"})
+        Assertions.assert_true_raise400(price_hour, {'error': "Price not provided"})
 
-        Assertions.assert_true_raise400(isPositivefloat(priceHour), {'error': "Invalid price"})
+        Assertions.assert_true_raise400(isPositivefloat(price_hour), {'error': "Invalid price"})
 
-        fare = Fare.objects.create(priceHour=priceHour)
+        fare = Fare.objects.create(priceHour=price_hour)
         PaymentPackage.objects.create(description=description,
                                       portfolio_id=portfolio_id, fare=fare)
 
@@ -187,9 +187,9 @@ class FareSerializer(serializers.ModelSerializer):
     @staticmethod
     def _service_update_package(json: dict, fare: Fare, logged_user: User):
         assert_true(fare, "This offer does not exist")
-        priceHour = json.get('priceHour')
-        Assertions.assert_true_raise400(priceHour, {'error': "Price not provided"})
-        Assertions.assert_true_raise400(isPositivefloat(priceHour), {'error': "Invalid price"})
+        price_hour = json.get('priceHour')
+        Assertions.assert_true_raise400(price_hour, {'error': "Price not provided"})
+        Assertions.assert_true_raise400(isPositivefloat(price_hour), {'error': "Invalid price"})
 
         fare.priceHour = json.get('priceHour')
         fare.paymentpackage.description = json.get('description')
@@ -223,14 +223,14 @@ class CustomSerializer(serializers.ModelSerializer):
             for package in packages:
                 Assertions.assert_true_raise400(not package.custom_id, {'error': "You already have a custom package"})
 
-        minimumPrice = json.get('minimumPrice')
+        minimum_price = json.get('minimumPrice')
         description = json.get('description')
         portfolio_id = logged_user.portfolio.id
-        Assertions.assert_true_raise400(minimumPrice, {'error': "Minimum price not provided"})
+        Assertions.assert_true_raise400(minimum_price, {'error': "Minimum price not provided"})
 
-        Assertions.assert_true_raise400(isPositivefloat(minimumPrice), {'error': "Invalid price"})
+        Assertions.assert_true_raise400(isPositivefloat(minimum_price), {'error': "Invalid price"})
 
-        custom = Custom.objects.create(minimumPrice=minimumPrice)
+        custom = Custom.objects.create(minimumPrice=minimum_price)
         PaymentPackage.objects.create(description=description,
                                       portfolio_id=portfolio_id, custom=custom)
 

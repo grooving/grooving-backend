@@ -65,7 +65,7 @@ class Portfolio(AbstractEntity):
 
 
 class Calendar(AbstractEntity):
-    days = ArrayField(models.CharField(max_length=10))
+    days = ArrayField(models.CharField(max_length=10),null=True)
     portfolio = models.OneToOneField(Portfolio, on_delete=models.CASCADE)
 
 
