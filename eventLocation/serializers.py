@@ -66,9 +66,9 @@ class EventLocationSerializer(serializers.ModelSerializer):
         if customer is None:
             raise serializers.ValidationError("user isn't authorized")
         json = request.data
-        if json.get("address") is None:
+        if json.get("address"):
             raise serializers.ValidationError("address field not provided")
-        if json.get("zone_id") is None:
+        if json.get("zone_id"):
             raise serializers.ValidationError("zone_id field not provided")
         else:
             zone: Zone = Zone.objects.filter(pk=json.get("zone_id")).first()
