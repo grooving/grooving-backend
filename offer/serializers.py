@@ -213,8 +213,9 @@ class OfferSerializer(serializers.ModelSerializer):
                 artist_flowstop_transitions = {'PENDING': 'REJECTED',
                                                'CONTRACT_MADE': 'CANCELLED_ARTIST'}
                 if json_status == 'CONTRACT_MADE':
-                    Assertions.assert_true_raise400(logged_user.paypalAccount is not None,
-                                        {'paypal': ' You need to provide a PayPal account to perform this action' })
+                    print(logged_user.paypalAccount)
+                    Assertions.assert_true_raise400(logged_user.paypalAccount,
+                                        {'error': ' You need to provide a PayPal account to perform this action' })
                     transaccion = offer_in_db.transaction
 
                     transaccion.paypalArtist = logged_user.paypalAccount
