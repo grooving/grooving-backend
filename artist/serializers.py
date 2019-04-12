@@ -7,13 +7,7 @@ from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
 from utils.Assertions import Assertions
 from utils.notifications.notifications import Notifications
-
-
-# Auxiliary method
-
-def url_is_an_image(url_image):
-    format_list = ['.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif']
-    return any(element in url_image for element in format_list)
+from utils.strings import Strings
 
 
 class ArtistInfoSerializer(serializers.HyperlinkedModelSerializer):
@@ -89,7 +83,7 @@ class ArtistSerializer(serializers.ModelSerializer):
         if photo:
             Assertions.assert_true_raise400(photo.startswith('http'), {'error': 'Invalid photo url,'
                                                                                 ' the photo must start with http'})
-            Assertions.assert_true_raise400(url_is_an_image(photo), {'error': 'Invalid photo url,'
+            Assertions.assert_true_raise400(Strings.url_is_an_image(photo), {'error': 'Invalid photo url,'
                                                               ' the photo must end with an image extension'})
 
         user.save()
@@ -170,7 +164,7 @@ class ArtistSerializer(serializers.ModelSerializer):
 
             Assertions.assert_true_raise400(photo.startswith('http'), {'error': 'Invalid photo url,'
                                                                        ' the photo must start with http'})
-            Assertions.assert_true_raise400(url_is_an_image(photo), {'error': 'Invalid photo url,'
+            Assertions.assert_true_raise400(Strings.url_is_an_image(photo), {'error': 'Invalid photo url,'
                                                               ' the photo must end with an image extension'})
         return True
 
