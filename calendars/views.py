@@ -48,7 +48,7 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         try:
-            return Calendar.objects.get(portfolio__artist_id=pk)
+            return Calendar.objects.get(portfolio__artist__id=pk)
         except Calendar.DoesNotExist:
             raise Http404
 
@@ -63,7 +63,7 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
     def put(self, request, pk=None):
         if pk is None:
             pk = self.kwargs['pk']
-        calendar = Calendar.objects.filter(portfolio___artist__id=pk).first()
+        calendar = Calendar.objects.filter(portfolio__artist__id=pk).first()
 
         Assertions.assert_true_raise400(len(request.data) != 0, {'error': 'No fields were given'})
         Assertions.assert_true_raise400(calendar is not None, {'error': 'Calendar does not exist'})
