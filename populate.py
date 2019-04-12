@@ -6,9 +6,7 @@ import string
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", 'Server.settings')
 django.setup()
 
-from Grooving.models import ArtisticGender, Portfolio, Artist, Zone, PortfolioModule, Calendar, PaymentPackage, \
-    Performance, Fare, Custom, Offer, Customer, EventLocation, SystemConfiguration, Rating, Transaction
-
+from Grooving.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
@@ -1255,6 +1253,7 @@ def save_data():
     user14_admin = User.objects.create(username='admin', password=make_password('admin'), is_staff=True,
                                        is_superuser=True)
     user14_admin.save()
+    Admin.objects.create(user=user14_admin)
 
     # Artists
 
