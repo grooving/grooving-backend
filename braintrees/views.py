@@ -131,7 +131,6 @@ class BraintreeViews(generics.GenericAPIView):
             # Card could've been declined or whatever
             # I recommend to send an error report to all admins
             # , including ``result.message`` and ``self.user.email``
-            print(result.errors.deep_errors)
             context = {
                 'error': "Failed to validate",
                 'form': request.data,
@@ -139,7 +138,7 @@ class BraintreeViews(generics.GenericAPIView):
                     'Your payment could not be processed. Please check your'
                     ' input or use another payment method and try again.')
             }
-            return Response(context)
+            Assertions.assert_true_raise400(result.is_success, {'error': 'Your payment could not be processed. Please check your input or use another payment method and try again.'})
 
         offer.transaction.braintree_id = result.transaction.id
         offer.transaction.amount = amount
