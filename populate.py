@@ -846,13 +846,6 @@ def save_data():
                                      iban='ES6621000418401234567891')
     artist13.save()
 
-    # ...admins
-
-    user14_admin = User.objects.create(username='admin', password=make_password('admin'), is_staff=True,
-                                       is_superuser=True)
-    user14_admin.save()
-    Admin.objects.create(user=user14_admin)
-
     # Portfolios with his modules
 
     portfolio1 = Portfolio.objects.create(artisticName='Carlos DJ',
@@ -1260,6 +1253,7 @@ def save_data():
     user14_admin = User.objects.create(username='admin', password=make_password('admin'), is_staff=True,
                                        is_superuser=True)
     user14_admin.save()
+    Admin.objects.create(user=user14_admin)
 
     # Artists
 
