@@ -515,7 +515,7 @@ def save_data():
 
     artist10 = Artist.objects.create(user=user1_artist10, rating=5.0, portfolio=portfolio10, phone='600304999',
                                      photo='https://img.discogs.com/jgyNBtPsY4DiLegwMrOC9N_yOc4=/600x600/smart/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/A-1452461-1423476836-6354.jpeg.jpg',
-                                     iban='ES6621000418401234567891')
+                                     iban='ES6621000418401234567891', paypalAccount='tamta.info@gmail.com')
     artist10.save()
 
     performance1_paymentPackageFamous1 = Performance.objects.create(info='This is only mi pay for mi top 8 songs',
@@ -624,7 +624,7 @@ def save_data():
 
     artist11 = Artist.objects.create(user=user1_artist11, rating=5.0, portfolio=portfolio11, phone='600304999',
                                      photo='http://vein.es/wp-content/uploads/2018/11/cap5-lamento.gif',
-                                     iban='ES6621000418401234567891')
+                                     iban='ES6621000418401234567891', paypalAccount='rosalia.info@gmail.com')
     artist11.save()
 
     performance1_paymentPackageFamous2 = Performance.objects.create(
@@ -740,7 +740,7 @@ def save_data():
 
     artist12 = Artist.objects.create(user=user1_artist12, rating=5.0, portfolio=portfolio12, phone='600304999',
                                      photo='https://los40es00.epimg.net/los40/imagenes/2018/08/18/actualidad/1534605895_686141_1534606292_noticia_normal.jpg',
-                                     iban='ES6621000418401234567891')
+                                     iban='ES6621000418401234567891', paypalAccount='taylor.info@gmail.com')
     artist12.save()
 
     performance1_paymentPackageFamous3 = Performance.objects.create(
@@ -843,7 +843,7 @@ def save_data():
 
     artist13 = Artist.objects.create(user=user1_artist13, rating=5.0, portfolio=portfolio13, phone='600304999',
                                      photo='https://data.whicdn.com/images/152059660/original.gif',
-                                     iban='ES6621000418401234567891')
+                                     iban='ES6621000418401234567891', paypalAccount='charli.info@gmail.com')
     artist13.save()
 
     # Portfolios with his modules
