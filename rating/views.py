@@ -70,6 +70,7 @@ class PostRating(generics.CreateAPIView):
 
         else:
 
-            artist.rating = (artist.rating * (numRaters - 1) + rating.score) / numRaters
+            artist.rating = int(round((artist.rating * (numRaters - 1) + rating.score) / numRaters))
+
             artist.save()
         return Response(ratingChecked.data, status=status.HTTP_201_CREATED)
