@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User, Group
 from utils.Assertions import assert_true
 from rest_framework import serializers
 from Grooving.models import EventLocation, Zone, Customer

@@ -1,17 +1,10 @@
-from django.shortcuts import render
-from django.shortcuts import redirect, render
 from Grooving.models import Calendar,Portfolio,Artist
-from django.contrib import messages
-from django.db.utils import IntegrityError
-
 from rest_framework.response import Response
-from django.shortcuts import render_to_response
 from rest_framework import generics
 from .serializers import CalendarSerializer
 from rest_framework import status
 from django.http import Http404
-from django.core.exceptions import PermissionDenied
-from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
+from utils.authentication_utils import get_logged_user,get_user_type
 from utils.Assertions import Assertions
 
 
@@ -25,10 +18,11 @@ class CalendarByArtist(generics.RetrieveUpdateDestroyAPIView):
             pk = self.kwargs['pk']
         try:
             artist = Artist.objects.get(id=pk)
-            calendar= Calendar.objects.get(portfolio_id=artist.portfolio.id)
+            calendar = Calendar.objects.get(portfolio_id=artist.portfolio.id)
             return calendar
         except Calendar.DoesNotExist:
-            raise Http404
+            Assertions.assert_true_raise404(False,
+                                            {'error': 'Calendar not found'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:
@@ -73,8 +67,7 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
         Assertions.assert_true_raise403(loggedUser is not None and loggedUser.id == artist.id, {'error': 'User Id does not match calendar owner'})
         serializer = CalendarSerializer(calendar, data=request.data, partial=True)
         Assertions.assert_true_raise400(serializer.is_valid(),{'error': 'Data in serializer is not valid'})
-        serializer.save(pk,loggedUser)
-        calendar = self.get_object(pk)
+        serializer.save(pk, loggedUser)
 
         return Response(status=status.HTTP_200_OK)
 

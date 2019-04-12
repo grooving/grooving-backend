@@ -1,4 +1,5 @@
-from Grooving.models import Offer,  Artist, Portfolio, User, Calendar, PaymentPackage, Customer, EventLocation, Zone, Performance, Fare, Custom
+'''
+from Grooving.models import  Artist, Portfolio, User, Calendar, PaymentPackage,  Zone, Performance
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
@@ -59,4 +60,4 @@ class PortfolioTestCase(APITestCase):
 
         print(Portfolio.objects.filter(pk=portfolio1.id).first().status)
 
-        print("\n\nPASSED\n\n")
+        print("\n\nPASSED\n\n") '''

@@ -19,20 +19,12 @@ from utils.Assertions import Assertions
 from Grooving.models import Offer, Customer
 from django.core.exceptions import PermissionDenied
 
+
 class BraintreeViews(generics.GenericAPIView):
 
     serializer_class = TransactionSerializer
 
     def get(self, request, format=None):
-
-        # We need the user to assign the transaction
-
-        # Ha! There it is. This allows you to switch theself.braintree_client_token
-        # Braintree environments by changing one setting
-
-        #logged_user = get_logged_user(request)
-
-        #Assertions.assert_true_raise401(logged_user, {'error': 'You are not logged in'})
 
         if settings.BRAINTREE_PRODUCTION:
             braintree_env = braintree.Environment.Production
@@ -134,23 +126,6 @@ class BraintreeViews(generics.GenericAPIView):
                 'submit_for_settlement': False,
             }
         })
-        '''
-        else:
-            customer = braintree.Customer.create(customer_kwargs)
-            result = braintree.Transaction.sale({
-                "amount" : serializer.data["amount"],
-                "payment_method_nonce" : "fake-paypal-one-time-nonce",
-                "order_id" : "Mapped to PayPal Invoice Number",
-                "options" : {
-                    "submit_for_settlement": True,
-                    "paypal": {
-                        "payee_email": serializer.data['paypalCustomer'],
-                        "description" : "Description for PayPal email receipt",
-                        },
-                    },
-            })
-        print(result.is_success)
-        '''
 
         if not result.is_success:
             # Card could've been declined or whatever

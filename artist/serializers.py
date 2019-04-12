@@ -6,7 +6,6 @@ from portfolio.serializers import ArtisticGenderSerializer
 from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
 from utils.Assertions import Assertions
-from utils.notifications.notifications import Notifications
 from utils.strings import Strings
 
 
@@ -51,7 +50,7 @@ class ArtistSerializer(serializers.ModelSerializer):
     def save(self):
 
         artist = self._service_create_artist(self.initial_data)
-        # Notifications.send_email_welcome(artist.user.id) TODO
+        Notifications.send_email_welcome(artist.user.id)
         return artist
 
     def update(self, pk):
@@ -78,8 +77,10 @@ class ArtistSerializer(serializers.ModelSerializer):
             Assertions.assert_true_raise400(artist.phone.isnumeric(), {'error': "Phone must be a number"})
             Assertions.assert_true_raise400(len(artist.phone) == 9, {'error': "Phone length must be 9 digits"})
 
-        Assertions.assert_true_raise400(len(user.first_name) > 1 and len(user.last_name) > 1,
-                                        {'error': "First or second name do not seem real"})
+        Assertions.assert_true_raise400(len(user.first_name) > 1,
+                                        {'error': "First name is too short"})
+        Assertions.assert_true_raise400(len(user.last_name) > 1,
+                                        {'error': "Last name is too short"})
         if photo:
             Assertions.assert_true_raise400(photo.startswith('http'), {'error': 'Invalid photo url,'
                                                                                 ' the photo must start with http'})

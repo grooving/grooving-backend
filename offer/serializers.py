@@ -42,69 +42,10 @@ class CodeSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
 
     amount = serializers.DecimalField(max_digits=20, decimal_places=2)
-    #expirationDate = serializers.DateField(input_formats='%m%y', format='%Y-%m')
 
     class Meta:
         model = Transaction
         fields = ('id', 'amount', 'paypalArtist')
-
-    '''def validate(self, attrs):
-        # if attrs.get('ibanCustomer') is not None:
-        if attrs.get('paypalCustomer') is None:
-            Assertions.assert_true_raise400(
-                attrs.get('holder') and
-                attrs.get('number') and
-                attrs.get('expirationDate') and
-                attrs.get('cvv'),
-                {'error': 'credit card value doesn\'t valid'}
-            )
-
-            # Credit Card validation
-
-            try:
-
-                Assertions.assert_true_raise400(
-                    len(attrs.get('number')) == 16 and attrs.get('number').isdigit(),
-                    {'error': 'credit card number field bad provided'}
-                )
-
-                Assertions.assert_true_raise400(
-                    len(attrs.get('expirationDate')) == 4 and attrs.get('expirationDate').isdigit(),
-                    {'error': 'expiration date field bad provided'}
-                )
-
-                Assertions.assert_true_raise400(
-                    len(attrs.get('cvv')) == 3 and attrs.get('cvv').isdigit(),
-                    {'error': 'cvv field bad provided'}
-                )
-
-                number = attrs['number']
-                cvc = attrs['cvv']
-
-                month = int(attrs['expirationDate'][:2])
-                year = attrs['expirationDate'][2:]
-                year = '20' + year
-                year = int(year)
-                Assertions.assert_true_raise400(month >= 1 and  month<=12,
-                    {'error':  'bad month number'}
-                )
-                card = pycard.Card(number=number, month=month, year=year,
-                                   cvc=cvc)
-                Assertions.assert_true_raise400(card.is_valid, {'error': 'The credit card is not valid.'})
-
-            except FieldError:
-
-                raise FieldError('Invalid credit card.')
-
-
-        else:
-
-            # Email validation
-
-            Assertions.assert_true_raise400(validate_email(attrs.get('paypalCustomer')),
-                                            {'error': 'paypal account provided isn\'t valid'})
-
-        return True'''
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -153,7 +94,7 @@ class OfferSerializer(serializers.ModelSerializer):
             # creation
             offer = Offer()
             offer = self._service_create(self.initial_data, offer, logged_user)
-            # Notifications.send_email_create_an_offer(offer.id) # TODO
+            Notifications.send_email_create_an_offer(offer.id) # TODO
         else:
             # edit
             id = (self.initial_data, pk)[pk is not None]
@@ -179,7 +120,7 @@ class OfferSerializer(serializers.ModelSerializer):
         # Configure Paypal
         response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
                       headers={'Accept': 'application/json', 'Accept-Language': 'en_US', 'content-type': 'application/x-www-form-urlencoded'},
-                      params={'grant_type':'client_credentials'},
+                      params={'grant_type': 'client_credentials'},
                       auth=HTTPBasicAuth('AZUNfuWGR6SWVjXJo82ariPtUrGOgA7L_QP2sxe8_QHaBuQ2JUT7AN9KnQKTpjT20yOr8l4G_3zlvx3B',
                                          'EPyiDZA9P9vGWLXihX-p5qTfVBZRtMvE1gCV5G2eLHgzbZXWo5VlctjQgIIUr1WPZT-haW5Db_pDJ-3t'))
 
@@ -191,7 +132,8 @@ class OfferSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise401(user_logged.paypalAccount,
                                         {'paypal': ' You need to provide a PayPal account to perform this action' })
 
-        response = requests.post('https://api.sandbox.paypal.com/v1/payments/payouts', data='{"sender_batch_header": {"sender_batch_id": "Payment_Offer_'+str(paymentCode)+'","email_subject": "You have a payout!","email_message": "You have received a payout! Thanks for using our service!"},"items": [{"recipient_type": "EMAIL","amount": {"value": "'+str(offer.transaction.amount)+'","currency": "EUR"},"note": "Thanks for your patronage!","receiver": "'+str(user_logged.paypalAccount)+'"}]}',
+        response = requests.post('https://api.sandbox.paypal.com/v1/payments/payouts',
+                                 data='{"sender_batch_header": {"sender_batch_id": "Payment_Offer_'+str(paymentCode)+'","email_subject": "You have a payout!","email_message": "You have received a payout! Thanks for using our service!"},"items": [{"recipient_type": "EMAIL","amount": {"value": "'+str(offer.transaction.amount)+'","currency": "EUR"},"note": "Thanks for your patronage!","receiver": "'+str(user_logged.paypalAccount)+'"}]}',
                                  headers={'content-type': 'application/json',
                                           'authorization': 'Bearer ' + access_token})
 
@@ -201,7 +143,7 @@ class OfferSerializer(serializers.ModelSerializer):
         offer.save()
 
         # Notification by email
-        # Notifications.send_email_contract_made_to_payment_made(offer.id) TODO
+        Notifications.send_email_contract_made_to_payment_made(offer.id)
 
         return offer
 
@@ -232,19 +174,7 @@ class OfferSerializer(serializers.ModelSerializer):
         #transaction.amount = json.get('transaction').get('amount')
 
         transaction.save()
-        '''transaction = Transaction.objects.create(
-            # ibanCustomer=json.get('transaction').get('ibanCustomer'),
-            holder=json.get('transaction').get('holder'),
-            number=json.get('transaction').get('number'),
-            expirationDate=datetime.datetime.strptime(json.get('transaction').get('expirationDate'), "%m%y").date(),
-            cvv=json.get('transaction').get('cvv')
-        )
-        Customer.objects.filter(user_id=logged_user.id).update(
-            # ibanCustomer=json.get('transaction').get('ibanCustomer'),
-            holder=transaction.holder,
-            number=transaction.number,
-            expirationDate=transaction.expirationDate
-        )'''
+
         offer.transaction = transaction
         offer.appliedVAT = SystemConfiguration.objects.all().first().vat
         offer.save()
@@ -354,7 +284,7 @@ class OfferSerializer(serializers.ModelSerializer):
             offer_in_db.save()
 
             # Sending email notifications
-            ''' TODO
+
             if offer_in_db.status == 'CONTRACT_MADE':
                 Notifications.send_email_pending_to_contract_made(offer_in_db.id)
             elif offer_in_db.status == 'REJECTED':
@@ -365,7 +295,7 @@ class OfferSerializer(serializers.ModelSerializer):
                 Notifications.send_email_contract_made_to_cancelled_artist(offer_in_db.id)
             elif offer_in_db.status == 'CANCELLED_CUSTOMER':
                 Notifications.send_email_contract_made_to_cancelled_customer(offer_in_db.id)
-            '''
+
             print("ESTADO DB DESPUES:" + offer_in_db.status)
             return offer_in_db
 
@@ -391,10 +321,6 @@ class OfferSerializer(serializers.ModelSerializer):
                                         {'error': 'description field not provided'})
         Assertions.assert_true_raise400(json.get("date"),
                                         {'error': 'date field not provided'})
-        #Assertions.assert_true_raise400(json.get("transaction"),
-        #                                {'error': 'transaction field not provided'})
-
-        #TransactionSerializer.validate(self, json.get("transaction"))
 
         # Past date value validation
 
