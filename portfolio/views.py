@@ -1,5 +1,4 @@
 from Grooving.models import Portfolio, Artist
-from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user, get_user_type
 from rest_framework.response import Response
 from rest_framework import generics

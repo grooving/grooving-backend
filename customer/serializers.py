@@ -7,8 +7,6 @@ from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
 from utils.Assertions import Assertions
 from utils.notifications.notifications import Notifications
-from django.core.validators import URLValidator,ValidationError
-from django import forms
 
 
 class CustomerInfoSerializer(serializers.HyperlinkedModelSerializer):
@@ -58,9 +56,15 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         customer.phone = json.get('phone')
         customer.photo = json.get('photo')
         user = customer.user
-        user.first_name = json.get('first_name')
-        user.last_name = json.get('last_name')
+        user.first_name = json.get('first_name').strip()
+        user.last_name = json.get('last_name').strip()
         photo = json.get('photo')
+
+        customer.paypalAccount = json.get('paypalAccount')
+        if customer.paypalAccount:
+            Assertions.assert_true_raise400('@' in customer.paypalAccount and '.' in customer.paypalAccount,
+                                            {'error': "Invalid paypalAccount"})
+
         Assertions.assert_true_raise400(user.first_name, {'error': "First name not provided"})
         Assertions.assert_true_raise400(user.last_name, {'error': "Last name not provided"})
         if customer.phone:
@@ -70,9 +74,12 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(len(user.first_name) > 1 and len(user.last_name) > 1,
                                         {'error': "First or second name do not seem real"})
         if photo:
-            list = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
-            result = any(elem in photo for elem in list)
-            Assertions.assert_true_raise400(result, {'error': 'Invalid photo url'})
+            extensions = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
+            result = any(photo.endswith(elem) for elem in extensions)
+            Assertions.assert_true_raise400(photo.startswith('http'), {'error': 'Invalid photo url,'
+                                                                                ' the photo must start with http'})
+            Assertions.assert_true_raise400(result, {'error': 'Invalid photo url,'
+                                                              ' the photo must end with an image extension'})
 
         user.save()
         customer.user = user
@@ -96,12 +103,12 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
         user_names = User.objects.values_list('username', flat=True)
         emails = User.objects.values_list('email', flat=True)
-        password = request.data.get("password")
-        confirm_password = request.data.get("confirm_password")
-        username = request.data.get("username")
+        password = request.data.get("password").strip()
+        confirm_password = request.data.get("confirm_password").strip()
+        username = request.data.get("username").strip()
         email = request.data.get("email")
-        first_name = request.data.get("first_name")
-        last_name = request.data.get("last_name")
+        first_name = request.data.get("first_name").strip()
+        last_name = request.data.get("last_name").strip()
         phone = request.data.get("phone")
         photo = request.data.get("photo")
         Assertions.assert_true_raise400(request.data, {'error': "Empty form is not valid"})
@@ -121,7 +128,7 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(not (username in password or password in username),
                                         {'error': "Password can't be similar to the username"})
 
-        Assertions.assert_true_raise400(not (email in password or password in username),
+        Assertions.assert_true_raise400(not (email in password or password in email),
                                         {'error': "Password can't be similar to the email"})
 
         Assertions.assert_true_raise400(not (first_name in password or password in first_name),
@@ -129,9 +136,6 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
         Assertions.assert_true_raise400(not (last_name in password or password in last_name),
                                         {'error': "Password can't be similar to the last name"})
-
-        Assertions.assert_true_raise400('123' not in password and 'qwerty' not in password and
-                                        not password.isnumeric(), {'error': "Password must be complex"})
 
         Assertions.assert_true_raise400(len(password) > 7, {'error': "Password is too short"})
 
@@ -141,12 +145,17 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
             Assertions.assert_true_raise400(phone.isnumeric(), {'error': "Phone must be a number"})
             Assertions.assert_true_raise400(len(phone) == 9, {'error': "Phone length must be 9 digits"})
 
-        Assertions.assert_true_raise400(len(first_name) > 1 and len(last_name) > 1,
-                                        {'error': "First or second name do not seem real"})
+        Assertions.assert_true_raise400(len(first_name) > 1,
+                                        {'error': "First name is too short"})
+        Assertions.assert_true_raise400(len(last_name) > 1,
+                                        {'error': "Last name is too short"})
         Assertions.assert_true_raise400('@' in email and '.' in email, {'error': "Invalid email"})
-        Assertions.assert_true_raise400(len(email) > 5, {'error': "Invalid email"})
+        Assertions.assert_true_raise400(len(email) > 5, {'error': "Email is too short"})
         if photo:
-            list = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
-            result = any(elem in photo for elem in list)
-            Assertions.assert_true_raise400(result, {'error': 'Invalid photo url'})
+            extensions = ('.png', '.jpg', '.jpeg', '.gif', '.bmp', '.tif')
+            result = any(photo.endswith(elem) for elem in extensions)
+            Assertions.assert_true_raise400(photo.startswith('http'),
+                                            {'error': 'Invalid photo url, the photo must start with http'})
+            Assertions.assert_true_raise400(result, {'error': 'Invalid photo url,'
+                                                              ' the photo must end with an image extension'})
         return True

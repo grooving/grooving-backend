@@ -16,12 +16,11 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = OfferSerializer
 
     def get_object(self, pk=None):
-        if pk is None:
-            pk = self.kwargs['pk']
         try:
             return Offer.objects.get(pk=pk)
-        except Offer.DoesNotExist:
-            raise Http404
+        except Customer.DoesNotExist:
+            Assertions.assert_true_raise404(False,
+                                            {'error': 'Offer not found'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:
@@ -79,6 +78,8 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
                         return Response(status=status.HTTP_200_OK)
                     else:
                         return Response(status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return Response(status=status.HTTP_403_FORBIDDEN)
 
     def delete(self, request, pk=None, format=None):
         if pk is None:
@@ -117,9 +118,9 @@ class NumOffers(generics.GenericAPIView):
         user_type = get_user_type(articustomer)
         if user_type == "Artist":
             numOffers = Offer.objects.filter(paymentPackage__portfolio__artist=articustomer, status='PENDING').count()
-
-        return Response(numOffers)
-
+            return Response(numOffers, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'user isn\'t authorized'}, status=status.HTTP_403_FORBIDDEN)
 
 class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
     queryset = Offer.objects.all()

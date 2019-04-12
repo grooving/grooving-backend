@@ -4,6 +4,9 @@ from rest_framework import generics
 from .serializers import ListArtistOffersSerializer, ListCustomerOffersSerializer
 from utils.authentication_utils import get_user_type, get_logged_user
 from utils.utils import auto_update_old_offers
+from utils.Assertions import Assertions
+from django.http import Http404
+
 
 class ListArtistOffers(generics.ListAPIView):
 
@@ -14,13 +17,17 @@ class ListArtistOffers(generics.ListAPIView):
         user = get_logged_user(self.request)
         user_type = get_user_type(user)
 
-        if user_type == 'Artist':
+        Assertions.assert_true_raise403(user is not None, {'error': 'You must be logged in to access this page.'})
+        Assertions.assert_true_raise403(user_type == 'Artist', {'error': 'You are not an artist.'})
+        try:
             artist = Artist.objects.get(user_id=user.user_id)
+
             queryset = Offer.objects.filter(paymentPackage__portfolio__artist=artist)
             auto_update_old_offers(queryset)
             return queryset
-        else:
-            raise PermissionDenied("No tienes autorización para entrar aquí")
+        except Artist.DoesNotExist:
+            booleano = False
+            Assertions.assert_true_raise400(booleano, {'error': 'This artist does not exist.'})
 
 
 class ListCustomerOffers(generics.ListAPIView):
@@ -31,12 +38,13 @@ class ListCustomerOffers(generics.ListAPIView):
 
         user = get_logged_user(self.request)
         user_type = get_user_type(user)
-
-        if user_type == 'Customer':
+        Assertions.assert_true_raise403(user is not None, {'error': 'You must be logged in to access this page.'})
+        Assertions.assert_true_raise403(user_type == 'Customer', {'error': 'You are not a customer.'})
+        try:
             customer = Customer.objects.get(user_id=user.user_id)
             queryset = Offer.objects.filter(eventLocation__customer=customer)
             auto_update_old_offers(queryset)
             return queryset
-        else:
-            # There are no offers matching the users; therefore, they have no offers linked to them. An empty list is given
-            raise PermissionDenied("No tienes autorización para entrar aquí")
+        except Customer.DoesNotExist:
+            booleano = False
+            Assertions.assert_true_raise400(booleano, {'error': 'This customer does not exist.'})

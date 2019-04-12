@@ -1,17 +1,12 @@
-from django.shortcuts import render
-from django.shortcuts import redirect, render
 from Grooving.models import PaymentPackage,Artist,Custom,Performance,Fare
-from django.contrib import messages
-from django.db.utils import IntegrityError
 from utils.Assertions import Assertions
 from rest_framework.response import Response
-from django.shortcuts import render_to_response
 from rest_framework import generics
-from .serializers import PaymentPackageSerializer,PaymentPackageListSerializer, PaymentPackageSerializerShort,FareSerializer,CustomSerializer,PerformanceSerializer
+from .serializers import PaymentPackageSerializer,PaymentPackageListSerializer, PaymentPackageSerializerShort, FareSerializer,CustomSerializer,PerformanceSerializer
 from rest_framework import status
 from django.http import Http404
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
-from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
+from django.core.exceptions import PermissionDenied
+from utils.authentication_utils import get_logged_user,get_user_type
 
 
 class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
@@ -28,7 +23,7 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
         except Artist.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk=None, format = None):
+    def get(self, request, pk=None, format= None):
         if pk is None:
             pk = self.kwargs['pk']
         user = get_logged_user(request)
@@ -44,6 +39,7 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
             return Response(serializer.data)
         except Artist.DoesNotExist:
             raise Http404
+
 
 class PaymentPackageManager(generics.RetrieveUpdateDestroyAPIView):
 
@@ -117,9 +113,10 @@ class CreateCustomPackage(generics.CreateAPIView):
         try:
             return Custom.objects.get(pk=pk)
         except Custom.DoesNotExist:
-            raise Http404
+            Assertions.assert_true_raise404(False,
+                                            {'error': 'Custom package not found'})
 
-    def post(self, request,pk=None):
+    def post(self, request, pk=None):
         user_type = None
 
         try:
@@ -130,7 +127,9 @@ class CreateCustomPackage(generics.CreateAPIView):
 
         if pk:
             package = PaymentPackage.objects.filter(custom_id=pk).first()
-            Assertions.assert_true_raise403(logged_user.user.id == package.portfolio.artist.user.id)
+
+            owner = package.portfolio.artist
+            Assertions.assert_true_raise403(logged_user.user.id == owner.user.id, {'error': "You are not the owner"})
 
         if user_type == "Artist":
             serializer = CustomSerializer(data=request.data,partial=True)
@@ -150,7 +149,8 @@ class CreatePerformancePackage(generics.CreateAPIView):
         try:
             return Performance.objects.get(pk=pk)
         except Performance.DoesNotExist:
-            raise Http404
+            Assertions.assert_true_raise404(False,
+                                            {'error': 'Performance package not found'})
 
     def post(self, request,pk=None):
         user_type = None
@@ -162,7 +162,9 @@ class CreatePerformancePackage(generics.CreateAPIView):
 
         if pk:
             package = PaymentPackage.objects.filter(performance_id=pk).first()
-            Assertions.assert_true_raise403(logged_user.user.id == package.portfolio.artist.user.id)
+
+            owner = package.portfolio.artist
+            Assertions.assert_true_raise403(logged_user.user.id == owner.user.id, {'error': "You are not the owner"})
 
         if user_type == "Artist":
             serializer = PerformanceSerializer(data=request.data, partial=True)
@@ -182,7 +184,8 @@ class CreateFarePackage(generics.CreateAPIView):
         try:
             return Fare.objects.get(pk=pk)
         except Fare.DoesNotExist:
-            raise Http404
+            Assertions.assert_true_raise404(False,
+                                            {'error': 'Fare package not found'})
 
     def post(self, request, pk=None):
         user_type = None
@@ -194,7 +197,9 @@ class CreateFarePackage(generics.CreateAPIView):
 
         if pk:
             package = PaymentPackage.objects.filter(fare_id=pk).first()
-            Assertions.assert_true_raise403(logged_user.user.id == package.portfolio.artist.user.id)
+
+            owner = package.portfolio.artist
+            Assertions.assert_true_raise403(logged_user.user.id == owner.user.id, {'error': "You are not the owner"})
 
         if user_type == "Artist":
             serializer = FareSerializer(data=request.data, partial=True)

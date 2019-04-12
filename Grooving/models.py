@@ -64,7 +64,6 @@ class Portfolio(AbstractEntity):
     banner = models.CharField(blank=True, null=True, max_length=500)
     biography = models.TextField(blank=True, null=True)
     artisticName = models.CharField(blank=True, null=True, max_length=140)
-    artist = models.OneToOneField('Artist', null=True, blank=True, related_name='portfolio', on_delete=models.SET_NULL)
     artisticGender = models.ManyToManyField(ArtisticGender, blank=True)
     zone = models.ManyToManyField(Zone, blank=True)
 
@@ -73,20 +72,22 @@ class Portfolio(AbstractEntity):
 
 
 class Calendar(AbstractEntity):
-    days = ArrayField(models.CharField(max_length=10))
+    days = ArrayField(models.CharField(max_length=10),null=True)
     portfolio = models.OneToOneField(Portfolio, on_delete=models.CASCADE)
 
 
 class Artist(UserAbstract):
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=0.0,
                                  validators=[MinValueValidator(Decimal('0.0')), MaxValueValidator(Decimal('5.0'))])
+    portfolio = models.OneToOneField(Portfolio, default=None, related_name='artist', on_delete=models.CASCADE)
+
 
 ModuleTypeField = (
     ('PHOTO', 'PHOTO'),
     ('VIDEO', 'VIDEO'),
     ('AUDIO', 'AUDIO'),
     ('TWITTER', 'TWITTER'),
-    ('INSTAGRAM', 'INSTRAGRAM'),
+    ('INSTAGRAM', 'INSTAGRAM'),
     ('MEMBER', 'MEMBER'))
 
 
@@ -154,15 +155,10 @@ OfferStatusField = (
 
 
 class Transaction(AbstractEntity):
-    holder = models.CharField(blank=True, null=True, max_length=255)
-    expirationDate = models.DateField(blank=True, null=True)
-    number = models.CharField(blank=True, null=True, max_length=16)
-    cvv = models.CharField(blank=True, null=True, max_length=3)
-    ibanCustomer = models.CharField(blank=True, null=True, max_length=34)
-    paypalCustomer = models.EmailField(blank=True, null=True)
-    ibanArtist = models.CharField(max_length=34, blank=True, null=True)
-    paypalArtist = models.EmailField(blank=True, null=True)
 
+    amount = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0.3'))], null=True)
+    braintree_id = models.CharField(blank=True, null=True, max_length=70)
+    paypalArtist = models.EmailField(blank=True, null=True)
 
 
 class Rating(AbstractEntity):
@@ -205,11 +201,4 @@ class SystemConfiguration(AbstractEntity):
     slogan = models.CharField(max_length=255, blank=True, null=True)
     termsText = models.TextField(default='Terms text')
     privacyText = models.TextField(default='Privacy text')
-
-
-class EmailNotification(AbstractEntity):
-    subject = models.CharField(max_length=255)
-    body = models.TextField(default='Body message')
-
-    def __str__(self):
-        return str(self.subject)
+    aboutUs = models.TextField(default='About Us')

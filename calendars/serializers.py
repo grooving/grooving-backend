@@ -12,7 +12,6 @@ class CalendarSerializer(serializers.ModelSerializer):
         fields = ('days', 'portfolio')
 
     def save(self, pk=None, logged_user=None):
-
         if self.initial_data.get('id') is None and pk is None:
             # creation
             calendar = Calendar()
@@ -20,7 +19,6 @@ class CalendarSerializer(serializers.ModelSerializer):
         else:
             # edit
             id = (self.initial_data, pk)[pk is not None]
-
             calendar = Calendar.objects.filter(pk=id).first()
             calendar = self._service_update(self.initial_data, calendar, logged_user)
         calendar.save()
@@ -31,12 +29,15 @@ class CalendarSerializer(serializers.ModelSerializer):
 
         Assertions.assert_true_raise403(logged_user is not None)
 
-        portfolio = Portfolio.objects.filter(id=logged_user.portfolio.id)
+        portfolio = Portfolio.objects.filter(id=logged_user.portfolio.id).first()
+        calendar = Calendar.objects.filter(portfolio=portfolio).first()
 
-        Assertions.assert_true_raise400(portfolio.calendar is None,{'info': 'A calendar already exist for this artist'})
+        Assertions.assert_true_raise400(calendar is None, {'info': 'A calendar already exist for this artist'})
+
+        calendar = Calendar()
 
         r = re.compile('\d{4}-\d{4}-\d{2}')
-
+        Assertions.assert_true_raise400(json.get('days') is not None, {'info': 'No days field was given'})
         for day in json['days']:
             Assertions.assert_true_raise400(r.match(day), {'days': 'Bad format. Correct format YYYY-MM-DD'})
             calendar.days.append(day)
@@ -56,7 +57,7 @@ class CalendarSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(portfolio_in_db.calendar == calendar, {'info': 'This calendar doesnt belong to this user'})
 
         r = re.compile('^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])')
-
+        Assertions.assert_true_raise400(json.get('days') is not None, {'info': 'No days field was given'})
         for day in json['days']:
             Assertions.assert_true_raise400(r.match(day), {'days': 'Bad format. Correct format YYYY-MM-DD'})
 
