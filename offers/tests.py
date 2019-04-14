@@ -6,7 +6,6 @@ from rest_framework.authtoken.models import Token
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
 from rest_framework.test import APITestCase
-# Create your tests here.
 
 
 class OfferTestCase(TestCase):

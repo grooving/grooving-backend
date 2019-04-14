@@ -17,6 +17,9 @@ import django_heroku
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
 
+STATIC_URL = '/static/'
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -25,8 +28,9 @@ SECRET_KEY = 'rw&&q!#o4d3pdrwaqp#(!7c7-9&y8p@nr9lduvslgc(oq$@75l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+#DEBUG_PROPAGATE_EXCEPTIONS = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -74,7 +78,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    #'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'utils.CorsMiddleware.CorsMiddleware',
@@ -159,7 +163,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
 
 # Email configuration
 
@@ -167,7 +170,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'grupogrooving@gmail.com'
+EMAIL_HOST_USER = 'mail.grooving@gmail.com'
 EMAIL_HOST_PASSWORD = '94TDtF4zG2t4Cxy'
 
 django_heroku.settings(locals())
+
+BRAINTREE_PRODUCTION = False  # We'll need this later to switch between the sandbox and live account
+BRAINTREE_MERCHANT_ID = "2jr4z6qz4rf4n5xt"
+BRAINTREE_PUBLIC_KEY = "dqgwkcsmb7j68wf7"
+BRAINTREE_PRIVATE_KEY = "7d71536e5952a2a492855762b66ba75d"

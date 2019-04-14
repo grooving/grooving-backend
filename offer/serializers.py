@@ -14,6 +14,11 @@ from validate_email_address import validate_email
 from django.utils import timezone
 from utils.authentication_utils import get_user_type
 from utils.notifications.notifications import Notifications
+from Server import settings
+import requests
+import braintree
+import json
+from requests.auth import HTTPBasicAuth
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -36,69 +41,11 @@ class CodeSerializer(serializers.ModelSerializer):
 
 class TransactionSerializer(serializers.ModelSerializer):
 
-    expirationDate = serializers.DateField(input_formats='%m%y', format='%Y-%m')
+    amount = serializers.DecimalField(max_digits=20, decimal_places=2)
 
     class Meta:
         model = Transaction
-        fields = ('id', 'holder', 'expirationDate', 'number', 'cvv', 'paypalCustomer')
-
-    def validate(self, attrs):
-        # if attrs.get('ibanCustomer') is not None:
-        if attrs.get('paypalCustomer') is None:
-            Assertions.assert_true_raise400(
-                attrs.get('holder') and
-                attrs.get('number') and
-                attrs.get('expirationDate') and
-                attrs.get('cvv'),
-                {'error': 'credit card value doesn\'t valid'}
-            )
-
-            # Credit Card validation
-
-            try:
-
-                Assertions.assert_true_raise400(
-                    len(attrs.get('number')) == 16 and attrs.get('number').isdigit(),
-                    {'error': 'credit card number field bad provided'}
-                )
-
-                Assertions.assert_true_raise400(
-                    len(attrs.get('expirationDate')) == 4 and attrs.get('expirationDate').isdigit(),
-                    {'error': 'expiration date field bad provided'}
-                )
-
-                Assertions.assert_true_raise400(
-                    len(attrs.get('cvv')) == 3 and attrs.get('cvv').isdigit(),
-                    {'error': 'cvv field bad provided'}
-                )
-
-                number = attrs['number']
-                cvc = attrs['cvv']
-
-                month = int(attrs['expirationDate'][:2])
-                year = attrs['expirationDate'][2:]
-                year = '20' + year
-                year = int(year)
-                Assertions.assert_true_raise400(month >= 1 and  month<=12,
-                    {'error':  'bad month number'}
-                )
-                card = pycard.Card(number=number, month=month, year=year,
-                                   cvc=cvc)
-                Assertions.assert_true_raise400(card.is_valid, {'error': 'The credit card is not valid.'})
-
-            except FieldError:
-
-                raise FieldError('Invalid credit card.')
-
-
-        else:
-
-            # Email validation
-
-            Assertions.assert_true_raise400(validate_email(attrs.get('paypalCustomer')),
-                                            {'error': 'paypal account provided isn\'t valid'})
-
-        return True
+        fields = ('id', 'amount', 'paypalArtist')
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -132,15 +79,14 @@ class OfferSerializer(serializers.ModelSerializer):
     eventLocation = EventLocationSerializer(read_only=True)
     eventLocation_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=EventLocation.objects.all(),
                                                               source='eventLocation')
-    transaction = TransactionSerializer()
+    # transaction = TransactionSerializer()
 
     rating = RatingSerializer(read_only=True)
 
     class Meta:
         model = Offer
         fields = ('id', 'reason', 'appliedVAT', 'description', 'status', 'date', 'hours', 'price', 'currency',
-                      'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id',
-                      'transaction', 'rating')
+                      'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id','rating')
 
     # Esto sobrescribe una función heredada del serializer.
     def save(self, pk=None, logged_user=None):
@@ -148,7 +94,7 @@ class OfferSerializer(serializers.ModelSerializer):
             # creation
             offer = Offer()
             offer = self._service_create(self.initial_data, offer, logged_user)
-            Notifications.send_email_create_an_offer(offer.id)
+            Notifications.send_email_create_an_offer(offer.id) # TODO
         else:
             # edit
             id = (self.initial_data, pk)[pk is not None]
@@ -161,17 +107,38 @@ class OfferSerializer(serializers.ModelSerializer):
     @staticmethod
     def service_made_payment_artist(paymentCode, user_logged):
         Assertions.assert_true_raise403(user_logged is not None)
-        Assertions.assert_true_raise400(paymentCode is not None, {"paymentCode": "null payment code"})
+        Assertions.assert_true_raise400(paymentCode is not None, {"error": "null payment code"})
 
         offer = Offer.objects.filter(paymentCode=paymentCode).first()
-        Assertions.assert_true_raise404(offer is not None)
-        Assertions.assert_true_raise403(offer.paymentPackage.portfolio.artist.id == user_logged.id)
+        Assertions.assert_true_raise404(offer, {'error': 'Offer not found'})
+        Assertions.assert_true_raise403(offer.paymentPackage.portfolio.artist.id == user_logged.id,
+                                            {'error': 'You are not the owner of the offer'})
         Assertions.assert_true_raise400(offer.status == 'CONTRACT_MADE',
-                                        {"status": 'El pago ya se ha hecho o no se puede realizar ya'})
+                                        {"error": 'The payment has already been made or is outdated'})
 
         offer.status = 'PAYMENT_MADE'
-        # try:
-        # TODO: Pago por braintree
+
+        # Configure Paypal
+        response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
+                      headers={'Accept': 'application/json', 'Accept-Language': 'en_US', 'content-type': 'application/x-www-form-urlencoded'},
+                      params={'grant_type': 'client_credentials'},
+                      auth=HTTPBasicAuth('AZUNfuWGR6SWVjXJo82ariPtUrGOgA7L_QP2sxe8_QHaBuQ2JUT7AN9KnQKTpjT20yOr8l4G_3zlvx3B',
+                                         'EPyiDZA9P9vGWLXihX-p5qTfVBZRtMvE1gCV5G2eLHgzbZXWo5VlctjQgIIUr1WPZT-haW5Db_pDJ-3t'))
+
+        Assertions.assert_true_raise400(response, {'error': 'No hay respuesta desde Paypal'})
+
+        access_token = json.loads(response.content.decode("utf-8"))['access_token']
+
+        Assertions.assert_true_raise400(response, {'error': 'No coge el token'})
+        Assertions.assert_true_raise401(user_logged.paypalAccount,
+                                        {'paypal': ' You need to provide a PayPal account to perform this action' })
+
+        response = requests.post('https://api.sandbox.paypal.com/v1/payments/payouts',
+                                 data='{"sender_batch_header": {"sender_batch_id": "Payment_Offer_'+str(paymentCode)+'","email_subject": "You have a payout!","email_message": "You have received a payout! Thanks for using our service!"},"items": [{"recipient_type": "EMAIL","amount": {"value": "'+str(offer.transaction.amount)+'","currency": "EUR"},"note": "Thanks for your patronage!","receiver": "'+str(user_logged.paypalAccount)+'"}]}',
+                                 headers={'content-type': 'application/json',
+                                          'authorization': 'Bearer ' + access_token})
+
+        Assertions.assert_true_raise400(response, {'error': 'No hay respuesta AL PAGAR'})
         # except:
         # offer.status == 'CONTRACT_MADE'
         offer.save()
@@ -204,27 +171,11 @@ class OfferSerializer(serializers.ModelSerializer):
             offer.currency = offer.paymentPackage.currency
 
         transaction = Transaction()
-        if json.get('transaction').get('paypalCustomer') is not None:
-            transaction = Transaction.objects.create(
-                paypalCustomer=json.get('transaction').get('paypalCustomer'),
-            )
-            Customer.objects.filter(user_id=logged_user.id).update(
-                paypalAccount=transaction.paypalCustomer,
-            )
-        else:
-            transaction = Transaction.objects.create(
-                # ibanCustomer=json.get('transaction').get('ibanCustomer'),
-                holder=json.get('transaction').get('holder'),
-                number=json.get('transaction').get('number'),
-                expirationDate=datetime.datetime.strptime(json.get('transaction').get('expirationDate'), "%m%y").date(),
-                cvv=json.get('transaction').get('cvv')
-            )
-            Customer.objects.filter(user_id=logged_user.id).update(
-                # ibanCustomer=json.get('transaction').get('ibanCustomer'),
-                holder=transaction.holder,
-                number=transaction.number,
-                expirationDate=transaction.expirationDate
-            )
+        #Assertions.assert_true_raise400(json.get('transaction').get('amount'), {'error' : 'No amount recieved'})
+        #transaction.amount = json.get('transaction').get('amount')
+
+        transaction.save()
+
         offer.transaction = transaction
         offer.appliedVAT = SystemConfiguration.objects.all().first().vat
         offer.save()
@@ -242,8 +193,10 @@ class OfferSerializer(serializers.ModelSerializer):
 
     def _service_update_status(self, json: dict, offer_in_db: Offer, logged_user: User):
         json_status = json.get('status')
+        Assertions.assert_true_raise400(json_status, {'error': 'status field not provided'})
         if json_status:
             status_in_db = offer_in_db.status
+            Assertions.assert_true_raise400(json_status != status_in_db, {'error': 'status provided isn\'t changed'})
             normal_transitions = {}
             artist_flowstop_transitions = {}
             customer_flowstop_transitions = {}
@@ -260,10 +213,50 @@ class OfferSerializer(serializers.ModelSerializer):
                 artist_flowstop_transitions = {'PENDING': 'REJECTED',
                                                'CONTRACT_MADE': 'CANCELLED_ARTIST'}
                 if json_status == 'CONTRACT_MADE':
-                    Assertions.assert_true_raise400(logged_user.iban is not None,
-                                                    {'error': "You must introduce your bank account before"})
-                    offer_in_db.transaction.ibanArtist = logged_user.iban
-                    offer_in_db.transaction.save()
+                    print(logged_user.paypalAccount)
+                    Assertions.assert_true_raise400(logged_user.paypalAccount,
+                                        {'error': ' You need to provide a PayPal account to perform this action' })
+                    transaccion = offer_in_db.transaction
+
+                    transaccion.paypalArtist = logged_user.paypalAccount
+
+                    transaccion.save()
+
+                    if settings.BRAINTREE_PRODUCTION:
+                        braintree_env = braintree.Environment.Production
+                    else:
+                        braintree_env = braintree.Environment.Sandbox
+
+                    Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+
+                    # Configure Braintree
+                    braintree.Configuration.configure(
+                        environment=braintree_env,
+                        merchant_id=settings.BRAINTREE_MERCHANT_ID,
+                        public_key=settings.BRAINTREE_PUBLIC_KEY,
+                        private_key=settings.BRAINTREE_PRIVATE_KEY,
+                    )
+                    Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id,{'error':
+                    'La oferta no posee los credenciales de Braintree'})
+                    braintree.Transaction.submit_for_settlement(offer_in_db.transaction.braintree_id)
+                elif json_status == 'REJECTED':
+
+                    if settings.BRAINTREE_PRODUCTION:
+                        braintree_env = braintree.Environment.Production
+                    else:
+                        braintree_env = braintree.Environment.Sandbox
+
+                    Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+
+                    # Configure Braintree
+                    braintree.Configuration.configure(
+                        environment=braintree_env,
+                        merchant_id=settings.BRAINTREE_MERCHANT_ID,
+                        public_key=settings.BRAINTREE_PUBLIC_KEY,
+                        private_key=settings.BRAINTREE_PRIVATE_KEY,
+                    )
+
+                    #braintree.Transaction.settlement_decline_transaction(offer_in_db.transaction.braintree_id)
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
                                   or artist_flowstop_transitions.get(status_in_db) == json_status
@@ -279,6 +272,7 @@ class OfferSerializer(serializers.ModelSerializer):
 
                     try:
                         offer_in_db.paymentCode = self._service_generate_unique_payment_code()
+
                         offer_in_db.save()
                         break
                     except IntegrityError:
@@ -329,10 +323,6 @@ class OfferSerializer(serializers.ModelSerializer):
                                         {'error': 'description field not provided'})
         Assertions.assert_true_raise400(json.get("date"),
                                         {'error': 'date field not provided'})
-        Assertions.assert_true_raise400(json.get("transaction"),
-                                        {'error': 'transaction field not provided'})
-
-        TransactionSerializer.validate(self, json.get("transaction"))
 
         # Past date value validation
 
@@ -345,12 +335,12 @@ class OfferSerializer(serializers.ModelSerializer):
                                                                    '%Y-%m-%dT%H:%M:%S') > datetime.datetime.now(),
                                         {'error': 'date value is past'})
         Assertions.assert_true_raise400(json.get("paymentPackage_id"),
-                                        {'error': 'paymentPackage_id field not provided'})
+                                        {'error': 'payment package field not provided'})
 
         paymentPackage = PaymentPackage.objects.filter(pk=json.get("paymentPackage_id")).first()
 
         Assertions.assert_true_raise400(paymentPackage,
-                                        {'error': 'paymentPackage doesn\'t exist'})
+                                        {'error': 'payment package doesn\'t exist'})
 
         # Custom offer properties for each paymentPackage type
 
@@ -365,20 +355,21 @@ class OfferSerializer(serializers.ModelSerializer):
                 raise Assertions.assert_true_raise400(False, {'error': 'hours value bad provided'})
 
         elif paymentPackage.custom is not None:
+            price = json.get('price')
             Assertions.assert_true_raise400(json.get("price"),
                                             {'error': 'price field not provided'})
-            Assertions.assert_true_raise400(Decimal(json.get("price")) > paymentPackage.custom.minimumPrice,
+            Assertions.assert_true_raise400(0.0 < price and price >= paymentPackage.custom.minimumPrice,
                                             {'error': 'price entered it\'s below of minimum price'})
             Assertions.assert_true_raise400(json.get('hours'),
                                             {'error': 'hours field not provided'})
 
         Assertions.assert_true_raise400(json.get("eventLocation_id"),
-                                        {'error': 'eventLocation_id field not provided'})
+                                        {'error': 'event location field not provided'})
 
         eventLocation = EventLocation.objects.filter(pk=attrs.data.get("eventLocation_id")).first()
 
         Assertions.assert_true_raise400(eventLocation,
-                                        {'error': 'eventLocation does not exist'})
+                                        {'error': 'event location does not exist'})
 
         # User owner validation
 

@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework import generics
 from .serializers import OfferSerializer, GetOfferSerializer
 from rest_framework import status
-from django.http import Http404
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from utils.Assertions import Assertions
 
@@ -21,7 +20,8 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
         try:
             return Offer.objects.get(pk=pk)
         except Offer.DoesNotExist:
-            raise Http404
+            Assertions.assert_true_raise404(False,
+                                            {'error': 'Offer not found'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:
@@ -79,6 +79,8 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
                         return Response(status=status.HTTP_200_OK)
                     else:
                         return Response(status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return Response(status=status.HTTP_403_FORBIDDEN)
 
     def delete(self, request, pk=None, format=None):
         if pk is None:
@@ -117,8 +119,9 @@ class NumOffers(generics.GenericAPIView):
         user_type = get_user_type(articustomer)
         if user_type == "Artist":
             numOffers = Offer.objects.filter(paymentPackage__portfolio__artist=articustomer, status='PENDING').count()
-
-        return Response(numOffers)
+            return Response(numOffers, status=status.HTTP_200_OK)
+        else:
+            return Response({'error': 'user isn\'t authorized'}, status=status.HTTP_403_FORBIDDEN)
 
 
 class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
@@ -131,13 +134,11 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         customer = get_customer(request)
-        Assertions.assert_true_raise403(customer is not None)
+        Assertions.assert_true_raise403(customer,{'error': 'Customer not found'})
         offer = self.get_object().first()
-        Assertions.assert_true_raise404(offer is not None)
-        Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id)
+        Assertions.assert_true_raise404(offer,'Customer not found')
+        Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id,'You are not the owner of the offer')
 
-        #serializer = CodeSerializer(offer)
-        #code = serializer.data.get("paymentCode")
         return Response({"paymentCode": str(offer.paymentCode)}, status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):

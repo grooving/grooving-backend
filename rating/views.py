@@ -1,10 +1,7 @@
-from Grooving.models import Rating, Artist, Offer
-from utils.authentication_utils import get_logged_user,get_user_type
+from Grooving.models import Rating, Offer
 from rest_framework.response import Response
-from rest_framework import generics, status, serializers
-from django.http import Http404
+from rest_framework import generics, status
 from rating.serializers import CustomerRatingSerializer, ListRatingSerializer
-from django.db.models import Count, Sum
 
 
 class GetRatings(generics.ListAPIView):
@@ -12,17 +9,7 @@ class GetRatings(generics.ListAPIView):
     model = Rating
     serializer_class = ListRatingSerializer
     authentication_classes = []
-    """
-    def get_object(self, pk=None):
 
-        if pk is None:
-            pk = self.kwargs['pk']
-        try:
-            rating = Rating.objects.filter(id=pk)
-            return rating
-        except Rating.DoesNotExist:
-            raise Http404
-    """
     def get_queryset(self, pk=None):
 
         #   el PK es de un artist cuyos ratings queremos obtener
@@ -55,39 +42,35 @@ class PostRating(generics.CreateAPIView):
         pk = self.kwargs['pk']
 
         serializer = CustomerRatingSerializer(data=request.data)
-        """if serializer.validate(request, pk): #  "Some of the conditions to do this action aren't fulfilled.")
-            
-            #serializer.is_valid(request, pk)"""
-        if 1 == 1:
-            rating = serializer.save()
-            ratingChecked = CustomerRatingSerializer(rating)
-            offer = Offer.objects.get(id=pk)
-            offer.rating = rating
-            offer.save()
-            artist = offer.paymentPackage.portfolio.artist
+        serializer.validate(request, pk) #  "Some of the conditions to do this action aren't fulfilled.")
 
-            offersWithArtist = Offer.objects.filter(paymentPackage__portfolio__artist=artist)
-            numRaters = 0
+        rating = serializer.save()
+        ratingChecked = CustomerRatingSerializer(rating)
+        offer = Offer.objects.get(id=pk)
+        offer.rating = rating
+        offer.save()
+        artist = offer.paymentPackage.portfolio.artist
 
-            for offer in offersWithArtist:
+        offersWithArtist = Offer.objects.filter(paymentPackage__portfolio__artist=artist)
+        numRaters = 0
 
-                if offer.rating is not None:
+        for offer in offersWithArtist:
 
-                    numRaters = numRaters + 1
-            #   totalRating = offersWithArtist.annotate(Sum('rating'))
+            if offer.rating is not None:
+                numRaters = numRaters + 1
+        #   totalRating = offersWithArtist.annotate(Sum('rating'))
 
-#           Se comprueba que no sean 0 votos. No podemos dividir entre 0, o el universo explotará y los gatitos kawaiis
-            #           de internet morirán
+        #           Se comprueba que no sean 0 votos. No podemos dividir entre 0, o el universo explotará y los gatitos kawaiis
+        #           de internet morirán
 
-            if(numRaters == 0):
+        if (numRaters == 0):
 
-                artist.rating = rating.score
-                artist.save()
+            artist.rating = rating.score
+            artist.save()
 
-            else:
-
-                artist.rating = (artist.rating*(numRaters-1)+rating.score)/numRaters
-                artist.save()
-            return Response(ratingChecked.data, status=status.HTTP_201_CREATED)
         else:
-            raise serializers.ValidationError("Invalid data")
+
+            artist.rating = int(round((artist.rating * (numRaters - 1) + rating.score) / numRaters))
+
+            artist.save()
+        return Response(ratingChecked.data, status=status.HTTP_201_CREATED)

@@ -1,10 +1,11 @@
-from django.contrib.auth.hashers import make_password
+'''from django.contrib.auth.hashers import make_password
 from Grooving.models import User, Customer, Artist, Zone, Portfolio
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 import datetime, pytz
 
 # Create your tests here.
+
 
 class OfferTestCase(APITestCase):
 
@@ -66,4 +67,4 @@ class OfferTestCase(APITestCase):
         self.assertEqual(response.status_code, 400)
 
         self.assertEqual(response.get('x-auth'), None)
-        print("--Expected bad request: \n" + str(response.content) + "\n")
+        print("--Expected bad request: \n" + str(response.content) + "\n")'''

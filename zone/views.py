@@ -1,18 +1,11 @@
-from django.shortcuts import render
-from django.shortcuts import redirect, render
-from Grooving.models import Zone, Artist, Portfolio
-from django.contrib import messages
-from django.db.utils import IntegrityError
+from Grooving.models import Zone, Portfolio
 from rest_framework.response import Response
-from django.shortcuts import render_to_response
 from rest_framework import generics
 from .serializers import ZoneSerializer, SearchZoneSerializer
 from rest_framework import status
-from django.http import Http404
 from django.core.exceptions import PermissionDenied
-from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
+from utils.authentication_utils import get_logged_user, get_user_type
 from utils.Assertions import Assertions
-from collections import defaultdict
 
 
 class ZoneManager(generics.RetrieveUpdateDestroyAPIView):
@@ -26,7 +19,8 @@ class ZoneManager(generics.RetrieveUpdateDestroyAPIView):
         try:
             return Zone.objects.get(pk=pk)
         except Zone.DoesNotExist:
-            raise Http404
+            Assertions.assert_true_raise404(False,
+                                            {'error': 'Zone not found'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:
@@ -105,9 +99,20 @@ class ListZones(generics.RetrieveAPIView):
             except ValueError:
                 Assertions.assert_true_raise400(False, {"error": "Incorrect format for id"})
 
-            zones = list(Portfolio.objects.filter(pk=portfolio).first().zone.all())
-            Assertions.assert_true_raise404(zones is not None)
-            serializer = SearchZoneSerializer(zones, many=True)
+            portfolio = Portfolio.objects.filter(pk=portfolio).first()
+            Assertions.assert_true_raise404(portfolio,
+                                            {'error':  'Portfolio not found'})
+            zones = portfolio.zone.all()
+            count = zones.count()
+            child_zones = []
+            for zone in zones:
+                childs = SearchZoneSerializer.get_base_childs(zone, [])[0]
+                if len(child_zones) == 0:
+                    child_zones = childs
+                else:
+                    child_zones.extend(childs)
+
+            serializer = SearchZoneSerializer(child_zones, many=True)
             zones = serializer.data
 
         return Response(zones, status=status.HTTP_200_OK)

@@ -1,6 +1,5 @@
 
 from rest_framework.test import APITestCase
-from user.views import ArtistRegister,CustomerRegister
 
 class UserTestCase(APITestCase):
 

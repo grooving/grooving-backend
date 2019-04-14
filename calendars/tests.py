@@ -1,4 +1,4 @@
-from Grooving.models import Offer,  Artist, Portfolio, User, Calendar, PaymentPackage, Customer
+'''from Grooving.models import Offer,  Artist, Portfolio, User, Calendar, PaymentPackage, Customer
 from Grooving.models import EventLocation, Zone, Performance
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
@@ -59,4 +59,4 @@ class CalendarTestCase(APITestCase):
         self.assertEqual(response1.status_code, 200)
         print(response1)
 
-        print(Calendar.objects.filter(pk=calendar1.id).first().days)
+        print(Calendar.objects.filter(pk=calendar1.id).first().days)'''

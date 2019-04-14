@@ -22,7 +22,6 @@ from artist.views import GetPersonalInformationOfArtist,ArtistRegister
 from customer.views import GetPersonalInformationOfCustomer, GetPublicInformationOfCustomer, CustomerRegister
 from offer.views import OfferManage, CreateOffer, PaymentCode,NumOffers
 from portfolioModule.views import PortfolioModuleManager, CreatePortfolioModule
-from user.views import UserManage
 from artist.views import ListArtist,ArtistRegister
 from offers.views import ListArtistOffers, ListCustomerOffers
 from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage,CreateCustomPackage,CreateFarePackage,CreatePerformancePackage
@@ -31,6 +30,8 @@ from artistGender.views import ArtisticGenderManager, CreateArtisticGender, List
 from zone.views import ZoneManager, CreateZone, ListZones
 from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
+from utils.utils import TermsAndConditions, Privacy, AboutUs
+from braintrees.views import BraintreeViews
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
 
@@ -56,10 +57,9 @@ urlpatterns = [
     url(r'^customer/publicInformation/(?P<pk>[0-9]+)/$', GetPublicInformationOfCustomer.as_view()),
     url(r'^calendar/(?P<pk>[0-9]+)/$', CalendarManager.as_view()),
     url(r'^calendar/$', CreateCalendar.as_view()),
-    url(r'^user/$', UserManage.as_view()),
     url(r'^artisticGender/$', CreateArtisticGender.as_view()),
     url(r'^artisticGenders/$', ListArtisticGenders.as_view()),
-    url(r'^artisticGender/(?P<pk>[0-9]+)/ ', ArtisticGenderManager.as_view()),
+    url(r'^artisticGender/(?P<pk>[0-9]+)/$', ArtisticGenderManager.as_view()),
     url(r'^zone/$', CreateZone.as_view()),
     url(r'^zone/(?P<pk>[0-9]+)/$', ZoneManager.as_view()),
     path('api/login/', LoginManager.as_view(), name='login'),
@@ -86,5 +86,8 @@ urlpatterns = [
     url(r'^zones/$', ListZones.as_view()),
 
     url(r'^numOffers/$', NumOffers.as_view()),
-    url(r'^terms/$', TermsAndConditions.as_view()),
+    url(r'^terms$', TermsAndConditions.as_view()),
+    url(r'^privacy$', Privacy.as_view()),
+    url(r'^about$', AboutUs.as_view()),
+    url(r'^braintree_token/$', BraintreeViews.as_view())
 ]

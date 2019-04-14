@@ -24,8 +24,28 @@ class SearchZoneSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_tree():
         parent = SearchZoneSerializer._get_parent_of_all()
-        Assertions.assert_true_raise404(parent is not None)
+        Assertions.assert_true_raise404(parent,"Parent zone not found")
         return SearchZoneSerializer._get_childs_zone(parent, [])[0]
+
+    @staticmethod
+    def get_base_childs(zone, total=[]):
+        total = total
+        total.append(zone)
+        base_childs = []
+        for child_zone in zone.zone_set.all():
+            if child_zone not in total:
+                recursive_data = SearchZoneSerializer.get_base_childs(child_zone, total)
+
+                total = recursive_data[1]
+                if child_zone.zone_set.all().count() == 0:
+                    base_childs.append(child_zone)
+                else:
+                    base_childs.extend(recursive_data[0])
+
+        if len(base_childs) == 0:
+            base_childs.append(zone)
+
+        return base_childs, total
 
     @staticmethod
     def _get_childs_zone(zone, total=[]):
@@ -33,6 +53,10 @@ class SearchZoneSerializer(serializers.ModelSerializer):
         total.append(zone)
         id = str(zone.id)
         name = zone.name
+        parentZone = None
+        if zone.parentZone is not None:
+            parentZone = str(zone.parentZone.id)
+
         child_dicts_list = []
         for child_zone in zone.zone_set.all():
             if child_zone not in total:
@@ -40,7 +64,7 @@ class SearchZoneSerializer(serializers.ModelSerializer):
                 total = recursive_data[1]
                 child_dicts_list.append(recursive_data[0])
 
-        dictionary = {"id": id, "name": name, "children": child_dicts_list}
+        dictionary = {"id": id, "name": name, "parent": parentZone, "children": child_dicts_list}
 
         return dictionary, total
 

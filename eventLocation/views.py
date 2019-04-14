@@ -1,19 +1,13 @@
-from django.shortcuts import render
-from django.shortcuts import redirect, render
-from Grooving.models import EventLocation, Artist, Customer, Offer,Portfolio
-from django.contrib import messages
-from django.db.utils import IntegrityError
-from utils.authentication_utils import get_logged_user,get_user_type
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
+from Grooving.models import EventLocation, Artist, Customer, Offer, Portfolio
+from utils.authentication_utils import get_logged_user, get_user_type
+from django.core.exceptions import PermissionDenied
 
 from rest_framework.response import Response
-from django.shortcuts import render_to_response
 from rest_framework import generics
 from .serializers import EventLocationSerializer
 from rest_framework import status
-from django.http import Http404
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
+from utils.Assertions import Assertions
 # Create your views here.
 
 
@@ -28,7 +22,8 @@ class EventLocationManager(generics.RetrieveUpdateDestroyAPIView):
         try:
             return EventLocation.objects.get(pk=pk)
         except EventLocation.DoesNotExist:
-            raise Http404
+            raise Assertions.assert_true_raise404(False,
+                                            {'error': 'Event location not found'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:
@@ -37,10 +32,9 @@ class EventLocationManager(generics.RetrieveUpdateDestroyAPIView):
         articustomer = get_logged_user(request)
         user_type = get_user_type(articustomer)
         if user_type == "Artist":
-            offer = Offer.objects.all.filter(eventLocation_id=eventLocation.id)
-            portfolio = Portfolio.objects.get(paymentPackage_id=offer.paymentPackage_id)
-            artist = Artist.objects.get(portfolio_id=portfolio.id)
-            if articustomer.user_id == artist.user_id:
+            offers = Offer.objects.filter(eventLocation=eventLocation)
+            offers_artist = Offer.objects.filter(paymentPackage__portfolio=articustomer.portfolio)
+            if any(item in offers for item in offers_artist):
                 serializer = EventLocationSerializer(eventLocation)
                 return Response(serializer.data)
             else:
@@ -56,32 +50,6 @@ class EventLocationManager(generics.RetrieveUpdateDestroyAPIView):
         else:
             raise PermissionDenied
 
-
-'''
-    def put(self, request, pk):
-        eventLocation = self.get_object(pk)
-        if len(request.data) == 1:
-            serializer = EventLocationSerializer(eventLocation, data=request.data, partial=True)
-
-        else:
-            serializer = EventLocationSerializer(eventLocation, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk, format=None):
-        eventLocation = self.get_object(pk)
-        eventLocation.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def update(self, request, pk, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object(pk)
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-'''
 
 class CreateEventLocation(generics.CreateAPIView):
     queryset = EventLocation.objects.all()

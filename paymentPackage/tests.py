@@ -1,4 +1,4 @@
-from Grooving.models import Offer, Artist, Portfolio, User, Calendar, PaymentPackage, Customer
+'''from Grooving.models import Offer, Artist, Portfolio, User, Calendar, PaymentPackage, Customer
 from Grooving.models import EventLocation, Zone, Performance, ArtisticGender
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
@@ -58,5 +58,5 @@ class ArtistGenderTestCase(APITestCase):
         self.assertEqual(response1.status_code, 200)
 
         print(response1)
-        print(PaymentPackage.objects.filter(pk=payment_package1.id).first())
+        print(PaymentPackage.objects.filter(pk=payment_package1.id).first())'''
 

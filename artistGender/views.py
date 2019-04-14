@@ -1,18 +1,12 @@
-from django.shortcuts import render
-from django.shortcuts import redirect, render
-from Grooving.models import ArtisticGender, Artist
-from django.contrib import messages
-from django.db.utils import IntegrityError
-
+from Grooving.models import ArtisticGender
 
 from django.core.exceptions import PermissionDenied
-from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
+from utils.authentication_utils import get_logged_user,get_user_type
 from rest_framework.response import Response
-from django.shortcuts import render_to_response
 from rest_framework import generics
 from .serializers import ArtisticGenderSerializer, ShortArtisticGenderSerializer
 from rest_framework import status
-from django.http import Http404
+from utils.Assertions import Assertions
 
 
 class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
@@ -26,7 +20,7 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
         try:
             return ArtisticGender.objects.get(pk=pk)
         except ArtisticGender.DoesNotExist:
-            raise Http404
+            raise Assertions.assert_true_raise404(False, {'error': 'Artistic gender not found'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:
@@ -86,7 +80,7 @@ class ListArtisticGenders(generics.RetrieveUpdateDestroyAPIView):
         try:
             return ArtisticGender.objects.get(pk=pk)
         except ArtisticGender.DoesNotExist:
-            raise Http404
+            raise Assertions.assert_true_raise404(False, {'error': 'Artistic gender not found'})
 
     def get(self, request, pk=None, format=None):
 
