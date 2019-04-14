@@ -1,6 +1,4 @@
 from Grooving.models import User, Artist, Customer, Portfolio, PortfolioModule, Calendar, EventLocation
-from django.core.exceptions import PermissionDenied
-from utils.authentication_utils import get_user_type, get_customer, get_artist
 from utils.Assertions import Assertions
 from rest_framework.response import Response
 from rest_framework import generics
