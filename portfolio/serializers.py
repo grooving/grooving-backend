@@ -3,6 +3,7 @@ from rest_framework import serializers
 from Grooving.models import Portfolio, Calendar, ArtisticGender, PortfolioModule, PaymentPackage, Artist, Zone
 from utils.Assertions import Assertions
 import re
+from utils.strings import Strings
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -37,8 +38,6 @@ class CalendarSerializer(serializers.ModelSerializer):
 
 class ArtisticGenderSerializer(serializers.ModelSerializer):
 
-    #parentGender = ParentGenderSerializer(read_only=True)
-
     class Meta:
         model = ArtisticGender
         fields = ('id', 'name', 'parentGender')
@@ -64,18 +63,17 @@ class ZoneSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Zone
-        fields = ('parentZone_id', 'name')
+        fields = ('id', 'parentZone_id', 'name')
 
 
 class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
 
-    artisticName = serializers.CharField()
-    biography = serializers.CharField()
-    banner = serializers.CharField()
+    artisticName = serializers.CharField(allow_null=True)
+    biography = serializers.CharField(allow_null=True)
+    banner = serializers.CharField(allow_blank=True,allow_null=True)
     images = serializers.SerializerMethodField('list_images')
     videos = serializers.SerializerMethodField('list_videos')
     main_photo = serializers.SerializerMethodField('list_photo')
-    #artisticGenders = serializers.SerializerMethodField('list_genders')
     artist = ArtistSerializer(read_only=True)
     artisticGender = ArtisticGenderSerializer(read_only=True, many=True)
     zone = ZoneSerializer(read_only=True, many=True)
@@ -144,20 +142,27 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
             else:
                 return Assertions.assert_true_raise403(False, {'error': 'User doesnt own this portfolio'})
         else:
-            return Assertions.assert_true_raise404(False)
+            return Assertions.assert_true_raise404(False,
+                                            {'error': 'Portfolio not found'})
 
     @staticmethod
     def _service_update(json: dict, portfolio_in_db):
 
-        Assertions.assert_true_raise400(portfolio_in_db is not None, {'error' : 'Portfolio not in database'})
+        Assertions.assert_true_raise400(portfolio_in_db is not None, {'error': 'Portfolio not in database'})
 
         if json['artisticName'] is not None:
+            Assertions.assert_true_raise400(isinstance(json['artisticName'], str), {'error', 'Artistic Name must be a string'})
             portfolio_in_db.artisticName = json.get('artisticName')
 
         if json['banner'] is not None:
+            Assertions.assert_true_raise400(isinstance(json['banner'], str), {'error', 'Banner must be a string'})
+            Assertions.assert_true_raise400(json['banner'].startswith('http'), {'error': 'Invalid banner url,'
+                                                                                ' the banner must start with http'})
+            Assertions.assert_true_raise400(Strings.url_is_an_image(json['banner']), {'error': 'Invalid image format banner.'})
             portfolio_in_db.banner = json.get('banner')
 
         if json['biography'] is not None:
+            Assertions.assert_true_raise400(isinstance(json['biography'], str), {'error', 'Biography must be a string'})
             portfolio_in_db.biography = json.get('biography')
 
         if json['images'] is not None:
@@ -170,12 +175,15 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                     image_db.delete()
 
             for image in json['images']:
+                Assertions.assert_true_raise400(isinstance(image, str), {'error', 'Images must be a string'})
+                Assertions.assert_true_raise400(image.startswith('http'), {'error': 'Invalid image url,'
+                                                                                    ' the image must start with http'})
                 aux = True
                 for image_db in PortfolioModule.objects.filter(type='PHOTO', portfolio=portfolio_in_db):
                     if image_db.link == image:
                         aux = False
                 if aux:
-                    Assertions.assert_true_raise400(image.endswith(".png") or image.endswith(".gif") or image.endswith(".jpg") or image.endswith(".jpeg"), {'error': 'Formato imagen erroneo'})
+                    Assertions.assert_true_raise400(Strings.url_is_an_image(image), {'error': 'Invalid format image'})
                     module = PortfolioModule()
                     module.type = 'PHOTO'
                     module.link = image
@@ -187,8 +195,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
             r = re.compile('^(http(s)?:\/\/)?(|((m).)|((w){3}.))?youtu(be|.be)?(\.)')
 
             for video in json['videos']:
-                print(video)
-                Assertions.assert_true_raise400(r.match(video), {'video': 'Bad format.'})
+                Assertions.assert_true_raise400(r.match(video), {'video': 'Video must be from youtube'})
 
             for video_db in PortfolioModule.objects.filter(type='VIDEO', portfolio=portfolio_in_db):
                 aux = True
@@ -199,6 +206,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                     video_db.delete()
 
             for video in json['videos']:
+                Assertions.assert_true_raise400(isinstance(video, str), {'error', 'Videos must be a string'})
                 aux = True
                 for video_db in PortfolioModule.objects.filter(type='VIDEO', portfolio=portfolio_in_db):
                     if video_db.link == video:
@@ -228,7 +236,29 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                 else:
                     portfolio_in_db.artisticGender.add(genre_db.id)
 
+        if json['zone'] is not None:
+
+            for zone in portfolio_in_db.zone.all():
+                if zone.name in json['zone']:
+                    None
+                else:
+                    portfolio_in_db.zone.remove(zone.id)
+
+            for zone in json['zone']:
+                try:
+                    zone_db = Zone.objects.get(name=zone)
+                except:
+                    return Assertions.assert_true_raise400(False, {'error': 'Zone not in database'})
+                if portfolio_in_db.id in zone_db.portfolio_set.all():
+                    None
+                else:
+                    portfolio_in_db.zone.add(zone_db.id)
+
         if json['main_photo'] is not None:
+            Assertions.assert_true_raise400(isinstance(json['main_photo'], str), {'error', 'Main_photo must be a string'})
+            Assertions.assert_true_raise400(json['main_photo'].startswith('http'), {'error': 'Invalid main_photo url,'
+                                                                                ' the photo must start with http'})
+            Assertions.assert_true_raise400(Strings.url_is_an_image(json['main_photo']), {'error': 'Invalid image format main_photo'})
             artist = Artist.objects.get(portfolio=portfolio_in_db)
             artist.photo = json['main_photo']
             artist.save()

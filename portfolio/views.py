@@ -1,11 +1,9 @@
 from Grooving.models import Portfolio, Artist
-from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user, get_user_type
 from rest_framework.response import Response
 from rest_framework import generics
 from .serializers import PortfolioSerializer
 from rest_framework import status
-from django.http import Http404
 from utils.Assertions import Assertions
 
 
@@ -20,7 +18,8 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
         try:
             return Portfolio.objects.get(pk=pk)
         except Portfolio.DoesNotExist:
-            raise Http404
+            Assertions.assert_true_raise404(False,
+                                            {'error': 'Portfolio not found'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:
@@ -50,7 +49,7 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
             else:
                 raise Assertions.assert_true_raise403(False, {'error': 'Not logged or not owner of Portfolio'})
         else:
-            return Assertions.assert_true_raise404(False)
+            return Assertions.assert_true_raise404(False, {'error': 'Portfolio not found'})
 
     def delete(self, request, pk=None, format=None):
         if pk is None:

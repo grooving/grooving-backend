@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User, Group
 from utils.Assertions import assert_true
 from rest_framework import serializers
 from Grooving.models import EventLocation, Zone, Customer
@@ -66,7 +65,7 @@ class EventLocationSerializer(serializers.ModelSerializer):
         if customer is None:
             raise serializers.ValidationError("user isn't authorized")
         json = request.data
-        if json.get("address") is None:
+        if json.get("address") is None or len(json.get("address")) == 0:
             raise serializers.ValidationError("address field not provided")
         if json.get("zone_id") is None:
             raise serializers.ValidationError("zone_id field not provided")

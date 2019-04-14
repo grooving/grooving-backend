@@ -25,4 +25,5 @@ Whoosh == 2.7.4
 captain-pycard
 validate-email-address
 Weasyprint==46
-
+Distance
+braintree==3.52.0
