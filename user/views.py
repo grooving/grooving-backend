@@ -27,4 +27,4 @@ class UserManage(generics.DestroyAPIView):
             serialized = UserSerializer(user)
             return Response(serialized.data, status=status.HTTP_200_OK)
         else:
-            Assertions.assert_true_raise400(False, {'error': 'ERROR_VALIDATE'})
+            return Response({'error': 'ERROR_VALIDATE'}, status=status.HTTP_400_BAD_REQUEST)

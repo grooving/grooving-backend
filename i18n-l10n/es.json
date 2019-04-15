@@ -1,5 +1,6 @@
 {
   "ERROR_USER_FORBIDDEN": "El usuario tiene prohibido esta acción",
+  "ERROR_FIELD_ID": "Campo id no rellenado",
   "ERROR_FIELD_TYPE": "Campo tipo no rellenado",
   "ERROR_FIELD_LINK": "Campo enlace no rellenado",
   "ERROR_FIELD_DESCRIPTION": "Campo descripción no rellenado",

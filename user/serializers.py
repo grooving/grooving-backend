@@ -19,11 +19,15 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         admin = Admin.objects.filter(user=attrs.user).first()
         Assertions.assert_true_raise403(admin is not None, {'error': 'ERROR_USER_FORBIDDEN'})
 
-        # Ban user validation
+        # Data validation
 
         json = attrs.data
+        Assertions.assert_true_raise400(json.get('id'), {'error': 'ERROR_FIELD_ID'})
+
+        # Ban user validation
+
         user = User.objects.filter(id=json.get('id')).first()
-        Assertions.assert_true_raise400(user is not None, {'error': 'ERROR_USER_FORBIDDEN'})
+        Assertions.assert_true_raise400(user is not None, {'error': 'ERROR_BAN_USER_UNKNOWN'})
 
         return True
 
