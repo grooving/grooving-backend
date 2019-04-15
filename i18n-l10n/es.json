@@ -11,5 +11,9 @@
   "ERROR_CREATEMODULE_INSTAGRAM": "No se puede crear otro modulo de Instagram",
   "ERROR_REFERENCE_PORTFOLIO": "No puedes referenciar este portfolio",
   "ERROR_DELETE_USER_UNKNOWN": "Error al eliminar un usuario desconocido",
-  "ERROR_DELETE_USER": "Error al eliminar usuario"
+  "ERROR_DELETE_USER": "Error al eliminar usuario",
+  "ERROR_BAN_USER_UNKNOWN": "Error al banear un usuario desconocido",
+  "ERROR_BAN_USER": "Error al banear usuario",
+  "ERROR_VALIDATE": "La validación de los datos ha sido erronea"
+
 }
