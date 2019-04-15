@@ -111,7 +111,7 @@ class BraintreeViews(generics.GenericAPIView):
         else:
             amount = offer.price * offer.hours
         print(amount)
-        Assertions.assert_true_raise400(amount > 0, {'error': 'Error in the amount'})
+        Assertions.assert_true_raise400(amount > 0, {'error': 'Amount is 0 or lower'})
 
         result = braintree.Transaction.sale({
             "customer_id": customer.customer.id,
