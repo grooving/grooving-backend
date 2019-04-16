@@ -35,7 +35,7 @@ from utils.utils import TermsAndConditions, Privacy, AboutUs
 from braintrees.views import BraintreeViews
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
-
+from chat.views import index, room
 router = routers.DefaultRouter()
 
 urlpatterns = [
@@ -91,5 +91,7 @@ urlpatterns = [
     url(r'^terms$', TermsAndConditions.as_view()),
     url(r'^privacy$', Privacy.as_view()),
     url(r'^about$', AboutUs.as_view()),
-    url(r'^braintree_token/$', BraintreeViews.as_view())
+    url(r'^braintree_token/$', BraintreeViews.as_view()),
+    url(r'^chat/$', index),
+    url(r'^chat/(?P<room_name>[^/]+)/$', room, name='room'),
 ]
