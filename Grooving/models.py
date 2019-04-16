@@ -34,8 +34,13 @@ class Admin(Actor):
         return str(self.user.username)
 
 
+LanguageField = (
+    ('es', 'es'),
+    ('en', 'en'))
+
+
 class UserAbstract(Actor):
-    language = models.CharField(max_length=3)
+    language = models.CharField(choices=LanguageField, max_length=3)
     photo = models.CharField(max_length=500, blank=True, null=True)
     phone = models.CharField(max_length=12, blank=True, null=True)
     iban = models.CharField(max_length=34, blank=True, null=True)
@@ -189,7 +194,6 @@ class Offer(AbstractEntity):
 
     def __str__(self):
         return str(self.description)
-
 
 class SystemConfiguration(AbstractEntity):
     minimumPrice = models.DecimalField(default=0.0, max_digits=20, decimal_places=2,
