@@ -15,6 +15,6 @@
   "ERROR_DELETE_USER": "Error al eliminar usuario",
   "ERROR_BAN_USER_UNKNOWN": "Error al banear un usuario desconocido",
   "ERROR_BAN_USER": "Error al banear usuario",
-  "ERROR_VALIDATE": "La validación de los datos ha sido erronea"
-
+  "ERROR_VALIDATE": "La validación de los datos ha sido erronea",
+  "ERROR_NO_ARTISTIC_NAME": "No has introducido un nombre artistico."
 }
