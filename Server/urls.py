@@ -24,6 +24,7 @@ from offer.views import OfferManage, CreateOffer, PaymentCode,NumOffers
 from portfolioModule.views import PortfolioModuleManager, CreatePortfolioModule
 from user.views import UserManage
 from artist.views import ListArtist,ArtistRegister
+from user.views import UserManage
 from offers.views import ListArtistOffers, ListCustomerOffers
 from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage,CreateCustomPackage,CreateFarePackage,CreatePerformancePackage
 from calendars.views import CalendarByArtist, CalendarManager, CreateCalendar
