@@ -39,8 +39,8 @@ class UserManage(generics.DestroyAPIView):
             elif Customer.objects.filter(user=request.user).first() is not None:
                 customer = Customer.objects.get(user=request.user)
                 EventLocation.objects.filter(customer=customer).update(isHidden=True)
-                Assertions.assert_true_raise400(False, {'error': 'ERROR_DELETE_USER_UNKNOWN'})
             else:
+                Assertions.assert_true_raise400(False, {'error': 'ERROR_DELETE_USER_UNKNOWN'})
             request.user.delete()
         except TypeError:
             Assertions.assert_true_raise401(False, {'error': 'ERROR_DELETE_USER'})
