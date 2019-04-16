@@ -206,6 +206,25 @@ class OfferSerializer(serializers.ModelSerializer):
                 customer_flowstop_transitions = {'PENDING': 'WITHDRAWN',
                                                  'CONTRACT_MADE': 'CANCELLED_CUSTOMER'}
 
+                if json_status == 'CANCELLED_CUSTOMER':
+
+                    if settings.BRAINTREE_PRODUCTION:
+                        braintree_env = braintree.Environment.Production
+                    else:
+                        braintree_env = braintree.Environment.Sandbox
+
+                    Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+
+                    # Configure Braintree
+                    braintree.Configuration.configure(
+                        environment=braintree_env,
+                        merchant_id=settings.BRAINTREE_MERCHANT_ID,
+                        public_key=settings.BRAINTREE_PUBLIC_KEY,
+                        private_key=settings.BRAINTREE_PRIVATE_KEY,
+                    )
+
+                    braintree.Transaction.refund(offer_in_db.transaction.braintree_id)
+
             artistReceiver = Artist.objects.filter(pk=offer_in_db.paymentPackage.portfolio.artist.id).first()
 
             if get_user_type(logged_user) == 'Artist' and artistReceiver == logged_user:
@@ -256,7 +275,26 @@ class OfferSerializer(serializers.ModelSerializer):
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
 
-                    #braintree.Transaction.settlement_decline_transaction(offer_in_db.transaction.braintree_id)
+                    braintree.Transaction.void(offer_in_db.transaction.braintree_id)
+
+                elif json_status == 'CANCELLED_ARTIST':
+
+                    if settings.BRAINTREE_PRODUCTION:
+                        braintree_env = braintree.Environment.Production
+                    else:
+                        braintree_env = braintree.Environment.Sandbox
+
+                    Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+
+                    # Configure Braintree
+                    braintree.Configuration.configure(
+                        environment=braintree_env,
+                        merchant_id=settings.BRAINTREE_MERCHANT_ID,
+                        public_key=settings.BRAINTREE_PUBLIC_KEY,
+                        private_key=settings.BRAINTREE_PRIVATE_KEY,
+                    )
+
+                    braintree.Transaction.refund(offer_in_db.transaction.braintree_id)
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
                                   or artist_flowstop_transitions.get(status_in_db) == json_status
