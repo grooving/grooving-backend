@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, JSONField
 from django.utils import timezone
 
 # Create your models here.
@@ -63,6 +63,7 @@ class Zone(AbstractEntity):
 class Portfolio(AbstractEntity):
     banner = models.CharField(blank=True, null=True, max_length=500)
     biography = models.TextField(blank=True, null=True)
+    artist = models.OneToOneField('Artist', related_name='portfolio', null=True, blank=True, on_delete=models.SET_NULL)
     artisticName = models.CharField(blank=True, null=True, max_length=140)
     artisticGender = models.ManyToManyField(ArtisticGender, blank=True)
     zone = models.ManyToManyField(Zone, blank=True)
@@ -79,7 +80,6 @@ class Calendar(AbstractEntity):
 class Artist(UserAbstract):
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=0.0,
                                  validators=[MinValueValidator(Decimal('0.0')), MaxValueValidator(Decimal('5.0'))])
-    portfolio = models.OneToOneField(Portfolio, default=None, related_name='artist', on_delete=models.CASCADE)
 
 
 ModuleTypeField = (
@@ -94,7 +94,7 @@ ModuleTypeField = (
 class PortfolioModule(AbstractEntity):
     type = models.CharField(choices=ModuleTypeField, max_length=50)
     link = models.URLField(blank=True, null=True)
-    description = models.TextField(max_length=1000, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -102,7 +102,7 @@ class PortfolioModule(AbstractEntity):
 
 
 class Performance(AbstractEntity):
-    info = models.TextField(max_length=1000)
+    info = models.TextField()
     hours = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.5'))])
     price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('1.0'))])
 
@@ -166,6 +166,10 @@ class Rating(AbstractEntity):
     comment = models.TextField(blank=True, null=True)
 
 
+class Chat(AbstractEntity):
+    json = JSONField(default=dict)
+
+
 class Offer(AbstractEntity):
     description = models.TextField(default='Description')
     status = models.CharField(choices=OfferStatusField, default='PENDING', max_length=50)
@@ -180,6 +184,7 @@ class Offer(AbstractEntity):
     appliedVAT = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(Decimal('0.0'))])
     transaction = models.OneToOneField(Transaction, on_delete=models.SET_NULL, null=True, blank=True)
     rating = models.OneToOneField(Rating, on_delete=models.SET_NULL, null=True, blank=True)
+    chat = models.OneToOneField(Chat, related_name='offer', null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return str(self.description)

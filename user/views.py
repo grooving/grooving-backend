@@ -28,3 +28,20 @@ class UserManage(generics.DestroyAPIView):
             return Response(serialized.data, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'ERROR_VALIDATE'}, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        try:
+            if Artist.objects.filter(user=request.user).first() is not None:
+                artist = Artist.objects.get(user=request.user)
+                portfolio = Portfolio.objects.filter(artist=artist).update(isHidden=True)
+                PortfolioModule.objects.filter(portfolio=portfolio).update(isHidden=True)
+                Calendar.objects.filter(portfolio=portfolio).update(isHidden=True)
+            elif Customer.objects.filter(user=request.user).first() is not None:
+                customer = Customer.objects.get(user=request.user)
+                EventLocation.objects.filter(customer=customer).update(isHidden=True)
+                Assertions.assert_true_raise400(False, {'error': 'ERROR_DELETE_USER_UNKNOWN'})
+            else:
+            request.user.delete()
+        except TypeError:
+            Assertions.assert_true_raise401(False, {'error': 'ERROR_DELETE_USER'})
+        return Response(status=status.HTTP_204_NO_CONTENT)

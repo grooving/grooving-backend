@@ -22,6 +22,7 @@ from artist.views import GetPersonalInformationOfArtist,ArtistRegister
 from customer.views import GetPersonalInformationOfCustomer, GetPublicInformationOfCustomer, CustomerRegister
 from offer.views import OfferManage, CreateOffer, PaymentCode,NumOffers
 from portfolioModule.views import PortfolioModuleManager, CreatePortfolioModule
+from user.views import UserManage
 from artist.views import ListArtist,ArtistRegister
 from user.views import UserManage
 from offers.views import ListArtistOffers, ListCustomerOffers
