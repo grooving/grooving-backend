@@ -19,15 +19,15 @@ class GetPersonalInformationOfArtist(generics.ListAPIView):
 
         user = get_logged_user(self.request)
         user_type = get_user_type(user)
-        Assertions.assert_true_raise403(user is not None, {'error': 'You must be logged in to access this page.'})
-        Assertions.assert_true_raise403(user_type == 'Artist', {'error': 'You are not an artist.'})
+        Assertions.assert_true_raise403(user is not None, {'error': 'ERROR_NOT_LOGGED_IN'})
+        Assertions.assert_true_raise403(user_type == 'Artist', {'error': 'ERROR_NOT_AN_ARTIST'})
         try:
             artist = Artist.objects.get(user_id=user.user_id)
             serializer = ArtistInfoSerializer(artist)
             return Response(serializer.data)
         except Artist.DoesNotExist:
             booleano = False
-            Assertions.assert_true_raise400(booleano, {'error': 'The requested artist does not exist.'})
+            Assertions.assert_true_raise400(booleano, {'error': 'ERROR_NO_ARTIST_FOUND'})
 
 
 class ListArtist(generics.ListAPIView):
@@ -54,7 +54,7 @@ class ArtistRegister(generics.CreateAPIView):
             return Artist.objects.get(pk=pk)
         except Artist.DoesNotExist:
             Assertions.assert_true_raise404(False,
-                                            {'error': 'Artist not found'})
+                                            {'error': 'ERROR_NO_ARTIST_FOUND'})
 
     def post(self, request, *args, **kwargs):
         Assertions.assert_true_raise400(len(request.data) != 0, {'error': "Empty form is not valid"})

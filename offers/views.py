@@ -15,8 +15,8 @@ class ListArtistOffers(generics.ListAPIView):
         user = get_logged_user(self.request)
         user_type = get_user_type(user)
 
-        Assertions.assert_true_raise403(user is not None, {'error': 'You must be logged in to access this page.'})
-        Assertions.assert_true_raise403(user_type == 'Artist', {'error': 'You are not an artist.'})
+        Assertions.assert_true_raise403(user is not None, {'error': 'ERROR_NOT_LOGGED_IN'})
+        Assertions.assert_true_raise403(user_type == 'Artist', {'error': 'ERROR_NOT_AN_ARTIST'})
         try:
             artist = Artist.objects.get(user_id=user.user_id)
 
@@ -25,7 +25,7 @@ class ListArtistOffers(generics.ListAPIView):
             return queryset
         except Artist.DoesNotExist:
             booleano = False
-            Assertions.assert_true_raise400(booleano, {'error': 'This artist does not exist.'})
+            Assertions.assert_true_raise400(booleano, {'error': 'ERROR_NO_ARTIST_FOUND'})
 
 
 class ListCustomerOffers(generics.ListAPIView):
@@ -36,8 +36,8 @@ class ListCustomerOffers(generics.ListAPIView):
 
         user = get_logged_user(self.request)
         user_type = get_user_type(user)
-        Assertions.assert_true_raise403(user is not None, {'error': 'You must be logged in to access this page.'})
-        Assertions.assert_true_raise403(user_type == 'Customer', {'error': 'You are not a customer.'})
+        Assertions.assert_true_raise403(user is not None, {'error': 'ERROR_NOT_LOGGED_IN'})
+        Assertions.assert_true_raise403(user_type == 'Customer', {'error': 'ERROR_NOT_A_CUSTOMER'})
         try:
             customer = Customer.objects.get(user_id=user.user_id)
             queryset = Offer.objects.filter(eventLocation__customer=customer)
@@ -45,4 +45,4 @@ class ListCustomerOffers(generics.ListAPIView):
             return queryset
         except Customer.DoesNotExist:
             booleano = False
-            Assertions.assert_true_raise400(booleano, {'error': 'This customer does not exist.'})
+            Assertions.assert_true_raise400(booleano, {'error': 'ERROR_NO_CUSTOMER_FOUND'})

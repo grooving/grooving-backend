@@ -17,14 +17,14 @@ class GetPersonalInformationOfCustomer(generics.ListAPIView):
 
         user = get_logged_user(request)
         user_type = get_user_type(user)
-        Assertions.assert_true_raise403(user is not None, {'error': 'You must be logged in to access this page.'})
-        Assertions.assert_true_raise403(user_type == 'Customer', {'error': 'You are not a customer.'})
+        Assertions.assert_true_raise403(user is not None, {'error': 'ERROR_NOT_LOGGED_IN'})
+        Assertions.assert_true_raise403(user_type == 'Customer', {'error': 'ERROR_NOT_A_CUSTOMER'})
         try:
             customer = Customer.objects.get(user_id=user.user_id)
             serializer = CustomerInfoSerializer(customer)
             return Response(serializer.data)
         except Customer.DoesNotExist:
-            Assertions.assert_true_raise404(False, {'error': 'This customer does not exist.'})
+            Assertions.assert_true_raise404(False, {'error': 'ERROR_NO_CUSTOMER_FOUND'})
 
 
 class GetPublicInformationOfCustomer(generics.ListAPIView):
@@ -39,7 +39,7 @@ class GetPublicInformationOfCustomer(generics.ListAPIView):
             return Customer.objects.get(pk=pk)
         except Customer.DoesNotExist:
             Assertions.assert_true_raise404(False,
-                                            {'error': 'The customer you want to view does not exist.'})
+                                            {'error': 'ERROR_NO_CUSTOMER_FOUND'})
 
     def get(self, request, pk=None, format=None):
 
@@ -49,7 +49,7 @@ class GetPublicInformationOfCustomer(generics.ListAPIView):
             return Response(serializer.data)
         except Customer.DoesNotExist:
             Assertions.assert_true_raise404(False,
-                                            {'error': 'The customer you want to view does not exist.'})
+                                            {'error': 'ERROR_NO_CUSTOMER_FOUND'})
 
 
 class CustomerRegister(generics.CreateAPIView):
@@ -62,7 +62,7 @@ class CustomerRegister(generics.CreateAPIView):
             return Customer.objects.get(pk=pk)
         except Customer.DoesNotExist:
             Assertions.assert_true_raise404(False,
-                                            {'error': 'Customer not found'})
+                                            {'error': 'ERROR_NO_CUSTOMER_FOUND'})
 
     def post(self, request, *args, **kwargs):
         Assertions.assert_true_raise400(len(request.data) != 0, {'error': "Empty form is not valid"})

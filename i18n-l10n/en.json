@@ -16,5 +16,19 @@
   "ERROR_BAN_USER_UNKNOWN": "Commit error to ban an unknown user",
   "ERROR_BAN_USER": "Commit error to ban user",
   "ERROR_VALIDATE": "Data validation has been error",
-  "ERROR_NO_ARTISTIC_NAME": "You did not submit an artistic name."
+  "ERROR_NO_ARTISTIC_NAME": "You did not submit an artistic name.",
+  "ERROR_NOT_LOGGED_IN": "You must be logged in to view this page.",
+  "ERROR_NOT_AN_ARTIST": "You are not an artist, and therefore you cannot be here.",
+  "ERROR_NOT_A_CUSTOMER": "You are not a customer, and therefore you cannot be here.",
+  "ERROR_NO_CUSTOMER_FOUND": "The customer you are searching for does not exist.",
+  "ERROR_NO_ARTIST_FOUND": "The artist you are searching for does not exist.",
+  "ERROR_NO_SCORE": "You must give a score.",
+  "ERROR_DECIMAL_SCORE": "The rating must be a number with no decimals.",
+  "ERROR_RATING_OUT_OF_RANGE": "The rating must be between 1 and 5 points.",
+  "ERROR_OFFER_NOT_OWNED": "This offer is not yours.",
+  "ERROR_OFFER_NOT_READY": "This offer cannot receive a rating yet, since it has not been paid yet.",
+  "ERROR_OFFER_ALREADY_RATED": "This offer is already rated. You cannot rate it twice.",
+  "ERROR_OFFER_NOT_FOUND": "The offer you are searching for does not exist.",
+  "ERROR_NO_DATA_GIVEN": "The form has no data."
+}
 }
