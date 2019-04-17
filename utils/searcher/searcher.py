@@ -1,7 +1,30 @@
 
 
-from Grooving.models import Portfolio, Rating, Artist
+from Grooving.models import Portfolio, Rating, Artist, Customer
 from utils.searcher.distancia import artisticNameCompare, categoriaCompare, zoneCompare
+
+def searchAdmin(userName=""):
+    artists = Artist.objects.all()
+    filterArtists = [artist for artist in artists if compare(artist, userName)]
+    customers = Customer.objects.all()
+    filterCustomers = [customer for customer in customers if compare(customer, userName)]
+
+    return {"artists": filterArtists, "customers": filterCustomers}
+
+def compareUsers(user, userName=""):
+    coincidencesNeeded = 0
+    coincidencesFinded = 0
+    if userName:
+        coincidencesNeeded = 1
+        userName = userName.strip().replace(" ", "#")
+        coincidencesFinded = artisticNameCompare(user.username.replace(" ", "#"), userName)
+
+    equals = False
+
+    if coincidencesFinded == coincidencesNeeded:
+        equals = True
+
+    return equals
 
 
 def search(artisticName="", categoria="", zone="", order=""):

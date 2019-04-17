@@ -1,12 +1,13 @@
-from Grooving.models import User, Artist, Customer, Portfolio, PortfolioModule, Calendar, EventLocation, Admin
+from Grooving.models import User, Artist, Customer, Portfolio, PortfolioModule, Calendar, EventLocation, Admin,\
+    UserAbstract
 from utils.Assertions import Assertions
 from rest_framework.response import Response
 from rest_framework import generics
 from rest_framework import status
 from django.http import Http404
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from .serializers import UserSerializer
-
+from .serializers import UserSerializer, ListArtistSerializer, PublicCustomerInfoSerializer
+from utils.searcher.searcher import searchAdmin
 
 class UserManage(generics.DestroyAPIView):
     queryset = User.objects.all()
@@ -45,3 +46,26 @@ class UserManage(generics.DestroyAPIView):
         except TypeError:
             Assertions.assert_true_raise401(False, {'error': 'ERROR_DELETE_USER'})
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ListUsers(generics.RetrieveAPIView):
+
+    serializer_class = ListArtistSerializer
+
+    def get_queryset(self):
+
+        return UserAbstract.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        username = request.query_params.get("username", None)
+        #Assertions.assert_true_raise403()
+        users = searchAdmin(username)
+        artists = users.get("artists")
+        customers = users.get("customers")
+        dataUsers = []
+        if artists:
+            dataUsers = ListArtistSerializer(artists, many=True).data
+            if customers:
+                dataUsers.extend(PublicCustomerInfoSerializer(customers, many=True).data)
+
+        return Response(dataUsers, status=status.HTTP_200_OK)
