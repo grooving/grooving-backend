@@ -445,7 +445,7 @@ class Notifications:
                                                       list_attachments, True)
 
     @staticmethod
-    def send_notification_for_breach_security():
+    def send_notification_for_breach_security(subject, body):
 
         # Get all system emails
         email_system_configuration_list = ['', SystemConfiguration.corporateEmail, SystemConfiguration.reportEmail]
@@ -455,15 +455,13 @@ class Notifications:
         for email in emails_users:
             from_email = 'Grooving <no-reply@grupogrooving.com>'
             to = [email]
-            subject = 'Notice of data breach'
             body_content_type = 'html'
-            body = '<p>We are writing to inform you about a data security issue that many involve ' \
-                   'your Grooving account information. We have taken steps to secure your account ' \
-                   'and are working closely with law enforcement.</p>' \
-                   '<p>For security reasons, you must reset your password to protect your personal ' \
-                   'information.</p>' + Notifications.footer()
+            custom_body = '<p>We are writing to inform you about a data security issue that many involve ' \
+                          'your Grooving account information. We have taken steps to secure your account ' \
+                          'and are working closely with law enforcement.</p>' \
+                          '<p>' + body + '</p>' + Notifications.footer()
 
-            EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
+            EmailMessageThread.send_mail(from_email, to, custom_body, subject, body_content_type, True)
 
     @staticmethod
     def send_email_ban_unban_users(user_id):
