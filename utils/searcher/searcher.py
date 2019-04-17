@@ -4,9 +4,9 @@ from Grooving.models import Portfolio, Rating, Artist, Customer
 from utils.searcher.distancia import artisticNameCompare, categoriaCompare, zoneCompare
 
 def searchAdmin(userName=""):
-    artists = Artist.objects.all()
+    artists = Artist.objects.filter(isHidden=False).all()
     filterArtists = [artist for artist in artists if compare(artist, userName)]
-    customers = Customer.objects.all()
+    customers = Customer.objects.filter(isHidden=False).all()
     filterCustomers = [customer for customer in customers if compare(customer, userName)]
 
     return {"artists": filterArtists, "customers": filterCustomers}
@@ -30,7 +30,7 @@ def compareUsers(user, userName=""):
 def search(artisticName="", categoria="", zone="", order=""):
 
 
-    portfolios = Portfolio.objects.all()
+    portfolios = Portfolio.objects.filter(isHidden=False).all()
     filtersPortfolios = [(porfolio, 0) for porfolio in portfolios if compare(porfolio, artisticName=artisticName,
                                                                    categoria=categoria, zone=zone)]
 
