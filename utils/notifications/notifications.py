@@ -464,3 +464,31 @@ class Notifications:
                    'information.</p>' + Notifications.footer()
 
             EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
+
+    @staticmethod
+    def send_email_ban_unban_users(user_id):
+
+        # Entity database objects (necessary from template & email)
+
+        user = User.objects.filter(pk=user_id).first()
+        system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+
+        # Email
+
+        from_email = 'Grooving <no-reply@grupogrooving.com>'
+        to = [user.email]
+        body_content_type = 'html'
+
+        if user.is_active:
+            subject = 'Your Grooving account has been actived again'
+            body = '<p>Hello,</p>' \
+                   '<p>Thanks for contacting Grooving Support. We have activated your account again.</p>' \
+                   '<p>We apologize for the inconvenience.</p>'
+        else:
+            subject = 'Your Grooving account has been banned'
+            body = '<p>This account has been temporaly banned to a violation of ours Terms & conditions. Please ' \
+                   'contact to Grooving support at ' + system_configuration.reportEmail + ' </p>'
+
+        body += Notifications.footer()
+
+        EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
