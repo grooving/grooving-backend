@@ -28,7 +28,7 @@ class ArtistSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def give_offers(self):
-        numOffers = Offer.objects.filter(paymentPackage__portfolio__artist=self,status='PENDING').count()
+        numOffers = Offer.objects.filter(paymentPackage__portfolio__artist=self, status='PENDING').count()
         return numOffers
 
 
@@ -67,7 +67,7 @@ class LoginSerializer(serializers.Serializer):
         elif isinstance(instance, Admin):
             adminSerializer = AdminSerializer(instance)
             return {
-                'customer': adminSerializer.data
+                'admin': adminSerializer.data
             }
 
     class Meta:
