@@ -24,7 +24,7 @@ LanguageField = (
 
 class Actor(AbstractEntity):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    language = models.CharField(default='es', choices=LanguageField, max_length=3)
+    language = models.CharField(choices=LanguageField, max_length=3, default="en")
 
     def __str__(self):
         return str(self.user.username)
@@ -38,7 +38,6 @@ class Admin(Actor):
 
     def __str__(self):
         return str(self.user.username)
-
 
 class UserAbstract(Actor):
     photo = models.CharField(max_length=500, blank=True, null=True)
