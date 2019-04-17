@@ -24,7 +24,7 @@ from offer.views import OfferManage, CreateOffer, PaymentCode,NumOffers
 from portfolioModule.views import PortfolioModuleManager, CreatePortfolioModule
 from user.views import UserManage
 from artist.views import ListArtist,ArtistRegister
-from user.views import UserManage
+from user.views import UserManage, ListUsers
 from offers.views import ListArtistOffers, ListCustomerOffers
 from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage,CreateCustomPackage,CreateFarePackage,CreatePerformancePackage
 from calendars.views import CalendarByArtist, CalendarManager, CreateCalendar
@@ -94,5 +94,6 @@ urlpatterns = [
     url(r'^privacy$', Privacy.as_view()),
     url(r'^about$', AboutUs.as_view()),
     url(r'^braintree_token/$', BraintreeViews.as_view()),
-    url(r'^send_breach_notification/$', SendMailDataBreach.as_view())
+    url(r'^send_breach_notification/$', SendMailDataBreach.as_view()),
+    url(r'^users/$', ListUsers.as_view())
 ]
