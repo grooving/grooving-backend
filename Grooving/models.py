@@ -39,8 +39,6 @@ class Admin(Actor):
     def __str__(self):
         return str(self.user.username)
 
-
-
 class UserAbstract(Actor):
     photo = models.CharField(max_length=500, blank=True, null=True)
     phone = models.CharField(max_length=12, blank=True, null=True)
@@ -71,7 +69,7 @@ class Portfolio(AbstractEntity):
     banner = models.CharField(blank=True, null=True, max_length=500)
     biography = models.TextField(blank=True, null=True)
     artist = models.OneToOneField('Artist', related_name='portfolio', null=True, blank=True, on_delete=models.SET_NULL)
-    artisticName = models.CharField(blank=True, null=True, max_length=140)
+    artisticName = models.CharField(unique=True, blank=True, null=True, max_length=140)
     artisticGender = models.ManyToManyField(ArtisticGender, blank=True)
     zone = models.ManyToManyField(Zone, blank=True)
 
