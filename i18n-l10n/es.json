@@ -28,5 +28,8 @@
   "ERROR_OFFER_NOT_OWNED": "Esta oferta no te pertenece.",
   "ERROR_OFFER_NOT_READY": "Esta oferta no puede recibir una puntuacion, pues aun no se ha hecho el pago.",
   "ERROR_OFFER_ALREADY_RATED": "Esta oferta ya tiene una puntuacion. No puedes puntuarla dos veces.",
-  "ERROR_OFFER_NOT_FOUND": "La oferta que buscas no existe."
+  "ERROR_OFFER_NOT_FOUND": "La oferta que buscas no existe.",
+  "ERROR_NO_DATA_GIVEN": "El formulario no tiene datos.",
+  "ERROR_NO_MATCHING_LANGUAGE": "El idioma que has escogido no esta disponible.",
+  "ERROR_ACTOR_NOT_FOUND": "El actor que buscas no existe."
 }

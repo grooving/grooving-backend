@@ -37,6 +37,7 @@ from braintrees.views import BraintreeViews
 from emails.views import SendMailDataBreach
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
+from languageChooser.views import LanguageChooser
 
 router = routers.DefaultRouter()
 
@@ -95,5 +96,6 @@ urlpatterns = [
     url(r'^about$', AboutUs.as_view()),
     url(r'^braintree_token/$', BraintreeViews.as_view()),
     url(r'^send_breach_notification/$', SendMailDataBreach.as_view()),
-    url(r'^users/$', ListUsers.as_view())
+    url(r'^users/$', ListUsers.as_view()),
+    url(r'^language/$', LanguageChooser.as_view()),
 ]
