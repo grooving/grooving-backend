@@ -54,7 +54,7 @@ class ListUsers(generics.RetrieveAPIView):
 
     def get_queryset(self):
 
-        return UserAbstract.objects.all()
+        return ['Something',]
 
     def get(self, request, *args, **kwargs):
         username = request.query_params.get("username", None)
