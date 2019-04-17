@@ -24,8 +24,8 @@ LanguageField = (
 
 class Actor(AbstractEntity):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    language = models.CharField(choices=LanguageField, max_length=3)
-    
+    language = models.CharField(default='es', choices=LanguageField, max_length=3)
+
     def __str__(self):
         return str(self.user.username)
 
@@ -70,7 +70,7 @@ class Portfolio(AbstractEntity):
     banner = models.CharField(blank=True, null=True, max_length=500)
     biography = models.TextField(blank=True, null=True)
     artist = models.OneToOneField('Artist', related_name='portfolio', null=True, blank=True, on_delete=models.SET_NULL)
-    artisticName = models.CharField(blank=True, null=True, max_length=140)
+    artisticName = models.CharField(unique=True, blank=True, null=True, max_length=140)
     artisticGender = models.ManyToManyField(ArtisticGender, blank=True)
     zone = models.ManyToManyField(Zone, blank=True)
 
