@@ -907,7 +907,7 @@ def save_data():
     user14_admin = User.objects.create(username='admin', password=make_password('admin'), is_staff=True,
                                        is_superuser=True)
     user14_admin.save()
-    Admin.objects.create(user=user14_admin)
+    Admin.objects.create(user=user14_admin, language='en')
 
     # Artists
 

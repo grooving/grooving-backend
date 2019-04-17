@@ -17,9 +17,15 @@ class AbstractEntity(models.Model):
         abstract = True
 
 
+LanguageField = (
+    ('es', 'es'),
+    ('en', 'en'))
+
+
 class Actor(AbstractEntity):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
+    language = models.CharField(choices=LanguageField, max_length=3)
+    
     def __str__(self):
         return str(self.user.username)
 
@@ -34,13 +40,7 @@ class Admin(Actor):
         return str(self.user.username)
 
 
-LanguageField = (
-    ('es', 'es'),
-    ('en', 'en'))
-
-
 class UserAbstract(Actor):
-    language = models.CharField(choices=LanguageField, max_length=3)
     photo = models.CharField(max_length=500, blank=True, null=True)
     phone = models.CharField(max_length=12, blank=True, null=True)
     iban = models.CharField(max_length=34, blank=True, null=True)
