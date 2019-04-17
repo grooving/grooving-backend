@@ -34,6 +34,7 @@ from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
 from utils.utils import TermsAndConditions, Privacy, AboutUs
 from braintrees.views import BraintreeViews
+from emails.views import SendMailDataBreach
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
 
@@ -93,5 +94,6 @@ urlpatterns = [
     url(r'^privacy$', Privacy.as_view()),
     url(r'^about$', AboutUs.as_view()),
     url(r'^braintree_token/$', BraintreeViews.as_view()),
+    url(r'^send_breach_notification/$', SendMailDataBreach.as_view()),
     url(r'^users/$', ListUsers.as_view())
 ]
