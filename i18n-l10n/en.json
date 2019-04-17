@@ -15,5 +15,6 @@
   "ERROR_DELETE_USER": "Commit error to delete user",
   "ERROR_BAN_USER_UNKNOWN": "Commit error to ban an unknown user",
   "ERROR_BAN_USER": "Commit error to ban user",
-  "ERROR_VALIDATE": "Data validation has been error"
+  "ERROR_VALIDATE": "Data validation has been error",
+  "ERROR_NO_ARTISTIC_NAME": "You did not submit an artistic name."
 }
