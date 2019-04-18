@@ -74,8 +74,8 @@ def save_data():
                     "<h3>Heroku</h3>" +
                     "<a href=”https://www.heroku.com/policy/security”>Heroku</a>" +
 
-                    "<p>You can choose to disable cookies through your individual browser options. To know more "
-                    "detailed information about cookie management with specific web browsers, it can be found at "
+                    "<p>You can choose to disable cookies through your individual browser options. To know more " +
+                    "detailed information about cookie management with specific web browsers, it can be found at " +
                     "the browsers' respective websites.</p>" +
 
                     "<h2>Consent</h2>" +
@@ -132,7 +132,7 @@ def save_data():
                     "<a href=”https://www.heroku.com/policy/security”>Heroku</a>" +
 
                     "<h2>Consentimiento</h2>" +
-                    "<p>Al utilizar nuestro sitio web, usted acepta nuestra Política de privacidad y acepta sus "
+                    "<p>Al utilizar nuestro sitio web, usted acepta nuestra Política de privacidad y acepta sus " +
                     "Términos y condiciones.</p>",
         aboutUs_es= "<p> At Grooving, we all come to work every day because we want to solve the biggest " +
                     "problems for the artists: empower artists by giving visibility and improving their " +
@@ -146,7 +146,7 @@ def save_data():
         termsText_es = "<p>Las condiciones de uso de la página web, las reglas de uso y el uso de grooving.com, la " +
                        "propiedad de Grooving SL y el correo electrónico grupogrooving@gmail.com, en adelante, " +
                        "Grooving, que el usuario del portal debe aceptar para utilizar todos los servicios e " +
-                       "información que se proporcionan desde el portal.</p> +
+                       "información que se proporcionan desde el portal.</p>" +
                        
                        "<p>Tanto el usuario como Grooving, propietario del portal, se han convertido en las partes. " +
                        "El acceso al uso del portal, la parte de sus contenidos y servicios significa la aceptación " +
@@ -304,7 +304,7 @@ def save_data():
                      "improvement or maintenance of computer equipment and systems. In these cases, the " +
                      "portal will be announced 24 hours before the interruption.  The portal will not be " +
                      "responsible for the interruption, suspension or termination of the information " +
-                     "or services</p>" 
+                     "or services</p>" +
                     
                      "<h2>Portal contents responsibility</h2>" +
                      "<p>The portal will control the license of those services provided through the " +
@@ -344,8 +344,8 @@ def save_data():
                      "<p>Without prior approval and written permission, you may not create frames around " +
                      "our Webpages that alter in any way the visual presentation or appearance of our Website.</p>" +
 
-                     "<h2>License</h2>"
-                     "<p>Unless otherwise stated, Grooving and/or its licensors own the intellectual "
+                     "<h2>License</h2>" +
+                     "<p>Unless otherwise stated, Grooving and/or its licensors own the intellectual " +
                      "property rights for all material on Grooving. All intellectual property rights are " +
                      "reserved.</p>" +
 
@@ -370,11 +370,11 @@ def save_data():
                      "of 72 hours after its detection.</p>" +
 
                      "<h3>Right to be forgotten</h3>" +
-                     "<p> Any user who uses Grooving can request the removal of their data from their user "
+                     "<p> Any user who uses Grooving can request the removal of their data from their user " +
                      "profile.</p>" +
 
                      "<h3>Right to export your personal information</h3>" +
-                     "<p>All users who use Grooving can request the data that our company has about them from their "
+                     "<p>All users who use Grooving can request the data that our company has about them from their " +
                      "user profile.</p>")
 
     system_configuration1.save()
