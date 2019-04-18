@@ -10,8 +10,8 @@ from Grooving.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
-users_artists_email = 'utri1990@gmail.com'     # Preferiblemente gmail
-users_customers_email = 'utri1990@gmail.com'   # Preferiblemente gmail
+users_artists_email = 'tucorreo@elquesea.com'     # Preferiblemente gmail
+users_customers_email = 'tucorreo@elquesea.com'   # Preferiblemente gmail
 
 
 def _service_generate_unique_payment_code():
