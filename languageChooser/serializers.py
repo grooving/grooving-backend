@@ -12,6 +12,12 @@ class LanguageChooserArtistSerializer(serializers.ModelSerializer):
 
         language = attrs.query_params.get('lang')
 
+        Assertions.assert_true_raise400(language, {'error': 'ERROR_NO_LANGUAGE_GIVEN'})
+
+        Assertions.assert_true_raise400(language.isalpha(), {'error': 'ERROR_NO_MATCHING_LANGUAGE'})
+
+        language = language.lower()
+
         Assertions.assert_true_raise400(language == 'es' or language == 'en', {'error': 'ERROR_NO_MATCHING_LANGUAGE'})
 
         return True
@@ -44,6 +50,12 @@ class LanguageChooserCustomerSerializer(serializers.ModelSerializer):
 
         language = attrs.query_params.get('lang')
 
+        Assertions.assert_true_raise400(language, {'error': 'ERROR_NO_LANGUAGE_GIVEN'})
+
+        Assertions.assert_true_raise400(language.isalpha(), {'error': 'ERROR_NO_MATCHING_LANGUAGE'})
+
+        language = language.lower()
+
         Assertions.assert_true_raise400(language == 'es' or language == 'en', {'error': 'ERROR_NO_MATCHING_LANGUAGE'})
 
         return True
@@ -75,6 +87,12 @@ class LanguageChooserAdminSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
 
         language = attrs.query_params.get('lang')
+
+        Assertions.assert_true_raise400(language, {'error': 'ERROR_NO_LANGUAGE_GIVEN'})
+
+        Assertions.assert_true_raise400(language.isalpha(), {'error': 'ERROR_NO_MATCHING_LANGUAGE'})
+
+        language = language.lower()
 
         Assertions.assert_true_raise400(language == 'es' or language == 'en', {'error': 'ERROR_NO_MATCHING_LANGUAGE'})
 

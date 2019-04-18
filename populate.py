@@ -10,8 +10,8 @@ from Grooving.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
-users_artists_email = 'tucorreo@cualquiera.com'     # Preferiblemente gmail
-users_customers_email = 'tucorreo@cualquiera.com'   # Preferiblemente gmail
+users_artists_email = 'tucorreo@elquesea.com'     # Preferiblemente gmail
+users_customers_email = 'tucorreo@elquesea.com'   # Preferiblemente gmail
 
 
 def _service_generate_unique_payment_code():
@@ -47,162 +47,335 @@ def save_data():
                     "movement on the website, and gathering demographic information.</p>" +
 
                     "<h2>Cookies and Web Beacons</h2>" +
-                    "<p>Like any other website, Grooving uses cookies. These cookies are used to store information " +
-                    "including visitors' preferences, and the pages on the website that the visitor " +
-                    "accessed or visited. The information is used to optimize the users' experience by customizing " +
-                    "our web page content based on visitors' browser type and/or other information.</p>" +
+                    "<p>Grooving uses cookies to store information including visitors' preferences, and the pages " +
+                    "on the website that the visitor accessed or visited. The information is used to optimize the " +
+                    "users' experience by customizing our web page content based on visitors' browser type and/or " +
+                    "other information.</p>" +
 
-                    "<h2>Our Advertising Partners</h2>" +
-                    "<p>Some of advertisers on our site may use cookies. Our advertising partners are listed below. "
-                    "Each of our advertising partners has their own Privacy Policy for their policies on user data. "
-                    "For easier access, we hyperlinked to their Privacy Policies below.</p>" +
+                    "<h2>Privacy Policies</h2>" +
+                    "<p>This Privacy Policy applies only to our online activities and is valid for visitors to our " +
+                    "website with regards to the information that they shared and/or collect in Grooving. This " +
+                    "policy is not applicable to any information collected offline or via channels other than this " +
+                    "website.</p>" +
+                    "<p>Note that Grooving has no access to or control over these cookies.</p>" +
+
+                    "<p>This Privacy Policy applies only to our online activities and is valid for visitors to " +
+                    "our website with regards to the information that they shared and/or collect in Grooving. " +
+                    "This policy is not applicable to any information collected offline or via channels other than " +
+                    "this website.</p>" +
+
+                    "<h2>Third Party Privacy Policies</h2>" +
+                    "<p>Grooving's Privacy Policy does not apply to other websites. Thus, we are advising you to " +
+                    "consult the respective Privacy Policies of these third-party servers for more detailed " +
+                    "information. You may find a complete list of these Privacy Policies bellow:</p>" +
 
                     "<h3>Braintree</h3>" +
                     "<a href=”https://www.braintreepayments.com/legal/acceptable-use-policy”>Braintree</a>" +
                     "<h3>Heroku</h3>" +
                     "<a href=”https://www.heroku.com/policy/security”>Heroku</a>" +
 
-                    "<h2>Privacy Policies</h2>" +
-                    "<p>Third-party ad servers or ad networks uses technologies like cookies, JavaScript, or Web " +
-                    "Beacons that are used in their respective advertisements and links that appear on Grooving, " +
-                    "which are sent directly to users' browser. They automatically receive your IP address when " +
-                    "this occurs. These technologies are used to measure the effectiveness of their advertising " +
-                    "campaigns and/or to personalize the advertising content that you see on websites " +
-                    "that you visit.</p>" +
-                    "<p>Note that Grooving has no access to or control over these cookies that are used by " +
-                    "third-party advertisers.</p>" +
-
-                    "<h2>Third Party Privacy Policies</h2>" +
-                    "<p>Grooving's Privacy Policy does not apply to other advertisers or websites. Thus, we are " +
-                    "advising you to consult the respective Privacy Policies of these third-party ad servers for " +
-                    "more detailed information. It may include their practices and instructions about how to opt-out" +
-                    " of certain options.</p>" +
-                    "<p>You can choose to disable cookies through your individual browser options. To know more "
-                    "detailed information about cookie management with specific web browsers, it can be found at "
+                    "<p>You can choose to disable cookies through your individual browser options. To know more " +
+                    "detailed information about cookie management with specific web browsers, it can be found at " +
                     "the browsers' respective websites.</p>" +
-
-                    "<h2>Online Privacy Policy Only</h2>" +
-                    "<p>This Privacy Policy applies only to our online activities and is valid for visitors to " +
-                    "our website with regards to the information that they shared and/or collect in Grooving. " +
-                    "This policy is not applicable to any information collected offline or via channels other than " +
-                    "this website.</p>" +
 
                     "<h2>Consent</h2>" +
                     "<p>By using our website, you hereby consent to our Privacy Policy and agree to its Terms and " +
                     "Conditions.</p>",
         privacyText_en =
-                    "<h2>Terminos y condiciones en español</h2>",
+                    "<h2>Introducción</h2>" +
+                    "<p>En Grooving, accesible desde https://grooving-frontend-d3.herokuapp.com, una de nuestras " +
+                    "principales prioridades es la privacidad de nuestros visitantes. Este documento de Política de " +
+                    "privacidad contiene tipos de información que Grooving recopila y registra, y cómo la usamos.</p>" +
+                    "<p>Si tiene preguntas adicionales o necesita más información sobre nuestra Política de " +
+                    "privacidad, no dude en ponerse en contacto con nosotros a través del correo electrónico " +
+                    "grupogrooving@gmail.com </p>" +
+
+                    "<h2>Archivos de registro</h2>" +
+                    "<p>Grooving sigue un procedimiento estándar de uso de archivos de registro. Estos archivos " +
+                    "registran a los visitantes cuando visitan sitios web. Todas las empresas de hosting hacen esto " +
+                    "y forman parte de la analítica de servicios de hosting. La información recopilada por los " +
+                    "archivos de registro incluye direcciones de protocolo de Internet (IP), tipo de navegador, " +
+                    "proveedor de servicios de Internet (ISP), marca de fecha y hora, páginas de referencia/salida " +
+                    "y posiblemente el número de clics. Estos no están vinculados a ninguna información que sea " +
+                    "personalmente identificable. El propósito de la información es analizar tendencias, administrar " +
+                    "el sitio, rastrear el movimiento de los usuarios en el sitio web y recopilar información "
+                    "demográfica.</p>" +
+
+                    "<h2>Cookies y Web Beacons</h2>" +
+                    "<p>Grooving utiliza cookies para almacenar información, incluidas las preferencias de los " +
+                    "visitantes, y las páginas del sitio web a las que el visitante accedió o visitó. La información " +
+                    "se utiliza para optimizar la experiencia de los usuarios mediante la personalización del " +
+                    "contenido de nuestra página web en función del tipo de navegador de los visitantes yu otra " +
+                    "información. </p>" +
+
+                    "<h2>Política de privacidad de terceros</h2>" +
+                    "<p>Los servidores de terceros utilizan tecnologías como cookies, JavaScript que se usan en los " +
+                    "enlaces que aparecen en Grooving, que se envían directamente al navegador de los usuarios. " +
+                    "Reciben automáticamente su dirección IP cuando esto ocurre.</p>" +
+
+                    "<p>Tenga en cuenta que Grooving no tiene acceso ni control sobre estas cookies.</p>" +
+
+                    "<p>Esta Política de privacidad se aplica sólo a nuestras actividades en línea y es válida para " +
+                    "los visitantes de nuestro sitio web en relación con la información que compartieron y/o " +
+                    "recopilaron en Grooving. Esta política no se aplica a ninguna información recopilada fuera de " +
+                    "línea o a través de canales que no sean este sitio web.</p>" +
+
+                    "<p>La política de privacidad de Grooving no se aplica a otros sitios web. Por lo tanto, le " +
+                    "recomendamos que consulte las políticas de privacidad. Puede incluir sus prácticas e " +
+                    "instrucciones sobre cómo optar por no participar en ciertas opciones. Puede encontrar una " +
+                    "lista completa de estas Políticas de privacidad y sus enlaces a continuación:</p>" +
+
+                    "<h3>Braintree</h3>" +
+                    "<a href=”https://www.braintreepayments.com/legal/acceptable-use-policy”>Braintree</a>" +
+
+                    "<h3>Heroku</h3>" +
+                    "<a href=”https://www.heroku.com/policy/security”>Heroku</a>" +
+
+                    "<h2>Consentimiento</h2>" +
+                    "<p>Al utilizar nuestro sitio web, usted acepta nuestra Política de privacidad y acepta sus " +
+                    "Términos y condiciones.</p>",
         aboutUs_es= "<p> At Grooving, we all come to work every day because we want to solve the biggest " +
                     "problems for the artists: empower artists by giving visibility and improving their " +
                     "monetization. What is our mission? Simplifying the search and hiring made easy.</p>" +
-					"<p>With all this, we can ensure that <b>Grooving makes the difference</b>.</p> ",
-        aboutUs_en= "<h2>Sobre nosotros</h2>",
-        termsText_es =
-                    "<h2>Términos y condiciones</h2>",
+					"<p>With all this, we can ensure that <b>Grooving makes the difference</b>.</p>",
+        aboutUs_en= "<h2>Sobre nosotros</h2>" +
+                    "<p>En Grooving, trabajamos todos los días porque queremos resolver los grandes problemas a los " +
+                    "que se enfrentan los artistas mejorando su visibilidad y monetización de su actividad. ¿Cómo lo " +
+                    "conseguimos? Simplificando la búsqueda y la contratación de manera fácil, sencilla y fiable.</p>" +
+                    "<p>Podemos asegurar que <b>Grooving marca la diferencia</b>.</p>",
+        termsText_es = "<p>Las condiciones de uso de la página web, las reglas de uso y el uso de grooving.com, la " +
+                       "propiedad de Grooving SL y el correo electrónico grupogrooving@gmail.com, en adelante, " +
+                       "Grooving, que el usuario del portal debe aceptar para utilizar todos los servicios e " +
+                       "información que se proporcionan desde el portal.</p>" +
+                       
+                       "<p>Tanto el usuario como Grooving, propietario del portal, se han convertido en las partes. " +
+                       "El acceso al uso del portal, la parte de sus contenidos y servicios significa la aceptación " +
+                       "total de estas condiciones de uso. La implementación del uso del portal se refiere a la " +
+                       "aplicación estricta de los términos reconocidos en los términos de uso del portal.</p>" +
+
+                       "<h2>Regulación de las condiciones de uso</h2>" +
+                       "<p>Las condiciones generales de uso del portal regulan el acceso y uso del portal, los " +
+                       "contenidos y servicios, la disposición de los usuarios y/o a través del portal, ya sea a " +
+                       "través del portal, por los usuarios o por un tercero. Sin embargo, el acceso y el uso del " +
+                       "contenido y/o los servicios pueden utilizarse en ciertas condiciones específicas.</p>" +
+
+                       "<h2>Modificaciones</h2>" +
+
+                       "<p>La empresa se reserva el derecho de modificar en cualquier momento las condiciones " +
+                       "generales de uso del portal. En cualquier caso, le recomendamos que consulte periódicamente " +
+                       "las condiciones generales de uso del portal y que éstas se puedan modificar.</p>" +
+
+                       "<h2>Información y servicios</h2>" +
+
+                       "<p>Los usuarios pueden acceder a un tipo diferente de información y servicios a través " +
+                       "del portal. El portal se reserva el derecho de modificar, en cualquier momento y sin previo " +
+                       "aviso, la presentación y configuración de la información y los servicios del portal. El " +
+                       "usuario reconoce y acepta expresamente que en cualquier momento el portal puede interrumpir, " +
+                       "desactivar y/o cancelar cualquier información o servicio. Sin embargo, a veces, por razones " +
+                       "de mantenimiento, actualización, cambio de ubicación, etc., puede significar la interrupción " +
+                       "del acceso al portal.</p>" +
+
+                       "<h2>Información del portal y disponibilidad de servicios</h2>" +
+                       "<p>El portal no garantiza la disponibilidad continua y permanente de los servicios, " +
+                       "quedando así eximido de cualquier responsabilidad por posibles daños, como la falta de " +
+                       "disponibilidad del servicio debido a fuerza mayor o errores en las redes de transferencia " +
+                       "de datos telemáticos, o desconexiones hechas para la mejora o mantenimiento de equipos y " +
+                       "sistemas informáticos. En estos casos, el portal será anunciado 24 horas antes de la " +
+                       "interrupción. El portal no será responsable de la interrupción, suspensión o terminación " +
+                       "de la información o servicios.<p>" +
+
+                       "<h2>Responsabilidades del contenido del portal</h2>" +
+
+                       "<p>El portal controlará la licencia de los servicios prestados a través de la plataforma por " +
+                       "terceros. En el caso de que el usuario como resultado del uso del portal sufra o dañe la " +
+                       "comunicación y se tomen las medidas adecuadas para resolverlo.</p>" +
+
+                       "<p>El portal no interviene en la creación de los contenidos y/o servicios proporcionados o " +
+                       "proporcionados por terceros en y/o a través de la aplicación, de la misma manera que tampoco " +
+                       "controla su legalidad. En cualquier caso, no ofrecemos ningún tipo de garantía sobre ellos. " +
+                       "El usuario reconoce que el portal no es responsable de los contenidos y/o servicios " +
+                       "proporcionados o proporcionados por terceros en y/o a través del portal.</p>" +
+
+                       "<p>En cualquier caso, el portal excluye cualquier responsabilidad por daños y pérdidas que " +
+                       "puedan deberse a información y/o servicios prestados o proporcionados por terceros que no " +
+                       "sean la propios de Grooving. Toda la responsabilidad será asumida por un tercero, ya sea " +
+                       "proveedor, colaborador u otro.</p>" +
+
+                       "<h2>Obligaciones de los usuarios</h2>" +
+                       "<p>El usuario debe respetar en todo momento los términos y condiciones establecidos. " +
+                       "El usuario acepta que utilizará el portal asumiendo cualquier responsabilidad que pueda " +
+                       "surgir de la infracción de las reglas.</p>" +
+
+                       "<p>Asimismo, el usuario no puede usar el portal para transmitir, almacenar, divulgar, " +
+                       "promocionar o distribuir datos o contenidos que sean portadores de virus o cualquier otro " +
+                       "código de computadora, archivos o programas diseñados para interrumpir, destruir o impedir " +
+                       "el funcionamiento de cualquier program o equipo.</p>" +
+
+                       "<p>El usuario se compromete a indemnizar y eximir de responsabilidad al portal por " +
+                       "cualquier daño, perjuicio, penalización, multa, penalización o compensación que el portal " +
+                       "deba afrontar.</p>" +
+
+                       "<h2>Cookies</h2>" +
+                       "<p>Empleamos el uso de cookies. Al acceder a Grupo Grooving, usted ha aceptado usar cookies " +
+                       "de acuerdo con la Política de privacidad de Grooving.</p>" +
+
+                       "<p>La mayoría de los sitios web interactivos utilizan cookies para permitirnos recuperar " +
+                       "los detalles del usuario para cada visita. Las cookies son utilizadas por nuestro sitio web " +
+                       "para permitir la funcionalidad de ciertas áreas para que sea más fácil para las personas que " +
+                       "visitan nuestro sitio web.</p>" +
+
+                       "<h2>iFrames</h2>" +
+                       "<p>Sin la aprobación previa y el permiso por escrito, no puede crear iFrames alrededor de " +
+                       "nuestras páginas web que alteren de alguna manera la presentación visual o la apariencia de " +
+                       "nuestro sitio web.</p>" +
+
+                       "<h2>Licencias</h2>" +
+                       "<p>A menos que se indique lo contrario, Grooving y/o sus licenciantes son propietarios de " +
+                       "los derechos de propiedad intelectual de todo el material de Grooving. Todos los derechos " +
+                       "de propiedad intelectual están reservados.</p>" +
+
+                       "<h2>Eliminación de enlaces</h2>" +
+
+                       "<p> Si encuentra algún enlace en Grooving que sea ofensivo por cualquier motivo, puede " +
+                       "contactarnos e informarnos en cualquier momento. Estudiaremos sus peticiones para retirar " +
+                       "los enlaces.</p>" +
+
+                       "<p>No aseguramos que la información sea correcta, su integridad o exactitud; ni prometemos " +
+                       "garantizar que el sitio web permanezca disponible o que el material en el sitio web se " +
+                       "mantenga actualizado.</p>" +
+
+                       "<h2>Comportamiento inapropiado de otros usuarios</h2>" +
+                       "<p>Si detecta un comportamiento inadecuado de otro usuario de Grooving, puede reportarlo a " +
+                       "Grooving enviando un correo electrónico a grupogrooving@gmail.com adjuntando el nombre de " +
+                       "usuario que desea informar, el motivo y alguna prueba (vídeo, imágenes, enlaces, ...) .</p>" +
+
+                       "<h2>GPDR - Regulación de Protección General de Datos</h2>" +
+                       "<p>Grooving cumple con las regulaciones de la Unión Europea desde el nacimiento de la " +
+                       "compañía, cumpliendo con cada uno de sus artículos y sometiendo auditorías regularmente.</p>" +
+
+                       "<h3>Derecho a ser informado sobre brechas de seguridad</h3>" +
+                       "<p>En caso de que se detecte una brecha de seguridad en Grooving, se le notificará un máximo " +
+                       "de 72 horas después de su detección.</p>" +
+
+                       "<h3>Derecho al olvido</h3>" +
+                       "<p>Cualquier usuario que utilice Grooving puede solicitar la eliminación de sus datos desde " +
+                       "su perfil de usuario.</p>" +
+
+                       "<h3>Derecho a exportar tus datos personales</h3>" +
+                       "<p>Todos los usuarios que utilizan Grooving pueden solicitar los datos que nuestra empresa " +
+                       "tiene sobre ellos desde su perfil de usuario.</p>",
+
         termsText_en="<p>The conditions of use of the web page, the rules of use and the use of " +
-                              "grooving.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
-                              " hereinafter, Grooving, that the user of the portal must accept to use all the " +
-                              "services and information that are provided from the portal.</p>" +
-                              "<p>The user as well as Grooving, owner of the portal, have become the parties. " +
-                              "Access to the use of the portal, the part of its contents and services means full " +
-                              "acceptance of these conditions of use. The implementation of the provision and use " +
-                              "of the portal refers to the strict application of the terms recognized in these " +
-                              "terms of use of the portal.</p>" +
+                     "grooving.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
+                     " hereinafter, Grooving, that the user of the portal must accept to use all the " +
+                     "services and information that are provided from the portal.</p>" +
+                     "<p>The user as well as Grooving, owner of the portal, have become the parties. " +
+                     "Access to the use of the portal, the part of its contents and services means full " +
+                     "acceptance of these conditions of use. The implementation of the provision and use " +
+                     "of the portal refers to the strict application of the terms recognized in these " +
+                     "terms of use of the portal.</p>" +
 
-                              "<h2>Use conditions regulation</h2>" +
-                              "<p>The general conditions of use of the portal regulate the access and use of the " +
-                              "portal, the contents and services, the disposition of the users and / or through " +
-                              "the portal, either through the portal, either by the users or by any third party. " +
-                              "However, access and use of the content and / or services may be used in certain " +
-                              "specific conditions.</p>" +
+                     "<h2>Use conditions regulation</h2>" +
+                     "<p>The general conditions of use of the portal regulate the access and use of the " +
+                     "portal, the contents and services, the disposition of the users and / or through " +
+                     "the portal, either through the portal, either by the users or by any third party. " +
+                     "However, access and use of the content and / or services may be used in certain " +
+                     "specific conditions.</p>" +
 
-                              "<h2>Modifications</h2>" +
-                              "<p>The company reserves the right to modify at any time the general conditions of " +
-                              "use of the portal. In any case, we recommend that you periodically consult the " +
-                              "general conditions of use of the portal, and that they can be modified.</p>" +
+                     "<h2>Modifications</h2>" +
+                     "<p>The company reserves the right to modify at any time the general conditions of " +
+                     "use of the portal. In any case, we recommend that you periodically consult the " +
+                     "general conditions of use of the portal, and that they can be modified.</p>" +
 
-                              "<h2>Information and services</h2>" +
-                              "<p>Users can access a different type of information and services through the portal. " +
-                              "The portal reserves the right to modify, at any time, and without prior notice, the " +
-                              "presentation and configuration of information and services from the portal. The user " +
-                              "expressly acknowledges and accepts that at any time the portal may interrupt, " +
-                              "deactivate and / or cancel any information or service. The portal is not available. " +
-                              "However, sometimes, for reasons of maintenance, updating, change of location, etc., " +
-                              "may mean the interruption of access to the portal.</p>" +
+                     "<h2>Information and services</h2>" +
+                     "<p>Users can access a different type of information and services through the portal. " +
+                     "The portal reserves the right to modify, at any time, and without prior notice, the " +
+                     "presentation and configuration of information and services from the portal. The user " +
+                     "expressly acknowledges and accepts that at any time the portal may interrupt, " +
+                     "deactivate and / or cancel any information or service. " +
+                     "However, sometimes, for reasons of maintenance, updating, change of location, etc., " +
+                     "may mean the interruption of access to the portal.</p>" +
 
-                              "<h2>Portal information and services availability</h2>" +
-                              "<p>The portal does not guarantee the continuous and permanent availability of the " +
-                              "services being in this way exempt from any responsibility for possible damages such "+
-                              "as the lack of availability of the service due to force majeure or errors in the " +
-                              "telematic data transfer networks, works at will, or disconnections made for " +
-                              "improvement or maintenance of computer equipment and systems. In these cases, the " +
-                              "portal will be announced 24 hours before the interruption.  The portal will not be " +
-                              "responsible for the interruption, suspension or termination of the information " +
-                              "or services</p>" 
+                     "<h2>Portal information and services availability</h2>" +
+                     "<p>The portal does not guarantee the continuous and permanent availability of the " +
+                     "services being in this way exempt from any responsibility for possible damages such "+
+                     "as the lack of availability of the service due to force majeure or errors in the " +
+                     "telematic data transfer networks, works at will, or disconnections made for " +
+                     "improvement or maintenance of computer equipment and systems. In these cases, the " +
+                     "portal will be announced 24 hours before the interruption.  The portal will not be " +
+                     "responsible for the interruption, suspension or termination of the information " +
+                     "or services</p>" +
                     
-                              "<h2>Portal contents responsibility</h2>" +
-                              "<p>The portal will control the license of those services provided through the " +
-                              "platform by third parties. In the event that the user as a result of the use of the " +
-                              "portal suffers or will harm the communication and the appropriate measures will be " +
-                              "taken to solve it.</p>" +
-                              "<p>The portal does not intervene in the creation of the contents and / or services " +
-                              "provided or provided by third parties in and / or through the application, in the " +
-                              "same way that it does not control its legality either. In any case, we do not offer " +
-                              "any kind of guarantee on them. The user acknowledges that the portal is not and is " +
-                              "not responsible for the contents and / or services provided or provided by third " +
-                              "parties in and / or through the portal.</p>" +
-                              "<p>In any case, the portal excludes any liability for damages and losses that may be " +
-                              "due to information and / or services provided or provided by third parties other " +
-                              "than the Company. All responsibility will be the third party, " +
-                              "whether provider, collaborator or other.</p>" +
+                     "<h2>Portal contents responsibility</h2>" +
+                     "<p>The portal will control the license of those services provided through the " +
+                     "platform by third parties. In the event that the user as a result of the use of the " +
+                     "portal suffers or will harm the communication and the appropriate measures will be " +
+                     "taken to solve it.</p>" +
+                     "<p>The portal does not intervene in the creation of the contents and / or services " +
+                     "provided or provided by third parties in and / or through the application, in the " +
+                     "same way that it does not control its legality either. In any case, we do not offer " +
+                     "any kind of guarantee on them. The user acknowledges that the portal is not and is " +
+                     "not responsible for the contents and / or services provided or provided by third " +
+                     "parties in and / or through the portal.</p>" +
+                     "<p>In any case, the portal excludes any liability for damages and losses that may be " +
+                     "due to information and / or services provided or provided by third parties other " +
+                     "than the Company. All responsibility will be the third party, whether provider, " +
+                     "collaborator or other.</p>" +
 
-                              "<h2>User’s obligations</h2>" +
-                              "<p>The user must respect at all times the terms and conditions established in this " +
-                              "legal notice. The user expresses expressly that he will use the portal diligently " +
-                              "and assuming any responsibility that may arise from the breach of the rules.</p>" +
-                              "<p>Likewise, the user may not use the portal to transmit, store, disclose, promote " +
-                              "or distribute data or contents that are carriers of viruses or any other computer " +
-                              "code, files or programs designed to interrupt, destroy or impair the operation of " +
-                              "any program or equipment. IT or telecommunications. </p>"
-                              "<p>The user undertakes to indemnify and hold harmless the portal for any damage, " +
-                              "prejudice, penalty, fine, penalty or compensation that the portal has to face.</p>" +
+                     "<h2>User’s obligations</h2>" +
+                     "<p>The user must respect at all times the terms and conditions established in this " +
+                     "legal notice. The user expresses expressly that he will use the portal diligently " +
+                     "and assuming any responsibility that may arise from the breach of the rules.</p>" +
+                     "<p>Likewise, the user may not use the portal to transmit, store, disclose, promote " +
+                     "or distribute data or contents that are carriers of viruses or any other computer " +
+                     "code, files or programs designed to interrupt, destroy or impair the operation of " +
+                     "any program or equipment.</p>"
+                     "<p>The user undertakes to indemnify and hold harmless the portal for any damage, " +
+                     "prejudice, penalty, fine, penalty or compensation that the portal has to face.</p>" +
 
-                              "<h2>Cookies</h2>" +
-                              "<p>We employ the use of cookies. By accessing Grooving group, you agreed to use " +
-                              "cookies in agreement with the Grooving's Privacy Policy.</p>" +
-                              "<p>Most interactive websites use cookies to let us retrieve the user's details for " +
-                              "each visit. Cookies are used by our website to enable the functionality of certain " +
-                              "areas to make it easier for people visiting our website.</p>" +
+                     "<h2>Cookies</h2>" +
+                     "<p>We employ the use of cookies. By accessing Grooving group, you agreed to use " +
+                     "cookies in agreement with the Grooving's Privacy Policy.</p>" +
+                     "<p>Most interactive websites use cookies to let us retrieve the user's details for " +
+                     "each visit. Cookies are used by our website to enable the functionality of certain " +
+                     "areas to make it easier for people visiting our website.</p>" +
 
-                              "<h2>iFrames</h2>" +
-                              "<p>Without prior approval and written permission, you may not create frames around " +
-                              "our Webpages that alter in any way the visual presentation or appearance of our " +
-                              "Website.</p>" +
+                     "<h2>iFrames</h2>" +
+                     "<p>Without prior approval and written permission, you may not create frames around " +
+                     "our Webpages that alter in any way the visual presentation or appearance of our Website.</p>" +
 
-                              "<h2>License</h2>"
-                              "<p>Unless otherwise stated, Grooving and/or its licensors own the intellectual "
-                              "property rights for all material on Grooving. All intellectual property rights are " +
-                              "reserved. You may access this from Grooving for your own personal use subjected to " +
-                              "restrictions set in these terms and conditions.</p>" +
+                     "<h2>License</h2>" +
+                     "<p>Unless otherwise stated, Grooving and/or its licensors own the intellectual " +
+                     "property rights for all material on Grooving. All intellectual property rights are " +
+                     "reserved.</p>" +
 
-                              "<h2>Removal of links from our website</h2>" +
-                              "<p>If you find any link on our Website that is offensive for any reason, you are " +
-                              "free to contact and inform us any moment. We will consider requests to remove links " +
-                              "but we are not obligated to or so or to respond to you directly.</p>" +
-                              "<p>We do not ensure that the information on this website is correct, we do not " +
-                              "warrant its completeness or accuracy; nor do we promise to ensure that the " +
-                              "website remains available or that the material on the website is kept up to date.</p>" +
+                     "<h2>Removal of links from our website</h2>" +
+                     "<p>If you find any link on Grooving that is offensive for any reason, you are " +
+                     "free to contact and inform us any moment. We will consider requests to remove links.</p>" +
+                     "<p>We do not ensure that the information on this website is correct, we do not " +
+                     "warrant its completeness or accuracy; nor do we promise to ensure that the " +
+                     "website remains available or that the material on the website is kept up to date.</p>" +
 
-                              "<h2>GPDR - General Data Protection Regulation</h2>" +
-                              "<p>Grooving complies with the regulations of the European Union since the company " +
-                              "birth, complying with each of its articles and subjecting audits on a " +
-                              "regular basis.</p>" +
-                              "<h3>Right to be informed with breaches</h3>"+
-                              "<p>All those users who use Grooving can request to delete their data by sending an " +
-                              "email to <b>grupogrooving@gmail.com</b></p>" +
-                              "<h3>Right to port data</h3>" +
-                              "<p>All those users who use Grooving can request their data that our company has about " +
-                              "them by sending an email to <b>grupogrooving@gmail.com</b></p>")
+                     "<h2>Bad users behavior</h2>" +
+                     "<p>If you detect inappropriate behavior of another Grooving user, you can report it to " +
+                     "Grooving by sending an email to grupogrooving@gmail.com attached the username you want to " +
+                     "report, the reason, and some proof (video, images, links, ...).</p>"
+
+                     "<h2>GPDR - General Data Protection Regulation</h2>" +
+                     "<p>Grooving complies with the regulations of the European Union since the company " +
+                     "birth, complying with each of its articles and subjecting audits on a regular basis.</p>" +
+
+                     "<h3>Right to be informed with breaches</h3>" +
+                     "<p>In case a security breach is detected in the Grooving system, it will be notified a maximum " +
+                     "of 72 hours after its detection.</p>" +
+
+                     "<h3>Right to be forgotten</h3>" +
+                     "<p> Any user who uses Grooving can request the removal of their data from their user " +
+                     "profile.</p>" +
+
+                     "<h3>Right to export your personal information</h3>" +
+                     "<p>All users who use Grooving can request the data that our company has about them from their " +
+                     "user profile.</p>")
 
     system_configuration1.save()
 

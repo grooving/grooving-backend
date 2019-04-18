@@ -31,5 +31,6 @@
   "ERROR_OFFER_NOT_FOUND": "La oferta que buscas no existe.",
   "ERROR_NO_DATA_GIVEN": "El formulario no tiene datos.",
   "ERROR_NO_MATCHING_LANGUAGE": "El idioma que has escogido no esta disponible.",
-  "ERROR_ACTOR_NOT_FOUND": "El actor que buscas no existe."
+  "ERROR_ACTOR_NOT_FOUND": "El actor que buscas no existe.",
+  "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar."
 }

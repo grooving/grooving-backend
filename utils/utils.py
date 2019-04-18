@@ -25,23 +25,21 @@ class TermsAndConditions(generics.GenericAPIView):
 
     @staticmethod
     def get(request):
-        return Response(SystemConfiguration.objects.all().first().termsText)
+        return Response(SystemConfiguration.objects.all().first().termsText_en)
 
 
 class Privacy(generics.GenericAPIView):
 
     @staticmethod
     def get(request):
-        return Response(SystemConfiguration.objects.all().first().privacyText)
+        return Response(SystemConfiguration.objects.all().first().privacyText_en)
 
 
 class AboutUs(generics.GenericAPIView):
 
     @staticmethod
     def get(request):
-        return Response(SystemConfiguration.objects.all().first().aboutUs)
-
-
+        return Response(SystemConfiguration.objects.all().first().aboutUs_en)
 
 
 def isPositivefloat(string):
