@@ -3,7 +3,7 @@ from rest_framework import serializers
 from Grooving.models import Offer, PaymentPackage, Customer,Zone, EventLocation, Artist, Portfolio
 from eventLocation.serializers import ZoneSerializer
 from rating.serializers import ListRatingSerializer
-from portfolio.serializers import PortfolioSerializer
+from paymentPackage.serializers import PaymentPackageListSerializer
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -57,7 +57,7 @@ class PortfolioOfferSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Portfolio
-        fields = ('artist',)
+        fields = ('artist', 'artisticName')
 
 
 class OfferPaymentPackageSerializer(serializers.HyperlinkedModelSerializer):
@@ -79,7 +79,7 @@ class OfferWithOnlyPaymentPackageSerializer(serializers.ModelSerializer):
 class ListCustomerOffersSerializer(serializers.ModelSerializer):
 
     eventLocation = EventLocationSerializer(read_only=True, many=False)
-    paymentPackage = OfferWithOnlyPaymentPackageSerializer(read_only=True)
+    paymentPackage = PaymentPackageListSerializer(read_only=True)
     artist = OfferPaymentPackageSerializer(read_only=True, source='paymentPackage.portfolio.artist')
     rating = ListRatingSerializer(read_only=True)
 
