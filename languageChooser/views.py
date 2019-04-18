@@ -25,7 +25,7 @@ class LanguageChooser(generics.ListAPIView):
 
         if serializer.validate(request):
 
-            language = request.query_params.get('lang')
+            language = request.query_params.get('lang').lower()
             queryset.language = language
             queryset.save()
 
