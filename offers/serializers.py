@@ -51,31 +51,40 @@ class ListArtistOffersSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id', 'description', 'status', 'price', 'date', 'hours', 'eventLocation', 'reason')
 
 
-class OfferPaymentPackageSerializer(serializers.HyperlinkedModelSerializer):
-
-    portfolio = PortfolioSerializer(read_only=True)
-
-    class Meta:
-        model = PaymentPackage
-        fields = ('portfolio',)
-
-
 class PortfolioOfferSerializer(serializers.HyperlinkedModelSerializer):
 
-    artist = ListArtistOffersSerializer(read_only=True)
+    artist = ArtistOfferSerializer(read_only=True)
 
     class Meta:
         model = Portfolio
         fields = ('artist',)
 
 
-class ListCustomerOffersSerializer(serializers.HyperlinkedModelSerializer):
+class OfferPaymentPackageSerializer(serializers.HyperlinkedModelSerializer):
+
+    portfolio = PortfolioOfferSerializer(read_only=True)
+
+    class Meta:
+        model = PaymentPackage
+        fields = ('portfolio',)
+
+
+class OfferWithOnlyPaymentPackageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = PaymentPackage
+        fields = ('id', 'description', 'performance', 'fare', 'custom', 'currency')
+
+
+class ListCustomerOffersSerializer(serializers.ModelSerializer):
 
     eventLocation = EventLocationSerializer(read_only=True, many=False)
-    paymentPackage = OfferPaymentPackageSerializer(read_only=True, source='paymentPackage.portfolio.artist')
+    paymentPackage = OfferWithOnlyPaymentPackageSerializer(read_only=True)
+    artist = OfferPaymentPackageSerializer(read_only=True, source='paymentPackage.portfolio.artist')
     rating = ListRatingSerializer(read_only=True)
 
     class Meta:
         depth = 4
         model = Offer
-        fields = ('id', 'description', 'status', 'price', 'date', 'hours', 'paymentPackage', 'eventLocation', 'rating', 'reason')
+        fields = ('id', 'description', 'status', 'price', 'date', 'hours', 'artist', 'paymentPackage', 'eventLocation',
+                  'rating', 'reason')
