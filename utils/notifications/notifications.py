@@ -1,7 +1,6 @@
 from django.core.mail import EmailMessage
 from Grooving.models import Offer, SystemConfiguration, User, Artist, Customer
 from weasyprint import HTML
-from django.template.loader import render_to_string
 from datetime import datetime
 import threading
 from utils.authentication_utils import get_language
