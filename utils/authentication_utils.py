@@ -87,15 +87,29 @@ def get_admin(request):
 # Deprecated functions
 
 
-def get_user_type(user):
+def get_user_type(artist_or_customer):
     print("utils.authentication_utils.get_user_type is deprecated.")
-    if user:
-        artist = Artist.objects.filter(user_id=user.user_id).first()
+    if artist_or_customer:
+        artist = Artist.objects.filter(user_id=artist_or_customer.user_id).first()
         if artist is not None:
             return "Artist"
         else:
-            customer = Customer.objects.filter(user_id=user.user_id).first()
+            customer = Customer.objects.filter(user_id=artist_or_customer.user_id).first()
             if customer is not None:
                 return "Customer"
+    else:
+        return None
+
+
+def get_language(user):
+
+    if user:
+        artist = Artist.objects.filter(user_id=user.id).first()
+        if artist is not None:
+            return artist.language
+        else:
+            customer = Customer.objects.filter(user_id=user.id).first()
+            if customer is not None:
+                return customer.language
     else:
         return None
