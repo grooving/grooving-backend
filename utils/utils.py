@@ -51,3 +51,13 @@ def isPositivefloat(string):
             return False
     except ValueError:
         return False
+
+def isPositiveInteger(string):
+    try:
+        int(string)
+        if '-' not in string:
+            return True
+        else:
+            return False
+    except ValueError:
+        return False
