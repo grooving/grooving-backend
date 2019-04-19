@@ -138,11 +138,7 @@ def save_data():
                     "problems for the artists: empower artists by giving visibility and improving their " +
                     "monetization. What is our mission? Simplifying the search and hiring made easy.</p>" +
 					"<p>With all this, we can ensure that <b>Grooving makes the difference</b>.</p>",
-        aboutUs_en= "<h2>Sobre nosotros</h2>" +
-                    "<p>En Grooving, trabajamos todos los días porque queremos resolver los grandes problemas a los " +
-                    "que se enfrentan los artistas mejorando su visibilidad y monetización de su actividad. ¿Cómo lo " +
-                    "conseguimos? Simplificando la búsqueda y la contratación de manera fácil, sencilla y fiable.</p>" +
-                    "<p>Podemos asegurar que <b>Grooving marca la diferencia</b>.</p>",
+        aboutUs_en= "",
         termsText_es = "<p>Las condiciones de uso de la página web, las reglas de uso y el uso de grooving.com, la " +
                        "propiedad de Grooving SL y el correo electrónico grupogrooving@gmail.com, en adelante, " +
                        "Grooving, que el usuario del portal debe aceptar para utilizar todos los servicios e " +
