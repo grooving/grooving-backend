@@ -74,6 +74,12 @@ class CustomerRatingSerializer(serializers.HyperlinkedModelSerializer):
             #       Django tiene protección ante XSS activada por defecto por HTML escaping. Además, el comentario puede
             #       ser nulo, si bien debe pasarse por la llamada aunque esté vacío.
 
+            #Se comprueba que la oferta no este unida a un artista que se haya dado de baja. Para ello, miramos si el portfolio esta hidden
+
+            portfolio = offer.paymentPackage.portfolio
+
+            Assertions.assert_true_raise400(portfolio.isHidden is False, {'error': 'ERROR_NO_USER'})
+
             #       Salimos de la función
 
             return True
