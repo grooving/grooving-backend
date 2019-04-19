@@ -24,7 +24,7 @@ class ArtistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artist
-        fields = ('id', 'photo', 'phone', 'portfolio', 'user','numOffers')
+        fields = ('id', 'photo', 'phone', 'portfolio', 'user','numOffers','language')
 
     @staticmethod
     def give_offers(self):
@@ -38,7 +38,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ('id', 'photo', 'phone', 'user')
+        fields = ('id', 'photo', 'phone', 'user','language')
 
 
 class AdminSerializer(serializers.ModelSerializer):
@@ -47,7 +47,7 @@ class AdminSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Admin
-        fields = ('id', 'user')
+        fields = ('id', 'user','language')
 
 
 class LoginSerializer(serializers.Serializer):
