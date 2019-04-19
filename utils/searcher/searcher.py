@@ -30,7 +30,7 @@ def compareUsers(user, userName=""):
 def search(artisticName="", categoria="", zone="", order=""):
 
 
-    portfolios = Portfolio.objects.filter(isHidden=False).all()
+    portfolios = Portfolio.objects.filter(isHidden=False).exclude(artist_id__isnull=True).all()
     filtersPortfolios = [(porfolio, 0) for porfolio in portfolios if compare(porfolio, artisticName=artisticName,
                                                                    categoria=categoria, zone=zone)]
 

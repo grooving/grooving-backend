@@ -8,6 +8,7 @@ from django.http import Http404
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .serializers import UserSerializer, ListArtistSerializer, PublicCustomerInfoSerializer
 from utils.searcher.searcher import searchAdmin
+from utils.authentication_utils import get_admin
 
 class UserManage(generics.DestroyAPIView):
     queryset = User.objects.all()
@@ -54,9 +55,11 @@ class ListUsers(generics.RetrieveAPIView):
 
     def get_queryset(self):
 
-        return ['Something',]
+        return ['Something', ]
 
     def get(self, request, *args, **kwargs):
+        admin = get_admin(request)
+        Assertions.assert_true_raise403(admin is not None, {"error": "You are not admin"})
         username = request.query_params.get("username", None)
         #Assertions.assert_true_raise403()
         users = searchAdmin(username)
