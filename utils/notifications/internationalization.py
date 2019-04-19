@@ -1,4 +1,4 @@
-from emailTesting.models import SystemConfiguration
+from Grooving.models import SystemConfiguration
 from django.template.loader import render_to_string
 
 # Necessary variables
