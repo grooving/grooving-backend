@@ -13,7 +13,7 @@ class Assertions:
         Assertions.__assert_true(assertion, 401, {"code": "No authenticate"}, details)
 
     @staticmethod
-    def assert_true_raise403(assertion: bool, details: dict = {"code": "Denied persmission"}):
+    def assert_true_raise403(assertion: bool, details: dict = {"code": "Denied permission"}):
         Assertions.__assert_true(assertion, 403, {"code": "Denied persmission"}, details)
 
     @staticmethod

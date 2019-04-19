@@ -24,11 +24,11 @@ class ArtistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Artist
-        fields = ('id', 'photo', 'phone', 'portfolio', 'user','numOffers')
+        fields = ('id', 'photo', 'phone', 'portfolio', 'user','numOffers','language')
 
     @staticmethod
     def give_offers(self):
-        numOffers = Offer.objects.filter(paymentPackage__portfolio__artist=self,status='PENDING').count()
+        numOffers = Offer.objects.filter(paymentPackage__portfolio__artist=self, status='PENDING').count()
         return numOffers
 
 
@@ -38,7 +38,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Customer
-        fields = ('id', 'photo', 'phone', 'user')
+        fields = ('id', 'photo', 'phone', 'user','language')
 
 
 class AdminSerializer(serializers.ModelSerializer):
@@ -47,7 +47,7 @@ class AdminSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Admin
-        fields = ('id', 'user')
+        fields = ('id', 'user','language')
 
 
 class LoginSerializer(serializers.Serializer):
@@ -67,7 +67,7 @@ class LoginSerializer(serializers.Serializer):
         elif isinstance(instance, Admin):
             adminSerializer = AdminSerializer(instance)
             return {
-                'customer': adminSerializer.data
+                'admin': adminSerializer.data
             }
 
     class Meta:

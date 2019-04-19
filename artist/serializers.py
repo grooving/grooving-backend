@@ -10,14 +10,23 @@ from utils.strings import Strings
 from utils.notifications.notifications import Notifications
 
 
+class EvenShorterPortfolioSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = Portfolio
+        fields = ('artisticName',)
+
+
 class ArtistInfoSerializer(serializers.HyperlinkedModelSerializer):
 
     user = UserSerializer(read_only=True)
+    artisticName = EvenShorterPortfolioSerializer(read_only=True, source='portfolio')
 
     class Meta:
         depth = 1
         model = Artist
-        fields = ('id', 'user', 'photo', 'phone', 'iban', 'paypalAccount')
+        fields = ('id', 'artisticName', 'user', 'photo', 'phone', 'iban', 'paypalAccount')
 
 
 class ShortPortfolioSerializer(serializers.ModelSerializer):
@@ -88,9 +97,24 @@ class ArtistSerializer(serializers.ModelSerializer):
             Assertions.assert_true_raise400(Strings.url_is_an_image(photo), {'error': 'Invalid photo url,'
                                                               ' the photo must end with an image extension'})
 
-        user.save()
-        artist.user = user
-        return artist
+        artisticName = json.get('artisticName')
+
+        Assertions.assert_true_raise400(artisticName, {'error': 'ERROR_NO_ARTISTIC_NAME'})
+        Assertions.assert_true_raise400(artisticName != "", {'error': 'ERROR_NO_ARTISTIC_NAME'})
+
+        try:
+
+            portfolio = Portfolio.objects.get(artist=artist)
+
+            portfolio.artisticName = artisticName
+
+            user.save()
+            artist.user = user
+            portfolio.save()
+            return artist
+        except Portfolio.DoesNotExist:
+
+            Assertions.assert_true_raise400(False, {'error': 'ERROR_NOTFOUND_PORTFOLIO'})
 
     @staticmethod
     def _service_create_artist(json: dict):

@@ -1,10 +1,10 @@
-from Grooving.models import ArtisticGender
+from Grooving.models import ArtisticGender,Portfolio
 
 from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user,get_user_type
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import ArtisticGenderSerializer, ShortArtisticGenderSerializer
+from .serializers import ArtisticGenderSerializer, ShortArtisticGenderSerializer,SearchGenreSerializer
 from rest_framework import status
 from utils.Assertions import Assertions
 
@@ -71,19 +71,47 @@ class CreateArtisticGender(generics.CreateAPIView):
             raise PermissionDenied("The artisticGender is not for yourself")
 
 
-class ListArtisticGenders(generics.RetrieveUpdateDestroyAPIView):
+class ListArtisticGenders(generics.RetrieveAPIView):
 
-    queryset = ArtisticGender.objects.all()
-    serializer_class = ArtisticGenderSerializer
+    serializer_class = SearchGenreSerializer
 
-    def get_object(self, pk=None):
-        try:
-            return ArtisticGender.objects.get(pk=pk)
-        except ArtisticGender.DoesNotExist:
-            raise Assertions.assert_true_raise404(False, {'error': 'Artistic gender not found'})
+    def get_queryset(self):
 
-    def get(self, request, pk=None, format=None):
+        return ArtisticGender.objects.all()
 
-        artisticGenders = ArtisticGender.objects.all()
-        serializer = ShortArtisticGenderSerializer(artisticGenders, many=True)
-        return Response(serializer.data)
+    def get(self, request, *args, **kwargs):
+
+        tree = request.query_params.get("tree", None)
+        portfolio = request.query_params.get("portfolio", None)
+        genres = None
+        if tree is None and portfolio is None:
+            genres = list(ArtisticGender.objects.all())
+            serializer = SearchGenreSerializer(genres, many=True)
+            genres = serializer.data
+        elif tree == "true":
+            Assertions.assert_true_raise400(portfolio is None, {"error": "Portfolio's genres don't have tree option"})
+            genres = SearchGenreSerializer.get_tree()
+        elif portfolio is not None:
+
+            try:
+                portfolio = int(portfolio)
+            except ValueError:
+                Assertions.assert_true_raise400(False, {"error": "Incorrect format for id"})
+
+            portfolio = Portfolio.objects.filter(pk=portfolio).first()
+            Assertions.assert_true_raise404(portfolio,
+                                            {'error': 'Portfolio not found'})
+            genres = portfolio.artisticGender.all()
+            count = genres.count()
+            child_genres = []
+            for zone in genres:
+                childs = SearchGenreSerializer.get_base_childs(zone, [])[0]
+                if len(child_genres) == 0:
+                    child_genres = childs
+                else:
+                    child_genres.extend(childs)
+
+            serializer = SearchGenreSerializer(child_genres, many=True)
+            genres = serializer.data
+
+        return Response(genres, status=status.HTTP_200_OK)

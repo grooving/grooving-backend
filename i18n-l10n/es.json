@@ -1,5 +1,6 @@
 {
   "ERROR_USER_FORBIDDEN": "El usuario tiene prohibido esta acción",
+  "ERROR_FIELD_ID": "Campo id no rellenado",
   "ERROR_FIELD_TYPE": "Campo tipo no rellenado",
   "ERROR_FIELD_LINK": "Campo enlace no rellenado",
   "ERROR_FIELD_DESCRIPTION": "Campo descripción no rellenado",
@@ -11,5 +12,25 @@
   "ERROR_CREATEMODULE_INSTAGRAM": "No se puede crear otro modulo de Instagram",
   "ERROR_REFERENCE_PORTFOLIO": "No puedes referenciar este portfolio",
   "ERROR_DELETE_USER_UNKNOWN": "Error al eliminar un usuario desconocido",
-  "ERROR_DELETE_USER": "Error al eliminar usuario"
+  "ERROR_DELETE_USER": "Error al eliminar usuario",
+  "ERROR_BAN_USER_UNKNOWN": "Error al banear un usuario desconocido",
+  "ERROR_BAN_USER": "Error al banear usuario",
+  "ERROR_VALIDATE": "La validación de los datos ha sido erronea",
+  "ERROR_NO_ARTISTIC_NAME": "No has introducido un nombre artistico.",
+  "ERROR_NOT_LOGGED_IN": "Debes estar autenticado para entrar en este sitio.",
+  "ERROR_NOT_AN_ARTIST": "No eres un artista, y por tanto no puedes estar en este sitio.",
+  "ERROR_NOT_A_CUSTOMER": "No eres un cliente, y por tanto no puedes estar en este sitio.",
+  "ERROR_NO_CUSTOMER_FOUND": "El cliente que buscas no existe.",
+  "ERROR_NO_ARTIST_FOUND": "El artista que buscas no existe.",
+  "ERROR_NO_SCORE": "Debes dar una puntuacion al artista.",
+  "ERROR_DECIMAL_SCORE": "La puntuacion debe ser un numero sin decimales.",
+  "ERROR_RATING_OUT_OF_RANGE": "La puntuacion debe estar entre 1 y 5.",
+  "ERROR_OFFER_NOT_OWNED": "Esta oferta no te pertenece.",
+  "ERROR_OFFER_NOT_READY": "Esta oferta no puede recibir una puntuacion, pues aun no se ha hecho el pago.",
+  "ERROR_OFFER_ALREADY_RATED": "Esta oferta ya tiene una puntuacion. No puedes puntuarla dos veces.",
+  "ERROR_OFFER_NOT_FOUND": "La oferta que buscas no existe.",
+  "ERROR_NO_DATA_GIVEN": "El formulario no tiene datos.",
+  "ERROR_NO_MATCHING_LANGUAGE": "El idioma que has escogido no esta disponible.",
+  "ERROR_ACTOR_NOT_FOUND": "El actor que buscas no existe.",
+  "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar."
 }

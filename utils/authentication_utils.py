@@ -1,4 +1,4 @@
-from Grooving.models import Artist, Customer
+from Grooving.models import Artist, Customer, User
 
 from rest_framework.authtoken.models import Token
 
@@ -58,6 +58,25 @@ def get_customer(request):
                 customer = Customer.objects.filter(user_id=user_id).first()
                 if customer is not None:
                     return customer
+                else:
+                    return None
+        else:
+            return None
+    except:
+        return None
+
+
+def get_admin(request):
+    try:
+        token = request._auth.key
+        if token is not None:
+            token_object = Token.objects.all().filter(pk=token).first()
+            if token_object is not None:
+
+                admin = User.objects.filter(id=token_object.user_id).first()
+
+                if admin is not None and admin.is_staff:
+                    return admin
                 else:
                     return None
         else:

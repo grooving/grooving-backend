@@ -2,6 +2,10 @@ from django.utils import timezone
 from Grooving.models import SystemConfiguration
 from rest_framework import generics
 from rest_framework.response import Response
+import utils.Assertions
+from utils.Assertions import Assertions
+from utils.authentication_utils import get_admin
+from utils.notifications.notifications import Notifications
 
 
 def auto_update_old_offers(offers):
@@ -21,21 +25,21 @@ class TermsAndConditions(generics.GenericAPIView):
 
     @staticmethod
     def get(request):
-        return Response(SystemConfiguration.objects.all().first().termsText)
+        return Response(SystemConfiguration.objects.all().first().termsText_en)
 
 
 class Privacy(generics.GenericAPIView):
 
     @staticmethod
     def get(request):
-        return Response(SystemConfiguration.objects.all().first().privacyText)
+        return Response(SystemConfiguration.objects.all().first().privacyText_en)
 
 
 class AboutUs(generics.GenericAPIView):
 
     @staticmethod
     def get(request):
-        return Response(SystemConfiguration.objects.all().first().aboutUs)
+        return Response(SystemConfiguration.objects.all().first().aboutUs_en)
 
 
 def isPositivefloat(string):

@@ -17,8 +17,14 @@ class AbstractEntity(models.Model):
         abstract = True
 
 
+LanguageField = (
+    ('es', 'es'),
+    ('en', 'en'))
+
+
 class Actor(AbstractEntity):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    language = models.CharField(choices=LanguageField, max_length=3, default="en")
 
     def __str__(self):
         return str(self.user.username)
@@ -32,7 +38,6 @@ class Admin(Actor):
 
     def __str__(self):
         return str(self.user.username)
-
 
 class UserAbstract(Actor):
     photo = models.CharField(max_length=500, blank=True, null=True)
@@ -64,7 +69,7 @@ class Portfolio(AbstractEntity):
     banner = models.CharField(blank=True, null=True, max_length=500)
     biography = models.TextField(blank=True, null=True)
     artist = models.OneToOneField('Artist', related_name='portfolio', null=True, blank=True, on_delete=models.SET_NULL)
-    artisticName = models.CharField(blank=True, null=True, max_length=140)
+    artisticName = models.CharField(unique=True, blank=True, null=True, max_length=140)
     artisticGender = models.ManyToManyField(ArtisticGender, blank=True)
     zone = models.ManyToManyField(Zone, blank=True)
 
@@ -189,7 +194,6 @@ class Offer(AbstractEntity):
     def __str__(self):
         return str(self.description)
 
-
 class SystemConfiguration(AbstractEntity):
     minimumPrice = models.DecimalField(default=0.0, max_digits=20, decimal_places=2,
                                        validators=[MinValueValidator(Decimal('1.0'))])
@@ -204,6 +208,9 @@ class SystemConfiguration(AbstractEntity):
     logo = models.CharField(max_length=500)
     appName = models.CharField(max_length=255)
     slogan = models.CharField(max_length=255, blank=True, null=True)
-    termsText = models.TextField(default='Terms text')
-    privacyText = models.TextField(default='Privacy text')
-    aboutUs = models.TextField(default='About Us')
+    termsText_es = models.TextField(default='Terms text')
+    termsText_en = models.TextField(default='Texto de terminos')
+    privacyText_es = models.TextField(default='Privacy text')
+    privacyText_en = models.TextField(default='Texto de privacidad')
+    aboutUs_es = models.TextField(default='About Us')
+    aboutUs_en = models.TextField(default='Sobre nosotros')

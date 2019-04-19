@@ -24,10 +24,10 @@ class CustomerRatingSerializer(serializers.HyperlinkedModelSerializer):
     def _service_create(json: dict, rating: Rating):
 
         rating.score = json.get('score')
-        Assertions.assert_true_raise401(rating.score, {'error': 'You must give a score to this artist.'})
+        Assertions.assert_true_raise401(rating.score, {'error': 'ERROR_NO_SCORE'})
 
-        Assertions.assert_true_raise401(isinstance(rating.score, int), {'error': 'The score must be a number with no decimals.'})
-        Assertions.assert_true_raise401(rating.score >= 1 and rating.score <= 5, {'error': 'The rating cannot be less than 1 or more than 5 points.'})
+        Assertions.assert_true_raise401(isinstance(rating.score, int), {'error': 'ERROR_DECIMAL_SCORE'})
+        Assertions.assert_true_raise401(rating.score >= 1 and rating.score <= 5, {'error': 'ERROR_RATING_OUT_OF_RANGE'})
 
         rating.comment = json.get('comment')
 
@@ -48,8 +48,8 @@ class CustomerRatingSerializer(serializers.HyperlinkedModelSerializer):
         user_type = get_user_type(user)
 
         #       Si no es Customer, se le bloquea el paso
-        Assertions.assert_true_raise403(user is not None, {'error': 'You must be logged in to access this page.'})
-        Assertions.assert_true_raise403(user_type == 'Customer', {'error': 'You are not a customer, and thus are not allowed to be here.'})
+        Assertions.assert_true_raise403(user is not None, {'error': 'ERROR_NOT_LOGGED_IN'})
+        Assertions.assert_true_raise403(user_type == 'Customer', {'error': 'ERROR_NOT_A_CUSTOMER'})
 
         #       Si lo es, se mira que sea, de hecho, el que creó la oferta en primer lugar
         #       Se obtiene la oferta que se quiere valorar y se toma su Customer
@@ -59,17 +59,17 @@ class CustomerRatingSerializer(serializers.HyperlinkedModelSerializer):
 
             offer = Offer.objects.get(id=pk)
             Assertions.assert_true_raise403(user.user_id == offer.eventLocation.customer.user.id,
-                                            {'error': 'You are not the owner of this offer.'})
+                                            {'error': 'ERROR_OFFER_NOT_OWNED'})
 
             #       Ahora se mira si la oferta está en estado PAYMENT_MADE
 
             Assertions.assert_true_raise401(offer.status == 'PAYMENT_MADE',
-                                            {'error': 'This offer is not ready to receive a rating, since it has not been paid yet.'})
+                                            {'error': 'ERROR_OFFER_NOT_READY'})
 
             #       Finalmente, se mira si ha votado ya o no
 
             Assertions.assert_true_raise401(offer.rating is None,
-                                            {'error': 'This offer has already been rated. You cannot rate it twice.'})
+                                            {'error': 'ERROR_OFFER_ALREADY_RATED'})
 
             #       Django tiene protección ante XSS activada por defecto por HTML escaping. Además, el comentario puede
             #       ser nulo, si bien debe pasarse por la llamada aunque esté vacío.
@@ -80,7 +80,7 @@ class CustomerRatingSerializer(serializers.HyperlinkedModelSerializer):
 
         except Offer.DoesNotExist:
             booleano = False
-            Assertions.assert_true_raise400(booleano, {'error': 'This offer does not exist.'})
+            Assertions.assert_true_raise400(booleano, {'error': 'ERROR_OFFER_NOT_FOUND'})
 
 
 

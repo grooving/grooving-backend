@@ -16,7 +16,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 from django.conf.urls import url, include
-from login.views import LoginManager
+from login.views import LoginManager, AdminLoginManager
 from portfolio.views import PortfolioManager
 from artist.views import GetPersonalInformationOfArtist,ArtistRegister
 from customer.views import GetPersonalInformationOfCustomer, GetPublicInformationOfCustomer, CustomerRegister
@@ -24,6 +24,7 @@ from offer.views import OfferManage, CreateOffer, PaymentCode,NumOffers
 from portfolioModule.views import PortfolioModuleManager, CreatePortfolioModule
 from user.views import UserManage
 from artist.views import ListArtist,ArtistRegister
+from user.views import UserManage, ListUsers
 from offers.views import ListArtistOffers, ListCustomerOffers
 from paymentPackage.views import PaymentPackageByArtist, PaymentPackageManager, CreatePaymentPackage,CreateCustomPackage,CreateFarePackage,CreatePerformancePackage
 from calendars.views import CalendarByArtist, CalendarManager, CreateCalendar
@@ -33,9 +34,12 @@ from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
 from utils.utils import TermsAndConditions, Privacy, AboutUs
 from braintrees.views import BraintreeViews
+from emails.views import SendMailDataBreach
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
 from chat.views import index, room
+from languageChooser.views import LanguageChooser
+
 router = routers.DefaultRouter()
 
 urlpatterns = [
@@ -65,6 +69,7 @@ urlpatterns = [
     url(r'^zone/$', CreateZone.as_view()),
     url(r'^zone/(?P<pk>[0-9]+)/$', ZoneManager.as_view()),
     path('api/login/', LoginManager.as_view(), name='login'),
+    path('api/admin/login/', AdminLoginManager.as_view(), name='admin_login'),
     url(r'^paymentCode/$', PaymentCode.as_view()),
     url(r'^signupArtist/$', ArtistRegister.as_view()),
     url(r'^signupCustomer/$', CustomerRegister.as_view()),
@@ -92,6 +97,13 @@ urlpatterns = [
     url(r'^privacy$', Privacy.as_view()),
     url(r'^about$', AboutUs.as_view()),
     url(r'^braintree_token/$', BraintreeViews.as_view()),
+
+    # TODO:delete chat urls later
     url(r'^chat/$', index),
     url(r'^chat/(?P<room_name>[^/]+)/$', room, name='room'),
+
+    url(r'^send_breach_notification/$', SendMailDataBreach.as_view()),
+    url(r'^users/$', ListUsers.as_view()),
+    url(r'^language/$', LanguageChooser.as_view()),
+
 ]
