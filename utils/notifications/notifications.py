@@ -658,6 +658,7 @@ class Notifications:
         # Entity database objects (necessary from template & email)
 
         user = User.objects.filter(pk=user_id).first()
+        system_configuration = SystemConfiguration.objects.filter(pk=1).first()
         language = get_language(user)
 
         # Email
@@ -670,9 +671,28 @@ class Notifications:
 
         if user.is_active:
             subject = translate(language, "BAN_UNBAN_USERS_ACTIVE_SUBJECT")
-            body = translate(language, "BAN_UNBAN_USERS_ACTIVE_BODY") + Notifications.footer(language)
+            if language == "en":
+                body = "<p>Hello,</p>" + \
+                       "<p>Thanks for contacting Grooving Support. We have activated your account " + \
+                       "again.</p> <p>We apologize for the inconvenience.</p>"
+            elif language == "es":
+                body = "<p>Hola,</p>" + \
+                       "<p>Gracias por contactar con el equipo de Grooving. Hemos activado su cuenta " + \
+                       "de nuevo.</p>" + \
+                       "<p>Disculpe las molestias por lo ocurrido.</p>"
         else:
             subject = translate(language, "BAN_UNBAN_USERS_INACTIVE_SUBJECT")
+            if language == "en":
+                body = "<p>Hola,</p>" + \
+                       "<p>Esta cuenta ha sido temporalmente desactivada por violación de los Terminos " + \
+                       "y condiciones de Grooving. Por favor, contacte con el equipo de grooving en " + \
+                        system_configuration.reportEmail + "</p>" + Notifications.footer(language)
+            elif language == "es":
+                body = "<p>Hello,</p>" + \
+                       "<p>This account has been temporaly banned to a violation of ours Terms & " + \
+                       "conditions. Please contact to Grooving support at " + \
+                       system_configuration.reportEmail + "</p>"
+
             body = translate(language, "BAN_UNBAN_USERS_INACTIVE_BODY") + Notifications.footer(language)
 
         EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)

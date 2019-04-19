@@ -1,21 +1,9 @@
-from Grooving.models import SystemConfiguration
 from django.template.loader import render_to_string
-
-# Necessary variables
-system_configuration = SystemConfiguration.objects.filter(pk=1).first()
 
 spanish = {
     "WELCOME_SUBJECT": "Bienvenido a Grooving",
     "BAN_UNBAN_USERS_ACTIVE_SUBJECT": "¡Tu cuenta de Grooving ha sido activada de nuevo!",
-    "BAN_UNBAN_USERS_ACTIVE_BODY": "<p>Hola,</p>" +
-                                   "<p>Gracias por contactar con el equipo de Grooving. Hemos activado su cuenta " +
-                                   "de nuevo.</p>" +
-                                   "<p>Disculpe las molestias por lo ocurrido.</p>",
     "BAN_UNBAN_USERS_INACTIVE_SUBJECT": "Tu cuenta de Grooving ha sido bloqueada",
-    "BAN_UNBAN_USERS_INACTIVE_BODY": "<p>Hello,</p>" +
-                                     "<p>Esta cuenta ha sido temporalmente desactivada por violación de los Terminos " +
-                                     "y condiciones de Grooving. Por favor, contacte con el equipo de grooving en " +
-                                     system_configuration.reportEmail + "</p>",
     "BREACH_NOTIFICATION_BODY": "<p>Te informamos de que hemos detectado una brecha de seguridad en nuestro sistema " +
                                 "que afecta a la información de varias cuentas de Grooving. Hemos tomado medidas " +
                                 "para asegurar su cuenta y estamos trabajando estrechamente con las " +
@@ -30,17 +18,7 @@ spanish = {
 english = {
     "WELCOME_SUBJECT": "Welcome to Grooving family",
     "BAN_UNBAN_USERS_ACTIVE_SUBJECT": "Your Grooving account has been actived again",
-    "BAN_UNBAN_USERS_ACTIVE_BODY": "<p>Hello,</p>" +
-                                   "<p>Thanks for contacting Grooving Support. We have activated your account " +
-                                   "again.</p> <p>We apologize for the inconvenience.</p>",
     "BAN_UNBAN_USERS_INACTIVE_SUBJECT": "Your Grooving account has been banned",
-    "BAN_UNBAN_USERS_INACTIVE_BODY": "<p>Hello,</p>" +
-                                     "<p>This account has been temporaly banned to a violation of ours Terms & " +
-                                      "conditions. Please contact to Grooving support at " +
-                                      system_configuration.reportEmail + "</p>",
-    "BREACH_NOTIFICATION_BODY": "<p>We are writing to inform you about a data security issue that many involve " +
-                                "your Grooving account information. We have taken steps to secure your account " +
-                                "and are working closely with law enforcement.</p>",
     "RIGHT_TO_BE_FORGOTTEN_BODY": "<p>Hello,</p>" +
                                   "<p>We appreciate you having contacting us.</p>" +
                                   "<p>We have carried out the procedure to apply your right to oblivion and has " +
