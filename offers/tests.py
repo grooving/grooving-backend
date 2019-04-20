@@ -39,12 +39,12 @@ class OfferTestCase(TestCase):
         zone1 = Zone.objects.create(name="Sevilla Sur")
         zone1.save()
 
-        portfolio1 = Portfolio.objects.create(artisticName="Juanartist")
+        artist1 = Artist.objects.create(user=user2_artist1, phone='600304999')
+        artist1.save()
+
+        portfolio1 = Portfolio.objects.create(artisticName="Juanartist", artist=artist1)
         portfolio1.zone.add(zone1)
         portfolio1.save()
-
-        artist1 = Artist.objects.create(user=user2_artist1, portfolio=portfolio1, phone='600304999')
-        artist1.save()
 
         calendar1 = Calendar.objects.create(days=days, portfolio=portfolio1)
         calendar1.save()
@@ -88,12 +88,12 @@ class OfferTestCase(TestCase):
                                             email='artist2@gmail.com')
         user4_artist2.save()
 
-        portfolio2 = Portfolio.objects.create(artisticName="Juanartist")
+        artist2 = Artist.objects.create(user=user4_artist2, phone='600304999')
+        artist2.save()
+
+        portfolio2 = Portfolio.objects.create(artisticName="Juanartista", artist=artist2)
         portfolio2.zone.add(zone1)
         portfolio2.save()
-
-        artist2 = Artist.objects.create(user=user4_artist2, portfolio=portfolio2, phone='600304999')
-        artist2.save()
 
         calendar2 = Calendar.objects.create(days=days, portfolio=portfolio2)
         calendar2.save()
