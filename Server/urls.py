@@ -38,6 +38,9 @@ from emails.views import SendMailDataBreach
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
 from languageChooser.views import LanguageChooser
+from adminBoard.views import GetRegisteredArtistsAllTime, GetRegisteredCustomersAllTime, GetPendingOffersAllTime, \
+    GetRejectedOffersAllTime, GetContractMadeOffersAllTime, GetPaymentOffersAllTime, GetContractMadeOffersLastMonth, \
+    GetPaymentOffersLastMonth, GetPendingOffersLastMonth, GetRejectedOffersLastMonth, GetRegisteredCustomersLastMonth, GetRegisteredArtistsLastMonth
 
 router = routers.DefaultRouter()
 
@@ -99,4 +102,17 @@ urlpatterns = [
     url(r'^send_breach_notification/$', SendMailDataBreach.as_view()),
     url(r'^users/$', ListUsers.as_view()),
     url(r'^language/$', LanguageChooser.as_view()),
+    url(r'^admin/totalArtists/$', GetRegisteredArtistsAllTime.as_view()),
+    url(r'^admin/totalCustomers/$', GetRegisteredCustomersAllTime.as_view()),
+    url(r'^admin/ratioPending/$', GetPendingOffersAllTime.as_view()),
+    url(r'^admin/ratioRejected/$', GetRejectedOffersAllTime.as_view()),
+    url(r'^admin/ratioContractMade/$', GetContractMadeOffersAllTime.as_view()),
+    url(r'^admin/ratioPaymentMade/$', GetPaymentOffersAllTime.as_view()),
+    url(r'^admin/totalArtistsLastMonth/$', GetRegisteredArtistsLastMonth.as_view()),
+    url(r'^admin/totalCustomersLastMonth/$', GetRegisteredCustomersLastMonth.as_view()),
+    url(r'^admin/ratioPendingLastMonth/$', GetPendingOffersLastMonth.as_view()),
+    url(r'^admin/ratioRejectedLastMonth/$', GetRejectedOffersLastMonth.as_view()),
+    url(r'^admin/ratioContractMadeLastMonth/$', GetContractMadeOffersLastMonth.as_view()),
+    url(r'^admin/ratioPaymentMadeLastMonth/$', GetPaymentOffersLastMonth.as_view())
+
 ]
