@@ -16,9 +16,10 @@ class NotificationSerializer(serializers.Serializer):
         body = request.data.get('body')
         subject = request.data.get('subject')
 
+        # Assertions.assert_true_raise400(body and subject, {"error": "Body and subject is empty"})
         Assertions.assert_true_raise400(body, {"error": "Body is empty"})           # Salta si es None o cadena vacía
         Assertions.assert_true_raise400(subject, {"error": "Subject is empty"})     # Salta si es None o cadena vacía
 
         # Comprobar la cadena vacia
 
-        Notifications.send_notification_for_breach_security()
+        Notifications.send_notification_for_breach_security(subject, body)
