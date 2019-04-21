@@ -33,25 +33,53 @@ def cancel_offers_with_no_user(offers):
                 o.status = 'REJECTED'
                 o.save()
 
+
 class TermsAndConditions(generics.GenericAPIView):
 
     @staticmethod
     def get(request):
-        return Response(SystemConfiguration.objects.all().first().termsText_en)
+        language = request.META['HTTP_ACCEPT_LANGUAGE']
+        result = None
+        print(language)
+
+        if language.find("en") != -1:
+            result = SystemConfiguration.objects.all().first().termsText_en
+        elif language.find("es") != -1:
+            result = SystemConfiguration.objects.all().first().termsText_es
+
+        return Response(result)
 
 
 class Privacy(generics.GenericAPIView):
 
     @staticmethod
     def get(request):
-        return Response(SystemConfiguration.objects.all().first().privacyText_en)
+        language = request.META['HTTP_ACCEPT_LANGUAGE']
+        result = None
+        print(language)
+
+        if language.find("en") != -1:
+            result = SystemConfiguration.objects.all().first().privacyText_en
+        elif language.find("es") != -1:
+            result = SystemConfiguration.objects.all().first().privacyText_es
+
+        return Response(result)
 
 
 class AboutUs(generics.GenericAPIView):
 
     @staticmethod
     def get(request):
-        return Response(SystemConfiguration.objects.all().first().aboutUs_en)
+        language = request.META['HTTP_ACCEPT_LANGUAGE']
+        result = None
+        print(language)
+
+        if language.find("en") != -1:
+            result = SystemConfiguration.objects.all().first().aboutUs_en
+        elif language.find("es") != -1:
+            result = SystemConfiguration.objects.all().first().aboutUs_es
+
+        return Response(result)
 
 
 def isPositivefloat(string):
