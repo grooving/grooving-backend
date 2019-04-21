@@ -621,7 +621,7 @@ class Notifications:
                                                       list_attachments, True)
 
     @staticmethod
-    def send_notification_for_breach_security(breach_explanation, body):
+    def send_notification_for_breach_security(subject, breach_explanation):
 
         # Get all system emails
 
@@ -637,20 +637,20 @@ class Notifications:
             to = [artist.user.email]
             body_content_type = "html"
 
-            custom_body = translate(artist.language, "BREACH_NOTIFICATION_BODY") + "<p>" + body + "</p>" + \
+            custom_body = translate(artist.language, "BREACH_NOTIFICATION_BODY") + "<p>" + breach_explanation + "</p>" + \
                           Notifications.footer(artist.language)
 
-            EmailMessageThread.send_mail(from_email, to, custom_body, breach_explanation, body_content_type, True)
+            EmailMessageThread.send_mail(from_email, to, custom_body, subject, body_content_type, True)
 
         for customer in customer_list:
             from_email = "Grooving <no-reply@grupogrooving.com>"
             to = [customer.user.email]
             body_content_type = "html"
 
-            custom_body = translate(customer.language, "BREACH_NOTIFICATION_BODY") + "<p>" + body + "</p>" + \
+            custom_body = translate(customer.language, "BREACH_NOTIFICATION_BODY") + "<p>" + breach_explanation + "</p>" + \
                           Notifications.footer(customer.language)
 
-            EmailMessageThread.send_mail(from_email, to, custom_body, breach_explanation, body_content_type, True)
+            EmailMessageThread.send_mail(from_email, to, custom_body, subject, body_content_type, True)
 
     @staticmethod
     def send_email_ban_unban_users(user_id):
