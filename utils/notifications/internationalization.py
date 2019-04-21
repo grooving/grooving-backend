@@ -19,6 +19,9 @@ english = {
     "WELCOME_SUBJECT": "Welcome to Grooving family",
     "BAN_UNBAN_USERS_ACTIVE_SUBJECT": "Your Grooving account has been actived again",
     "BAN_UNBAN_USERS_INACTIVE_SUBJECT": "Your Grooving account has been banned",
+    "BREACH_NOTIFICATION_BODY": "<p>We inform you that we have detected a security breach in our system that we " +
+                                "inform you about the Grooving accounts. We have taken steps to secure your account " +
+                                "and are working closely with law enforcement authorities.</p>",
     "RIGHT_TO_BE_FORGOTTEN_BODY": "<p>Hello,</p>" +
                                   "<p>We appreciate you having contacting us.</p>" +
                                   "<p>We have carried out the procedure to apply your right to oblivion and has " +

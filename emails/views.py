@@ -14,8 +14,8 @@ class SendMailDataBreach(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):                    # Indicamos que es un método HTTP GET
         admin = get_admin(request)
-        subject = request.data.get("subject").strip()
-        body = request.data.get("body").strip()
+        subject = request.data.get("subject")
+        body = request.data.get("body")
 
         Assertions.assert_true_raise403(admin, {"error": "You aren't an admin user"})
         Assertions.assert_true_raise400(subject, {'error': "Subject field not provided"})
