@@ -22,7 +22,12 @@
     var chatSocket = new WebSocket(
         protocol+'://' + window.location.host +
         '/chat/' + roomName + '/');
+    chatSocket.onopen = function(e) {
+        chatSocket.send(JSON.stringify({
+            'token': "152a3e9dd0db0ba454cb8d24d0138562794f999a" //Token del usuario logeado
 
+        }));
+    }
     chatSocket.onmessage = function(e) {
         var json = JSON.parse(e.data);
         var data = json ["json"];

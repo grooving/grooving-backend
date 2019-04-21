@@ -14,11 +14,11 @@ class ChatConsumer(WebsocketConsumer):
     def connect(self):
         url = self.scope['url_route']
         self.room_name = url.get('kwargs').get('offer_id')
+
         if not host_is_allow(url):
             self.accept()
             self.send(text_data=json.dumps({"json":
                 {
-
                 'mode': 'ERROR',
                 'error': 'NOT_ALLOWED_REQUEST_HOST'
                 }
@@ -62,22 +62,6 @@ class ChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json.get("message")
         token = text_data_json.get("token")
-        token_object = Token.objects.all().filter(pk=token).first()
-
-        # Send message to room group
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_name,
-            {
-                'type': 'chat_message',
-                'message': message,
-                'token': token
-            }
-        )
-
-    # Receive message from room group
-    def chat_message(self, event):
-        message = event['message']
-        token = event['token']
         user = is_correct_user_authenticate(token, self.customer, self.artist)
         if not user[0]:
             self.send(text_data=json.dumps({"json":
@@ -86,17 +70,42 @@ class ChatConsumer(WebsocketConsumer):
                     'error': 'PERMISSION_DENNIED_NOT_OWNER'
                 }
             }))
+            async_to_sync(self.channel_layer.group_discard)(
+                self.room_group_name,
+                self.channel_name
+            )
+
             self.close()
         else:
+
+
+            if message is not None:
+                message =  {"mode": "MESSAGE",
+                       "name": str(user[1].user.first_name),
+                       "username": str(user[1].user.username),
+                       "hour": get_string_time(),
+                       "message": message
+                       }
+                # Send message to room group
+                async_to_sync(self.channel_layer.group_send)(
+                    self.room_group_name,
+                    {
+                        'type': 'chat_message',
+                        'message': message,
+                        'token': token
+                    }
+                )
+
+    # Receive message from room group
+    def chat_message(self, event):
+        message = event['message']
+        token = event['token']
+
+
             # Send message to WebSocket
-            self.send(text_data=json.dumps({
-                "json": {"mode": "MESSAGE",
-                   "name": str(user[1].user.first_name),
-                   "username": str(user[1].user.username),
-                   "hour": str(datetime.now().hour) +":"+ str(datetime.now().minute),
-                   "message": message
-                   }
-            }))
+        self.send(text_data=json.dumps({
+            "json": message
+        }))
 
 
 def host_is_allow(host):
@@ -126,7 +135,12 @@ def is_correct_user_authenticate(token, customer, artist):
     return correct, user
 
 
-
-
-
+def get_string_time():
+    hour = str(datetime.now().hour)
+    if len(hour)==1:
+        hour = "0"+hour
+    minute = str(datetime.now().minute)
+    if len(minute)==1:
+        minute = "0"+minute
+    return hour + ":" + minute
 #def is_correct_user_authenticate(offer, token):
