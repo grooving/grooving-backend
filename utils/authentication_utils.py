@@ -99,3 +99,17 @@ def get_user_type(user):
                 return "Customer"
     else:
         return None
+
+
+def get_language(user):
+
+    if user:
+        artist = Artist.objects.filter(user_id=user.id).first()
+        if artist is not None:
+            return artist.language
+        else:
+            customer = Customer.objects.filter(user_id=user.id).first()
+            if customer is not None:
+                return customer.language
+    else:
+        return None

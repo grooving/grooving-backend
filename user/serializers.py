@@ -56,7 +56,7 @@ class UserSerializerForAdmin(serializers.HyperlinkedModelSerializer):
     class Meta:
         depth = 1
         model = User
-        fields = ('first_name', 'last_name', 'username', 'is_active')
+        fields = ('id', 'first_name', 'last_name', 'username', 'is_active')
 
 
 class UserRegisterSerializer(serializers.HyperlinkedModelSerializer):

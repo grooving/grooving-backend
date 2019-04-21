@@ -21,6 +21,18 @@ def auto_update_old_offers(offers):
                 o.save()
 
 
+def cancel_offers_with_no_user(offers):
+
+    if not offers:
+        pass
+    if len(offers) == 0:
+        pass
+    else:
+        for o in offers:
+            if o.status != 'PAYMENT_MADE' and (o.paymentPackage.portfolio.isHidden or o.eventLocation.isHidden):
+                o.status = 'REJECTED'
+                o.save()
+
 class TermsAndConditions(generics.GenericAPIView):
 
     @staticmethod
