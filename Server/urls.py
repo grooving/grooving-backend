@@ -37,7 +37,7 @@ from braintrees.views import BraintreeViews
 from emails.views import SendMailDataBreach
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
-from chat.views import index, room
+from chat.views import index, room, ListChatMesages
 from languageChooser.views import LanguageChooser
 from adminBoard.views import GetRegisteredArtistsAllTime, GetRegisteredCustomersAllTime, GetPendingOffersAllTime, \
     GetRejectedOffersAllTime, GetContractMadeOffersAllTime, GetPaymentOffersAllTime, GetContractMadeOffersLastMonth, \
@@ -103,7 +103,7 @@ urlpatterns = [
 
     # TODO:delete chat urls later
     url(r'^chat/$', index),
-    url(r'^chat/(?P<room_name>[^/]+)/$', room, name='room'),
+    url(r'^chating/(?P<room_name>[^/]+)/$', room, name='room'),
 
     url(r'^send_breach_notification/$', SendMailDataBreach.as_view()),
     url(r'^users/$', ListUsers.as_view()),
@@ -120,7 +120,7 @@ urlpatterns = [
     url(r'^admin/ratioPendingLastMonth/$', GetPendingOffersLastMonth.as_view()),
     url(r'^admin/ratioRejectedLastMonth/$', GetRejectedOffersLastMonth.as_view()),
     url(r'^admin/ratioContractMadeLastMonth/$', GetContractMadeOffersLastMonth.as_view()),
-    url(r'^admin/ratioPaymentMadeLastMonth/$', GetPaymentOffersLastMonth.as_view())
-
+    url(r'^admin/ratioPaymentMadeLastMonth/$', GetPaymentOffersLastMonth.as_view()),
+    url(r'^chat/(?P<pk>[0-9]+)/$', ListChatMesages.as_view())
 
 ]

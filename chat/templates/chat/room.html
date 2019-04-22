@@ -24,7 +24,7 @@
         '/chat/' + roomName + '/');
     chatSocket.onopen = function(e) {
         chatSocket.send(JSON.stringify({
-            'token': "152a3e9dd0db0ba454cb8d24d0138562794f999a" //Token del usuario logeado
+            'token': "88d14decd18a4c181fa1ba7651a4a7073d90adcb" //Token del usuario logeado
 
         }));
     }
@@ -41,7 +41,7 @@
             message = data["date"]
         }
         else if (message = "MESSAGE"){  // El mensaje en sí mismo que nos interesa
-            message = "@"+data["username"] + " - " + data["name"] + " - "  + data["hour"] + ": " + data["message"]
+            message = "@"+data["username"] + " - " + data["name"] + " - "  + data["date"]+ "-" + data["hour"] + ": " + data["message"]
         }
         message = message;
         document.querySelector('#chat-log').value += (message + '\n');
@@ -63,7 +63,7 @@
         var messageInputDom = document.querySelector('#chat-message-input');
         var message = messageInputDom.value;
         chatSocket.send(JSON.stringify({
-            'token': "152a3e9dd0db0ba454cb8d24d0138562794f999a", //Token del usuario logeado
+            'token': "88d14decd18a4c181fa1ba7651a4a7073d90adcb", //Token del usuario logeado
             'message': message
         }));
 

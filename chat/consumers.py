@@ -1,7 +1,7 @@
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 import json
-from Grooving.models import Offer, Artist, Customer
+from Grooving.models import Offer, Artist, Customer, Chat
 from django.conf import settings
 from channels.exceptions import DenyConnection, AcceptConnection
 from utils.utils import isPositiveInteger
@@ -37,14 +37,18 @@ class ChatConsumer(WebsocketConsumer):
             self.offer = Offer.objects.filter(isHidden=False, pk=int(self.room_name)).first()
             self.customer = self.offer.eventLocation.customer
             self.artist = self.offer.paymentPackage.portfolio.artist
+            self.chat = Chat.objects.filter(offer=self.offer).first()
+            if self.chat is None:
+                chat = Chat(json={"init": False, "messages": None})
+                chat.save()
+                self.offer.chat=chat
+                self.offer.save()
+                self.chat = chat
+            if self.chat is not None and self.chat.json is None:
+                self.chat.json = {"init": False, "messages": None}
+                self.chat.save()
             self.room_group_name = 'chat_%s' % self.room_name
-
-            # Join room group
-            async_to_sync(self.channel_layer.group_add)(
-                self.room_group_name,
-                self.channel_name
-            )
-
+            self.is_connect_to_group=False
             self.accept()
 
     def disconnect(self, close_code):
@@ -70,20 +74,31 @@ class ChatConsumer(WebsocketConsumer):
                     'error': 'PERMISSION_DENNIED_NOT_OWNER'
                 }
             }))
-            async_to_sync(self.channel_layer.group_discard)(
-                self.room_group_name,
-                self.channel_name
-            )
+            try:
+                async_to_sync(self.channel_layer.group_discard)(
+                    self.room_group_name,
+                    self.channel_name
+                )
+            except:
+                pass
 
             self.close()
         else:
-
+            # Join room group
+            if not self.is_connect_to_group:
+                async_to_sync(self.channel_layer.group_add)(
+                    self.room_group_name,
+                    self.channel_name
+                )
+                self.is_connect_to_group = True
 
             if message is not None:
                 message =  {"mode": "MESSAGE",
                        "name": str(user[1].user.first_name),
                        "username": str(user[1].user.username),
+                       #"photo": str(user[1].photo),
                        "hour": get_string_time(),
+                       "date": get_string_date(),
                        "message": message
                        }
                 # Send message to room group
@@ -101,8 +116,15 @@ class ChatConsumer(WebsocketConsumer):
         message = event['message']
         token = event['token']
 
+        if not self.chat.json.get("init") or self.chat.json.get("messages") is None:
+            self.chat.json["messages"] = [{"json": message}, ]
+            self.chat.json["init"] = True
 
+        else:
+            dict= {"json": message}
+            self.chat.json["messages"].append(dict)
             # Send message to WebSocket
+        self.chat.save()
         self.send(text_data=json.dumps({
             "json": message
         }))
@@ -135,6 +157,15 @@ def is_correct_user_authenticate(token, customer, artist):
     return correct, user
 
 
+def get_string_date():
+    day = str(datetime.now().day)
+    if len(day) == 1:
+        day = "0" + day
+    month = str(datetime.now().month)
+    if len(month) == 1:
+        month = "0" + month
+    year = str(datetime.now().year)
+    return year + "-" + month +  "-" + day
 def get_string_time():
     hour = str(datetime.now().hour)
     if len(hour)==1:
