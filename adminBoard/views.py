@@ -5,6 +5,7 @@ from Grooving.models import Artist, Customer, Offer
 from rest_framework.response import Response
 from utils.authentication_utils import get_admin, get_logged_user
 from utils.Assertions import Assertions
+from django.db.models import Sum
 
 
 class GetRegisteredArtistsAllTime(generics.ListAPIView):
@@ -262,3 +263,91 @@ class GetPaymentOffersLastMonth(generics.ListAPIView):
             ratio = paymentoffers / totaloffers
 
             return Response(ratio)
+
+
+class GetTotalMoney(generics.ListAPIView):
+    # serializer_class = ArtistInfoSerializer
+
+    def get(self, request, *args, **kwargs):
+
+        admin = get_admin(request)
+
+        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+
+        # Se calcula un lapso de un mes
+
+        # Se aplica un doble filtro para sacar las ofertas en este estado Y que sean del último mes (31 días en todos los casos, aun si tiene 30 días o es febrero)
+        paymentoffers = Offer.objects.filter(status='PAYMENT_MADE')
+        totalPrice = 0.0
+
+        for offer in paymentoffers:
+
+            totalPrice = totalPrice + float(offer.price)
+
+        return Response(totalPrice)
+
+
+class GetMoneyEarned(generics.ListAPIView):
+    # serializer_class = ArtistInfoSerializer
+
+    def get(self, request, *args, **kwargs):
+
+        admin = get_admin(request)
+
+        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+
+        # Se calcula un lapso de un mes
+
+        # Se aplica un doble filtro para sacar las ofertas en este estado Y que sean del último mes (31 días en todos los casos, aun si tiene 30 días o es febrero)
+        paymentoffers = Offer.objects.filter(status='PAYMENT_MADE')
+        totalPrice = 0
+
+        for offer in paymentoffers:
+
+            totalPrice = totalPrice + float(offer.price)
+
+        return Response(float(totalPrice)*0.07)
+
+
+class GetTotalMoneyLastMonth(generics.ListAPIView):
+    # serializer_class = ArtistInfoSerializer
+
+    def get(self, request, *args, **kwargs):
+
+        admin = get_admin(request)
+
+        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+
+        # Se calcula un lapso de un mes
+        time_threshold = datetime.now() - timedelta(hours=744)
+        # Se aplica un doble filtro para sacar las ofertas en este estado Y que sean del último mes (31 días en todos los casos, aun si tiene 30 días o es febrero)
+        paymentoffers = Offer.objects.filter(status='PAYMENT_MADE').filter(creationMoment__gt=time_threshold)
+        totalPrice = 0
+
+        for offer in paymentoffers:
+
+            totalPrice = totalPrice + float(offer.price)
+
+        return Response(totalPrice)
+
+
+class GetMoneyEarnedLastMonth(generics.ListAPIView):
+    # serializer_class = ArtistInfoSerializer
+
+    def get(self, request, *args, **kwargs):
+
+        admin = get_admin(request)
+
+        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+
+        # Se calcula un lapso de un mes
+        time_threshold = datetime.now() - timedelta(hours=744)
+        # Se aplica un doble filtro para sacar las ofertas en este estado Y que sean del último mes (31 días en todos los casos, aun si tiene 30 días o es febrero)
+        paymentoffers = Offer.objects.filter(status='PAYMENT_MADE').filter(creationMoment__gt=time_threshold)
+        totalPrice = 0
+
+        for offer in paymentoffers:
+
+            totalPrice = totalPrice + float(offer.price)
+
+        return Response(float(totalPrice)*0.07)

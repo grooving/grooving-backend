@@ -40,7 +40,8 @@ from utils.utils import TermsAndConditions
 from languageChooser.views import LanguageChooser
 from adminBoard.views import GetRegisteredArtistsAllTime, GetRegisteredCustomersAllTime, GetPendingOffersAllTime, \
     GetRejectedOffersAllTime, GetContractMadeOffersAllTime, GetPaymentOffersAllTime, GetContractMadeOffersLastMonth, \
-    GetPaymentOffersLastMonth, GetPendingOffersLastMonth, GetRejectedOffersLastMonth, GetRegisteredCustomersLastMonth, GetRegisteredArtistsLastMonth
+    GetPaymentOffersLastMonth, GetPendingOffersLastMonth, GetRejectedOffersLastMonth, GetRegisteredCustomersLastMonth, \
+    GetRegisteredArtistsLastMonth, GetTotalMoney, GetMoneyEarned, GetMoneyEarnedLastMonth, GetTotalMoneyLastMonth
 
 router = routers.DefaultRouter()
 
@@ -113,6 +114,9 @@ urlpatterns = [
     url(r'^admin/ratioPendingLastMonth/$', GetPendingOffersLastMonth.as_view()),
     url(r'^admin/ratioRejectedLastMonth/$', GetRejectedOffersLastMonth.as_view()),
     url(r'^admin/ratioContractMadeLastMonth/$', GetContractMadeOffersLastMonth.as_view()),
-    url(r'^admin/ratioPaymentMadeLastMonth/$', GetPaymentOffersLastMonth.as_view())
-
+    url(r'^admin/ratioPaymentMadeLastMonth/$', GetPaymentOffersLastMonth.as_view()),
+    url(r'^admin/totalMoney/$', GetTotalMoney.as_view()),
+    url(r'^admin/moneyEarned/$', GetMoneyEarned.as_view()),
+    url(r'^admin/totalMoneyLastMonth/$', GetTotalMoneyLastMonth.as_view()),
+    url(r'^admin/moneyEarnedLastMonth/$', GetMoneyEarnedLastMonth.as_view())
 ]
