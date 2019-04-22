@@ -37,9 +37,6 @@
             message = data["error"]
             window.alert(message)
         }
-        else if (message == "DATE"){ //Por implementar
-            message = data["date"]
-        }
         else if (message = "MESSAGE"){  // El mensaje en sí mismo que nos interesa
             message = "@"+data["username"] + " - " + data["name"] + " - "  + data["date"]+ "-" + data["hour"] + ": " + data["message"]
         }
