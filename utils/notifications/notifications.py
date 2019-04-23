@@ -1,9 +1,9 @@
 from django.core.mail import EmailMessage
-from Grooving.models import Offer, SystemConfiguration, User, Artist, Customer
+from Grooving.models import Offer, SystemConfiguration, User, Artist, Customer, PortfolioModule
 from weasyprint import HTML
 from datetime import datetime
 import threading
-from utils.authentication_utils import get_language
+from utils.authentication_utils import get_language, get_artist_or_customer_by_user
 from utils.notifications.internationalization import translate, translate_render
 
 
@@ -621,7 +621,7 @@ class Notifications:
                                                       list_attachments, True)
 
     @staticmethod
-    def send_notification_for_breach_security(breach_explanation, body):
+    def send_notification_for_breach_security(subject, breach_explanation):
 
         # Get all system emails
 
@@ -637,20 +637,20 @@ class Notifications:
             to = [artist.user.email]
             body_content_type = "html"
 
-            custom_body = translate(artist.language, "BREACH_NOTIFICATION_BODY") + "<p>" + body + "</p>" + \
+            custom_body = translate(artist.language, "BREACH_NOTIFICATION_BODY") + "<p>" + breach_explanation + "</p>" + \
                           Notifications.footer(artist.language)
 
-            EmailMessageThread.send_mail(from_email, to, custom_body, breach_explanation, body_content_type, True)
+            EmailMessageThread.send_mail(from_email, to, custom_body, subject, body_content_type, True)
 
         for customer in customer_list:
             from_email = "Grooving <no-reply@grupogrooving.com>"
             to = [customer.user.email]
             body_content_type = "html"
 
-            custom_body = translate(customer.language, "BREACH_NOTIFICATION_BODY") + "<p>" + body + "</p>" + \
+            custom_body = translate(customer.language, "BREACH_NOTIFICATION_BODY") + "<p>" + breach_explanation + "</p>" + \
                           Notifications.footer(customer.language)
 
-            EmailMessageThread.send_mail(from_email, to, custom_body, breach_explanation, body_content_type, True)
+            EmailMessageThread.send_mail(from_email, to, custom_body, subject, body_content_type, True)
 
     @staticmethod
     def send_email_ban_unban_users(user_id):
@@ -715,3 +715,53 @@ class Notifications:
         body = translate(language, "RIGHT_TO_BE_FORGOTTEN_BODY") + Notifications.footer(language)
 
         EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
+
+    @staticmethod
+    def send_email_download_all_personal_data(user_id):
+
+        # Entity database objects (necessary from template & email)
+
+        user = User.objects.filter(pk=user_id).first()
+        artist_or_customer = get_artist_or_customer_by_user(user)
+        language = ""
+        pdf_html = None
+
+        if isinstance(artist_or_customer, Artist):
+            language = artist_or_customer.language
+
+            context_pdf = {
+                "artist": artist_or_customer,
+                "artist_unavailable_days": ", ".join(list(artist_or_customer.portfolio.calendar.days)),
+                "artist_genders": ",".join(list(artist_or_customer.portfolio.artisticGender.
+                                                values_list("name", flat=True))),
+                "artist_portfoliomodules": PortfolioModule.objects.filter(
+                    portfolio__artist__id=artist_or_customer.id).distinct(),
+                "artist_zones": ",".join(list(artist_or_customer.portfolio.zone.values_list("name", flat=True))),
+                "artist_offers": Offer.objects
+                    .filter(paymentPackage__portfolio__artist__id=artist_or_customer.id).distinct()
+            }
+            # print(Offer.objects.filter(paymentPackage__portfolio__artist__id=artist_or_customer.id))
+            pdf_html = translate_render(language, "PDF_DOWNLOAD_DATA_ARTIST", context_pdf)
+        elif isinstance(artist_or_customer, Customer):
+            language = artist_or_customer.language
+
+            context_pdf = {
+                "customer": artist_or_customer,
+            }
+
+            pdf_html = translate_render(language, "PDF_DOWNLOAD_DATA_CUSTOMER", context_pdf)
+
+        pdf_file = HTML(string=pdf_html).write_pdf()
+
+        # Email
+
+        from_email = "Grooving <no-reply@grupogrooving.com>"
+        to = [user.email]
+
+        subject = translate(language, "SUBJECT_DOWNLOAD_DATA_USER")
+        body = translate(language, "BODY_DOWNLOAD_DATA_USER") + Notifications.footer(language)
+        body_content_type = "html"
+
+        list_attachments = [('data.pdf', pdf_file, 'application/pdf')]
+        EmailMessageThread.send_mail_with_attachments(from_email, to, body, subject, body_content_type,
+                                                      list_attachments, True)

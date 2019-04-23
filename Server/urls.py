@@ -34,14 +34,15 @@ from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
 from utils.utils import TermsAndConditions, Privacy, AboutUs
 from braintrees.views import BraintreeViews
-from emails.views import SendMailDataBreach
+from emails.views import SendMailDataBreach, DownloadPersonalData
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
 from chat.views import index, room, ListChatMesages
 from languageChooser.views import LanguageChooser
 from adminBoard.views import GetRegisteredArtistsAllTime, GetRegisteredCustomersAllTime, GetPendingOffersAllTime, \
     GetRejectedOffersAllTime, GetContractMadeOffersAllTime, GetPaymentOffersAllTime, GetContractMadeOffersLastMonth, \
-    GetPaymentOffersLastMonth, GetPendingOffersLastMonth, GetRejectedOffersLastMonth, GetRegisteredCustomersLastMonth, GetRegisteredArtistsLastMonth
+    GetPaymentOffersLastMonth, GetPendingOffersLastMonth, GetRejectedOffersLastMonth, GetRegisteredCustomersLastMonth, \
+    GetRegisteredArtistsLastMonth, GetTotalMoney, GetMoneyEarned, GetMoneyEarnedLastMonth, GetTotalMoneyLastMonth
 
 router = routers.DefaultRouter()
 
@@ -121,6 +122,11 @@ urlpatterns = [
     url(r'^admin/ratioRejectedLastMonth/$', GetRejectedOffersLastMonth.as_view()),
     url(r'^admin/ratioContractMadeLastMonth/$', GetContractMadeOffersLastMonth.as_view()),
     url(r'^admin/ratioPaymentMadeLastMonth/$', GetPaymentOffersLastMonth.as_view()),
-    url(r'^chat/(?P<pk>[0-9]+)/$', ListChatMesages.as_view())
+    url(r'^chat/(?P<pk>[0-9]+)/$', ListChatMesages.as_view()),
+    url(r'^admin/totalMoney/$', GetTotalMoney.as_view()),
+    url(r'^admin/moneyEarned/$', GetMoneyEarned.as_view()),
+    url(r'^admin/totalMoneyLastMonth/$', GetTotalMoneyLastMonth.as_view()),
+    url(r'^admin/moneyEarnedLastMonth/$', GetMoneyEarnedLastMonth.as_view()),
+    url(r'^downloadPersonalData/$', DownloadPersonalData.as_view()),
 
 ]

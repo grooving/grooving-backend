@@ -21,4 +21,4 @@ class NotificationSerializer(serializers.Serializer):
 
         # Comprobar la cadena vacia
 
-        Notifications.send_notification_for_breach_security()
+        Notifications.send_notification_for_breach_security(subject, body)

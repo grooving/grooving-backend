@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    * {
+        text-align: justify;
+        font-family: Archive;
+    }
+
+    p, tr, td {
+        font-size: 12px;
+    }
+
+    table {
+        font-size: 12px;
+        width: 100%;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>PDF</title>
+</head>
+<body>
+<img alt="Image not found" src="https://raw.githubusercontent.com/Iriabow/pepe/master/photo_2019-04-07_00-59-27.jpg">
+<h1>Personal information</h1>
+<table>
+    <tr>
+        <td><b>Full name</b>: {{ customer.user.get_full_name }}</td>
+        <td><b>Phone</b>: {% if customer.phone %}{{ customer.phone }}{% else %}Not specified{% endif %}</td>
+    </tr>
+</table>
+<h2>Locations</h2>
+{% if customer.eventLocations %}
+    {% for location in customer.eventLocations.all %}
+        <table>
+            <tr>
+                <td><b>Name</b>: {% if location.name %}{{ location.name }}{% else %}not specified{% endif %}</td>
+                <td><b>Zone</b>: {{ location.zone.name }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Address</b>: {{ location.address }}</td>
+            </tr>
+            {% if location.equipment %}
+                <tr>
+                    <td colspan="2"><b>Equipment</b>: {{ location.equipment }}</td>
+                </tr>
+            {% endif %}
+            {% if location.description %}
+                <tr>
+                    <td colspan="2"><b>Description</b>: {{ location.description }}</td>
+                </tr>
+            {% endif %}
+        </table>
+        <br/>
+        <h3>Offers sent for {{ location.name }}</h3>
+        {% for offer in location.offers.all %}
+            <h4>Offer {{ forloop.counter }}</h4>
+            <table>
+                <tr>
+                    <td><b>Artist</b>: {{ offer.paymentPackage.portfolio.artisticName }}</td>
+                    <td><b>Date event</b>: {{ offer.date|date:'Y-m-d' }} at
+                        {{ offer.date|date:'H:i' }} for {{ offer.hours }} hour/s
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><b>Package selected</b>: {{ offer.paymentPackage.description }}</td>
+                </tr>
+                <tr>
+                    <td><b>Price</b>: {{ offer.price }} {{ offer.currency }}</td>
+                    <td><b>Offer status</b>:{% if offer.status == "PENDING" %}
+                        Pending
+                    {% elif offer.status == "REJECTED" %}
+                        Rejected for the artist
+                    {% elif offer.status == "WITHDRAWN" %}
+                        Rejected for you
+                    {% elif offer.status == "CONTRACT_MADE" %}
+                        Accepted
+                    {% elif offer.status == "CANCELLED_ARTIST" %}
+                        Cancelled for the artist
+                    {% elif offer.status == "CANCELLED_CUSTOMER" %}
+                        Cancelled for you
+                    {% elif offer.status == "PAYMENT_MADE" %}
+                        Paid
+                    {% endif %}</td>
+                </tr>
+
+                {% if offer.status == "PAYMENT_MADE" and offer.rating %}
+                </table>
+                    <br/>
+                    <table>
+                    {% if offer.rating.score %}
+                        <tr>
+                            <td><b>Score received</b>: {{ offer.rating.score }}</td>
+                        </tr>
+                    {% endif %}
+                    {% if offer.rating.comment %}
+                        <tr>
+                            <td><b>Comments</b>: {{ offer.rating.comment }}</td>
+                        </tr>
+                    {% endif %}
+                {% endif %}
+            </table>
+            <br/>
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    <p>There are no locations</p>
+{% endif %}
+
+</body>
+</html>

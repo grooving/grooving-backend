@@ -13,17 +13,32 @@ spanish = {
                                   "<p>Hemos llevado a cabo el procedimiento para aplicar su derecho al olvido y se "
                                   "ha realizado correctamente. </p>" +
                                   "<p>Un saludo.</p>",
+    "SUBJECT_DOWNLOAD_DATA_USER": "Solicitud de información personal",
+    "BODY_DOWNLOAD_DATA_USER": "<p>Buenas, </p>" +
+                               "<p>Cumpliendo con el <a href=\"https://gdpr-info.eu/art-20-gdpr/\">artículo 20</a> " +
+                               "del GPDR (General Data Protection Regulation), le hemos enviado toda la información " +
+                               "relativa sobre usted en un pdf adjunto a este correo.</p>" +
+                               "<p>Un saludo.</p>"
 }
 
 english = {
     "WELCOME_SUBJECT": "Welcome to Grooving family",
     "BAN_UNBAN_USERS_ACTIVE_SUBJECT": "Your Grooving account has been actived again",
     "BAN_UNBAN_USERS_INACTIVE_SUBJECT": "Your Grooving account has been banned",
+    "BREACH_NOTIFICATION_BODY": "<p>We inform you that we have detected a security breach in our system that we " +
+                                "inform you about the Grooving accounts. We have taken steps to secure your account " +
+                                "and are working closely with law enforcement authorities.</p>",
     "RIGHT_TO_BE_FORGOTTEN_BODY": "<p>Hello,</p>" +
                                   "<p>We appreciate you having contacting us.</p>" +
                                   "<p>We have carried out the procedure to apply your right to oblivion and has " +
                                   "performed correctly.</p>" +
-                                  "<p>Best regards.</p>"
+                                  "<p>Best regards.</p>",
+    "SUBJECT_DOWNLOAD_DATA_USER": "Personal information request",
+    "BODY_DOWNLOAD_DATA_USER": "<p>Hello, </p>" +
+                               "<p>In compliance with <a href=\"https://gdpr-info.eu/art-20-gdpr/\">artículo 20</a> " +
+                               "of the GPDR (General Data Protection Regulation), we have sent you all the relative " +
+                               "information about you in a pdf attached to this email.</p>" +
+                               "<p>Best regards.</p>"
 }
 
 
@@ -43,6 +58,8 @@ spanish_document = {
     "PDF_CONTRACT_MADE_TO_PAYMENT_MADE": "pdf_contract_made_to_payment_made_es.html",
     "PDF_CONTRACT_MADE_TO_CANCELLED_ARTIST": "pdf_contract_made_to_cancelled_artist_es.html",
     "PDF_CONTRACT_MADE_TO_CANCELLED_CUSTOMER": "pdf_contract_made_to_cancelled_customer_es.html",
+    "PDF_DOWNLOAD_DATA_ARTIST": "pdf_download_data_artist_es.html",
+    "PDF_DOWNLOAD_DATA_CUSTOMER": "pdf_download_data_customer_es.html",
     "FOOTER": "footer_mail_es.html"
 }
 
@@ -52,6 +69,8 @@ english_document = {
     "PDF_CONTRACT_MADE_TO_PAYMENT_MADE": "pdf_contract_made_to_payment_made_en.html",
     "PDF_CONTRACT_MADE_TO_CANCELLED_ARTIST": "pdf_contract_made_to_cancelled_artist_en.html",
     "PDF_CONTRACT_MADE_TO_CANCELLED_CUSTOMER": "pdf_contract_made_to_cancelled_customer_en.html",
+    "PDF_DOWNLOAD_DATA_ARTIST": "pdf_download_data_artist_en.html",
+    "PDF_DOWNLOAD_DATA_CUSTOMER": "pdf_download_data_customer_en.html",
     "FOOTER": "footer_mail_en.html"
 }
 

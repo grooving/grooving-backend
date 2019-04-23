@@ -1,4 +1,4 @@
-from Grooving.models import Artist, Customer, User
+from Grooving.models import Artist, Customer, Admin, User
 
 from rest_framework.authtoken.models import Token
 
@@ -84,6 +84,25 @@ def get_admin(request):
     except:
         return None
 
+
+def get_admin_2(request):
+    try:
+        token = request._auth.key
+        if token is not None:
+            token_object = Token.objects.all().filter(pk=token).first()
+            if token_object is not None:
+
+                admin = Admin.objects.filter(user__id=token_object.user_id).first()
+
+                if admin is not None and admin.user.is_staff:
+                    return admin
+                else:
+                    return None
+        else:
+            return None
+    except:
+        return None
+
 # Deprecated functions
 
 
@@ -113,3 +132,19 @@ def get_language(user):
                 return customer.language
     else:
         return None
+
+
+def get_artist_or_customer_by_user(user):
+
+    if user:
+        artist = Artist.objects.filter(user_id=user.id).first()
+
+        if artist is not None:
+            return artist
+        else:
+            customer = Customer.objects.filter(user_id=user.id).first()
+
+            if customer is not None:
+                return customer
+
+    return None
