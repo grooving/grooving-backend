@@ -15,7 +15,7 @@ from emails.internationalization import translate
 class SendMailDataBreach(generics.CreateAPIView):
     serializer_class = NotificationSerializer
 
-    def post(self, request, *args, **kwargs):                    # Indicamos que es un método HTTP GET
+    def post(self, request, *args, **kwargs):                    # Indicamos que es un método HTTP POST
         admin = get_admin_2(request)
         subject = request.data.get("subject")
         body = request.data.get("body")
@@ -32,3 +32,9 @@ class SendMailDataBreach(generics.CreateAPIView):
         # NotificationSerializer.send_mail(request)
         # NotificationSerializer(data=request.data)  Se usa a través del serializer (util cuando son muchos objetos)
         # Notifications.send_notification_for_breach_security()
+
+
+class DownloadPersonalData(generics.CreateAPIView):
+
+    def post(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_200_OK)
