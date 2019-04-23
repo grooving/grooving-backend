@@ -715,3 +715,53 @@ class Notifications:
         body = translate(language, "RIGHT_TO_BE_FORGOTTEN_BODY") + Notifications.footer(language)
 
         EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
+
+    @staticmethod
+    def send_email_download_all_personal_data(user_id):
+
+        # Entity database objects (necessary from template & email)
+
+        user = User.objects.filter(pk=user_id).first()
+        artist_or_customer = get_artist_or_customer_by_user(user)
+        language = ""
+        pdf_html = None
+
+        if isinstance(artist_or_customer, Artist):
+            language = artist_or_customer.language
+
+            context_pdf = {
+                "artist": artist_or_customer,
+                "artist_unavailable_days": ", ".join(list(artist_or_customer.portfolio.calendar.days)),
+                "artist_genders": ",".join(list(artist_or_customer.portfolio.artisticGender.
+                                                values_list("name", flat=True))),
+                "artist_portfoliomodules": PortfolioModule.objects.filter(
+                    portfolio__artist__id=artist_or_customer.id).distinct(),
+                "artist_zones": ",".join(list(artist_or_customer.portfolio.zone.values_list("name", flat=True))),
+                "artist_offers": Offer.objects
+                    .filter(paymentPackage__portfolio__artist__id=artist_or_customer.id).distinct()
+            }
+            # print(Offer.objects.filter(paymentPackage__portfolio__artist__id=artist_or_customer.id))
+            pdf_html = translate_render(language, "PDF_DOWNLOAD_DATA_ARTIST", context_pdf)
+        elif isinstance(artist_or_customer, Customer):
+            language = artist_or_customer.language
+
+            context_pdf = {
+                "customer": artist_or_customer,
+            }
+
+            pdf_html = translate_render(language, "PDF_DOWNLOAD_DATA_CUSTOMER", context_pdf)
+
+        pdf_file = HTML(string=pdf_html).write_pdf()
+
+        # Email
+
+        from_email = "Grooving <no-reply@grupogrooving.com>"
+        to = [user.email]
+
+        subject = translate(language, "SUBJECT_DOWNLOAD_DATA_USER")
+        body = translate(language, "BODY_DOWNLOAD_DATA_USER") + Notifications.footer(language)
+        body_content_type = "html"
+
+        list_attachments = [('data.pdf', pdf_file, 'application/pdf')]
+        EmailMessageThread.send_mail_with_attachments(from_email, to, body, subject, body_content_type,
+                                                      list_attachments, True)

@@ -46,6 +46,8 @@ spanish_document = {
     "PDF_CONTRACT_MADE_TO_PAYMENT_MADE": "pdf_contract_made_to_payment_made_es.html",
     "PDF_CONTRACT_MADE_TO_CANCELLED_ARTIST": "pdf_contract_made_to_cancelled_artist_es.html",
     "PDF_CONTRACT_MADE_TO_CANCELLED_CUSTOMER": "pdf_contract_made_to_cancelled_customer_es.html",
+    "PDF_DOWNLOAD_DATA_ARTIST": "pdf_download_data_artist_es.html",
+    "PDF_DOWNLOAD_DATA_CUSTOMER": "pdf_download_data_customer_es.html",
     "FOOTER": "footer_mail_es.html"
 }
 
@@ -55,6 +57,8 @@ english_document = {
     "PDF_CONTRACT_MADE_TO_PAYMENT_MADE": "pdf_contract_made_to_payment_made_en.html",
     "PDF_CONTRACT_MADE_TO_CANCELLED_ARTIST": "pdf_contract_made_to_cancelled_artist_en.html",
     "PDF_CONTRACT_MADE_TO_CANCELLED_CUSTOMER": "pdf_contract_made_to_cancelled_customer_en.html",
+    "PDF_DOWNLOAD_DATA_ARTIST": "pdf_download_data_artist_en.html",
+    "PDF_DOWNLOAD_DATA_CUSTOMER": "pdf_download_data_customer_en.html",
     "FOOTER": "footer_mail_en.html"
 }
 

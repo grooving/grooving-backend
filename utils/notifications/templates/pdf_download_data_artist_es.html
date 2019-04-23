@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<style>
+    * {
+        text-align: justify;
+        font-family: Archive;
+    }
+
+    p, tr, td {
+        font-size: 12px;
+    }
+
+    table {
+        font-size: 12px;
+        width: 100%;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>PDF</title>
+</head>
+<body>
+<img alt="Imágen no encontrada"
+     src="https://raw.githubusercontent.com/Iriabow/pepe/master/photo_2019-04-07_00-59-27.jpg">
+<h1>Información personal</h1>
+<table>
+    <tr>
+        <td><b>Nombre completo</b>: {{ artist.user.get_full_name }}</td>
+        <td><b>Teléfono</b>: {% if artist.phone %}{{ artist.phone }}{% else %}Ninguno{% endif %}</td>
+    </tr>
+    <tr>
+        <td><b>Cuenta de paypal</b>: {% if artist.paypalAccount %}{{ artist.paypalAccount }}{% else %}Ninguno{% endif %}
+        </td>
+        <td><b>Usuario</b>: {{ artist.user.username }}</td>
+    </tr>
+</table>
+<h2>Información artística</h2>
+<table>
+    <tr>
+        <td><b>Nombre artístico</b>:
+            {% if artist.portfolio.artisticName %}
+                {{ artist.portfolio.artisticName }}
+            {% else %}
+                No especificado
+            {% endif %}
+        </td>
+        {% if artist_genders %}
+            <td><b>Género artístico</b>: {{ artist_genders }}</td>
+        {% endif %}
+        {% if artist_zones %}
+            <td><b>Zonas de actuación</b>: {{ artist_zones }}</td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td><b>Puntuación media del grupo</b>: {{ artist.rating }}</td>
+    </tr>
+</table>
+<h3>Días no disponibles</h3>
+{% if artist_unavailable_days %}
+    <p>{{ artist_unavailable_days }}</p>
+{% endif %}
+
+<h3>Biografía</h3>
+<p>{{ artist.portfolio.biography }}</p>
+
+<h3>Paquetes de pago disponibles</h3>
+{% if not artist.portfolio.paymentPackages %}
+    <p>No ha creado ninguno.</p>
+{% else %}
+    {% for payment_package in artist.portfolio.paymentPackages.all %}
+        <table>
+            <tr>
+                <td colspan="3"><b>Descripción</b>: {{ payment_package.description }}</td>
+            </tr>
+            <tr>
+                {% if payment_package.performance %}
+                    <td><b>Tipo de paquete</b>: Actuación</td>
+                    <td><b>Duración</b>: {{ payment_package.performance.hours }} hora/s</td>
+                    <td><b>Precio:</b> {{ payment_package.performance.price.normalize }} {{ payment_package.currency }}
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="3"><b>Información</b>: {{ payment_package.performance.info }}</td>
+                {% elif payment_package.fare %}
+                    <td><b>Tipo de paquete</b>: Tarifa</td>
+                    <td><b>Precio por
+                        hora</b>: {{ payment_package.fare.priceHour.normalize }} {{ payment_package.currency }}</td>
+                {% elif payment_package.custom %}
+                    <td><b>Tipo de paquete</b>: Personalizado</td>
+                    <td><b>Precio
+                        mínimo</b>: {{ payment_package.custom.minimumPrice.normalize }} {{ payment_package.currency }}
+                    </td>
+                {% endif %}
+
+                </tr>
+        </table>
+        <br/>
+    {% endfor %}
+{% endif %}
+
+<h3>Contenido adicional</h3>
+{% if artist_portfoliomodules %}
+    {% for portfolio_modules in artist_portfoliomodules %}
+        <table>
+            <tr>
+                <td><b>Tipo de contenido</b>:
+                    {% if portfolio_modules.type == "PHOTO" %}
+                        Imagen
+                    {% elif portfolio_modules.type == "VIDEO" %}
+                        Video
+                    {% elif portfolio_modules.type == "AUDIO" %}
+                        Audio
+                    {% elif portfolio_modules.type == "FACEBOOK" %}
+                        Red social Facebook
+                    {% elif portfolio_modules.type == "TWITTER" %}
+                        Red social Twitter
+                    {% elif portfolio_modules.type == "INSTAGRAM" %}
+                        Red social Instagram
+                    {% elif portfolio_modules.type == "MEMBER" %}
+                        Miembro del equipo
+                    {% endif %}
+                </td>
+                {% if portfolio_modules.description %}
+                    <td><b>Descripción</b>: {{ portfolio_modules.description }}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                {% if portfolio_modules.link %}
+                    <td><b>Enlace</b>: <a href="{{ portfolio_modules.link }}">Clic aquí</a></td>
+                {% endif %}
+            </tr>
+        </table>
+    {% endfor %}
+{% else %}
+    <p>None created</p>
+{% endif %}
+<h2>Ofertas recibidas</h2>
+{% for offer in artist_offers %}
+    <h3>Oferta {{ forloop.counter }}</h3>
+    <table>
+        <tr>
+            <td><b>Nombre</b>:
+                {% if offer.eventLocation.name %}
+                    {{ offer.eventLocation.name }}
+                {% else %}
+                    Ninguno
+                {% endif %}
+            </td>
+            <td><b>Contratante</b>: {{ offer.eventLocation.customer.user.get_full_name }}</td>
+        </tr>
+        <tr>
+            <td><b>Dirección</b>: {{ offer.eventLocation.address }}</td>
+            <td><b>Zona</b>: {{ offer.eventLocation.zone }}</td>
+        </tr>
+        <tr>
+            <td colspan="2"><b>Event date</b>: {{ offer.date|date:'Y-m-d' }} at {{ offer.date|date:'H:i' }}
+                for {{ offer.hours }} hour/s
+            </td>
+        </tr>
+        {% if offer.eventLocation.equipment %}
+            <tr>
+                <td colspan="2">
+                    <b>Equipamiento</b>:
+                    {% if offer.eventLocation.equipment %}
+                        {{ offer.eventLocation.equipment }}
+                    {% else %}
+                        Ninguno
+                    {% endif %}
+                </td>
+            </tr>
+        {% endif %}
+        {% if offer.eventLocation.description %}
+            <tr>
+                <td colspan="2"><b>Descripción del lugar</b>: {{ offer.eventLocation.description }}</td>
+            </tr>
+        {% endif %}
+    </table>
+    <br/>
+
+    <table>
+        <tr>
+            <td colspan="2"><b>Descripción de la oferta</b>: {{ offer.description }}</td>
+        </tr>
+        <tr>
+            <td colspan="2"><b>Paquete de pago seleccionado</b>:
+                {% if offer.paymentPackage.performance %}
+                    Actuación
+                {% elif offer.paymentPackage.fare %}
+                    Tarifa
+                {% elif offer.paymentPackage.custom %}
+                    Personalizado
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><b>Precio</b>: {{ offer.price }} {{ offer.currency }}</td>
+            <td><b>Estado de la oferta</b>:
+                {% if offer.status == "PENDING" %}
+                    Pendiente
+                {% elif offer.status == "REJECTED" %}
+                    Rechazado por tí
+                {% elif offer.status == "WITHDRAWN" %}
+                    Rechazado por el ofertante
+                {% elif offer.status == "CONTRACT_MADE" %}
+                    Aceptado
+                {% elif offer.status == "CANCELLED_ARTIST" %}
+                    Cancelado por tí
+                {% elif offer.status == "CANCELLED_CUSTOMER" %}
+                    Cancelado por el ofertante
+                {% elif offer.status == "PAYMENT_MADE" %}
+                    Pagado
+                {% endif %}
+            </td>
+        </tr>
+        {% if offer.status == "CONTRACT_MADE" or offer.status == "CANCELLED_ARTIST" or offer.status == "CANCELLED_CUSTOMER" or offer.status == "PAYMENT_MADE" %}
+            <tr>
+                <td colspan="2"><b>Cuenta de paypal de ingreso</b>: {{ offer.transaction.paypalArtist }}</td>
+            </tr>
+        {% endif %}
+
+        {% if offer.status == "PAYMENT_MADE" and offer.rating %}
+            {% if offer.rating.score %}
+                <tr>
+                    <td><b>Puntuación recibida</b>: {{ offer.rating.score }}</td>
+                </tr>
+            {% endif %}
+            {% if offer.rating.comment %}
+                <tr>
+                    <td><b>Comentarios</b>: {{ offer.rating.comment }}</td>
+                </tr>
+            {% endif %}
+        {% endif %}
+        <tr>
+            {% if offer.status == "REJECTED" or offer.status == "WITHDRAWN" or offer.status == "CANCELLED_ARTIST" or offer.status == "CANCELLED_CUSTOMER" %}
+                <td><b>Razón</b>: {{ offer.reason }}</td>
+            {% endif %}
+        </tr>
+    </table>
+    <br/>
+{% endfor %}
+</body>
+</html>
