@@ -28,7 +28,8 @@
         <td><b>Phone</b>:{% if artist.phone %}{{ artist.phone }}{% else %}Not specified{% endif %}</td>
     </tr>
     <tr>
-        <td><b>Paypal account</b>: {% if artist.paypalAccount %}{{ artist.paypalAccount }}{% else %}Not specified{% endif %}
+        <td><b>Paypal account</b>:
+            {% if artist.paypalAccount %}{{ artist.paypalAccount }}{% else %}Not specified{% endif %}
         </td>
         <td><b>Username</b>: {{ artist.user.username }}</td>
     </tr>
@@ -36,13 +37,15 @@
 <h2>Artistic information</h2>
 <table>
     <tr>
-        <td><b>Artistic name</b>:
+        <td colspan="2"><b>Artistic name</b>:
             {% if artist.portfolio.artisticName %}
                 {{ artist.portfolio.artisticName }}
             {% else %}
                 Not specified
             {% endif %}
         </td>
+    </tr>
+    <tr>
         {% if artist_genders %}
             <td><b>Artistic gender</b>: {{ artist_genders }}</td>
         {% endif %}
@@ -51,16 +54,23 @@
         {% endif %}
     </tr>
     <tr>
-        <td><b>Group score</b>: {{ artist.rating }}</td>
+        <td colspan="2"><b>Group score</b>: {{ artist.rating }}</td>
     </tr>
 </table>
+
 <h3>Unavailable days</h3>
 {% if artist_unavailable_days %}
     <p>{{ artist_unavailable_days }}</p>
+{% else %}
+    <p>None created.</p>
 {% endif %}
 
 <h3>Biography</h3>
-<p>{{ artist.portfolio.biography }}</p>
+{% if artist.portfolio.biography %}
+    <p>{{ artist.portfolio.biography }}</p>
+{% else %}
+    <p>Not specified</p>
+{% endif %}
 
 <h3>Available payment packages</h3>
 {% if not artist.portfolio.paymentPackages %}
@@ -75,16 +85,20 @@
                 {% if payment_package.performance %}
                     <td><b>Package type</b>: Performance</td>
                     <td><b>Show time</b>: {{ payment_package.performance.hours }} hour/s</td>
-                    <td><b>Price:</b> {{ payment_package.performance.price.normalize }} {{ payment_package.currency }}</td>
+                    <td><b>Price:</b> {{ payment_package.performance.price.normalize }} {{ payment_package.currency }}
+                    </td>
                     </tr>
                     <tr>
                     <td colspan="3"><b>Information</b>: {{ payment_package.performance.info }}</td>
                 {% elif payment_package.fare %}
                     <td><b>Package type</b>: Fare</td>
-                    <td><b>Precio per hour</b>: {{ payment_package.fare.priceHour.normalize }} {{ payment_package.currency }}</td>
+                    <td><b>Precio per
+                        hour</b>: {{ payment_package.fare.priceHour.normalize }} {{ payment_package.currency }}</td>
                 {% elif payment_package.custom %}
                     <td><b>Payment package</b>: Custom</td>
-                    <td><b>Minimal price</b>: {{ payment_package.custom.minimumPrice.normalize }} {{ payment_package.currency }}</td>
+                    <td><b>Minimal
+                        price</b>: {{ payment_package.custom.minimumPrice.normalize }} {{ payment_package.currency }}
+                    </td>
                 {% endif %}
 
                 </tr>
@@ -93,7 +107,7 @@
     {% endfor %}
 {% endif %}
 
-<h3>Aditional content</h3>
+<h3>Aditional contents</h3>
 {% if artist_portfoliomodules %}
     {% for portfolio_modules in artist_portfoliomodules %}
         <table>
@@ -121,7 +135,7 @@
             </tr>
             <tr>
                 {% if portfolio_modules.link %}
-                    <td><b>Link</b>: <a href="{{ portfolio_modules.link }}">Clic here</a></td>
+                    <td><b>Link</b>: <a href="{{ portfolio_modules.link }}">Click here</a></td>
                 {% endif %}
             </tr>
         </table>
@@ -129,109 +143,114 @@
 {% else %}
     <p>None created</p>
 {% endif %}
+
 <h2>Offers received</h2>
-{% for offer in artist_offers %}
-    <h3>Offer {{ forloop.counter }}</h3>
-    <table>
-        <tr>
-            <td><b>Name</b>:
-                {% if offer.eventLocation.name %}
-                    {{ offer.eventLocation.name }}
-                {% else %}
-                    not specified
-                {% endif %}
-            </td>
-            <td><b>Contractor</b>: {{ offer.eventLocation.customer.user.get_full_name }}</td>
-        </tr>
-        <tr>
-            <td><b>Address</b>: {{ offer.eventLocation.address }}</td>
-            <td><b>Zone</b>: {{ offer.eventLocation.zone }}</td>
-        </tr>
-        <tr>
-            <td colspan="2"><b>Event date</b>: {{ offer.date|date:'Y-m-d' }} at {{ offer.date|date:'H:i' }}
-                for {{ offer.hours }} hour/s
-            </td>
-        </tr>
-        {% if offer.eventLocation.equipment %}
+{% if artist_offers %}
+    {% for offer in artist_offers %}
+        <h3>Offer {{ forloop.counter }}</h3>
+        <table>
             <tr>
-                <td colspan="2">
-                    <b>Equipment</b>:
-                    {% if offer.eventLocation.equipment %}
-                        {{ offer.eventLocation.equipment }}
+                <td><b>Name</b>:
+                    {% if offer.eventLocation.name %}
+                        {{ offer.eventLocation.name }}
                     {% else %}
-                        Not specified
+                        not specified
+                    {% endif %}
+                </td>
+                <td><b>Contractor</b>: {{ offer.eventLocation.customer.user.get_full_name }}</td>
+            </tr>
+            <tr>
+                <td><b>Address</b>: {{ offer.eventLocation.address }}</td>
+                <td><b>Zone</b>: {{ offer.eventLocation.zone }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Event date</b>: {{ offer.date|date:'Y-m-d' }} at {{ offer.date|date:'H:i' }}
+                    for {{ offer.hours }} hour/s
+                </td>
+            </tr>
+            {% if offer.eventLocation.equipment %}
+                <tr>
+                    <td colspan="2">
+                        <b>Equipment</b>:
+                        {% if offer.eventLocation.equipment %}
+                            {{ offer.eventLocation.equipment }}
+                        {% else %}
+                            Not specified
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+            {% if offer.eventLocation.description %}
+                <tr>
+                    <td colspan="2"><b>Place description</b>: {{ offer.eventLocation.description }}</td>
+                </tr>
+            {% endif %}
+        </table>
+        <br/>
+
+        <table>
+            <tr>
+                <td colspan="2"><b>Offer description</b>: {{ offer.description }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><b>Payment package selected</b>:
+                    {% if offer.paymentPackage.performance %}
+                        Performance
+                    {% elif offer.paymentPackage.fare %}
+                        Fare
+                    {% elif offer.paymentPackage.custom %}
+                        Custom
                     {% endif %}
                 </td>
             </tr>
-        {% endif %}
-        {% if offer.eventLocation.description %}
             <tr>
-                <td colspan="2"><b>Place description</b>: {{ offer.eventLocation.description }}</td>
+                <td><b>Price</b>: {{ offer.price }} {{ offer.currency }}</td>
+                <td><b>Offer status</b>:
+                    {% if offer.status == "PENDING" %}
+                        Pending
+                    {% elif offer.status == "REJECTED" %}
+                        Rejected for you
+                    {% elif offer.status == "WITHDRAWN" %}
+                        Rechazado for the contractor
+                    {% elif offer.status == "CONTRACT_MADE" %}
+                        Accepted
+                    {% elif offer.status == "CANCELLED_ARTIST" %}
+                        Cancelled for you
+                    {% elif offer.status == "CANCELLED_CUSTOMER" %}
+                        Cancelled for the contractor
+                    {% elif offer.status == "PAYMENT_MADE" %}
+                        Paid
+                    {% endif %}
+                </td>
             </tr>
-        {% endif %}
-    </table>
-    <br/>
-
-    <table>
-        <tr>
-            <td colspan="2"><b>Offer description</b>: {{ offer.description }}</td>
-        </tr>
-        <tr>
-            <td colspan="2"><b>Payment package selected</b>:
-                {% if offer.paymentPackage.performance %}
-                    Performance
-                {% elif offer.paymentPackage.fare %}
-                    Fare
-                {% elif offer.paymentPackage.custom %}
-                    Custom
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <td><b>Price</b>: {{ offer.price }} {{ offer.currency }}</td>
-            <td><b>Offer status</b>:
-                {% if offer.status == "PENDING" %}
-                    Pending
-                {% elif offer.status == "REJECTED" %}
-                    Rejected for you
-                {% elif offer.status == "WITHDRAWN" %}
-                    Rechazado for the contractor
-                {% elif offer.status == "CONTRACT_MADE" %}
-                    Accepted
-                {% elif offer.status == "CANCELLED_ARTIST" %}
-                    Cancelled for you
-                {% elif offer.status == "CANCELLED_CUSTOMER" %}
-                    Cancelled for the contractor
-                {% elif offer.status == "PAYMENT_MADE" %}
-                    Paid
-                {% endif %}
-            </td>
-        </tr>
-        {% if offer.status == "CONTRACT_MADE" or offer.status == "CANCELLED_ARTIST" or offer.status == "CANCELLED_CUSTOMER" or offer.status == "PAYMENT_MADE" %}
-        <tr>
-            <td colspan="2"><b>Paypal Deposit Account</b>: {{ offer.transaction.paypalArtist }}</td>
-        </tr>
-        {% endif %}
-
-        {% if offer.status == "PAYMENT_MADE" and offer.rating %}
-            {% if offer.rating.score %}
-            <tr>
-                <td><b>Score received</b>: {{ offer.rating.score }}</td>
-            </tr>
-            {% endif %}
-            {% if offer.rating.comment %}
+            {% if offer.status == "CONTRACT_MADE" or offer.status == "CANCELLED_ARTIST" or offer.status == "CANCELLED_CUSTOMER" or offer.status == "PAYMENT_MADE" %}
                 <tr>
-                    <td><b>Comments</b>: {{ offer.rating.comment }}</td>
+                    <td colspan="2"><b>Paypal Deposit Account</b>: {{ offer.transaction.paypalArtist }}</td>
                 </tr>
             {% endif %}
-        {% endif %}
-        <tr>
-            {% if offer.status == "REJECTED" or offer.status == "WITHDRAWN" or offer.status == "CANCELLED_ARTIST" or offer.status == "CANCELLED_CUSTOMER" %}
-                <td><b>Reason</b>: {{ offer.reason }}</td>
+
+            {% if offer.status == "PAYMENT_MADE" and offer.rating %}
+                {% if offer.rating.score %}
+                    <tr>
+                        <td><b>Score received</b>: {{ offer.rating.score }}</td>
+                    </tr>
+                {% endif %}
+                {% if offer.rating.comment %}
+                    <tr>
+                        <td><b>Comments</b>: {{ offer.rating.comment }}</td>
+                    </tr>
+                {% endif %}
             {% endif %}
-        </tr>
-    </table>
-    <br/>
-{% endfor %}
+            <tr>
+                {% if offer.reason and offer.status == "REJECTED" or offer.status == "WITHDRAWN" or offer.status == "CANCELLED_ARTIST" or offer.status == "CANCELLED_CUSTOMER" %}
+                    <td><b>Reason</b>: {{ offer.reason }}</td>
+                {% endif %}
+            </tr>
+        </table>
+        <br/>
+    {% endfor %}
+{% else %}
+    <p>None created.</p>
+{% endif %}
 </body>
 </html>

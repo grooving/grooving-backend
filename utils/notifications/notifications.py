@@ -1,9 +1,9 @@
 from django.core.mail import EmailMessage
-from Grooving.models import Offer, SystemConfiguration, User, Artist, Customer
+from Grooving.models import Offer, SystemConfiguration, User, Artist, Customer, PortfolioModule
 from weasyprint import HTML
 from datetime import datetime
 import threading
-from utils.authentication_utils import get_language
+from utils.authentication_utils import get_language, get_artist_or_customer_by_user
 from utils.notifications.internationalization import translate, translate_render
 
 

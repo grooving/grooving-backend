@@ -13,6 +13,12 @@ spanish = {
                                   "<p>Hemos llevado a cabo el procedimiento para aplicar su derecho al olvido y se "
                                   "ha realizado correctamente. </p>" +
                                   "<p>Un saludo.</p>",
+    "SUBJECT_DOWNLOAD_DATA_USER": "Solicitud de información personal",
+    "BODY_DOWNLOAD_DATA_USER": "<p>Buenas, </p>" +
+                               "<p>Cumpliendo con el <a href=\"https://gdpr-info.eu/art-20-gdpr/\">artículo 20</a> " +
+                               "del GPDR (General Data Protection Regulation), le hemos enviado toda la información " +
+                               "relativa sobre usted en un pdf adjunto a este correo.</p>" +
+                               "<p>Un saludo.</p>"
 }
 
 english = {
@@ -26,7 +32,13 @@ english = {
                                   "<p>We appreciate you having contacting us.</p>" +
                                   "<p>We have carried out the procedure to apply your right to oblivion and has " +
                                   "performed correctly.</p>" +
-                                  "<p>Best regards.</p>"
+                                  "<p>Best regards.</p>",
+    "SUBJECT_DOWNLOAD_DATA_USER": "Personal information request",
+    "BODY_DOWNLOAD_DATA_USER": "<p>Hello, </p>" +
+                               "<p>In compliance with <a href=\"https://gdpr-info.eu/art-20-gdpr/\">artículo 20</a> " +
+                               "of the GPDR (General Data Protection Regulation), we have sent you all the relative " +
+                               "information about you in a pdf attached to this email.</p>" +
+                               "<p>Best regards.</p>"
 }
 
 
