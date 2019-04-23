@@ -132,3 +132,19 @@ def get_language(user):
                 return customer.language
     else:
         return None
+
+
+def get_artist_or_customer_by_user(user):
+
+    if user:
+        artist = Artist.objects.filter(user_id=user.id).first()
+
+        if artist is not None:
+            return artist
+        else:
+            customer = Customer.objects.filter(user_id=user.id).first()
+
+            if customer is not None:
+                return customer
+
+    return None

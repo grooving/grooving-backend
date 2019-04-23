@@ -5,9 +5,9 @@ from utils.searcher.distancia import artisticNameCompare, categoriaCompare, zone
 
 def searchAdmin(userName=""):
     artists = Artist.objects.filter(isHidden=False).all()
-    filterArtists = [artist for artist in artists if compare(artist, userName)]
+    filterArtists = [artist for artist in artists if compareUsers(artist, userName)]
     customers = Customer.objects.filter(isHidden=False).all()
-    filterCustomers = [customer for customer in customers if compare(customer, userName)]
+    filterCustomers = [customer for customer in customers if compareUsers(customer, userName)]
 
     return {"artists": filterArtists, "customers": filterCustomers}
 
@@ -17,7 +17,7 @@ def compareUsers(user, userName=""):
     if userName:
         coincidencesNeeded = 1
         userName = userName.strip().replace(" ", "#")
-        coincidencesFinded = artisticNameCompare(user.username.replace(" ", "#"), userName)
+        coincidencesFinded = artisticNameCompare(user.user.username.replace(" ", "#"), userName)
 
     equals = False
 
