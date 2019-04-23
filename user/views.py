@@ -34,7 +34,7 @@ class UserManage(generics.DestroyAPIView):
             return Response({'error': 'ERROR_VALIDATE'}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
-        # try:
+        try:
             email = ''
             language = ''
             if Artist.objects.filter(user=request.user).first() is not None:
@@ -52,9 +52,9 @@ class UserManage(generics.DestroyAPIView):
             request.user.delete()
 
             Notifications.send_email_right_to_be_forgotten(email=email, language=language)
-        # except TypeError:
-        #     return Response({'error': 'ERROR_DELETE_USER'}, status=status.HTTP_400_BAD_REQUEST)
-            return Response(status=status.HTTP_204_NO_CONTENT)
+        except TypeError:
+            return Response({'error': 'ERROR_DELETE_USER'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ListUsers(generics.RetrieveAPIView):
