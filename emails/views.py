@@ -1,4 +1,3 @@
-from utils.authentication_utils import get_admin
 from rest_framework import generics
 from utils.notifications.notifications import Notifications
 from utils.Assertions import Assertions
@@ -36,7 +35,6 @@ class SendMailDataBreach(generics.CreateAPIView):
 
         # NotificationSerializer.send_mail(request)
         # NotificationSerializer(data=request.data)  Se usa a través del serializer (util cuando son muchos objetos)
-        # Notifications.send_notification_for_breach_security()
 
 
 class DownloadPersonalData(generics.CreateAPIView):
