@@ -34,7 +34,7 @@ from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
 from utils.utils import TermsAndConditions, Privacy, AboutUs
 from braintrees.views import BraintreeViews
-from emails.views import SendMailDataBreach
+from emails.views import SendMailDataBreach, DownloadPersonalData
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
 from languageChooser.views import LanguageChooser
@@ -118,5 +118,6 @@ urlpatterns = [
     url(r'^admin/totalMoney/$', GetTotalMoney.as_view()),
     url(r'^admin/moneyEarned/$', GetMoneyEarned.as_view()),
     url(r'^admin/totalMoneyLastMonth/$', GetTotalMoneyLastMonth.as_view()),
-    url(r'^admin/moneyEarnedLastMonth/$', GetMoneyEarnedLastMonth.as_view())
+    url(r'^admin/moneyEarnedLastMonth/$', GetMoneyEarnedLastMonth.as_view()),
+    url(r'^downloadPersonalData/$', DownloadPersonalData.as_view()),
 ]
