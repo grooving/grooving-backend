@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    h1, h2, h3 {
+        text-align: justify;
+        font-family: Archive;
+    }
+    p {
+        text-align: justify;
+        font-family: Archive;
+        font-size: 12px;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<img src="https://raw.githubusercontent.com/Iriabow/pepe/master/photo_2019-04-07_00-59-27.jpg">
+<h1>Contrato de servicio</h1></br>
+<p><b>{{ artist_name }}</b> se compromete a ofrecer su espectáculo en el evento <b>{{ event_name }}</b> el <b>{{ event_date }}</b> a las <b>{{ event_hour }}</b>.</p>
+
+<p>El gerente <b>{{ artist_name }}</b> del grupo artístico <b>{{ artist_artisticName }}</b> acepta las condiciones del evento organizado por <b>{{ customer_name }}</b>.</p>
+
+<p><b>{{ customer_name }}</b> será el punto de contacto y la persona que realizará el pago y la información logística sobre el evento.</p>
+
+<h2>Pago</h2>
+
+<!-- If del tipo de payment package -->
+
+{% if event_payment_package == 'Performance' %}
+    <p>La tarifa por los servicios prestados es <b>{{ event_price }} {{ event_currency }}</b> y <b>se espera que el artista esté presente {{ event_duration }} horas durante el evento</b>.</p>
+{% elif event_payment_package == 'Fare' %}
+    <p>La tarifa por los servicios prestados es <b>{{ event_payment_package_price_per_hour }} {{ event_currency }} por hora</b> y <b>se espera que artista esté presente {{ event_duration }} horas durante el evento</b>. <b>La cantidad total del evento sería {{ event_price }} {{ event_currency }}</b>.</p>
+{% else %}
+    <p>La tarifa por los servicios prestados es <b>{{ event_price }} {{ event_currency }}</b> y <b>se espera que el artista esté presente {{ event_duration }} houras durante el evento</b>.</p>
+{% endif %}
+
+<p>El pago completo del evento ya ha sido realizado a Grooving. El pago al artista se realizará después de ofrecer los servicios del evento.</p>
+
+<p>Si <b>{{ customer_name }}</b> o <b>{{ artist_name }}</b> desean cancelar el show, se devolverá el pago a <b>{{ customer_name }}</b> y se cargarán los costes por la gestión del servicio.</p>
+
+<h2>Equipamiento</h2>
+
+<p>Los materiales requeridos por el artista son los siguientes:</p>
+<p>{{ event_equipment }}</p>
+
+<p><b>{{ customer_name }}</b> es responsable de garantizar que el lugar cumpla con estos requisitos. Si es posible, un recorrido por el lugar y un plan final para el evento. <b>{{ artist_artisticName }}</b> intentará acomodar toda la solicitud de música razonable el día del evento.</p>
+
+
+<h2>Contenido de la actuación</h2>
+<p>El artista actuará acorde con la planificación. Cualquier solicitud especial debe hacerse por parte del cliente al cinco (5) días antes del evento. <b>{{ artist_name }}</b> intentará satisfacer la solicitud coherentemente para el día del evento.</p>
+
+<h2>Daños en el equipamiento</h2>
+
+<p><b>{{ customer_name }}</b> es responsable de cualquier daño al equipo del artista causado de forma irresponsable del cliente o de cualquier cualquier persona que asista al evento. Se le permitirá hacer una inspección visual del equipo antes de evento para garantizar que todo el equipo esté funcionando correctamente y libre de daños.
+
+<p>Ambas partes reconocen que han leído y comprenden completamente todos los términos de este contrato.</p>
+</body>
+</html>

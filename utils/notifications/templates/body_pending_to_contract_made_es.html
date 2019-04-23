@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<h1 style="color: #FFFFF; font-family: Helvetica"> {{ title }} </h1></br>
+<h2 style="color: #FFFFF; font-family: Helvetica">Información del evento: </h2>
+<table>
+    <tr>
+        <td><b>Nombre del evento</b>:</td>
+        <td>{{ event_name }}</td>
+    </tr>
+    <tr>
+        <td><b>Dirección</b>:</td>
+        <td>{{ event_address }}</td>
+    </tr>
+    <tr>
+        <td><b>Paquete seleccionado</b>:</td>
+        <td>{{ event_payment_package }}</td>
+    </tr>
+    <tr>
+        <td><b>Fecha</b>:</td>
+        <td>{{ event_date }} a las {{ event_hour }}</td>
+    </tr>
+    <tr>
+        <td><b>Duración</b>:</td>
+        <td>{{ event_duration }} hora/s</td>
+    </tr>
+    <tr>
+        <td><b>Precio</b>:</td>
+        <td>{{ event_price }} {{ event_currency }}</td>
+    </tr>
+    <tr>
+        <td><b>Equipamiento</b>:</td>
+        <td>{{ event_equipment }}</td>
+    </tr>
+    {% if event_payment_code %}
+    <tr>
+        <td><b>Código de pago</b>:</td>
+        <td>{{ event_payment_code }}</td>
+    </tr>
+    {% endif %}
+</table>
+</body>
+</html>

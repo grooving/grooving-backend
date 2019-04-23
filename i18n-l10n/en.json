@@ -1,5 +1,6 @@
 {
   "ERROR_USER_FORBIDDEN": "User has forbidden this action",
+  "ERROR_FIELD_ID": "Id field not provided",
   "ERROR_FIELD_TYPE": "Type field not provided",
   "ERROR_FIELD_LINK": "Link field not provided",
   "ERROR_FIELD_DESCRIPTION": "Description field not provided",
@@ -11,5 +12,25 @@
   "ERROR_CREATEMODULE_INSTAGRAM": "Can't create another Instagram module",
   "ERROR_REFERENCE_PORTFOLIO": "Can't reference this portfolio",
   "ERROR_DELETE_USER_UNKNOWN": "Commit error to delete an unknown user",
-  "ERROR_DELETE_USER": "Commit error to delete user"
+  "ERROR_DELETE_USER": "Commit error to delete user",
+  "ERROR_BAN_USER_UNKNOWN": "Commit error to ban an unknown user",
+  "ERROR_BAN_USER": "Commit error to ban user",
+  "ERROR_VALIDATE": "Data validation has been error",
+  "ERROR_NO_ARTISTIC_NAME": "You did not submit an artistic name.",
+  "ERROR_NOT_LOGGED_IN": "You must be logged in to do this action.",
+  "ERROR_NOT_AN_ARTIST": "You are not an artist, and therefore you cannot be here.",
+  "ERROR_NOT_A_CUSTOMER": "You are not a customer, and therefore you cannot be here.",
+  "ERROR_NO_CUSTOMER_FOUND": "The customer you are searching for does not exist.",
+  "ERROR_NO_ARTIST_FOUND": "The artist you are searching for does not exist.",
+  "ERROR_NO_SCORE": "You must give a score.",
+  "ERROR_DECIMAL_SCORE": "The rating must be a number with no decimals.",
+  "ERROR_RATING_OUT_OF_RANGE": "The rating must be between 1 and 5 points.",
+  "ERROR_OFFER_NOT_OWNED": "This offer is not yours.",
+  "ERROR_OFFER_NOT_READY": "This offer cannot receive a rating yet, since it has not been paid yet.",
+  "ERROR_OFFER_ALREADY_RATED": "This offer is already rated. You cannot rate it twice.",
+  "ERROR_OFFER_NOT_FOUND": "The offer you are searching for does not exist.",
+  "ERROR_NO_DATA_GIVEN": "The form has no data.",
+  "ERROR_NO_MATCHING_LANGUAGE": "The language you want is not available.",
+  "ERROR_ACTOR_NOT_FOUND": "The actor you are searching does not exist.",
+  "ERROR_NO_GIVEN_LANGUAGE": "You must give a language to switch to."
 }

@@ -1,116 +1,261 @@
 from django.core.mail import EmailMessage
-from Grooving.models import Offer, SystemConfiguration, User
+from Grooving.models import Offer, SystemConfiguration, User, Artist, Customer
 from weasyprint import HTML
-from django.template.loader import render_to_string
 from datetime import datetime
+import threading
+from utils.authentication_utils import get_language
+from utils.notifications.internationalization import translate, translate_render
+
+
+class EmailMessageThread(threading.Thread):
+
+    def __init__(self, from_email, to, body, subject, body_content_type, list_attachments, fail_silently=False):
+        self.from_email = from_email
+        self.to = to
+        self.body = body
+        self.subject = subject
+        self.body_content_type = body_content_type
+        self.fail_silently = fail_silently
+        self.list_attachments = list_attachments
+
+        threading.Thread.__init__(self)
+
+    def run(self):
+        message = EmailMessage(from_email=self.from_email, to=self.to, body=self.body, subject=self.subject)
+        message.content_subtype = self.body_content_type
+
+        message.attachments = self.list_attachments
+
+        '''
+        How it works attachments on EmailMessage?
+
+        - Traditional method:
+
+        if self.list_attachments:
+            for attachment in self.list_attachments:
+                message.attach(attachment[0], attachment[1], attachment[2])  # filename, content, mimetype
+
+        - Resume method:
+
+        [message.attach(attachment[0], attachment[1], attachment[2]) for attachment in self.list_attachments
+        if self.list_attachments]
+
+        - Fast method:
+
+        message.attachments = self.list_attachment
+        '''
+        message.send(fail_silently=self.fail_silently)
+
+    @staticmethod
+    def send_mail(from_email, to, body, subject, body_content_type, fail_silently):
+        EmailMessageThread(from_email, to, body, subject, body_content_type, None, fail_silently).start()
+
+    @staticmethod
+    def send_mail_with_attachments(from_email, to, body, subject, body_content_type, list_attachments, fail_silently):
+        EmailMessageThread(from_email, to, body, subject, body_content_type, list_attachments, fail_silently).start()
 
 
 class Notifications:
 
     @staticmethod
-    def footer():
-        return render_to_string('footer_mail.html')
+    def footer(languages):
+        return translate_render(languages, 'FOOTER')
 
     @staticmethod
     def send_email_welcome(user_id):
 
-        user = User.objects.get(pk=user_id)
+        # Entity database objects
 
-        email = EmailMessage()
-        email.from_email = 'Grooving <no-reply@grupogrooving.com>'
-        email.content_subtype = 'html'
+        user = User.objects.filter(pk=user_id).first()
+        languages = get_language(user)
 
-        email.to = [user.email]
-        email.subject = "Welcome to Grooving family"
-        email.body = "<p>Hi there,</p>" \
-                     "<p>Congratulations! You've signing with Grooving and are now part of a community that connects " \
-                     "artists and improve their visibility in an easy, simple, simple and reliable way. " \
-                     "From now, you'll get regular updates on the offers status made and all the information related" \
-                     " to them. </p>" \
-                     "<p>Your username is: <b>" + user.username + "</b></p>" \
-                                                                  "<p>Cheers,</p>" \
-                                                                  "<p>Grooving team</p>" \
-                     + Notifications.footer()
-        email.send()
+        # Email content
+
+        from_email = "Grooving <no-reply@grupogrooving.com>"
+        body_content_type = "html"
+        to = [user.email]
+        subject = translate(languages, "WELCOME_SUBJECT")
+        body = ""
+
+        if languages == "en":
+            body = "<p>Hi there,</p>" \
+                   "<p>Congratulations! You've signing with Grooving and are now part of a community that connects " \
+                   "artists and improve their visibility in an easy, simple, simple and reliable way. " \
+                   "From now, you'll get regular updates on the offers status made and all the information related" \
+                   " to them. </p>" \
+                   "<p>Your username is: <b>" + user.username + "</b></p>" \
+                                                                "<p>Cheers,</p>" \
+                                                                "<p>Grooving team</p>"
+        elif languages == "es":
+            body = "<p>¡Felicidades!,</p>" \
+                   "<p>Acabas de registrarte en Grooving y ahora eres parte de una comunidad que conecta " \
+                   "artistas y mejorar su visibilidad de una forma facíl, simple y confiable." \
+                   "Desde este momento, recibirás actualizaciones regulares sobre las ofertas que recibas con " \
+                   "información detallada.</p>" \
+                   "<p>Your username is: <b>" + user.username + "</b></p>" \
+                                                                "<p>Cheers,</p>" \
+                                                                "<p>Grooving team</p>"
+        body += Notifications.footer(languages)
+
+        EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
 
     @staticmethod
     def send_email_create_an_offer(offer_id):
-        offer = Offer.objects.get(pk=offer_id)
 
-        email = EmailMessage()
-        email.from_email = 'Grooving <no-reply@grupogrooving.com>'
-        email.content_subtype = 'html'
+        # Entity database objects
 
-        # email.to = ['utri1990@gmail.com']
-        email.to = [offer.paymentPackage.portfolio.artist.user.email]
-        email.subject = "You received a new offer to " + offer.paymentPackage.portfolio.artisticName
-        email.body = '<h1>' + offer.eventLocation.customer.user.get_full_name() + \
-                     ' has contacted you. </h1><p>Come on! See the details on the webpage.<p>' + Notifications.footer()
-        email.send()
+        offer = Offer.objects.filter(pk=offer_id).first()
+        language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
+        language_customer = get_language(offer.eventLocation.customer.user)
 
-        email.to = [offer.eventLocation.customer.user.email]
-        # email.to = ['utri1990@gmail.com']
-        email.subject = 'You has sent a offer!'
-        email.body = '<h1>Your offer has been send to ' + offer.paymentPackage.portfolio.artisticName + '</h1>' + \
-                     '<p>You will receive more information soon. </p>' + Notifications.footer()
-        email.send()
+        # Common email content
+
+        from_email = "Grooving <no-reply@grupogrooving.com>"
+        body_content_type = "html"
+
+        # Artist email
+
+        to = [offer.paymentPackage.portfolio.artist.user.email]
+        subject = ""
+        body = ""
+
+        if language_artist == 'en':
+            subject = "You received a new offer to " + offer.eventLocation.customer.user.get_full_name()
+            body = "<h1>" + offer.eventLocation.customer.user.get_full_name() + \
+                   " has contacted you. </h1><p>Come on! See the details on the webpage.<p>" + \
+                   Notifications.footer(language_artist)
+        elif language_artist == 'es':
+            subject = "Has recibido una nueva oferta de " + offer.eventLocation.customer.user.get_full_name()
+            body = "<h1>" + offer.eventLocation.customer.user.get_full_name() + \
+                   " ha contactado contigo. </h1><p>Puedes mirar los detalles en la página web.<p>" + \
+                   Notifications.footer(language_artist)
+
+        EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
+
+        # Customer email
+
+        to = [offer.eventLocation.customer.user.email]
+        subject = ""
+        body = ""
+
+        if language_customer == 'en':
+            subject = "You has sent a offer!"
+            body = "<h1>Your offer has been send to " + offer.paymentPackage.portfolio.artisticName + "</h1>" + \
+                   "<p>You will receive more information soon. </p>" + Notifications.footer(language_customer)
+        elif language_customer == 'es':
+            subject = "¡Has enviado una oferta!"
+            body = "<h1>Tu oferta ha sido enviada a " + offer.paymentPackage.portfolio.artisticName + "</h1>" + \
+                   "<p>Pronto recibiras más información.</p>" + Notifications.footer(language_customer)
+
+        EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
 
     @staticmethod
     def send_email_pending_to_rejected(offer_id):
-        offer = Offer.objects.get(pk=offer_id)
 
-        email = EmailMessage()
-        email.from_email = 'Grooving <no-reply@grupogrooving.com>'
+        # Entity database objects
 
-        email.to = [offer.paymentPackage.portfolio.artist.user.email]
-        # email.to = ['utri1990@gmail.com']
-        email.subject = 'The offer has been rejected successfully'
-        email.content_subtype = 'html'
-        email.body = 'You have rejected the offer received from ' + offer.eventLocation.customer.user.get_full_name() \
-                     + Notifications.footer()
-        email.send()
+        offer = Offer.objects.filter(pk=offer_id).first()
+        language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
+        language_customer = get_language(offer.eventLocation.customer.user)
 
-        email.to = [offer.eventLocation.customer.user.email]
-        # email.to = ['utri1990@gmail.com']
-        email.subject = 'Your offer has been rejected'
-        email.content_subtype = 'html'
-        email.body = 'We are sorry. The offer sent to ' + offer.paymentPackage.portfolio.artisticName + \
-                     ' has been rejected.' + Notifications.footer()
-        email.send()
+        # Common email content
+
+        from_email = "Grooving <no-reply@grupogrooving.com>"
+        body_content_type = "html"
+
+        # Artist email
+
+        to = [offer.paymentPackage.portfolio.artist.user.email]
+        subject = ""
+        body = ""
+
+        if language_artist == "en":
+            subject = "The offer has been rejected successfully"
+            body = "You have rejected the offer received from " + offer.eventLocation.customer.user.get_full_name() \
+                   + Notifications.footer(language_artist)
+        elif language_artist == "es":
+            subject = "La oferta ha sido rechazada satisfactoriamente"
+            body = "Has rechazado la oferta recibida por " + offer.eventLocation.customer.user.get_full_name() \
+                   + Notifications.footer(language_artist)
+
+        EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
+
+        # Customer email
+
+        to = [offer.eventLocation.customer.user.email]
+        subject = ""
+        body = ""
+
+        if language_customer == "en":
+            subject = "Your offer has been rejected"
+            body = "We are sorry. The offer sent to " + offer.paymentPackage.portfolio.artisticName + \
+                   " has been rejected." + Notifications.footer(language_customer)
+        elif language_customer == "es":
+            subject = "Tu oferta ha sido rechazada"
+            body = "Lo sentimos. La oferta enviada por " + offer.paymentPackage.portfolio.artisticName + \
+                   " ha sido rechazada." + Notifications.footer(language_customer)
+
+        EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
 
     @staticmethod
     def send_email_pending_to_withdrawn(offer_id):
-        offer = Offer.objects.get(pk=offer_id)
 
-        email = EmailMessage()
-        email.from_email = 'Grooving <no-reply@grupogrooving.com>'
+        # Entity database objects (necessary from template & email)
 
-        # email.to = ['utri1990@gmail.com']
-        email.to = [offer.paymentPackage.portfolio.artist.user.email]
-        email.subject = 'The offer has been withdrawn'
-        email.body = 'We are sorry. ' + offer.eventLocation.customer.user.get_full_name() + ' ' \
-                     'has withdrawn the offer.' + Notifications.footer()
-        email.content_subtype = 'html'
-        email.send()
+        offer = Offer.objects.filter(pk=offer_id).first()
+        language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
+        language_customer = get_language(offer.eventLocation.customer.user)
 
-        email.to = [offer.eventLocation.customer.user.email]
-        # email.to = ['utri1990@gmail.com']
-        email.subject = 'The offer has been withdrawn successfully.'
-        email.body = 'You have withdrawn the offer sent to ' + offer.paymentPackage.portfolio.artisticName + "." \
-                     + Notifications.footer()
-        email.content_subtype = 'html'
-        email.send()
+        # Common email content
+
+        from_email = "Grooving <no-reply@grupogrooving.com>"
+        body_content_type = "html"
+
+        # Artist email
+
+        to = [offer.paymentPackage.portfolio.artist.user.email]
+        subject = ""
+        body = ""
+
+        if language_artist == "en":
+            subject = 'The offer has been withdrawn'
+            body = '<p>We are sorry. ' + offer.eventLocation.customer.user.get_full_name() + \
+                   ' has withdrawn the offer.</p>' + Notifications.footer(language_artist)
+        elif language_artist == "es":
+            subject = 'La oferta ha sido retirada'
+            body = '<p>Lo sentimos. ' + offer.eventLocation.customer.user.get_full_name() + \
+                   ' ha retirado la oferta.</p>' + Notifications.footer(language_artist)
+
+        EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
+
+        # Customer email
+
+        to = [offer.eventLocation.customer.user.email]
+        subject = ""
+        body = ""
+
+        if language_customer == "en":
+            subject = 'The offer has been withdrawn successfully.'
+            body = '<p>You have withdrawn the offer sent to ' + offer.paymentPackage.portfolio.artisticName + \
+                   ".</p>" + Notifications.footer(language_customer)
+        elif language_customer == "es":
+            subject = 'La oferta ha sido retirada satisfactoriamente.'
+            body = '<p>Has retirado la oferta enviada por ' + offer.paymentPackage.portfolio.artisticName + \
+                   ".</p>" + Notifications.footer(language_customer)
+
+        EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
 
     @staticmethod
     def send_email_pending_to_contract_made(offer_id):
+
         # Entity database objects (necessary from template & email)
 
-        offer = Offer.objects.get(pk=offer_id)
+        offer = Offer.objects.filter(pk=offer_id).first()
         system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
+        language_customer = get_language(offer.eventLocation.customer.user)
 
-        # Template
-
-        # Template - Data to generate email body & pdf
+        # Data to generate email body & pdf
 
         context_body = {
             'customer_name': offer.eventLocation.customer.user.get_full_name(),
@@ -123,7 +268,6 @@ class Notifications:
             'event_price': offer.price,
             'event_currency': offer.currency,
             'event_equipment': offer.eventLocation.equipment,
-            'system_configuration_terms_and_conditions': system_configuration.termsText,
         }
 
         context_pdf = {
@@ -139,11 +283,10 @@ class Notifications:
             'event_price': offer.price,
             'event_currency': offer.currency,
             'event_equipment': offer.eventLocation.equipment,
-            'system_configuration_terms_and_conditions': system_configuration.termsText,
             'system_configuration_profit': system_configuration.profit,
         }
 
-        # Check package type (necessary for generate pdf & email information)
+        # Check package type (necessary for generate pdf & body information)
 
         if offer.paymentPackage.performance is not None:
             context_pdf['event_payment_package'] = 'Performance'  # Informaremos el precio total y la duración
@@ -156,45 +299,99 @@ class Notifications:
             context_pdf['event_payment_package'] = 'Custom'  # Informaremos del precio total y la duración
             context_body['event_payment_package'] = 'Custom'
 
-        pdf_html = render_to_string("pdf_pending_to_contract_made.html", context_pdf)
+        # Email - PDF generator
 
-        # Email
+        if language_artist == 'es':
+            context_pdf['system_configuration_terms_and_conditions'] = system_configuration.termsText_es
+        elif language_artist == 'en':
+            context_pdf['system_configuration_terms_and_conditions'] = system_configuration.termsText_en
 
-        email = EmailMessage()
-        email.subject = 'Offer accepted'
-        email.from_email = 'Grooving <no-reply@grupogrooving.com>'
-        email.content_subtype = 'html'
-        pdf_file = HTML(string=pdf_html).write_pdf()
-        email.attach('contract.pdf', pdf_file, 'application/pdf')
+        pdf_html_artist = translate_render(language_artist, "PDF_PENDING_TO_CONTRACT_MADE", context_pdf)
+
+        if language_customer == 'es':
+            context_pdf['system_configuration_terms_and_conditions'] = system_configuration.termsText_es
+        elif language_customer == 'en':
+            context_pdf['system_configuration_terms_and_conditions'] = system_configuration.termsText_en
+
+        pdf_html_customer = translate_render(language_customer, "PDF_PENDING_TO_CONTRACT_MADE", context_pdf)
+
+        # Email - Body generator for artist
+
+        if language_artist == "en":
+            context_body['system_configuration_terms_and_conditions'] = system_configuration.termsText_en
+            context_body['title'] = 'Congratulations! You have been hired by ' + \
+                                    offer.eventLocation.customer.user.get_full_name()
+        elif language_artist == "es":
+            context_body['system_configuration_terms_and_conditions'] = system_configuration.termsText_es
+            context_body['title'] = '¡Felicidades! Has sido contratado por ' + \
+                                    offer.eventLocation.customer.user.get_full_name()
+
+        body_artist_html = translate_render(language_artist, "BODY_PENDING_TO_CONTRACT_MADE", context_body) + \
+                           Notifications.footer(language_artist)
+
+        # Email - Body generator for customer
+
+        if language_customer == "en":
+            context_body['title'] = 'Done! You have hired ' + offer.paymentPackage.portfolio.artisticName
+        elif language_customer == "es":
+            context_body['title'] = '¡Hecho! Has contratado a ' + offer.paymentPackage.portfolio.artisticName
+        context_body['event_payment_code'] = offer.paymentCode
+
+        if language_customer == 'es':
+            context_body['system_configuration_terms_and_conditions'] = system_configuration.termsText_es
+        elif language_customer == 'en':
+            context_body['system_configuration_terms_and_conditions'] = system_configuration.termsText_en
+
+        body_customer_html = translate_render(language_customer, "BODY_PENDING_TO_CONTRACT_MADE", context_body) + \
+                             Notifications.footer(language_customer)
+
+        # Common email content
+
+        from_email = "Grooving <no-reply@grupogrooving.com>"
+        body_content_type = "html"
 
         # Artist mail
 
-        context_body['title'] = 'Congratulations! You have been hired by ' + \
-                                offer.eventLocation.customer.user.get_full_name()
-        # email.to = ['utri1990@gmail.com']
-        email.to = [offer.paymentPackage.portfolio.artist.user.email]
-        email.body = render_to_string("body_pending_to_contract_made.html", context_body) + Notifications.footer()
-        email.send()  # Sending email
+        to = [offer.paymentPackage.portfolio.artist.user.email]
+        subject = ""
+
+        if language_artist == 'en':
+            subject = "Offer accepted"
+        elif language_artist == 'es':
+            subject = "Oferta aceptada"
+
+        pdf_file_artist = HTML(string=pdf_html_artist).write_pdf()  # Generating PDF
+        list_attachments = [('contract.pdf', pdf_file_artist, 'application/pdf')]
+
+        EmailMessageThread.send_mail_with_attachments(from_email, to, body_artist_html, subject, body_content_type,
+                                                      list_attachments, True)
 
         # Customer mail
 
-        context_body['title'] = 'Done! You have hired ' + offer.paymentPackage.portfolio.artisticName
-        context_body['event_payment_code'] = offer.paymentCode
-        # email.to = ['utri1990@gmail.com']
-        email.to = [offer.eventLocation.customer.user.email]
-        email.body = render_to_string("body_pending_to_contract_made.html", context_body) + Notifications.footer()
+        subject = ""
 
-        email.send()  # Sending email
+        if language_customer == 'en':
+            subject = "Offer accepted"
+        elif language_customer == 'es':
+            subject = "Oferta aceptada"
+
+        to = [offer.eventLocation.customer.user.email]
+        pdf_file_customer = HTML(string=pdf_html_customer).write_pdf()  # Generating PDF
+        list_attachments = [('contract.pdf', pdf_file_customer, 'application/pdf')]
+        EmailMessageThread.send_mail_with_attachments(from_email, to, body_customer_html, subject, body_content_type,
+                                                      list_attachments, True)
 
     @staticmethod
     def send_email_contract_made_to_payment_made(offer_id):
 
         # Entity database objects (necessary from template & email)
 
-        offer = Offer.objects.get(pk=offer_id)
+        offer = Offer.objects.filter(pk=offer_id).first()
         system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
+        language_customer = get_language(offer.eventLocation.customer.user)
 
-        # Template - Artist pdf
+        # Data to generate email body & pdf
 
         artist_benefit = round(offer.price - offer.price * (system_configuration.profit / 100), 2)
 
@@ -209,50 +406,75 @@ class Notifications:
             'event_duration': offer.hours,
             'event_total': offer.price,
             'event_currency': offer.currency,
-            'system_configuration_terms_and_conditions': system_configuration.termsText,
             'system_configuration_profit': system_configuration.profit.normalize(),
             'invoice_grooving_benefit': round(offer.price * (system_configuration.profit / 100), 2),
             'invoice_artist_benefit': artist_benefit,
         }
 
-        pdf_html = render_to_string("pdf_contract_made_to_payment_made.html", context_pdf)
+        if language_artist == 'es':
+            context_pdf['system_configuration_terms_and_conditions'] = system_configuration.termsText_es
+        elif language_artist == 'en':
+            context_pdf['system_configuration_terms_and_conditions'] = system_configuration.termsText_en
 
-        # Email
+        # Common email content
 
-        email = EmailMessage()
-        email.from_email = 'Grooving <no-reply@grupogrooving.com>'
-        email.content_subtype = 'html'
+        from_email = "Grooving <no-reply@grupogrooving.com>"
+        body_content_type = "html"
 
         # Customer mail
 
-        email.subject = offer.paymentPackage.portfolio.artisticName + ' performance is over'
-        # email.to = ['utri1990@gmail.com']
-        email.to = [offer.eventLocation.customer.user.email]
-        email.body = '<p>We hope you enjoyed to ' + offer.paymentPackage.portfolio.artisticName + ' performance.<p>'\
-                     + Notifications.footer()
+        to = [offer.eventLocation.customer.user.email]
+        subject = ""
+        body = ""
 
-        email.send()  # Sending email
+        if language_customer == "en":
+            subject = offer.paymentPackage.portfolio.artisticName + " performance is over"
+            body = "<p>We hope you enjoyed to " + offer.paymentPackage.portfolio.artisticName + " performance.<p>" \
+                   + Notifications.footer(language_customer)
+        elif language_customer == "es":
+            subject = "¡" + offer.paymentPackage.portfolio.artisticName + " ha finalizado su actuación!"
+            body = "<p>Esperamos que haya disfrutado del espectáculo de " \
+                   + offer.paymentPackage.portfolio.artisticName + ".<p>" \
+                   + Notifications.footer(language_customer)
+
+        EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
 
         # Artist mail
 
-        email.subject = 'The payment has been realized'
-        # email.to = ['utri1990@gmail.com']
-        email.to = [offer.paymentPackage.portfolio.artist.user.email]
+        to = [offer.paymentPackage.portfolio.artist.user.email]
+        subject = ""
+        body = ""
+
+        if language_artist == "en":
+            subject = "The payment has been realized"
+            body = "<h1>You have received the payment in your account </h1>" \
+                   "<p>You can see the details on pdf attachment.<p>" + Notifications.footer(language_artist)
+        elif language_artist == "es":
+            subject = "El pago ha sido realizado"
+            body = "<h1>Has recibido el pago en tu cuenta</h1>" \
+                   "<p>Puedes ver los detalles en el pdf adjunto.<p>" + Notifications.footer(language_artist)
+
+        # Email - PDF generator to artist
+
+        pdf_html = translate_render(language_artist, "PDF_CONTRACT_MADE_TO_PAYMENT_MADE", context_pdf)
         pdf_file = HTML(string=pdf_html).write_pdf()
-        email.body = '<h1>You have received the payment in your account </h1>' \
-                     '<p>You can see the details on pdf attachment.<p>' + Notifications.footer()
-        email.attach('contract.pdf', pdf_file, 'application/pdf')
-        email.send()  # Sending email
+
+        list_attachments = [('contract.pdf', pdf_file, 'application/pdf')]
+
+        EmailMessageThread.send_mail_with_attachments(from_email, to, body, subject, body_content_type,
+                                                      list_attachments, True)
 
     @staticmethod
     def send_email_contract_made_to_cancelled_artist(offer_id):
 
         # Entity database objects (necessary from template & email)
 
-        offer = Offer.objects.get(pk=offer_id)
+        offer = Offer.objects.filter(pk=offer_id).first()
         system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
+        language_customer = get_language(offer.eventLocation.customer.user)
 
-        # Template - Artist pdf
+        # Data to generate pdf
 
         artist_benefit = round(offer.price - offer.price * (system_configuration.profit / 100), 2)
 
@@ -267,49 +489,70 @@ class Notifications:
             'event_duration': offer.hours,
             'event_total': offer.price,
             'event_currency': offer.currency,
-            'system_configuration_terms_and_conditions': system_configuration.termsText,
             'system_configuration_profit': system_configuration.profit.normalize(),
             'invoice_grooving_benefit': round(offer.price * (system_configuration.profit / 100), 2),
             'invoice_customer_benefit': artist_benefit,
         }
 
-        pdf_html = render_to_string("pdf_contract_made_to_cancelled_artist.html", context_pdf)
+        if language_customer == 'es':
+            context_pdf['system_configuration_terms_and_conditions'] = system_configuration.termsText_es
+        elif language_customer == 'en':
+            context_pdf['system_configuration_terms_and_conditions'] = system_configuration.termsText_en
+
+        pdf_html = translate_render(language_customer, "PDF_CONTRACT_MADE_TO_CANCELLED_ARTIST", context_pdf)
 
         # Email
 
-        email = EmailMessage()
-        email.from_email = 'Grooving <no-reply@grupogrooving.com>'
-        email.content_subtype = 'html'
+        from_email = "Grooving <no-reply@grupogrooving.com>"
+        body_content_type = "html"
 
         # Artist mail
 
-        email.subject = 'The performance has been cancelled by you'
-        # email.to = ['utri1990@gmail.com']
-        email.to = [offer.paymentPackage.portfolio.artist.user.email]
-        email.body = '<p>We are sorry that that this decision.</>' \
-                     '<p>See you soon!<p>' + Notifications.footer()
-        email.send()  # Sending email
+        to = [offer.paymentPackage.portfolio.artist.user.email]
+        subject = ""
+        body = ""
+
+        if language_artist == "en":
+            subject = "The performance has been cancelled by you"
+            body = "<p>We are sorry that this decision.</p><p>See you soon!<p>" + Notifications.footer(language_artist)
+        elif language_artist == "es":
+            subject = "Has cancelado la actuación"
+            body = "<p>Sentimos que hayas tomado esta decisión.</p><p>¡Nos vemos pronto!<p>" + \
+                   Notifications.footer(language_artist)
+
+        EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
 
         # Customer mail
 
-        email.subject = offer.paymentPackage.portfolio.artisticName + 'has cancelled the performance'
-        # email.to = ['utri1990@gmail.com']
-        email.to = [offer.eventLocation.customer.user.email]
+        to = [offer.eventLocation.customer.user.email]
+
+        if language_customer == "en":
+            subject = "The artist has cancelled the performance"
+            body = "<p>We are sorry that the performance has been cancelled. We proceed to return the money to your" \
+                   " account.</p>" + Notifications.footer(language_customer)
+        elif language_customer == "es":
+            subject = "El artista ha cancelado la actuación"
+            body = "<p>Sentimos que la actuación haya sido cancelada. Procedemos a devolver el pago a su cuenta.</p>" + \
+                   Notifications.footer(language_customer)
+
         pdf_file = HTML(string=pdf_html).write_pdf()
-        email.body = '<p>We are sorry that the performance has been cancelled. We proceed to return the money to your' \
-                     ' account.</p>' + Notifications.footer()
-        email.attach('invoice.pdf', pdf_file, 'application/pdf')
-        email.send()  # Sending email
+
+        list_attachments = [('invoice.pdf', pdf_file, 'application/pdf')]
+
+        EmailMessageThread.send_mail_with_attachments(from_email, to, body, subject, body_content_type,
+                                                      list_attachments, True)
 
     @staticmethod
     def send_email_contract_made_to_cancelled_customer(offer_id):
 
         # Entity database objects (necessary from template & email)
 
-        offer = Offer.objects.get(pk=offer_id)
+        offer = Offer.objects.filter(pk=offer_id).first()
         system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
+        language_customer = get_language(offer.eventLocation.customer.user)
 
-        # Template - Artist pdf
+        # Data to generate pdf
 
         artist_benefit = round(offer.price - offer.price * (system_configuration.profit / 100), 2)
 
@@ -324,36 +567,151 @@ class Notifications:
             'event_duration': offer.hours,
             'event_total': offer.price,
             'event_currency': offer.currency,
-            'system_configuration_terms_and_conditions': system_configuration.termsText,
             'system_configuration_profit': system_configuration.profit.normalize(),
             'invoice_grooving_benefit': round(offer.price * (system_configuration.profit / 100), 2),
             'invoice_customer_benefit': artist_benefit,
         }
 
-        pdf_html = render_to_string('pdf_contract_made_to_cancelled_customer.html', context_pdf)
+        if language_customer == 'es':
+            context_pdf['system_configuration_terms_and_conditions'] = system_configuration.termsText_es
+        elif language_customer == 'en':
+            context_pdf['system_configuration_terms_and_conditions'] = system_configuration.termsText_en
+
+        pdf_html = translate_render(language_customer, "PDF_CONTRACT_MADE_TO_CANCELLED_CUSTOMER", context_pdf)
 
         # Email
 
-        email = EmailMessage()
-        email.from_email = 'Grooving <no-reply@grupogrooving.com>'
-        email.content_subtype = 'html'
+        from_email = "Grooving <no-reply@grupogrooving.com>"
+        body_content_type = "html"
 
         # Artist mail
 
-        email.subject = 'The performance has been cancelled by ' + offer.eventLocation.customer.user.get_full_name()
-        # email.to = ['utri1990@gmail.com']
-        email.to = [offer.paymentPackage.portfolio.artist.user.email]
-        email.body = '<p>We are sorry that the performance has been cancelled.</p>' \
-                     '<p>See you soon!</p>' + Notifications.footer()
-        email.send()  # Sending email
+        to = [offer.paymentPackage.portfolio.artist.user.email]
+        body = ""
+        subject = ""
+
+        if language_artist == "en":
+            subject = "The performance has been cancelled by " + offer.eventLocation.customer.user.get_full_name()
+            body = "<p>We are sorry that the performance has been cancelled.</p>" \
+                   "<p>See you soon!</p>" + Notifications.footer(language_artist)
+        elif language_artist == "es":
+            subject = "El espectáculo ha sido cancelado por  " + offer.eventLocation.customer.user.get_full_name()
+            body = "<p>Sentimos que la actuación haya sido cancelada.</p>" \
+                   "<p>¡Nos vemos pronto!</p>" + Notifications.footer(language_artist)
+
+        EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
 
         # Customer mail
 
-        email.subject = 'You cancelled the performance'
-        # email.to = ['utri1990@gmail.com']
-        email.to = [offer.eventLocation.customer.user.email]
+        to = [offer.eventLocation.customer.user.email]
+
+        if language_customer == "en":
+            subject = 'You cancelled the performance'
+            body = '<p>We are sorry that this decision. We proceed to return the money to your account.</p>' + \
+                   Notifications.footer(language_customer)
+        elif language_customer == "es":
+            subject = 'Has cancelado la actuación'
+            body = '<p>Sentimos que hayas tomado esta decisión. Procederemos a devolver el dinero a su cuenta.</p>' + \
+                   Notifications.footer(language_customer)
+
         pdf_file = HTML(string=pdf_html).write_pdf()
-        email.body = '<p>We are sorry that this decision. We proceed to return the money to your account.</p>' + \
-                     Notifications.footer()
-        email.attach('invoice.pdf', pdf_file, 'application/pdf')
-        email.send()  # Sending email
+        list_attachments = [('invoice.pdf', pdf_file, 'application/pdf')]
+
+        EmailMessageThread.send_mail_with_attachments(from_email, to, body, subject, body_content_type,
+                                                      list_attachments, True)
+
+    @staticmethod
+    def send_notification_for_breach_security(subject, breach_explanation):
+
+        # Get all system emails
+
+        email_system_configuration_list = ['', SystemConfiguration.corporateEmail, SystemConfiguration.reportEmail]
+
+        artist_list = Artist.objects.all().distinct('user__email'). \
+            exclude(user__email__in=email_system_configuration_list)
+        customer_list = Customer.objects.all().distinct('user__email'). \
+            exclude(user__email__in=email_system_configuration_list)
+
+        for artist in artist_list:
+            from_email = "Grooving <no-reply@grupogrooving.com>"
+            to = [artist.user.email]
+            body_content_type = "html"
+
+            custom_body = translate(artist.language, "BREACH_NOTIFICATION_BODY") + "<p>" + breach_explanation + "</p>" + \
+                          Notifications.footer(artist.language)
+
+            EmailMessageThread.send_mail(from_email, to, custom_body, subject, body_content_type, True)
+
+        for customer in customer_list:
+            from_email = "Grooving <no-reply@grupogrooving.com>"
+            to = [customer.user.email]
+            body_content_type = "html"
+
+            custom_body = translate(customer.language, "BREACH_NOTIFICATION_BODY") + "<p>" + breach_explanation + "</p>" + \
+                          Notifications.footer(customer.language)
+
+            EmailMessageThread.send_mail(from_email, to, custom_body, subject, body_content_type, True)
+
+    @staticmethod
+    def send_email_ban_unban_users(user_id):
+
+        # Entity database objects (necessary from template & email)
+
+        user = User.objects.filter(pk=user_id).first()
+        system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        language = get_language(user)
+
+        # Email
+
+        from_email = "Grooving <no-reply@grupogrooving.com>"
+        to = [user.email]
+        body_content_type = "html"
+        subject = ""
+        body = ""
+
+        if user.is_active:
+            subject = translate(language, "BAN_UNBAN_USERS_ACTIVE_SUBJECT")
+            if language == "en":
+                body = "<p>Hello,</p>" + \
+                       "<p>Thanks for contacting Grooving Support. We have activated your account " + \
+                       "again.</p> <p>We apologize for the inconvenience.</p>"
+            elif language == "es":
+                body = "<p>Hola,</p>" + \
+                       "<p>Gracias por contactar con el equipo de Grooving. Hemos activado su cuenta " + \
+                       "de nuevo.</p>" + \
+                       "<p>Disculpe las molestias por lo ocurrido.</p>"
+        else:
+            subject = translate(language, "BAN_UNBAN_USERS_INACTIVE_SUBJECT")
+            if language == "en":
+                body = "<p>Hola,</p>" + \
+                       "<p>Esta cuenta ha sido temporalmente desactivada por violación de los Terminos " + \
+                       "y condiciones de Grooving. Por favor, contacte con el equipo de grooving en " + \
+                        system_configuration.reportEmail + "</p>" + Notifications.footer(language)
+            elif language == "es":
+                body = "<p>Hello,</p>" + \
+                       "<p>This account has been temporaly banned to a violation of ours Terms & " + \
+                       "conditions. Please contact to Grooving support at " + \
+                       system_configuration.reportEmail + "</p>"
+
+            body = translate(language, "BAN_UNBAN_USERS_INACTIVE_BODY") + Notifications.footer(language)
+
+        EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
+
+    @staticmethod
+    def send_email_right_to_be_forgotten(email, language):
+
+        # Email
+
+        from_email = "Grooving <no-reply@grupogrooving.com>"
+        to = [email]
+        body_content_type = "html"
+        subject = ""
+
+        if language == "en":
+            subject = "The request to the right to be forgotten has been applied correctly"
+        elif language == "es":
+            subject = "Su solicitud de derecho al olvido ha sido realizado correctamente"
+
+        body = translate(language, "RIGHT_TO_BE_FORGOTTEN_BODY") + Notifications.footer(language)
+
+        EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
