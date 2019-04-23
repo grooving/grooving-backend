@@ -21,11 +21,16 @@ uritemplate==3.0.0
 urllib3==1.24.1
 gunicorn
 django_heroku
-Whoosh == 2.7.4
 captain-pycard
 validate-email-address
 Weasyprint==46
 Distance
 braintree==3.52.0
+channels== 2.1.7
+channels-redis==2.4.0
+aioredis==1.2.0
+asgiref==2.3.2
+uvicorn
 cairocffi
 pangocffi
+

@@ -93,6 +93,17 @@ def isPositivefloat(string):
         return False
 
 
+def isPositiveInteger(string):
+    try:
+        int(string)
+        if '-' not in string:
+            return True
+        else:
+            return False
+    except ValueError:
+        return False
+
+
 def get_artist_or_customer_by_user(user):
 
     if user:
@@ -107,7 +118,6 @@ def get_artist_or_customer_by_user(user):
                 return customer
 
     return None
-
 
 def check_accept_language(request):
     language = ""
