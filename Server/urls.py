@@ -119,5 +119,5 @@ urlpatterns = [
     url(r'^admin/moneyEarned/$', GetMoneyEarned.as_view()),
     url(r'^admin/totalMoneyLastMonth/$', GetTotalMoneyLastMonth.as_view()),
     url(r'^admin/moneyEarnedLastMonth/$', GetMoneyEarnedLastMonth.as_view()),
-    url(r'^emails/downloadPersonalData/$', DownloadPersonalData.as_view()),
+    url(r'^downloadPersonalData/$', DownloadPersonalData.as_view()),
 ]
