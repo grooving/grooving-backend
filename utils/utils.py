@@ -107,3 +107,19 @@ def get_artist_or_customer_by_user(user):
                 return customer
 
     return None
+
+
+def check_accept_language(request):
+    language = ""
+
+    try:
+        request_language = request.META['HTTP_ACCEPT_LANGUAGE']
+
+        if request_language.find("en") != -1:
+            language = "en"
+        elif request_language.find("es") != -1:
+            language = "es"
+    except:
+        Assertions.assert_true_raise403(False, {"error": "Language not found"})
+
+    return language
