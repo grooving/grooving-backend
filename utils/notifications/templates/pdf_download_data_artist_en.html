@@ -147,6 +147,11 @@
 <h2>Offers received</h2>
 {% if artist_offers %}
     {% for offer in artist_offers %}
+        {% if offer.chat.json %}
+            Lo ve
+        {% else %}
+            No lo ve
+        {% endif %}
         <h3>Offer {{ forloop.counter }}</h3>
         <table>
             <tr>
@@ -247,6 +252,24 @@
                 {% endif %}
             </tr>
         </table>
+        {% if offer.chat.json %}
+            <h4>Conversaciones</h4>
+
+            {% for message in offer.chat.json.messages %}
+                <table>
+                    <tr>
+                        <td><b>Sent by</b>: {{ message.json.username }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Date</b>: {{ message.json.date }} a las {{ message.json.hour }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Message</b>: {{ message.json.message }}</td>
+                    </tr>
+                </table>
+                <br/>
+            {% endfor %}
+        {% endif %}
         <br/>
     {% endfor %}
 {% else %}

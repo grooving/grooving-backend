@@ -85,7 +85,7 @@
                 </tr>
 
                 {% if offer.status == "PAYMENT_MADE" and offer.rating %}
-                </table>
+                    </table>
                     <br/>
                     <table>
                     {% if offer.rating.score %}
@@ -99,8 +99,27 @@
                         </tr>
                     {% endif %}
                 {% endif %}
-            </table>
+                </table>
             <br/>
+
+            {% if offer.chat.json %}
+                <h4>Conversaciones</h4>
+
+                {% for message in offer.chat.json.messages %}
+                    <table>
+                        <tr>
+                            <td><b>Enviado por</b>: {{ message.json.username }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Fecha</b>: {{ message.json.date }} a las {{ message.json.hour }}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Mensaje</b>: {{ message.json.message }}</td>
+                        </tr>
+                    </table>
+                    <br/>
+                {% endfor %}
+            {% endif %}
         {% endfor %}
     {% endfor %}
 {% else %}
