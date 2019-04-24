@@ -38,6 +38,7 @@ class SendMailDataBreach(generics.CreateAPIView):
 
 
 class DownloadPersonalData(generics.CreateAPIView):
+    serializer_class = NotificationSerializer
 
     def post(self, request, *args, **kwargs):
         language = check_accept_language(request)
