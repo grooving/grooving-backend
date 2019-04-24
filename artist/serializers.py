@@ -123,12 +123,12 @@ class ArtistSerializer(serializers.ModelSerializer):
                                    first_name=json.get('first_name'), last_name=json.get('last_name'),
                                    email=json.get('email'))
 
-        portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'))
+        artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'), user=user)
+
+        portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'), artist=artist)
 
         Calendar.objects.create(days=[], portfolio=portfolio1)
 
-        artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'),
-                                       portfolio=portfolio1, user=user)
         return artist
 
     @staticmethod
