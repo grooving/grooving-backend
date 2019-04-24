@@ -2,10 +2,8 @@ from django.utils import timezone
 from Grooving.models import SystemConfiguration
 from rest_framework import generics
 from rest_framework.response import Response
-import utils.Assertions
 from utils.Assertions import Assertions
-from utils.authentication_utils import get_admin
-from utils.notifications.notifications import Notifications
+from Grooving.models import Artist, Customer
 
 
 def auto_update_old_offers(offers):
@@ -48,13 +46,13 @@ class TermsAndConditions(generics.GenericAPIView):
 
     @staticmethod
     def get(request):
-        language = request.META['HTTP_ACCEPT_LANGUAGE']
-        result = None
-        print(language)
+        language = check_accept_language(request)
 
-        if language.find("en") != -1:
+        result = None
+
+        if language == "en":
             result = SystemConfiguration.objects.all().first().termsText_en
-        elif language.find("es") != -1:
+        elif language == "es":
             result = SystemConfiguration.objects.all().first().termsText_es
 
         return Response(result)
@@ -64,13 +62,13 @@ class Privacy(generics.GenericAPIView):
 
     @staticmethod
     def get(request):
-        language = request.META['HTTP_ACCEPT_LANGUAGE']
-        result = None
-        print(language)
+        language = check_accept_language(request)
 
-        if language.find("en") != -1:
+        result = None
+
+        if language == "en":
             result = SystemConfiguration.objects.all().first().privacyText_en
-        elif language.find("es") != -1:
+        elif language == "es":
             result = SystemConfiguration.objects.all().first().privacyText_es
 
         return Response(result)
@@ -80,13 +78,13 @@ class AboutUs(generics.GenericAPIView):
 
     @staticmethod
     def get(request):
-        language = request.META['HTTP_ACCEPT_LANGUAGE']
-        result = None
-        print(language)
+        language = check_accept_language(request)
 
-        if language.find("en") != -1:
+        result = None
+
+        if language == "en":
             result = SystemConfiguration.objects.all().first().aboutUs_en
-        elif language.find("es") != -1:
+        elif language == "es":
             result = SystemConfiguration.objects.all().first().aboutUs_es
 
         return Response(result)
@@ -129,3 +127,22 @@ def get_artist_or_customer_by_user(user):
 
     return None
 
+
+def check_accept_language(request):
+    language = ""
+
+    try:
+        request_language = request.META['HTTP_ACCEPT_LANGUAGE']
+
+        if request_language.find("en") != -1:
+            language = "en"
+        elif request_language.find("es") != -1:
+            language = "es"
+        else:
+            raise ValueError("This language is not supported")
+    except ValueError as e:
+        Assertions.assert_true_raise403(False, {"error": e.args[0]})
+    except:
+        Assertions.assert_true_raise403(False, {"error": "Language not found"})
+
+    return language
