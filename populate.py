@@ -30,7 +30,7 @@ def save_data():
         appName='Grooving',
         slogan='Connecting artist with you',
         logo='',
-        privacyText_es="<h2>Introduction</h2>" +
+        privacyText_en="<h2>Introduction</h2>" +
                     "<p>At Grooving, accessible from https://grooving-frontend-d3.herokuapp.com, one of our main " +
                     "priorities is the privacy of our visitors. This Privacy Policy document contains types of " +
                     "information that is collected and recorded by Grooving and how we use it.</p>" +
@@ -81,7 +81,7 @@ def save_data():
                     "<h2>Consent</h2>" +
                     "<p>By using our website, you hereby consent to our Privacy Policy and agree to its Terms and " +
                     "Conditions.</p>",
-        privacyText_en =
+        privacyText_es =
                     "<h2>Introducción</h2>" +
                     "<p>En Grooving, accesible desde https://grooving-frontend-d3.herokuapp.com, una de nuestras " +
                     "principales prioridades es la privacidad de nuestros visitantes. Este documento de Política de " +
@@ -134,11 +134,11 @@ def save_data():
                     "<h2>Consentimiento</h2>" +
                     "<p>Al utilizar nuestro sitio web, usted acepta nuestra Política de privacidad y acepta sus " +
                     "Términos y condiciones.</p>",
-        aboutUs_es="<p> At Grooving, we all come to work every day because we want to solve the biggest " +
+        aboutUs_en="<p> At Grooving, we all come to work every day because we want to solve the biggest " +
                    "problems for the artists: empower artists by giving visibility and improving their " +
                    "monetization. What is our mission? Simplifying the search and hiring made easy.</p>" +
                    "<p>With all this, we can ensure that <b>Grooving makes the difference</b>.</p>",
-        aboutUs_en="<h2>Sobre nosotros</h2>" +
+        aboutUs_es="<h2>Sobre nosotros</h2>" +
                    "<p>En Grooving, trabajamos todos los días porque queremos resolver los grandes problemas a los " +
                    "que se enfrentan los artistas mejorando su visibilidad y monetización de su actividad. ¿Cómo lo " +
                    "conseguimos? Simplificando la búsqueda y la contratación de manera fácil, sencilla y fiable.</p>" +
