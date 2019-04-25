@@ -8,7 +8,33 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ArtisticGender
-        fields = ('id', 'name', 'parentGender', 'portfolio_set')
+        fields = ('id', 'name', 'parentGender')
+
+    def save(self, pk=None, logged_user=None):
+
+        if self.initial_data.get('id') is None and pk is None:
+            genre = ArtisticGender()
+            genre = self._service_create(self.initial_data,genre)
+            genre.save()
+            return genre
+        else:
+            return 0
+
+    @staticmethod
+    def _service_create(json: dict, genre: ArtisticGender):
+
+        Assertions.assert_true_raise401(ArtisticGender.objects.filter(name=json.get('name')).first() is None, {'error': 'ERROR_GENRE_EXISTS'})
+
+        genre.name = json.get('name')
+
+        Assertions.assert_true_raise401(ArtisticGender.objects.filter(id=json.get('parentGender')).first(),
+                                        {'error': 'ERROR_GENRE__NOT_EXIST'})
+
+        genre.parentGender = ArtisticGender.objects.filter(id=json.get('parentGender')).first()
+
+        genre.save()
+
+        return genre
 
 
 class ShortArtisticGenderSerializer(serializers.ModelSerializer):
