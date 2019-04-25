@@ -8,7 +8,7 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ArtisticGender
-        fields = ('id', 'name', 'parentGender', 'portfolio_set')
+        fields = ('id', 'name', 'parentGender')
 
 
 class ShortArtisticGenderSerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class SearchGenreSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_tree():
         parent = SearchGenreSerializer._get_parent_of_all()
-        Assertions.assert_true_raise404(parent, "Parent zone not found")
+        Assertions.assert_true_raise404(parent, {'error', 'Parent zone not found'})
         return SearchGenreSerializer._get_childs_genre(parent, [])[0]
 
     @staticmethod

@@ -1,7 +1,7 @@
 from Grooving.models import ArtisticGender,Portfolio
 
 from django.core.exceptions import PermissionDenied
-from utils.authentication_utils import get_logged_user,get_user_type
+from utils.authentication_utils import get_logged_user,get_user_type, get_admin_2
 from rest_framework.response import Response
 from rest_framework import generics
 from .serializers import ArtisticGenderSerializer, ShortArtisticGenderSerializer,SearchGenreSerializer
@@ -20,7 +20,7 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
         try:
             return ArtisticGender.objects.get(pk=pk)
         except ArtisticGender.DoesNotExist:
-            raise Assertions.assert_true_raise404(False, {'error': 'Artistic gender not found'})
+            raise Assertions.assert_true_raise404(False, {'error': 'ERROR_ARTISTIC_GENRE_NOT_FOUND'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:
@@ -29,21 +29,23 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
         serializer = ArtisticGenderSerializer(portfolio)
         return Response(serializer.data)
 
-    def put(self, request, pk=None):
+    def put(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
-        artisticGender = self.get_object(pk)
-        loggedUser = get_logged_user(request)
-        type = get_user_type(loggedUser)
-        if loggedUser is not None and type == "Artist":
+
+        try:
+            artisticGender = self.get_object(pk)
+            loggedUser = get_admin_2(request)
+            Assertions.assert_true_raise403(loggedUser, {'error': 'ERROR_NOT_AN_ADMIN'})
             serializer = ArtisticGenderSerializer(artisticGender, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
             else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            raise PermissionDenied("The artisticGender is not for yourself")
+                Assertions.assert_true_raise400(False, {'error': 'ERROR_BAD_REQUEST'})
+        except ArtisticGender.DoesNotExist:
+            Assertions.assert_true_raise404(False, {'error': 'ERROR_ARTISTIC_GENRE_NOT_FOUND'})
+
 
     def delete(self, request, pk=None, format=None):
         if pk is None:
