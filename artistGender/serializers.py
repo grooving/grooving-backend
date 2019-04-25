@@ -18,7 +18,17 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
             genre.save()
             return genre
         else:
-            return 0
+
+            id_genre = (self.initial_data.get('id'), pk)[pk is not None]
+
+            genre_id_control = str(self.initial_data.get('id'))
+
+            Assertions.assert_true_raise400(genre_id_control.isdigit(), {'error': 'ERROR_INCORRECT_ID'})
+
+            genre = ArtisticGender.objects.filter(pk=id_genre).first()
+            genre = self._service_update(self.initial_data, genre)
+            genre.save()
+            return genre
 
     @staticmethod
     def _service_create(json: dict, genre: ArtisticGender):
@@ -29,6 +39,51 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
 
         Assertions.assert_true_raise401(ArtisticGender.objects.filter(id=json.get('parentGender')).first(),
                                         {'error': 'ERROR_GENRE__NOT_EXIST'})
+
+        genre.parentGender = ArtisticGender.objects.filter(id=json.get('parentGender')).first()
+
+        genre.save()
+
+        return genre
+
+    @staticmethod
+    def _service_update(json: dict, genre: ArtisticGender):
+
+        genre_id_control = str(json.get('id'))
+
+        Assertions.assert_true_raise400(genre_id_control.isdigit(), {'error': 'ERROR_INCORRECT_ID'})
+
+        try:
+            genre = ArtisticGender.objects.get(pk=json.get('id'))
+        except ArtisticGender.DoesNotExist:
+            Assertions.assert_true_raise400(genre, {'error': 'ERROR_INCORRECT_ID'})
+
+
+        # Se busca si un artisticGenre con el nombre pedido ya existe
+
+        genre_name_control = ArtisticGender.objects.filter(name=json.get('name')).first()
+
+        # Es posible que sólo se quiera cambiar el parent, asi que es necesario ver si el genre con ese nombre y el que estamos editando son el mismo
+
+        if genre_name_control is not None and genre_name_control.id != json.get('id'):
+            # Si tienen el mismo nombre y son distintos... ¡tenemos un problema! Levantamos excepción.
+            Assertions.assert_true_raise400(ArtisticGender.objects.filter(name=json.get('name')).first() is None,
+                                            {'error': 'ERROR_GENRE_EXISTS'})
+
+        Assertions.assert_true_raise400(json.get('name') != '',
+                                        {'error': 'ERROR_GENRE_NULL_NAME'})
+
+        Assertions.assert_true_raise400(json.get('name') is not None,
+                                        {'error': 'ERROR_GENRE_NULL_NAME'})
+
+        parentGender_control = str(json.get('parentGender'))
+
+        Assertions.assert_true_raise400(parentGender_control.isdigit(), {'error': 'ERROR_NO_PARENT_GENRE_ID'})
+
+        Assertions.assert_true_raise404(ArtisticGender.objects.filter(id=json.get('parentGender')).first(),
+                                        {'error': 'ERROR_PARENT_GENRE_NOT_FOUND'})
+
+        genre.name = json.get('name')
 
         genre.parentGender = ArtisticGender.objects.filter(id=json.get('parentGender')).first()
 

@@ -1,6 +1,8 @@
 spanish = {
     "ERROR_ARTISTIC_GENRE_NOT_FOUND": "Este género artístico no existe",
-
+    "ERROR_NO_PARENT_GENRE_ID": "No se ha proporcionado un id de un género artístico padre válido.",
+    "ERROR_GENRE_NULL_NAME": "Debes dar un nombre para el género artístico",
+    "ERROR_PARENT_GENRE_NOT_FOUND": "Este género artístico padre no existe",
     "ERROR_GENRE_DOESNT_EXIST": "No existe un genro padre con esa id",
     "ERROR_GENRE_EXISTS": "Existe un genro con ese nombre",
     "ERROR_NO_USER": "No hay usuarios de este tipo",
@@ -15,7 +17,10 @@ spanish = {
 
 english = {
     "ERROR_ARTISTIC_GENRE_NOT_FOUND": "Este género artístico no existe",
+    "ERROR_NO_PARENT_GENRE_ID": "The given parent gender is not valid.",
+    "ERROR_GENRE_NULL_NAME": "You must provide a name for the genre.",
     "ERROR_GENRE_DOESNT_EXIST": "A parent Genre doesnt exist with that id",
+    "ERROR_PARENT_GENRE_NOT_FOUND": "This parent genre does not exist.",
     "ERROR_GENRE_EXISTS": "A Genre with that name already exists",
     "ERROR_NO_USER": "There are no users of this type",
     "ERROR_NOT_LOGGED_IN": "You must be logged in to access this page.",

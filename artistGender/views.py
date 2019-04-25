@@ -40,7 +40,8 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
             loggedUser = get_admin_2(request)
             Assertions.assert_true_raise403(loggedUser, {'error': 'ERROR_NOT_AN_ADMIN'})
             serializer = ArtisticGenderSerializer(artisticGender, data=request.data, partial=True)
-            if serializer.is_valid():
+            if serializer.validate(request.data):
+                serializer.is_valid()
                 serializer.save()
                 return Response(serializer.data)
             else:
