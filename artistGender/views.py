@@ -48,9 +48,27 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
     def delete(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
+
+        admin = get_admin(request)
+
+        Assertions.assert_true_raise400(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+
         artisticGender = self.get_object(pk)
+
+        children = ArtisticGender.objects.filter(parentGender=artisticGender)
+
+        for genre in children:
+            self.cascadedelete(genre)
+
         artisticGender.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def cascadedelete(self, genre : ArtisticGender):
+
+        children = ArtisticGender.objects.filter(parentGender=genre)
+
+        for genre in children:
+            self.cascadedelete(genre)
 
 
 class CreateArtisticGender(generics.CreateAPIView):
