@@ -33,7 +33,7 @@ from zone.views import ZoneManager, CreateZone, ListZones
 from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
 from utils.utils import TermsAndConditions, Privacy, AboutUs
-from braintrees.views import BraintreeViews
+from braintrees.views import BraintreeViews,PayPaypal,CreatePaypal
 from emails.views import SendMailDataBreach
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
@@ -118,5 +118,8 @@ urlpatterns = [
     url(r'^admin/totalMoney/$', GetTotalMoney.as_view()),
     url(r'^admin/moneyEarned/$', GetMoneyEarned.as_view()),
     url(r'^admin/totalMoneyLastMonth/$', GetTotalMoneyLastMonth.as_view()),
-    url(r'^admin/moneyEarnedLastMonth/$', GetMoneyEarnedLastMonth.as_view())
+    url(r'^admin/moneyEarnedLastMonth/$', GetMoneyEarnedLastMonth.as_view()),
+
+    url(r'^payPaypal/$', PayPaypal.as_view()),
+    url(r'^createPaypal/$', CreatePaypal.as_view())
 ]
