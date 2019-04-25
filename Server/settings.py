@@ -50,7 +50,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
     'rest_framework.authtoken',
-    'login'
+    'login',
+    'channels',
+    'chat'
 ]
 
 REST_FRAMEWORK = {
@@ -83,9 +85,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'utils.CorsMiddleware.CorsMiddleware',
 
+
     #whitenoise middleware for static files. #http://sayhelloworld.co/using-white-noise-to-server-django-static-files-on-heroku/
     #https://stackoverflow.com/questions/43271275/django-restrict-static-folder-access-to-non-logged-in-users
 ]
+
 
 ROOT_URLCONF = 'Server.urls'
 
@@ -108,6 +112,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Server.wsgi.application'
+ASGI_APPLICATION = 'Server.routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        },
+    },
+}
 
 
 # Database
