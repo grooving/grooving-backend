@@ -1,10 +1,12 @@
 from Grooving.models import ArtisticGender,Portfolio
 
 from django.core.exceptions import PermissionDenied
+
 from utils.authentication_utils import get_logged_user,get_user_type, get_admin_2
+from utils.authentication_utils import get_logged_user, get_user_type, get_admin
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import ArtisticGenderSerializer, ShortArtisticGenderSerializer,SearchGenreSerializer
+from .serializers import ArtisticGenderSerializer, SearchGenreSerializer
 from rest_framework import status
 from utils.Assertions import Assertions
 
@@ -50,9 +52,27 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
     def delete(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
+
+        admin = get_admin(request)
+
+        Assertions.assert_true_raise400(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+
         artisticGender = self.get_object(pk)
+
+        children = ArtisticGender.objects.filter(parentGender=artisticGender)
+
+        for genre in children:
+            self.cascadedelete(genre)
+
         artisticGender.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def cascadedelete(self, genre : ArtisticGender):
+
+        children = ArtisticGender.objects.filter(parentGender=genre)
+
+        for genre in children:
+            self.cascadedelete(genre)
 
 
 class CreateArtisticGender(generics.CreateAPIView):
@@ -60,17 +80,17 @@ class CreateArtisticGender(generics.CreateAPIView):
     serializer_class = ArtisticGenderSerializer
 
     def post(self, request, *args, **kwargs):
-        loggedUser = get_logged_user(request)
-        type = get_user_type(loggedUser)
-        if loggedUser is not None and type == "Artist":
-            serializer = ArtisticGenderSerializer(data=request.data, partial=True)
-            if serializer.validate(request.data):
-                serializer.is_valid()
-                artisticGender = serializer.save()
-                serialized = ArtisticGenderSerializer(artisticGender)
-                return Response(serialized.data, status=status.HTTP_201_CREATED)
-        else:
-            raise PermissionDenied("The artisticGender is not for yourself")
+
+        admin = get_admin(request)
+
+        Assertions.assert_true_raise400(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+
+        serializer = ArtisticGenderSerializer(data=request.data, partial=True)
+        if serializer.validate(request.data):
+            serializer.is_valid()
+            artisticGender = serializer.save()
+            serialized = ArtisticGenderSerializer(artisticGender)
+            return Response(serialized.data, status=status.HTTP_201_CREATED)
 
 
 class ListArtisticGenders(generics.RetrieveAPIView):
