@@ -1,5 +1,6 @@
 spanish = {
     "ERROR_ARTISTIC_GENRE_NOT_FOUND": "Este género artístico no existe",
+    "ERROR_INCORRECT_ID": "El ID proporcionado no es válido.",
     "ERROR_NO_PARENT_GENRE_ID": "No se ha proporcionado un id de un género artístico padre válido.",
     "ERROR_GENRE_NULL_NAME": "Debes dar un nombre para el género artístico",
     "ERROR_PARENT_GENRE_NOT_FOUND": "Este género artístico padre no existe",
@@ -16,7 +17,8 @@ spanish = {
 }
 
 english = {
-    "ERROR_ARTISTIC_GENRE_NOT_FOUND": "Este género artístico no existe",
+    "ERROR_ARTISTIC_GENRE_NOT_FOUND": "This artistic gender does not exist.",
+    "ERROR_INCORRECT_ID": "The given ID is not valid.",
     "ERROR_NO_PARENT_GENRE_ID": "The given parent gender is not valid.",
     "ERROR_GENRE_NULL_NAME": "You must provide a name for the genre.",
     "ERROR_GENRE_DOESNT_EXIST": "A parent Genre doesnt exist with that id",
