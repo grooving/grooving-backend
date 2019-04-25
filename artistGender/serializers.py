@@ -14,8 +14,9 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
 
         if self.initial_data.get('id') is None and pk is None:
             genre = ArtisticGender()
-            genre = self._service_create(self.initial_data,genre)
+            genre = self._service_create(self.initial_data, genre)
             genre.save()
+            Assertions.assert_true_raise401(genre,{'error': 'ERROR_IN_CREATION'})
             return genre
         else:
 
@@ -38,7 +39,7 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         genre.name = json.get('name')
 
         Assertions.assert_true_raise401(ArtisticGender.objects.filter(id=json.get('parentGender')).first(),
-                                        {'error': 'ERROR_GENRE__NOT_EXIST'})
+                                        {'error': 'ERROR_GENRE_DOESNT_EXIST'})
 
         genre.parentGender = ArtisticGender.objects.filter(id=json.get('parentGender')).first()
 
