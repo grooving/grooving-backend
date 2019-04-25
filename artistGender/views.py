@@ -59,6 +59,8 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
 
         artisticGender = self.get_object(pk)
 
+        Assertions.assert_true_raise401(artisticGender, {'error': 'ERROR_GENRE_DOESNT_EXIST'})
+
         children = ArtisticGender.objects.filter(parentGender=artisticGender)
 
         for genre in children:
@@ -67,12 +69,14 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
         artisticGender.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def cascadedelete(self, genre : ArtisticGender):
+    def cascadedelete(self, genre: ArtisticGender):
 
+        Assertions.assert_true_raise401(genre, {'error': 'ERROR_GENRE_DOESNT_EXIST'})
         children = ArtisticGender.objects.filter(parentGender=genre)
 
         for genre in children:
             self.cascadedelete(genre)
+        genre.delete()
 
 
 class CreateArtisticGender(generics.CreateAPIView):
