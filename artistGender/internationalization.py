@@ -4,7 +4,6 @@ spanish = {
     "ERROR_NO_PARENT_GENRE_ID": "No se ha proporcionado un id de un género artístico padre válido.",
     "ERROR_GENRE_NULL_NAME": "Debes dar un nombre para el género artístico",
     "ERROR_PARENT_GENRE_NOT_FOUND": "Este género artístico padre no existe",
-    "ERROR_GENRE_DOESNT_EXIST": "No existe un genro padre con esa id",
     "ERROR_IN_CREATION": "Error durante la creacion, intentelos de nuevo",
     "ERROR_GENRE_DOESNT_EXIST": "No existe un genero con esa id",
     "ERROR_GENRE_EXISTS": "Existe un genro con ese nombre",
