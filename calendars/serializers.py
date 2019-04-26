@@ -32,14 +32,14 @@ class CalendarSerializer(serializers.ModelSerializer):
         portfolio = Portfolio.objects.filter(id=logged_user.portfolio.id).first()
         calendar = Calendar.objects.filter(portfolio=portfolio).first()
 
-        Assertions.assert_true_raise400(calendar is None, {'info': 'A calendar already exist for this artist'})
+        Assertions.assert_true_raise400(calendar is None, {'error': 'A calendar already exist for this artist'})
 
         calendar = Calendar()
 
         r = re.compile('\d{4}-\d{4}-\d{2}')
-        Assertions.assert_true_raise400(json.get('days') is not None, {'info': 'No days field was given'})
+        Assertions.assert_true_raise400(json.get('days') is not None, {'error': 'No days field was given'})
         for day in json['days']:
-            Assertions.assert_true_raise400(r.match(day), {'days': 'Bad format. Correct format YYYY-MM-DD'})
+            Assertions.assert_true_raise400(r.match(day), {'error': 'Bad format. Correct format YYYY-MM-DD'})
             calendar.days.append(day)
 
         calendar.portfolio = portfolio
@@ -50,17 +50,20 @@ class CalendarSerializer(serializers.ModelSerializer):
     @staticmethod
     def _service_update(json: dict, calendar: Calendar, logged_user: User):
 
-        Assertions.assert_true_raise403(logged_user is not None, {'info':'Not logged in'})
-        Assertions.assert_true_raise400(calendar is not None, {'info':'This calendar doesn´t exist'})
+        Assertions.assert_true_raise403(logged_user is not None, {'error':'Not logged in'})
 
-        portfolio_in_db = Portfolio.objects.filter(id=logged_user.portfolio.id).first()
-        Assertions.assert_true_raise400(portfolio_in_db.calendar == calendar, {'info': 'This calendar doesnt belong to this user'})
+        portfolio_in_db = Portfolio.objects.get(id=logged_user.portfolio.id)
+
+        if not calendar.days:
+            calendar.days = []
+        Assertions.assert_true_raise400(portfolio_in_db.calendar == calendar, {'error': 'This calendar doesnt belong to this user'})
 
         r = re.compile('^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])')
-        Assertions.assert_true_raise400(json.get('days') is not None, {'info': 'No days field was given'})
+        Assertions.assert_true_raise400(json.get('days') is not None, {'error': 'No days field was given'})
         for day in json['days']:
-            Assertions.assert_true_raise400(r.match(day), {'days': 'Bad format. Correct format YYYY-MM-DD'})
+            Assertions.assert_true_raise400(r.match(day), {'error': 'Bad format. Correct format YYYY-MM-DD'})
 
+        Assertions.assert_true_raise400(calendar is not None, {'error': 'Calendar doesn´t exist'})
         for db_day in calendar.days:
             aux = True
             for day in json['days']:
