@@ -178,6 +178,11 @@ class SearchGenreSerializer(serializers.ModelSerializer):
             childdict = {"id": child.id, "name": child.name}
             children.append(childdict)
 
-        dictionary = {"id": parentId, "name": name, "children": children}
+        granddadId=None
+        if parent.parentGender is not None:
+
+            granddadId = parent.parentGender.id
+
+        dictionary = {"id": parentId, "name": name, "parent": granddadId, "children": children}
 
         return dictionary
