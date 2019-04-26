@@ -147,6 +147,7 @@ def save_data():
 
                    "<p>Con <b>Grooving</b> conseguimos hacerlo realidad simplificando la búsqueda y contratación de " +
                    "artistas.</p>",
+
         termsText_es = "<p>Las condiciones de uso de la página web, las reglas de uso y el uso de grooving.com, la " +
                        "propiedad de Grooving SL y el correo electrónico grupogrooving@gmail.com, en adelante, " +
                        "Grooving, que el usuario del portal debe aceptar para utilizar todos los servicios e " +
