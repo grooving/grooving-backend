@@ -49,6 +49,8 @@
         {% if artist_genders %}
             <td><b>Género artístico</b>: {{ artist_genders }}</td>
         {% endif %}
+    </tr>
+    <tr>
         {% if artist_zones %}
             <td><b>Zonas de actuación</b>: {{ artist_zones }}</td>
         {% endif %}
@@ -73,7 +75,7 @@
 {% endif %}
 
 <h3>Paquetes de pago disponibles</h3>
-{% if not artist.portfolio.paymentPackages %}
+{% if not artist.portfolio.paymentPackages.all %}
     <p>No ha creado ninguno.</p>
 {% else %}
     {% for payment_package in artist.portfolio.paymentPackages.all %}

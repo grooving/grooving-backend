@@ -29,8 +29,9 @@
         <td><b>Teléfono</b>: {% if customer.phone %}{{ customer.phone }}{% else %}Not specified{% endif %}</td>
     </tr>
 </table>
+
 <h2>Localizaciones</h2>
-{% if customer.eventLocations %}
+{% if customer.eventLocations.all %}
     {% for location in customer.eventLocations.all %}
         <table>
             <tr>
@@ -52,78 +53,85 @@
             {% endif %}
         </table>
         <br/>
-        <h3>Ofertas enviadas para {{ location.name }}</h3>
-        {% for offer in location.offers.all %}
-            <h4>Oferta {{ forloop.counter }}</h4>
-            <table>
-                <tr>
-                    <td><b>Artista</b>: {{ offer.paymentPackage.portfolio.artisticName }}</td>
-                    <td><b>Fecha del evento</b>: {{ offer.date|date:'Y-m-d' }} a
-                        las {{ offer.date|date:'H:i' }} durante {{ offer.hours }} hora/s
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2"><b>Paquete seleccionado</b>: {{ offer.paymentPackage.description }}</td>
-                </tr>
-                <tr>
-                    <td><b>Precio</b>: {{ offer.price }} {{ offer.currency }}</td>
-                    <td><b>Estado de la oferta</b>:{% if offer.status == "PENDING" %}
-                        Pendiente
-                    {% elif offer.status == "REJECTED" %}
-                        Rechazada por el artista
-                    {% elif offer.status == "WITHDRAWN" %}
-                        Rechazado por ti
-                    {% elif offer.status == "CONTRACT_MADE" %}
-                        Aceptada
-                    {% elif offer.status == "CANCELLED_ARTIST" %}
-                        Cancelada por el artista
-                    {% elif offer.status == "CANCELLED_CUSTOMER" %}
-                        Cancelada por ti
-                    {% elif offer.status == "PAYMENT_MADE" %}
-                        Pagado
-                    {% endif %}</td>
-                </tr>
 
-                {% if offer.status == "PAYMENT_MADE" and offer.rating %}
-                    </table>
-                    <br/>
-                    <table>
-                    {% if offer.rating.score %}
-                        <tr>
-                            <td><b>Puntuación recibida</b>: {{ offer.rating.score }}</td>
-                        </tr>
+        <h3>Ofertas enviadas para {{ location.name }}</h3>
+        {% if location.offers %}
+            {% for offer in location.offers.all %}
+                <h4>Oferta {{ forloop.counter }}</h4>
+                <table>
+                    <tr>
+                        <td><b>Artista</b>: {{ offer.paymentPackage.portfolio.artisticName }}</td>
+                        <td><b>Fecha del evento</b>: {{ offer.date|date:'Y-m-d' }} a
+                            las {{ offer.date|date:'H:i' }} durante {{ offer.hours }} hora/s
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><b>Paquete seleccionado</b>: {{ offer.paymentPackage.description }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Precio</b>: {{ offer.price }} {{ offer.currency }}</td>
+                        <td><b>Estado de la oferta</b>:{% if offer.status == "PENDING" %}
+                            Pendiente
+                        {% elif offer.status == "REJECTED" %}
+                            Rechazada por el artista
+                        {% elif offer.status == "WITHDRAWN" %}
+                            Rechazado por ti
+                        {% elif offer.status == "CONTRACT_MADE" %}
+                            Aceptada
+                        {% elif offer.status == "CANCELLED_ARTIST" %}
+                            Cancelada por el artista
+                        {% elif offer.status == "CANCELLED_CUSTOMER" %}
+                            Cancelada por ti
+                        {% elif offer.status == "PAYMENT_MADE" %}
+                            Pagado
+                        {% endif %}</td>
+                    </tr>
+
+                    {% if offer.status == "PAYMENT_MADE" and offer.rating %}
+                        </table>
+                        <br/>
+                        <table>
+                        {% if offer.rating.score %}
+                            <tr>
+                                <td><b>Puntuación recibida</b>: {{ offer.rating.score }}</td>
+                            </tr>
+                        {% endif %}
+                        {% if offer.rating.comment %}
+                            <tr>
+                                <td><b>Comentarios</b>: {{ offer.rating.comment }}</td>
+                            </tr>
+                        {% endif %}
                     {% endif %}
-                    {% if offer.rating.comment %}
-                        <tr>
-                            <td><b>Comentarios</b>: {{ offer.rating.comment }}</td>
-                        </tr>
+                    </table>
+                <br/>
+
+                {% if offer.chat.json %}
+                    <h4>Conversaciones</h4>
+
+                    {% if offer.chat.json.messages %}
+                        {% for message in offer.chat.json.messages %}
+                            <table>
+                                <tr>
+                                    <td><b>Enviado por</b>: {{ message.json.username }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Fecha</b>: {{ message.json.date }} a las {{ message.json.hour }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Mensaje</b>: {{ message.json.message }}</td>
+                                </tr>
+                            </table>
+                            <br/>
+                        {% endfor %}
                     {% endif %}
                 {% endif %}
-                </table>
-            <br/>
-
-            {% if offer.chat.json %}
-                <h4>Conversaciones</h4>
-
-                {% for message in offer.chat.json.messages %}
-                    <table>
-                        <tr>
-                            <td><b>Enviado por</b>: {{ message.json.username }}</td>
-                        </tr>
-                        <tr>
-                            <td><b>Fecha</b>: {{ message.json.date }} a las {{ message.json.hour }}</td>
-                        </tr>
-                        <tr>
-                            <td><b>Mensaje</b>: {{ message.json.message }}</td>
-                        </tr>
-                    </table>
-                    <br/>
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
+            {% endfor %}
+        {% else %}
+            <p>No hay ofertas.</p>
+        {% endif %}
     {% endfor %}
 {% else %}
-    <p>No hay localizaciones</p>
+    <p>No hay localizaciones ni ofertas</p>
 {% endif %}
 
 </body>

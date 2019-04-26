@@ -49,6 +49,8 @@
         {% if artist_genders %}
             <td><b>Artistic gender</b>: {{ artist_genders }}</td>
         {% endif %}
+    </tr>
+    <tr>
         {% if artist_zones %}
             <td><b>Performance zones</b>: {{ artist_zones }}</td>
         {% endif %}
@@ -73,7 +75,7 @@
 {% endif %}
 
 <h3>Available payment packages</h3>
-{% if not artist.portfolio.paymentPackages %}
+{% if not artist.portfolio.paymentPackages.all %}
     <p>None created.</p>
 {% else %}
     {% for payment_package in artist.portfolio.paymentPackages.all %}
