@@ -58,7 +58,10 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         calendar = Calendar.objects.filter(portfolio__artist__id=pk).first()
-
+        artist = Artist.objects.filter(pk=pk).first()
+        if not calendar:
+            calendar = Calendar.objects.create(days=[], portfolio=artist.portfolio)
+            calendar.save()
         Assertions.assert_true_raise400(len(request.data) != 0, {'error': 'No fields were given'})
         Assertions.assert_true_raise400(calendar is not None, {'error': 'Calendar does not exist'})
 
