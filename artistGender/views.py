@@ -109,15 +109,35 @@ class ListArtisticGenders(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
 
         tree = request.query_params.get("tree", None)
+        print(tree)
         portfolio = request.query_params.get("portfolio", None)
+        print(portfolio)
+        parentId = request.query_params.get("parentId", None)
+        print(parentId)
+
         genres = None
-        if tree is None and portfolio is None:
+        if tree is None and portfolio is None and parentId is None:
             genres = list(ArtisticGender.objects.all())
             serializer = SearchGenreSerializer(genres, many=True)
             genres = serializer.data
         elif tree == "true":
             Assertions.assert_true_raise400(portfolio is None, {"error": "Portfolio's genres don't have tree option"})
             genres = SearchGenreSerializer.get_tree()
+        elif parentId == "true":
+            Assertions.assert_true_raise400(portfolio is None, {"error": "Portfolio's genres don't have parent Id option"})
+            genres = SearchGenreSerializer.get_children()
+            print("Error")
+
+        elif parentId is not None:
+            try:
+                parentId = int(parentId)
+            except ValueError:
+                Assertions.assert_true_raise400(False, {"error": "Incorrect format for id"})
+
+            Assertions.assert_true_raise400(portfolio is None, {"error": "Portfolio's genres don't have parent Id option"})
+            genres = SearchGenreSerializer.get_children(parentId)
+            print("Error")
+
         elif portfolio is not None:
 
             try:
@@ -141,4 +161,5 @@ class ListArtisticGenders(generics.RetrieveAPIView):
             serializer = SearchGenreSerializer(child_genres, many=True)
             genres = serializer.data
 
+        print("Error")
         return Response(genres, status=status.HTTP_200_OK)

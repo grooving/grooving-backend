@@ -157,3 +157,27 @@ class SearchGenreSerializer(serializers.ModelSerializer):
         dictionary = {"id": id, "name": name, "parent": parentGenre, "children": child_dicts_list}
 
         return dictionary, total
+
+    @staticmethod
+    def get_children(parentId = None):
+
+        if parentId is None:
+            parent = SearchGenreSerializer._get_parent_of_all()
+            Assertions.assert_true_raise404(parent, {'error', 'Parent zone not found'})
+
+            name = parent.name
+        else:
+            parent = ArtisticGender.objects.filter(id=parentId).first()
+
+            name = parent.name
+
+        child_dicts_list = ArtisticGender.objects.filter(parentGender=parent)
+        children = []
+
+        for child in child_dicts_list:
+            childdict = {"id": child.id, "name": child.name}
+            children.append(childdict)
+
+        dictionary = {"id": parentId, "name": name, "children": children}
+
+        return dictionary
