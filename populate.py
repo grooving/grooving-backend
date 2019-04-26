@@ -134,15 +134,19 @@ def save_data():
                     "<h2>Consentimiento</h2>" +
                     "<p>Al utilizar nuestro sitio web, usted acepta nuestra Política de privacidad y acepta sus " +
                     "Términos y condiciones.</p>",
-        aboutUs_en="<p> At Grooving, we all come to work every day because we want to solve the biggest " +
-                   "problems for the artists: empower artists by giving visibility and improving their " +
-                   "monetization. What is our mission? Simplifying the search and hiring made easy.</p>" +
-                   "<p>With all this, we can ensure that <b>Grooving makes the difference</b>.</p>",
+        aboutUs_en="<p> At Grooving, we work hard to solve the daily problems of the artists by making them known " +
+                   "and increasing their daily activity in an easy, simple and reliable way. </p>" +
+                   "<h2> Do you think it's impossible? </h2> +"
+                   "<p> With <b> Grooving </b>, we managed to make it real by simplifying the search and hiring of " +
+                   "artists. </p>",
         aboutUs_es="<h2>Sobre nosotros</h2>" +
-                   "<p>En Grooving, trabajamos todos los días porque queremos resolver los grandes problemas a los " +
-                   "que se enfrentan los artistas mejorando su visibilidad y monetización de su actividad. ¿Cómo lo " +
-                   "conseguimos? Simplificando la búsqueda y la contratación de manera fácil, sencilla y fiable.</p>" +
-                  "<p>Podemos asegurar que <b>Grooving marca la diferencia</b>.</p>",
+                   "<p>En Grooving, trabajamos duro para resolver los problemas diarios de los artistas dándoles a " +
+                   "conocer e incrementando su actividad diaria de una forma fácil, sencilla y fiable.</p>" +
+
+                   "<h2>¿Piensas que es imposible? </h2>" +
+
+                   "<p>Con <b>Grooving</b> conseguimos hacerlo realidad simplificando la búsqueda y contratación de " +
+                   "artistas.</p>",
         termsText_es = "<p>Las condiciones de uso de la página web, las reglas de uso y el uso de grooving.com, la " +
                        "propiedad de Grooving SL y el correo electrónico grupogrooving@gmail.com, en adelante, " +
                        "Grooving, que el usuario del portal debe aceptar para utilizar todos los servicios e " +
@@ -250,8 +254,10 @@ def save_data():
                        "usuario que desea informar, el motivo y alguna prueba (vídeo, imágenes, enlaces, ...) .</p>" +
 
                        "<h2>GPDR - Regulación de Protección General de Datos</h2>" +
-                       "<p>Grooving cumple con las regulaciones de la Unión Europea desde el nacimiento de la " +
-                       "compañía, cumpliendo con cada uno de sus artículos y sometiendo auditorías regularmente.</p>" +
+                       "<p>Este documento está adaptado al Reglamento Europeo de Protección de Datos (RGPD) y a la " +
+                       "reciente Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y " +
+                       "garantía de los derechos digitales cumpliendo con cada uno de sus artículos y sometiéndose " +
+                       "a auditorías regularmente.</p>" +
 
                        "<h3>Derecho a ser informado sobre brechas de seguridad</h3>" +
                        "<p>En caso de que se detecte una brecha de seguridad en Grooving, se le notificará un máximo " +
@@ -362,8 +368,10 @@ def save_data():
                      "report, the reason, and some proof (video, images, links, ...).</p>"
 
                      "<h2>GPDR - General Data Protection Regulation</h2>" +
-                     "<p>Grooving complies with the regulations of the European Union since the company " +
-                     "birth, complying with each of its articles and subjecting audits on a regular basis.</p>" +
+                     "<p> This document is adapted to the European Data Protection Regulation (RGPD) and to the " +
+                     "recent Organic Law 3/2018, of December 5th, on the Protection of Personal Data and guarantee " +
+                     "of the digital rights that comply with each of its articles and submitting to audits " +
+                     "regularly.</p>" +
 
                      "<h3>Right to be informed with breaches</h3>" +
                      "<p>In case a security breach is detected in the Grooving system, it will be notified a maximum " +
