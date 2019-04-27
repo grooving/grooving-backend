@@ -7,7 +7,7 @@ from .serializers import OfferSerializer, GetOfferSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from utils.Assertions import Assertions
-from utils.utils import check_accept_language, check_accept_language_by_user
+from utils.utils import check_accept_language
 from utils.authentication_utils import get_logged_user
 from .internationalization import translate
 
