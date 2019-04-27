@@ -33,6 +33,7 @@ spanish = {
     "ERROR_FIRST_NAME_SPECIAL_CHARACTERS": "El nombre no puede contener caracteres especiales ni números.",
     "ERROR_LAST_NAME_SPECIAL_CHARACTERS": "Los apellidos no pueden contener caracteres especiales ni números.",
     "ERROR_EMPTY_ARTISTIC_NAME": "El nombre artistico debe ser obligatorio.",
+    "ERROR_ARTISTIC_NAME_ALREADY_EXISTS": "El nombre artistico ya existe.",
 
     "ERROR_NOT_LOGGED_IN": "Debes estar autenticado para entrar en este sitio.",
     "ERROR_NOT_AN_ARTIST": "No eres un artista, y por tanto no puedes estar en este sitio.",
@@ -46,7 +47,7 @@ spanish = {
 }
 
 english = {
-    "ERROR_EMPTY_JSON": "El formulario is not valid.",
+    "ERROR_EMPTY_JSON": "Form is not valid.",
     "ERROR_INVALID_PAYPAL_ACCOUNT": "Invalid paypal account.",
     "ERROR_EMPTY_FIRST_NAME": "First name can't be empty.",
     "ERROR_EMPTY_LAST_NAME": "Last name can't be empty.",
@@ -80,6 +81,7 @@ english = {
     "ERROR_FIRST_NAME_SPECIAL_CHARACTERS": "First name can't special characters & numbers.",
     "ERROR_LAST_NAME_SPECIAL_CHARACTERS": "Last name can't special characters & numbers.",
     "ERROR_EMPTY_ARTISTIC_NAME": "Artist name not provived.",
+    "ERROR_ARTISTIC_NAME_ALREADY_EXISTS": "Artistic name already exists.",
 
     "ERROR_NOT_LOGGED_IN": "You must be logged in to do this action.",
     "ERROR_NOT_AN_ARTIST": "You are not an artist, and therefore you cannot be here.",

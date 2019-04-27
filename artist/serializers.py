@@ -57,7 +57,7 @@ class ArtistSerializer(serializers.ModelSerializer):
 
     def save(self, request):
 
-        artist = self._service_create_artist(self.initial_data)
+        artist = self._service_create_artist(self.initial_data, request)
         Notifications.send_email_welcome(artist.user.id)
         return artist
 
@@ -67,7 +67,19 @@ class ArtistSerializer(serializers.ModelSerializer):
         return artist
 
     @staticmethod
-    def _service_create_artist(json: dict):
+    def _service_create_artist(json: dict, request):
+        language = check_accept_language(request)
+
+        # Check artisticName
+
+        Assertions.assert_true_raise400(json.get('artisticName'),
+                                        translate(language, "ERROR_EMPTY_ARTISTIC_NAME"))
+
+        Assertions.assert_true_raise400(len(json.get('artisticName')) > 0,
+                                        translate(language, "ERROR_EMPTY_ARTISTIC_NAME"))
+
+        if Portfolio.objects.filter(artisticName__iexact=json.get('artisticName')):
+            Assertions.assert_true_raise400(False, translate(language, "ERROR_ARTISTIC_NAME_ALREADY_EXISTS"))
 
         user = User.objects.create(username=json.get('username'), password=make_password(json.get('password')),
                                    first_name=json.get('first_name'), last_name=json.get('last_name'),
@@ -124,6 +136,11 @@ class ArtistSerializer(serializers.ModelSerializer):
 
         Assertions.assert_true_raise400(artistic_name, translate(language, "ERROR_NO_ARTISTIC_NAME"))
         Assertions.assert_true_raise400(artistic_name != "", translate(language, "ERROR_NO_ARTISTIC_NAME"))
+
+        # Comprobación: el artisticName nuevo (del request), no debe coincidir con ninguno del resto de artistas que no sea yo
+
+        if Portfolio.objects.exclude(artist__id=artist.id).filter(artisticName__iexact=json.get('artisticName')):
+            Assertions.assert_true_raise400(False, translate(language, "ERROR_ARTISTIC_NAME_ALREADY_EXISTS"))
 
         try:
             portfolio = Portfolio.objects.get(artist=artist)

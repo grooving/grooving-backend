@@ -9,7 +9,7 @@ from utils.Assertions import Assertions
 from artist.serializers import ArtistSerializer
 from utils.searcher.searcher import search
 from artist.internationalization import translate
-from utils.utils import check_accept_language
+from utils.utils import check_accept_language, check_special_characters_and_numbers
 
 
 class GetPersonalInformationOfArtist(generics.ListAPIView):
@@ -80,11 +80,17 @@ class ArtistRegister(generics.CreateAPIView):
     def put(self, request, pk=None):
         language = check_accept_language(request)
         Assertions.assert_true_raise400(len(request.data) != 0, translate(language, "ERROR_EMPTY_FORM"))
+        Assertions.assert_true_raise400(request.data.get("artisticName"),
+                                        translate(language, "ERROR_EMPTY_ARTISTIC_NAME"))
+        Assertions.assert_true_raise400(check_special_characters_and_numbers(request.data.get("first_name")),
+                                        translate(language, "ERROR_FIRST_NAME_SPECIAL_CHARACTERS"))
+        Assertions.assert_true_raise400(check_special_characters_and_numbers(request.data.get("last_name")),
+                                        translate(language, "ERROR_LAST_NAME_SPECIAL_CHARACTERS"))
 
         if pk is None:
             pk = self.kwargs['pk']
 
-        artist = self.get_object(pk)
+        artist = self.get_object(request, pk)
         artist_or_customer = get_logged_user(request)
 
         Assertions.assert_true_raise403(artist_or_customer, translate(language, "ERROR_ARTIST_NOT_LOGGED"))
@@ -93,7 +99,7 @@ class ArtistRegister(generics.CreateAPIView):
 
         serializer = ArtistSerializer(artist, data=request.data, partial=True)
         serializer.is_valid(True)
-        artist = serializer.update(pk)
+        artist = serializer.update(request, pk)
 
         artist.save()
 
