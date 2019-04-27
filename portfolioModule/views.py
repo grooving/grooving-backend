@@ -7,20 +7,22 @@ from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user,get_user_type,is_user_authenticated
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from utils.Assertions import Assertions
+from utils.utils import check_accept_language
+from .internationalization import translate
+
 
 class PortfolioModuleManager(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = PortfolioModule.objects.all()
     serializer_class = PortfolioModuleSerializer
 
-    def get_object(self, pk=None):
+    def get_object(self, pk=None, language='en'):
         if pk is None:
             pk = self.kwargs['pk']
         try:
             return PortfolioModule.objects.get(pk=pk)
         except PortfolioModule.DoesNotExist:
-            raise Assertions.assert_true_raise404(False,
-                                            {'error': 'Portfolio module not found'})
+            raise Assertions.assert_true_raise404(False, translate(language, 'ERROR_PROTFOLIOMODULE_NOT_FOUND'))
 
     def get(self, request, pk=None, format=None):
         if pk is None:
@@ -30,9 +32,12 @@ class PortfolioModuleManager(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
     def put(self, request, pk=None):
+
+        language = check_accept_language(request)
+
         if pk is None:
             pk = self.kwargs['pk']
-        portfolioModule = self.get_object(pk=pk)
+        portfolioModule = self.get_object(pk=pk, language=language)
         loggedUser = get_logged_user(request)
         artist = Artist.objects.filter(portfolio=portfolioModule.portfolio).first()
         if loggedUser is not None and loggedUser.id == artist.id:
@@ -46,9 +51,12 @@ class PortfolioModuleManager(generics.RetrieveUpdateDestroyAPIView):
             raise PermissionDenied("The artisticGender is not for yourself")
 
     def delete(self, request, pk=None, format=None):
+
+        language = check_accept_language(request)
+
         if pk is None:
             pk = self.kwargs['pk']
-        portfolioModule = self.get_object(pk=pk)
+        portfolioModule = self.get_object(pk=pk, language=language)
         portfolioModule.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -59,6 +67,9 @@ class CreatePortfolioModule(generics.CreateAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
+
+        language = check_accept_language(request)
+
         serializer = PortfolioModuleSerializer(data=request.data, partial=True)
         if serializer.validate(request):
             module = serializer.save(logged_user=request.user)

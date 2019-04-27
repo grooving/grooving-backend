@@ -1,13 +1,12 @@
 from Grooving.models import EventLocation, Artist, Customer, Offer, Portfolio
 from utils.authentication_utils import get_logged_user, get_user_type
 from django.core.exceptions import PermissionDenied
-
 from rest_framework.response import Response
 from rest_framework import generics
 from .serializers import EventLocationSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from utils.Assertions import Assertions
+
 # Create your views here.
 
 
@@ -15,15 +14,6 @@ class EventLocationManager(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = EventLocation.objects.all()
     serializer_class = EventLocationSerializer
-
-    def get_object(self, pk=None):
-        if pk is None:
-            pk = self.kwargs['pk']
-        try:
-            return EventLocation.objects.get(pk=pk)
-        except EventLocation.DoesNotExist:
-            raise Assertions.assert_true_raise404(False,
-                                            {'error': 'Event location not found'})
 
     def get(self, request, pk=None, format=None):
         if pk is None:
