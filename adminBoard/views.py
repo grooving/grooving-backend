@@ -353,7 +353,7 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
                                                          keyToTranslate="ERROR_FORBIDDEN_NO_ADMIN"))
         serializer = ZoneSerializer(data=request.data, partial=True)
         if serializer.validate_zone(request):
-            serializer.save()
+            serializer.save(request)
 
             return Response(status=status.HTTP_201_CREATED)
 
@@ -374,10 +374,11 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
                                                          keyToTranslate="ERROR_FORBIDDEN_NO_ADMIN"))
         zone = Zone.objects.get(pk=pk)
         serializer = ZoneSerializer(zone, data=request.data, partial=True)
-        serializer.is_valid(True)
-        zone = serializer.update(request,pk)
 
-        zone.save()
+        if serializer.validate_zone(request):
+            zone = serializer.update(request, pk)
+            zone.save()
+
         return Response(status=status.HTTP_200_OK)
 
     def delete(self, request, pk=None):
