@@ -1,14 +1,13 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from django.utils import timezone
 from datetime import datetime, timedelta
-from Grooving.models import Artist, Customer, Offer
+from Grooving.models import Artist, Customer, Offer, Zone, EventLocation
 from rest_framework.response import Response
-from utils.authentication_utils import get_admin, get_logged_user
+from utils.authentication_utils import get_admin_2, get_admin
+from utils.utils import check_accept_language
 from utils.Assertions import Assertions
-from django.db.models import Sum
-
-
-
+from adminBoard.serializers import ZoneSerializer
+from adminBoard.internationalization import translate
 
 
 class GetStatistics(generics.ListAPIView):
@@ -327,3 +326,102 @@ class GetStatistics(generics.ListAPIView):
         queryset['moneyEarnedLastMonth'] = self.get_money_earned_last_month(request)
 
         return Response(queryset)
+
+
+class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
+
+    serializer_class = ZoneSerializer
+
+    def get(self, request, pk=None):
+        language = check_accept_language(request)
+        try:
+            zone = Zone.objects.get(pk=pk)
+            serializer = ZoneSerializer(zone)
+            return Response(serializer.data)
+
+        except Zone.DoesNotExist:
+            Assertions.assert_true_raise404(False,
+                                            translate(keyLanguage=language, keyToTranslate="ERROR_ZONE_NOT_FOUND"))
+
+    def post(self, request):
+        language = check_accept_language(request)
+        Assertions.assert_true_raise400(len(request.data) != 0, translate(keyLanguage=language,
+                                                                          keyToTranslate="ERROR_EMPTY_FORM_NOT_VALID"))
+        admin = get_admin_2(request)
+
+        Assertions.assert_true_raise403(admin, translate(keyLanguage=language,
+                                                         keyToTranslate="ERROR_FORBIDDEN_NO_ADMIN"))
+        serializer = ZoneSerializer(data=request.data, partial=True)
+        if serializer.validate_zone(request):
+            serializer.save()
+
+            return Response(status=status.HTTP_201_CREATED)
+
+        else:
+            Assertions.assert_true_raise400(False, translate(keyLanguage=language,
+                                                             keyToTranslate="ERROR_FORBIDDEN_NO_ADMIN"))
+
+    def put(self, request, pk=None):
+        language = check_accept_language(request)
+        if pk is None:
+            pk = self.kwargs['pk']
+        Assertions.assert_true_raise400(len(request.data) != 0, translate(keyLanguage=language,
+                                                                          keyToTranslate="ERROR_EMPTY_FORM_NOT_VALID"))
+        language = check_accept_language(request)
+        admin = get_admin_2(request)
+
+        Assertions.assert_true_raise403(admin, translate(keyLanguage=language,
+                                                         keyToTranslate="ERROR_FORBIDDEN_NO_ADMIN"))
+        zone = Zone.objects.get(pk=pk)
+        serializer = ZoneSerializer(zone, data=request.data, partial=True)
+        serializer.is_valid(True)
+        zone = serializer.update(request,pk)
+
+        zone.save()
+        return Response(status=status.HTTP_200_OK)
+
+    def delete(self, request, pk=None):
+        if pk is None:
+            pk = self.kwargs['pk']
+        language = check_accept_language(request)
+        pks = list(Zone.objects.values_list("id",flat=True))
+        Assertions.assert_true_raise400(pk, translate(keyLanguage=language,
+                                                        keyToTranslate="ERROR_ZONE_NOT_FOUND"))
+        admin = get_admin_2(request)
+
+        Assertions.assert_true_raise403(admin, translate(keyLanguage=language,
+                                                         keyToTranslate="ERROR_FORBIDDEN_NO_ADMIN"))
+
+        Assertions.assert_true_raise400(int(pk) in pks, translate(keyLanguage=language,
+                                                                     keyToTranslate="ERROR_ZONE_NOT_FOUND"))
+        zone = Zone.objects.get(id=pk)
+        Assertions.assert_true_raise400(zone, translate(keyLanguage=language,
+                                                        keyToTranslate="ERROR_ZONE_NOT_FOUND"))
+        events = EventLocation.objects.all()
+        parentzones= []
+
+        for event in events:
+            try:
+                pzone = event.zone.parentZone
+                zone1 = event.zone
+                if pzone not in parentzones or zone1 not in parentzones:
+                    parentzones.append(zone1)
+                    parentzones.append(pzone)
+            except:
+                pass
+
+        for parentzone in parentzones:
+
+            try:
+                pzone = parentzone.parentZone
+                if pzone or pzone not in parentzones:
+                    parentzones.append(pzone)
+            except:
+                continue
+
+        Assertions.assert_true_raise400(not(zone in parentzones), translate(keyLanguage=language,
+                                                        keyToTranslate="ERROR_ZONE_BELONGS_TO_EVENT"))
+        zone.delete()
+        return Response(status=status.HTTP_200_OK)
+
+

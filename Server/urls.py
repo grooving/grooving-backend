@@ -39,7 +39,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
 from chat.views import index, room, ListChatMesages
 from languageChooser.views import LanguageChooser
-from adminBoard.views import GetStatistics
+from adminBoard.views import GetStatistics,AdminZoneManagement
 '''
 GetRegisteredArtistsAllTime, GetRegisteredCustomersAllTime, GetPendingOffersAllTime, \
     GetRejectedOffersAllTime, GetContractMadeOffersAllTime, GetPaymentOffersAllTime, GetContractMadeOffersLastMonth, \
@@ -131,5 +131,7 @@ urlpatterns = [
 #    url(r'^admin/moneyEarnedLastMonth/$', GetMoneyEarnedLastMonth.as_view()),
     url(r'^admin/statistics/$', GetStatistics.as_view()),
     url(r'^downloadPersonalData/$', DownloadPersonalData.as_view()),
+    url(r'^admin/zone/(?P<pk>[0-9]+)/$', AdminZoneManagement.as_view()),
+    url(r'^admin/zone/', AdminZoneManagement.as_view()),
 
 ]
