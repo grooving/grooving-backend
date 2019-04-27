@@ -3,7 +3,7 @@ from Grooving.models import SystemConfiguration
 from rest_framework import generics
 from rest_framework.response import Response
 from utils.Assertions import Assertions
-from Grooving.models import Artist, Customer
+from Grooving.models import Artist, Customer, User
 
 
 def auto_update_old_offers(offers):
@@ -133,6 +133,26 @@ def check_accept_language(request):
 
     try:
         request_language = request.META['HTTP_ACCEPT_LANGUAGE']
+
+        if request_language.find("en") != -1:
+            language = "en"
+        elif request_language.find("es") != -1:
+            language = "es"
+        else:
+            raise ValueError("This language is not supported")
+    except ValueError as e:
+        Assertions.assert_true_raise403(False, {"error": e.args[0]})
+    except:
+        Assertions.assert_true_raise403(False, {"error": "Language not found"})
+
+    return language
+
+
+def check_accept_language_by_user(logged_user):
+    language = ""
+
+    try:
+        request_language = logged_user.language
 
         if request_language.find("en") != -1:
             language = "en"
