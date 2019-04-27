@@ -7,6 +7,8 @@ from utils.authentication_utils import get_user_type, get_logged_user
 from rest_framework import status
 from utils.Assertions import Assertions
 from customer.serializers import CustomerSerializer
+from utils.utils import check_accept_language
+from .internationalization import translate
 
 
 class GetPersonalInformationOfCustomer(generics.ListAPIView):
@@ -17,14 +19,15 @@ class GetPersonalInformationOfCustomer(generics.ListAPIView):
 
         user = get_logged_user(request)
         user_type = get_user_type(user)
-        Assertions.assert_true_raise403(user is not None, {'error': 'ERROR_NOT_LOGGED_IN'})
-        Assertions.assert_true_raise403(user_type == 'Customer', {'error': 'ERROR_NOT_A_CUSTOMER'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(user is not None, translate(language, "ERROR_NOT_LOGGED_IN"))
+        Assertions.assert_true_raise403(user_type == 'Customer', translate(language, "ERROR_NOT_A_CUSTOMER"))
         try:
             customer = Customer.objects.get(user_id=user.user_id)
             serializer = CustomerInfoSerializer(customer)
             return Response(serializer.data)
         except Customer.DoesNotExist:
-            Assertions.assert_true_raise404(False, {'error': 'ERROR_NO_CUSTOMER_FOUND'})
+            Assertions.assert_true_raise404(False, translate(language, "ERROR_NO_CUSTOMER_FOUND"))
 
 
 class GetPublicInformationOfCustomer(generics.ListAPIView):
@@ -34,22 +37,20 @@ class GetPublicInformationOfCustomer(generics.ListAPIView):
     def get_object(self, pk=None):
         if pk is None:
             pk = self.kwargs['pk']
-
+        language = check_accept_language(self.request)
         try:
             return Customer.objects.get(pk=pk)
         except Customer.DoesNotExist:
-            Assertions.assert_true_raise404(False,
-                                            {'error': 'ERROR_NO_CUSTOMER_FOUND'})
+            Assertions.assert_true_raise404(False, translate(language, "ERROR_NO_CUSTOMER_FOUND"))
 
     def get(self, request, pk=None, format=None):
-
+        language = check_accept_language(request)
         try:
             customer = self.get_object(pk)
             serializer = PublicCustomerInfoSerializer(customer)
             return Response(serializer.data)
         except Customer.DoesNotExist:
-            Assertions.assert_true_raise404(False,
-                                            {'error': 'ERROR_NO_CUSTOMER_FOUND'})
+            Assertions.assert_true_raise404(False, translate(language, "ERROR_NO_CUSTOMER_FOUND"))
 
 
 class CustomerRegister(generics.CreateAPIView):
@@ -58,11 +59,11 @@ class CustomerRegister(generics.CreateAPIView):
     serializer_class = CustomerSerializer
 
     def get_object(self, pk=None):
+        language = check_accept_language(self.request)
         try:
             return Customer.objects.get(pk=pk)
         except Customer.DoesNotExist:
-            Assertions.assert_true_raise404(False,
-                                            {'error': 'ERROR_NO_CUSTOMER_FOUND'})
+            Assertions.assert_true_raise404(False, translate(language, "ERROR_NO_CUSTOMER_FOUND"))
 
     def post(self, request, *args, **kwargs):
         Assertions.assert_true_raise400(len(request.data) != 0, {'error': "Empty form is not valid"})

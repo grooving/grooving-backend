@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from utils.authentication_utils import get_admin, get_logged_user
 from utils.Assertions import Assertions
 from django.db.models import Sum
-
+from utils.utils import check_accept_language
+from .internationalization import translate
 
 
 
@@ -16,8 +17,8 @@ class GetStatistics(generics.ListAPIView):
     def get_artists(self, request, *args, **kwargs):
 
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
         artists = Artist.objects.all()
 
@@ -25,8 +26,8 @@ class GetStatistics(generics.ListAPIView):
 
     def get_registered_customers_all_time(self, request, *args, **kwargs):
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
         customers = Customer.objects.all()
 
         return len(customers)
@@ -34,8 +35,8 @@ class GetStatistics(generics.ListAPIView):
     def get_pending_offers_all_time(self, request, *args, **kwargs):
 
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
         totaloffers = len(Offer.objects.all())
 
@@ -54,8 +55,8 @@ class GetStatistics(generics.ListAPIView):
     def get_rejected_offers_all_time(self, request, *args, **kwargs):
 
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
         totaloffers = len(Offer.objects.all())
 
@@ -74,8 +75,8 @@ class GetStatistics(generics.ListAPIView):
     def get_contract_made_offers_all_time(self, request, *args, **kwargs):
 
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
         totaloffers = len(Offer.objects.all())
 
@@ -94,8 +95,8 @@ class GetStatistics(generics.ListAPIView):
     def get_payment_offers_all_time(self, request, *args, **kwargs):
 
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
         totaloffers = len(Offer.objects.all())
 
@@ -113,8 +114,8 @@ class GetStatistics(generics.ListAPIView):
 
     def get_registered_artists_last_month(self, request, *args, **kwargs):
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
         time_threshold = datetime.now() - timedelta(hours=744)
 
@@ -124,8 +125,8 @@ class GetStatistics(generics.ListAPIView):
 
     def get_registered_customers_last_month(self, request, *args, **kwargs):
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
         time_threshold = datetime.now() - timedelta(hours=744)
 
@@ -136,8 +137,8 @@ class GetStatistics(generics.ListAPIView):
     def get_pending_offers_last_month(self, request, *args, **kwargs):
 
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
         time_threshold = datetime.now() - timedelta(hours=744)
         totaloffers = len(Offer.objects.filter(creationMoment__gt=time_threshold))
@@ -157,8 +158,8 @@ class GetStatistics(generics.ListAPIView):
     def get_rejected_offers_last_month(self, request, *args, **kwargs):
 
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
         time_threshold = datetime.now() - timedelta(hours=744)
         totaloffers = len(Offer.objects.filter(creationMoment__gt=time_threshold))
@@ -178,8 +179,8 @@ class GetStatistics(generics.ListAPIView):
     def get_contract_made_offers_last_month(self, request, *args, **kwargs):
         now = timezone.now()
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
             # Se calcula un lapso de un mes
         time_threshold = datetime.now() - timedelta(hours=744)
@@ -202,7 +203,8 @@ class GetStatistics(generics.ListAPIView):
 
         admin = get_admin(request)
         now = timezone.now()
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
             # Se calcula un lapso de un mes
         time_threshold = datetime.now() - timedelta(hours=744)
@@ -223,8 +225,8 @@ class GetStatistics(generics.ListAPIView):
 
     def get_total_money(self, request, *args, **kwargs):
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
             # Se calcula un lapso de un mes
 
@@ -239,8 +241,8 @@ class GetStatistics(generics.ListAPIView):
 
     def get_money_earned(self, request, *args, **kwargs):
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
             # Se calcula un lapso de un mes
 
@@ -255,8 +257,8 @@ class GetStatistics(generics.ListAPIView):
 
     def get_total_money_last_month(self, request, *args, **kwargs):
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
             # Se calcula un lapso de un mes
         time_threshold = datetime.now() - timedelta(hours=744)
@@ -271,8 +273,8 @@ class GetStatistics(generics.ListAPIView):
 
     def get_money_earned_last_month(self, request, *args, **kwargs):
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
         # Se calcula un lapso de un mes
         time_threshold = datetime.now() - timedelta(hours=744)
@@ -289,8 +291,8 @@ class GetStatistics(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
 
         admin = get_admin(request)
-
-        Assertions.assert_true_raise403(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
         queryset = {}
 

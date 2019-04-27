@@ -2,7 +2,9 @@ from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from Grooving.models import Portfolio, ArtisticGender
 from utils.Assertions import Assertions
-
+from utils.utils import check_accept_language
+from .internationalization import translate
+from utils.authentication_utils import get_artist_or_customer_by_user
 
 class ArtisticGenderSerializer(serializers.ModelSerializer):
 
@@ -21,13 +23,10 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         else:
 
             id_genre = (self.initial_data.get('id'), pk)[pk is not None]
-
             genre_id_control = str(self.initial_data.get('id'))
 
-            Assertions.assert_true_raise400(genre_id_control.isdigit(), {'error': 'ERROR_INCORRECT_ID'})
-
             genre = ArtisticGender.objects.filter(pk=id_genre).first()
-            genre = self._service_update(self.initial_data, genre)
+            genre = self._service_update(self.initial_data, genre, logged_user)
             genre.save()
             return genre
 
@@ -51,16 +50,19 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         return genre
 
     @staticmethod
-    def _service_update(json: dict, genre: ArtisticGender):
+    def _service_update(json: dict, genre: ArtisticGender, loggedUser: User):
+
+        user = get_artist_or_customer_by_user(loggedUser)
+        language = user.language
 
         genre_id_control = str(json.get('id'))
 
-        Assertions.assert_true_raise400(genre_id_control.isdigit(), {'error': 'ERROR_INCORRECT_ID'})
+        Assertions.assert_true_raise400(genre_id_control.isdigit(), translate(language, 'ERROR_INCORRECT_ID'))
 
         try:
             genre = ArtisticGender.objects.get(pk=json.get('id'))
         except ArtisticGender.DoesNotExist:
-            Assertions.assert_true_raise400(genre, {'error': 'ERROR_INCORRECT_ID'})
+            Assertions.assert_true_raise404(False, translate(language, "ERROR_ARTISTIC_GENRE_NOT_FOUND"))
 
 
         # Se busca si un artisticGenre con el nombre pedido ya existe
@@ -72,20 +74,20 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         if genre_name_control is not None and genre_name_control.id != json.get('id'):
             # Si tienen el mismo nombre y son distintos... ¡tenemos un problema! Levantamos excepción.
             Assertions.assert_true_raise400(ArtisticGender.objects.filter(name=json.get('name')).first() is None,
-                                            {'error': 'ERROR_GENRE_EXISTS'})
+                                           translate(language, 'ERROR_GENRE_EXISTS'))
 
         Assertions.assert_true_raise400(json.get('name') != '',
-                                        {'error': 'ERROR_GENRE_NULL_NAME'})
+                                        translate(language, 'ERROR_GENRE_NULL_NAME'))
 
         Assertions.assert_true_raise400(json.get('name') is not None,
-                                        {'error': 'ERROR_GENRE_NULL_NAME'})
+                                        translate(language, 'ERROR_GENRE_NULL_NAME'))
 
         parentGender_control = str(json.get('parentGender'))
 
-        Assertions.assert_true_raise400(parentGender_control.isdigit(), {'error': 'ERROR_NO_PARENT_GENRE_ID'})
+        Assertions.assert_true_raise400(parentGender_control.isdigit(), translate(language,'ERROR_NO_PARENT_GENRE_ID'))
 
         Assertions.assert_true_raise404(ArtisticGender.objects.filter(id=json.get('parentGender')).first(),
-                                        {'error': 'ERROR_PARENT_GENRE_NOT_FOUND'})
+                                        translate(language, 'ERROR_PARENT_GENRE_NOT_FOUND'))
 
         genre.name = json.get('name')
 

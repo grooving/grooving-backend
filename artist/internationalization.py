@@ -21,7 +21,7 @@ english = {
     "ERROR_NO_DATA_GIVEN": "The form has no data.",
     "ERROR_NO_MATCHING_LANGUAGE": "The language you want is not available.",
     "ERROR_ACTOR_NOT_FOUND": "The actor you are searching does not exist.",
-    "ERROR_NO_GIVEN_LANGUAGE": "You must give a language to switch to.",
+    "ERROR_NO_GIVEN_LANGUAGE": "You must give a language to switch to."
 
 }
 
