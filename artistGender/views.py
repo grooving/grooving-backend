@@ -42,10 +42,15 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
             artisticGender = self.get_object(pk)
             loggedUser = get_admin_2(request)
             Assertions.assert_true_raise403(loggedUser, translate(language, "ERROR_NOT_AN_ADMIN"))
+            id_request = request.data.get('id')
+            pk_compare = int(pk)
+            Assertions.assert_true_raise401(str(id_request).isdigit(), translate(language, "ERROR_INCORRECT_ID"))
+            Assertions.assert_true_raise401(id_request == pk_compare, translate(language, "ERROR_INCORRECT_ID"))
+
             serializer = ArtisticGenderSerializer(artisticGender, data=request.data, partial=True)
             if serializer.validate(request.data):
                 serializer.is_valid()
-                serializer.save()
+                serializer.save(pk, loggedUser)
                 return Response(status=status.HTTP_201_CREATED)
             else:
                 raise Assertions.assert_true_raise400(False,
@@ -64,7 +69,7 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
 
         artisticGender = self.get_object(pk)
 
-        Assertions.assert_true_raise401(artisticGender, translate(language, "ERROR_GENRE_DOESNT_EXIST"))
+        Assertions.assert_true_raise404(artisticGender, translate(language, "ERROR_GENRE_DOESNT_EXIST"))
 
         children = ArtisticGender.objects.filter(parentGender=artisticGender)
 
@@ -76,7 +81,7 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
 
     def cascadedelete(self, genre: ArtisticGender):
         language = check_accept_language(self.request)
-        Assertions.assert_true_raise401(genre, translate(language, "ERROR_GENRE_DOESNT_EXIST"))
+        Assertions.assert_true_raise404(genre, translate(language, "ERROR_GENRE_DOESNT_EXIST"))
         children = ArtisticGender.objects.filter(parentGender=genre)
 
         for genre in children:
