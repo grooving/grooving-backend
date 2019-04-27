@@ -13,7 +13,9 @@ spanish = {
     "ERROR_OFFER_OF_THIS_KIND": "No hay ofertas de este tipo",
     "ERROR_NO_DATA_GIVEN": "El formulario no tiene datos.",
     "ERROR_NO_MATCHING_LANGUAGE": "El idioma que has escogido no esta disponible.",
-    "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar."
+    "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar.",
+    "ERROR_ONLY_ONE_OPTION": "Se ha seleccionado mas de una opcion de edicion.",
+    "ERROR_NO_PORTFOLIO": "Porfolio no existe."
 }
 
 english = {
@@ -32,7 +34,9 @@ english = {
     "ERROR_OFFER_OF_THIS_KIND": "There are no offers of this kind.",
     "ERROR_NO_DATA_GIVEN": "The form has no data.",
     "ERROR_NO_MATCHING_LANGUAGE": "This language is not available.",
-    "ERROR_NO_GIVEN_LANGUAGE": "You must choose a language."
+    "ERROR_NO_GIVEN_LANGUAGE": "You must choose a language.",
+    "ERROR_ONLY_ONE_OPTION": "More than one edition option given.",
+    "ERROR_NO_PORTFOLIO": "Porfolio does not exist."
 
 }
 

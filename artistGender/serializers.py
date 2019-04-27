@@ -114,7 +114,7 @@ class SearchGenreSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_tree():
         parent = SearchGenreSerializer._get_parent_of_all()
-        Assertions.assert_true_raise404(parent, {'error', 'Parent zone not found'})
+        Assertions.assert_true_raise404(parent, {'error': 'ERROR_PARENT_GENRE_NOT_FOUND'})
         return SearchGenreSerializer._get_childs_genre(parent, [])[0]
 
     @staticmethod
@@ -163,15 +163,17 @@ class SearchGenreSerializer(serializers.ModelSerializer):
 
         if parentId is None:
             parent = SearchGenreSerializer._get_parent_of_all()
-            Assertions.assert_true_raise404(parent, {'error', 'Parent zone not found'})
+            Assertions.assert_true_raise401(parent, {'error' : 'ERROR_PARENT_GENRE_NOT_FOUND'})
 
             name = parent.name
         else:
             parent = ArtisticGender.objects.filter(id=parentId).first()
-
+            Assertions.assert_true_raise401(parent, {'error': 'ERROR_PARENT_GENRE_NOT_FOUND'})
             name = parent.name
 
-        child_dicts_list = ArtisticGender.objects.filter(parentGender=parent)
+        if ArtisticGender.objects.filter(parentGender=parent) is not None:
+            child_dicts_list = ArtisticGender.objects.filter(parentGender=parent).order_by('name')
+
         children = []
 
         for child in child_dicts_list:
