@@ -141,9 +141,9 @@ def check_accept_language(request):
         else:
             raise ValueError("This language is not supported")
     except ValueError as e:
-        Assertions.assert_true_raise403(False, {"error": e.args[0]})
+        Assertions.assert_true_raise400(False, {"error": e.args[0]})
     except:
-        Assertions.assert_true_raise403(False, {"error": "Language not found"})
+        Assertions.assert_true_raise400(False, {"error": "Language not found"})
 
     return language
 

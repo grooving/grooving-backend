@@ -81,8 +81,6 @@ urlpatterns = [
     url(r'^signupCustomer/$', CustomerRegister.as_view()),
     url(r'^artist/offers/$', ListArtistOffers.as_view()),
     url(r'^customer/offers/$', ListCustomerOffers.as_view()),
-    url(r'^artist/(?P<pk>[0-9]+)/$', ArtistRegister.as_view()),
-    url(r'^customer/(?P<pk>[0-9]+)/$', CustomerRegister.as_view()),
     url(r'^artist/ratings/(?P<pk>[0-9]+)/$', GetRatings.as_view()),
     url(r'^customer/rating/(?P<pk>[0-9]+)/$', PostRating.as_view()),
     url(r'^paymentCode/$', PaymentCode.as_view()),

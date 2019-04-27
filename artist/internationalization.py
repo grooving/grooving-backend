@@ -31,7 +31,8 @@ spanish = {
     "ERROR_IT_ISNT_YOUR_PERSONAL_INFO": "Solo puedes cambiar tu información personal",
     "ERROR_ARTIST_NOT_LOGGED": "Permiso denegado.",
     "ERROR_FIRST_NAME_SPECIAL_CHARACTERS": "El nombre no puede contener caracteres especiales ni números.",
-    "ERROR_LAST_NAME_SPECIAL_CHARACTERS": "Los apellidos no puede contener caracteres especiales ni números.",
+    "ERROR_LAST_NAME_SPECIAL_CHARACTERS": "Los apellidos no pueden contener caracteres especiales ni números.",
+    "ERROR_EMPTY_ARTISTIC_NAME": "El nombre artistico debe ser obligatorio.",
 
     "ERROR_NOT_LOGGED_IN": "Debes estar autenticado para entrar en este sitio.",
     "ERROR_NOT_AN_ARTIST": "No eres un artista, y por tanto no puedes estar en este sitio.",
@@ -78,7 +79,7 @@ english = {
     "ERROR_ARTIST_NOT_LOGGED": "Permission denied.",
     "ERROR_FIRST_NAME_SPECIAL_CHARACTERS": "First name can't special characters & numbers.",
     "ERROR_LAST_NAME_SPECIAL_CHARACTERS": "Last name can't special characters & numbers.",
-
+    "ERROR_EMPTY_ARTISTIC_NAME": "Artist name not provived.",
 
     "ERROR_NOT_LOGGED_IN": "You must be logged in to do this action.",
     "ERROR_NOT_AN_ARTIST": "You are not an artist, and therefore you cannot be here.",
