@@ -398,19 +398,23 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
         Assertions.assert_true_raise400(zone, translate(keyLanguage=language,
                                                         keyToTranslate="ERROR_ZONE_NOT_FOUND"))
         events = EventLocation.objects.all()
-        parentzones=[]
+        parentzones= []
+
         for event in events:
             try:
                 pzone = event.zone.parentZone
-                if pzone.id not in parentzones:
+                zone1 = event.zone
+                if pzone not in parentzones or zone1 not in parentzones:
+                    parentzones.append(zone1)
                     parentzones.append(pzone)
             except:
                 pass
 
         for parentzone in parentzones:
-            pzone = parentzone.parentZone
+
             try:
-                if pzone.id and pzone not in parentzones:
+                pzone = parentzone.parentZone
+                if pzone or pzone not in parentzones:
                     parentzones.append(pzone)
             except:
                 continue
