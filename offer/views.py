@@ -10,7 +10,7 @@ from utils.Assertions import Assertions
 from utils.utils import check_accept_language
 from utils.authentication_utils import get_logged_user
 from .internationalization import translate
-
+import pyqrcode
 
 class OfferManage(generics.RetrieveUpdateDestroyAPIView):
 
@@ -146,13 +146,15 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         customer = get_customer(request)
+
         language = check_accept_language(request)
         Assertions.assert_true_raise400(False, translate(language, "ERROR_NOT_A_CUSTOMER"))
         offer = self.get_object().first()
         Assertions.assert_true_raise400(False, translate(language, "ERROR_CUSTOMER_NOT_FOUND"))
         Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id, translate(language, "ERROR_NOT_OFFER_OWNER"))
 
-        return Response({"paymentCode": str(offer.paymentCode)}, status.HTTP_200_OK)
+        return Response({"paymentCode": str(offer.paymentCode),
+                         "qrcode": pyqrcode.create(offer.paymentCode).png_as_base64_str(scale=16)}, status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
         offer = OfferSerializer.service_made_payment_artist(request.data.get("paymentCode"), get_artist(request))
