@@ -22,9 +22,9 @@ def _service_generate_unique_payment_code():
 
 def save_data():
     # System configuration
-    system_configuration1 = SystemConfiguration.objects.create(minimumPrice='20', currency='EUR', paypalTax='2.9',
+    system_configuration1 = SystemConfiguration.objects.create(minimumPrice='20', currency='EUR', paypalTax='3.4',
         creditCardTax='1.9',
-        vat='21', profit='7',
+        vat='21', profit='10',
         corporateEmail='grupogrooving@gmail.com',
         reportEmail='grupogrooving@gmail.com',
         appName='Grooving',
