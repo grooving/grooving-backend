@@ -22,9 +22,9 @@ def _service_generate_unique_payment_code():
 
 def save_data():
     # System configuration
-    system_configuration1 = SystemConfiguration.objects.create(minimumPrice='20', currency='EUR', paypalTax='2.9',
+    system_configuration1 = SystemConfiguration.objects.create(minimumPrice='20', currency='EUR', paypalTax='3.4',
         creditCardTax='1.9',
-        vat='21', profit='7',
+        vat='21', profit='10',
         corporateEmail='grupogrooving@gmail.com',
         reportEmail='grupogrooving@gmail.com',
         appName='Grooving',
@@ -389,46 +389,46 @@ def save_data():
     system_configuration1.save()
 
     # ArtisticGenders
-    artistic_gender0 = ArtisticGender.objects.create(name='All genres')
+    artistic_gender0 = ArtisticGender.objects.create(name='All genres', name_es="Todos los géneros")
     artistic_gender0.save()
 
-    artistic_gender1 = ArtisticGender.objects.create(name='Music', parentGender=artistic_gender0)
+    artistic_gender1 = ArtisticGender.objects.create(name='Music', parentGender=artistic_gender0, name_es="Música")
     artistic_gender1.save()
 
-    artistic_gender2 = ArtisticGender.objects.create(name='DJ', parentGender=artistic_gender1)
+    artistic_gender2 = ArtisticGender.objects.create(name='DJ', parentGender=artistic_gender1, name_es="Pincha discos")
     artistic_gender2.save()
 
-    artistic_gender3 = ArtisticGender.objects.create(name='Pop', parentGender=artistic_gender1)
+    artistic_gender3 = ArtisticGender.objects.create(name='Pop', parentGender=artistic_gender1, name_es="Pop")
     artistic_gender3.save()
 
-    artistic_gender4 = ArtisticGender.objects.create(name='Rock', parentGender=artistic_gender1)
+    artistic_gender4 = ArtisticGender.objects.create(name='Rock', parentGender=artistic_gender1, name_es="Rock")
     artistic_gender4.save()
 
-    artistic_gender5 = ArtisticGender.objects.create(name='Flamenco', parentGender=artistic_gender1)
+    artistic_gender5 = ArtisticGender.objects.create(name='Flamenco', parentGender=artistic_gender1, name_es="Flamenco")
     artistic_gender5.save()
 
-    artistic_gender6 = ArtisticGender.objects.create(name='Magician', parentGender=artistic_gender0)
+    artistic_gender6 = ArtisticGender.objects.create(name='Magician', parentGender=artistic_gender0, name_es="Mago")
     artistic_gender6.save()
 
-    artistic_gender7 = ArtisticGender.objects.create(name='Comedian', parentGender=artistic_gender0)
+    artistic_gender7 = ArtisticGender.objects.create(name='Comedian', parentGender=artistic_gender0, name_es="Comedia")
     artistic_gender7.save()
 
-    artistic_gender8 = ArtisticGender.objects.create(name='Carnival', parentGender=artistic_gender0)
+    artistic_gender8 = ArtisticGender.objects.create(name='Carnival', parentGender=artistic_gender0, name_es="Carnaval")
     artistic_gender8.save()
 
-    artistic_gender9 = ArtisticGender.objects.create(name='Clowns', parentGender=artistic_gender7)
+    artistic_gender9 = ArtisticGender.objects.create(name='Clowns', parentGender=artistic_gender7, name_es="Payasos")
     artistic_gender9.save()
 
-    artistic_gender11 = ArtisticGender.objects.create(name='Mariachis', parentGender=artistic_gender1)
+    artistic_gender11 = ArtisticGender.objects.create(name='Mariachis', parentGender=artistic_gender1, name_es="Mariachis")
     artistic_gender11.save()
 
-    artistic_gender12 = ArtisticGender.objects.create(name='Animation', parentGender=artistic_gender0)
+    artistic_gender12 = ArtisticGender.objects.create(name='Animation', parentGender=artistic_gender0, name_es="Animación")
     artistic_gender12.save()
 
-    artistic_gender13 = ArtisticGender.objects.create(name='Theater', parentGender=artistic_gender0)
+    artistic_gender13 = ArtisticGender.objects.create(name='Theater', parentGender=artistic_gender0, name_es="Teatro")
     artistic_gender13.save()
 
-    artistic_gender10 = ArtisticGender.objects.create(name='Drag Queen', parentGender=artistic_gender12)
+    artistic_gender10 = ArtisticGender.objects.create(name='Drag Queen', parentGender=artistic_gender12, name_es="Drag queen")
     artistic_gender10.save()
     # Zones
 
@@ -1081,8 +1081,10 @@ def save_data():
                                                           link='https://www.youtube.com/watch?v=UxxajLWwzqY')
     portfolio13_module10.save()
 
-    availableDays13 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
-                       '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
+    availableDays13 = []
+
+    calendar13 = Calendar.objects.create(days=availableDays13, portfolio=portfolio13)
+    calendar13.save()
 
     # ...admins
 
@@ -1437,6 +1439,10 @@ def save_data():
                                                         description='Foto 3',
                                                         link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/14519937_1111631358927775_3967127956346645930_n.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=b1fd94a5cb7933883de0e6e6d34672b9&oe=5D39423E')
     portfolio9_module4.save()
+    availableDays9 = []
+
+    calendar9 = Calendar.objects.create(days=availableDays9, portfolio=portfolio9)
+    calendar9.save()
 
     # Calendar
 

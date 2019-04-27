@@ -39,6 +39,7 @@ class Admin(Actor):
     def __str__(self):
         return str(self.user.username)
 
+
 class UserAbstract(Actor):
     photo = models.CharField(max_length=500, blank=True, null=True)
     phone = models.CharField(max_length=12, blank=True, null=True)
@@ -51,6 +52,7 @@ class UserAbstract(Actor):
 
 class ArtisticGender(AbstractEntity):
     name = models.CharField(max_length=140)
+    name_es = models.CharField(max_length=140)
     parentGender = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
