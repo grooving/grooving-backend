@@ -41,9 +41,10 @@ class PortfolioModuleManager(generics.RetrieveUpdateDestroyAPIView):
         artist = Artist.objects.filter(portfolio=portfolioModule.portfolio).first()
         if loggedUser is not None and loggedUser.id == artist.id:
             serializer = PortfolioModuleSerializer(portfolioModule, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
+            if serializer.validate(request):
+                module = serializer.save(pk, logged_user=request.user)
+                serialized = PortfolioModuleSerializer(module)
+                return Response(serialized.data, status=status.HTTP_200_OK)
             else:
                 raise Assertions.assert_true_raise400(False, translate(language, "ERROR_INVALID_PARAMETERS"))
         else:
@@ -63,7 +64,13 @@ class CreatePortfolioModule(generics.CreateAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
+
+        language = check_accept_language(request)
+        user = get_logged_user(request)
+        user_type = get_user_type(user)
+        Assertions.assert_true_raise403(user and user_type == 'Artist', translate(language, "ERROR_NOT_AN_ARTIST"))
         serializer = PortfolioModuleSerializer(data=request.data, partial=True)
+
         if serializer.validate(request):
             module = serializer.save(logged_user=request.user)
             serialized = PortfolioModuleSerializer(module)
