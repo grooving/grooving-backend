@@ -137,7 +137,8 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(artistic_name, translate(language, "ERROR_NO_ARTISTIC_NAME"))
         Assertions.assert_true_raise400(artistic_name != "", translate(language, "ERROR_NO_ARTISTIC_NAME"))
 
-        # Comprobación: el artisticName nuevo (del request), no debe coincidir con ninguno del resto de artistas que no sea yo
+        # Comprobación: el artisticName nuevo (del request), no debe coincidir con ninguno del resto de artistas
+        # que no sea yo
 
         if Portfolio.objects.exclude(artist__id=artist.id).filter(artisticName__iexact=json.get('artisticName')):
             Assertions.assert_true_raise400(False, translate(language, "ERROR_ARTISTIC_NAME_ALREADY_EXISTS"))
