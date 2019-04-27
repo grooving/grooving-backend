@@ -385,7 +385,7 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         language = check_accept_language(request)
-        pks = list(Zone.objects.values_list("id",flat=True))
+        pks = list(Zone.objects.values_list("id", flat=True))
         Assertions.assert_true_raise400(pk, translate(keyLanguage=language,
                                                         keyToTranslate="ERROR_ZONE_NOT_FOUND"))
         admin = get_admin_2(request)

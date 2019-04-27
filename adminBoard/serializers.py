@@ -75,11 +75,12 @@ class ZoneSerializer(serializers.ModelSerializer):
                 Assertions.assert_true_raise400(id is None,
                                                 translate(keyLanguage=language,
                                                           keyToTranslate="ERROR_ZONE_MORE_THAN_3_LEVELS"))
-
-        zone = Zone.objects.create(name=json.get('name'), parentZone=parentZone)
         names = list(Zone.objects.values_list('name', flat=True))
         Assertions.assert_true_raise400(name not in names, translate(keyLanguage=language,
                                                                      keyToTranslate="ERROR_ZONE_ALREADY_EXISTS"))
+
+        zone = Zone.objects.create(name=json.get('name'), parentZone=parentZone)
+
         return zone
 
     @staticmethod
