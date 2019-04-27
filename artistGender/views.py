@@ -9,6 +9,8 @@ from rest_framework import generics
 from .serializers import ArtisticGenderSerializer, SearchGenreSerializer
 from rest_framework import status
 from utils.Assertions import Assertions
+from utils.utils import check_accept_language
+from .internationalization import translate
 
 
 class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
@@ -17,12 +19,13 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ArtisticGenderSerializer
 
     def get_object(self, pk=None):
+        language = check_accept_language(self.request)
         if pk is None:
             pk = self.kwargs['pk']
         try:
             return ArtisticGender.objects.get(pk=pk)
         except ArtisticGender.DoesNotExist:
-            raise Assertions.assert_true_raise404(False, {'error': 'ERROR_ARTISTIC_GENRE_NOT_FOUND'})
+            raise Assertions.assert_true_raise404(False, {'error': translate(language, 'ERROR_ARTISTIC_GENRE_NOT_FOUND')})
 
     def get(self, request, pk=None, format=None):
         if pk is None:
@@ -34,33 +37,34 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
     def put(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
-
+        language = check_accept_language(request)
         try:
             artisticGender = self.get_object(pk)
             loggedUser = get_admin_2(request)
-            Assertions.assert_true_raise403(loggedUser, {'error': 'ERROR_NOT_AN_ADMIN'})
+            Assertions.assert_true_raise403(loggedUser, {'error': translate(language, "ERROR_NOT_AN_ADMIN")})
             serializer = ArtisticGenderSerializer(artisticGender, data=request.data, partial=True)
             if serializer.validate(request.data):
                 serializer.is_valid()
                 serializer.save()
-                return Response(serializer.data)
+                return Response(status=status.HTTP_201_CREATED)
             else:
-                Assertions.assert_true_raise400(False, {'error': 'ERROR_BAD_REQUEST'})
+                raise Assertions.assert_true_raise400(False,
+                                                      {'error': translate(language, 'ERROR_BAD_REQUEST')})
         except ArtisticGender.DoesNotExist:
-            Assertions.assert_true_raise404(False, {'error': 'ERROR_ARTISTIC_GENRE_NOT_FOUND'})
+            raise Assertions.assert_true_raise404(False, {'error': translate(language, 'ERROR_ARTISTIC_GENRE_NOT_FOUND')})
 
 
     def delete(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
-
+        language = check_accept_language(request)
         admin = get_admin(request)
 
-        Assertions.assert_true_raise400(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        Assertions.assert_true_raise403(admin, {'error': translate(language, "ERROR_NOT_AN_ADMIN")})
 
         artisticGender = self.get_object(pk)
 
-        Assertions.assert_true_raise401(artisticGender, {'error': 'ERROR_GENRE_DOESNT_EXIST'})
+        Assertions.assert_true_raise401(artisticGender, {'error': translate(language, "ERROR_GENRE_DOESNT_EXIST")})
 
         children = ArtisticGender.objects.filter(parentGender=artisticGender)
 
@@ -71,8 +75,8 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def cascadedelete(self, genre: ArtisticGender):
-
-        Assertions.assert_true_raise401(genre, {'error': 'ERROR_GENRE_DOESNT_EXIST'})
+        language = check_accept_language(self.request)
+        Assertions.assert_true_raise401(genre, {'error': translate(language, "ERROR_GENRE_DOESNT_EXIST")})
         children = ArtisticGender.objects.filter(parentGender=genre)
 
         for genre in children:
@@ -87,8 +91,8 @@ class CreateArtisticGender(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
 
         admin = get_admin(request)
-
-        Assertions.assert_true_raise400(admin, {'error': 'ERROR_NOT_AN_ADMIN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(admin, {'error': translate(language, "ERROR_NOT_AN_ADMIN")})
 
         serializer = ArtisticGenderSerializer(data=request.data, partial=True)
         if serializer.validate(request.data):

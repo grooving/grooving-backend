@@ -147,13 +147,17 @@ def check_accept_language(request):
 
     return language
 
-
+'''
 def check_accept_language_by_user(logged_user):
     language = ""
 
     try:
         request_language = logged_user.language
-
+        
+        if logged_user is None:
+            
+            language = "en"
+        
         if request_language.find("en") != -1:
             language = "en"
         elif request_language.find("es") != -1:
@@ -161,8 +165,9 @@ def check_accept_language_by_user(logged_user):
         else:
             raise ValueError("This language is not supported")
     except ValueError as e:
-        Assertions.assert_true_raise403(False, {"error": e.args[0]})
+        Assertions.assert_true_raise403(False, {"error": e.args[0]})    
     except:
         Assertions.assert_true_raise403(False, {"error": "Language not found"})
 
     return language
+'''
