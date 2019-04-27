@@ -16,7 +16,7 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
             genre = ArtisticGender()
             genre = self._service_create(self.initial_data, genre)
             genre.save()
-            Assertions.assert_true_raise401(genre,{'error': 'ERROR_IN_CREATION'})
+            Assertions.assert_true_raise401(genre, {'error': 'ERROR_IN_CREATION'})
             return genre
         else:
 
@@ -35,10 +35,13 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
     def _service_create(json: dict, genre: ArtisticGender):
 
         Assertions.assert_true_raise401(ArtisticGender.objects.filter(name=json.get('name')).first() is None, {'error': 'ERROR_GENRE_EXISTS'})
+        Assertions.assert_true_raise401(json.get('name') != "",{'error': 'ERROR_GENRE_NULL_NAME'})
+        Assertions.assert_true_raise401(json.get('name') is not None, {'error': 'ERROR_GENRE_NULL_NAME'})
 
         genre.name = json.get('name')
 
-        Assertions.assert_true_raise401(ArtisticGender.objects.filter(id=json.get('parentGender')).first(),
+        if json.get('parentGender') is not None:
+            Assertions.assert_true_raise401(ArtisticGender.objects.filter(id=json.get('parentGender')).first() is not None,
                                         {'error': 'ERROR_GENRE_DOESNT_EXIST'})
 
         genre.parentGender = ArtisticGender.objects.filter(id=json.get('parentGender')).first()
