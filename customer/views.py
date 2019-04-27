@@ -102,7 +102,7 @@ class CustomerRegister(generics.CreateAPIView):
 
         serializer = CustomerSerializer(customer, data=request.data, partial=True)
         serializer.is_valid(True)
-        customer = serializer.update(pk)
+        customer = serializer.update(request, pk)
 
         customer.save()
         return Response(status=status.HTTP_200_OK)

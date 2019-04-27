@@ -9,7 +9,7 @@ from utils.Assertions import Assertions
 from utils.notifications.notifications import Notifications
 from utils.strings import Strings
 from customer.internationalization import translate
-from utils.utils import check_accept_language
+from utils.utils import check_accept_language, check_special_characters_and_numbers
 
 
 class CustomerInfoSerializer(serializers.HyperlinkedModelSerializer):
@@ -59,6 +59,14 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         customer.phone = json.get('phone')
         customer.photo = json.get('photo')
         user = customer.user
+
+        Assertions.assert_true_raise400(json.get('first_name'), translate(language, "ERROR_EMPTY_FIRST_NAME"))
+        Assertions.assert_true_raise400(check_special_characters_and_numbers(json.get('first_name')),
+                                        translate(language, "ERROR_FIRST_NAME_SPECIAL_CHARACTERS"))
+        Assertions.assert_true_raise400(json.get('last_name'), translate(language, "ERROR_EMPTY_LAST_NAME"))
+        Assertions.assert_true_raise400(check_special_characters_and_numbers(json.get("last_name")),
+                                        translate(language, "ERROR_LAST_NAME_SPECIAL_CHARACTERS"))
+
         user.first_name = json.get('first_name').strip()
         user.last_name = json.get('last_name').strip()
         photo = json.get('photo')
@@ -107,32 +115,40 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
     def validate_customer(request):
         language = check_accept_language(request)
 
+        # Empty validations
+
+        Assertions.assert_true_raise400(request.data, translate(language, "ERROR_EMPTY_FORM"))
+        Assertions.assert_true_raise400(request.data.get("username"), translate(language, "ERROR_EMPTY_USERNAME"))
+        Assertions.assert_true_raise400(request.data.get("password"), translate(language, "ERROR_EMPTY_PASSWORD"))
+        Assertions.assert_true_raise400(request.data.get("confirm_password"),
+                                        translate(language, "ERROR_EMPTY_CONFIRM_PASSWORD"))
+        Assertions.assert_true_raise400(
+            request.data.get("password").strip() == request.data.get("confirm_password").strip(),
+            translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
+        Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMPTY_EMAIL"))
+        Assertions.assert_true_raise400(request.data.get("first_name"), translate(language, "ERROR_EMPTY_FIRST_NAME"))
+        Assertions.assert_true_raise400(request.data.get("last_name"), translate(language, "ERROR_EMPTY_LAST_NAME"))
+        Assertions.assert_true_raise400(check_special_characters_and_numbers(request.data.get("first_name")),
+                                        translate(language, "ERROR_FIRST_NAME_SPECIAL_CHARACTERS"))
+        Assertions.assert_true_raise400(check_special_characters_and_numbers(request.data.get("last_name")),
+                                        translate(language, "ERROR_LAST_NAME_SPECIAL_CHARACTERS"))
+
         user_names = User.objects.values_list('username', flat=True)
         emails = User.objects.values_list('email', flat=True)
         password = request.data.get("password").strip()
-        confirm_password = request.data.get("confirm_password").strip()
         username = request.data.get("username").strip()
         email = request.data.get("email")
         first_name = request.data.get("first_name").strip()
         last_name = request.data.get("last_name").strip()
         phone = request.data.get("phone")
         photo = request.data.get("photo")
-        Assertions.assert_true_raise400(request.data, translate(language, "ERROR_EMPTY_FORM"))
-
-        # Empty validations
-        Assertions.assert_true_raise400(username, translate(language, "ERROR_EMPTY_USERNAME"))
-        Assertions.assert_true_raise400(password, translate(language, "ERROR_EMPTY_PASSWORD"))
-        Assertions.assert_true_raise400(email, translate(language, "ERROR_EMPTY_EMAIL"))
-        Assertions.assert_true_raise400(first_name, translate(language, "ERROR_EMPTY_FIRST_NAME"))
-        Assertions.assert_true_raise400(last_name, translate(language, "ERROR_EMPTY_LAST_NAME"))
-        Assertions.assert_true_raise400(password == confirm_password,
-                                        translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
 
         # Email in use validation
-        Assertions.assert_true_raise400(not (email in emails),
-                                        translate(language, "ERROR_EMAIL_IN_USE"))
+
+        Assertions.assert_true_raise400(not (email in emails), translate(language, "ERROR_EMAIL_IN_USE"))
 
         # Password validations
+
         Assertions.assert_true_raise400(not (username in password or password in username),
                                         translate(language, "ERROR_PASSWORD_SIMILAR_USERNAME"))
 

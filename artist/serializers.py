@@ -104,7 +104,11 @@ class ArtistSerializer(serializers.ModelSerializer):
         user = artist.user
 
         Assertions.assert_true_raise400(json.get('first_name'), translate(language, "ERROR_EMPTY_FIRST_NAME"))
+        Assertions.assert_true_raise400(check_special_characters_and_numbers(json.get('first_name')),
+                                        translate(language, "ERROR_FIRST_NAME_SPECIAL_CHARACTERS"))
         Assertions.assert_true_raise400(json.get('last_name'), translate(language, "ERROR_EMPTY_LAST_NAME"))
+        Assertions.assert_true_raise400(check_special_characters_and_numbers(json.get("last_name")),
+                                        translate(language, "ERROR_LAST_NAME_SPECIAL_CHARACTERS"))
 
         user.first_name = json.get('first_name').strip()
         user.last_name = json.get('last_name').strip()
@@ -231,4 +235,4 @@ class ArtistSerializer(serializers.ModelSerializer):
                                             translate(language, "ERROR_INVALID_PHOTO_URL_HTTP"))
             Assertions.assert_true_raise400(Strings.url_is_an_image(photo),
                                             translate(language, "ERROR_INVALID_PHOTO_URL_ENDFORMAT"))
-            return True
+        return True
