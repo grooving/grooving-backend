@@ -22,15 +22,15 @@ class GetPersonalInformationOfArtist(generics.ListAPIView):
         user = get_logged_user(self.request)
         user_type = get_user_type(user)
         language = check_accept_language(request)
-        Assertions.assert_true_raise403(user is not None, {'error': translate(language, "ERROR_NOT_LOGGED_IN")})
-        Assertions.assert_true_raise403(user_type == 'Artist', {'error': translate(language, "ERROR_NOT_AN_ARTIST")})
+        Assertions.assert_true_raise403(user is not None, translate(language, "ERROR_NOT_LOGGED_IN"))
+        Assertions.assert_true_raise403(user_type == 'Artist', translate(language, "ERROR_NOT_AN_ARTIST"))
         try:
             artist = Artist.objects.get(user_id=user.user_id)
             serializer = ArtistInfoSerializer(artist)
             return Response(serializer.data)
         except Artist.DoesNotExist:
 
-            Assertions.assert_true_raise400(False, {'error': translate(language, "ERROR_NO_ARTIST_FOUND")})
+            Assertions.assert_true_raise400(False, translate(language, "ERROR_NO_ARTIST_FOUND"))
 
 
 class ListArtist(generics.ListAPIView):

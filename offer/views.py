@@ -27,7 +27,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
             return Offer.objects.get(pk=pk)
         except Offer.DoesNotExist:
             Assertions.assert_true_raise404(False,
-                                            {'error': translate(language, "ERROR_OFFER_NOT_FOUND")})
+                                            translate(language, "ERROR_OFFER_NOT_FOUND"))
 
     def get(self, request, pk=None, format=None):
         if pk is None:
@@ -43,7 +43,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
                 serializer = GetOfferSerializer(offer)
                 return Response(serializer.data)
             else:
-                Assertions.assert_true_raise403(False, {'error': translate(language, "ERROR_NOT_AN_ARTIST")})
+                Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_AN_ARTIST"))
         else:
             if user_type == "Customer":
                 event_location = offer.eventLocation
@@ -55,9 +55,9 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
                     serializer = OfferSerializer(offer)
                     return Response(serializer.data)
                 else:
-                    Assertions.assert_true_raise403(False, {'error': translate(language, "ERROR_NOT_A_CUSTOMER")})
+                    Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_A_CUSTOMER"))
             else:
-                raise Assertions.assert_true_raise403(False, {'error': translate(language, "ERROR_NOT_LOGGED_IN")})
+                raise Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_LOGGED_IN"))
 
     def put(self, request, pk=None):
         if pk is None:
@@ -76,7 +76,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
                     serializer.save(pk,logged_user=articustomer)
                     return Response(status=status.HTTP_200_OK)
                 else:
-                    Assertions.assert_true_raise403(False, {'error': translate(language, "ERROR_NOT_AN_ARTIST")})
+                    Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_AN_ARTIST"))
             else:
                 if user_type == "Customer":
                     event_location = offer.eventLocation
@@ -88,9 +88,9 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
                         serializer.save(pk, logged_user=articustomer)
                         return Response(status=status.HTTP_200_OK)
                     else:
-                        Assertions.assert_true_raise400(False, {'error': translate(language, "ERROR_NOT_A_CUSTOMER")})
+                        Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_A_CUSTOMER"))
                 else:
-                    Assertions.assert_true_raise403(False, {'error': translate(language, "ERROR_NOT_ALLOWED_USER")})
+                    Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_ALLOWED_USER"))
 
     def delete(self, request, pk=None, format=None):
         if pk is None:
@@ -133,7 +133,7 @@ class NumOffers(generics.GenericAPIView):
             numOffers = Offer.objects.filter(paymentPackage__portfolio__artist=articustomer, status='PENDING').count()
             return Response(numOffers, status=status.HTTP_200_OK)
         else:
-            Assertions.assert_true_raise403(False, {'error': translate(language, "ERROR_NOT_ALLOWED_USER")})
+            Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_ALLOWED_USER"))
 
 
 class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
@@ -147,10 +147,10 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, *args, **kwargs):
         customer = get_customer(request)
         language = check_accept_language(request)
-        Assertions.assert_true_raise400(False, {'error': translate(language, "ERROR_NOT_A_CUSTOMER")})
+        Assertions.assert_true_raise400(False, translate(language, "ERROR_NOT_A_CUSTOMER"))
         offer = self.get_object().first()
-        Assertions.assert_true_raise400(False, {'error': translate(language, "ERROR_CUSTOMER_NOT_FOUND")})
-        Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id, {'error': translate(language, "ERROR_NOT_OFFER_OWNER")})
+        Assertions.assert_true_raise400(False, translate(language, "ERROR_CUSTOMER_NOT_FOUND"))
+        Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id, translate(language, "ERROR_NOT_OFFER_OWNER"))
 
         return Response({"paymentCode": str(offer.paymentCode)}, status.HTTP_200_OK)
 
