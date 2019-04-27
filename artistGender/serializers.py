@@ -186,8 +186,18 @@ class SearchGenreSerializer(serializers.ModelSerializer):
         granddadId=None
         if parent.parentGender is not None:
 
-            granddadId = parent.parentGender.id
+            grandad =  parent.parentGender
+            granddadId = grandad.id
 
-        dictionary = {"id": parentId, "name": name, "parent": granddadId, "children": children}
+        if parent.parentGender is None:
+            depth = 1
+
+        elif grandad.parentGender is None:
+            depth = 2
+
+        else:
+            depth = 3
+
+        dictionary = {"depth": depth, "id": parentId, "name": name, "parent": granddadId, "children": children}
 
         return dictionary

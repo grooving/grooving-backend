@@ -129,7 +129,7 @@ class ListArtisticGenders(generics.RetrieveAPIView):
             try:
                 parentId = int(parentId)
             except ValueError:
-                Assertions.assert_true_raise400(False, translate(request,"ERROR_INCORRECT_ID"))
+                Assertions.assert_true_raise400(False, translate(request.headers['Accept-Language'], "ERROR_INCORRECT_ID"))
 
             Assertions.assert_true_raise400(tree is None and portfolio is None, {"error": "ERROR_ONLY_ONE_OPTION"})
             genres = SearchGenreSerializer.get_children(parentId)
