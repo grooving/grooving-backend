@@ -7,7 +7,7 @@ from .serializers import OfferSerializer, GetOfferSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from utils.Assertions import Assertions
-
+import pyqrcode
 
 class OfferManage(generics.RetrieveUpdateDestroyAPIView):
 
@@ -134,12 +134,14 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
 
     def get(self, request, *args, **kwargs):
         customer = get_customer(request)
-        Assertions.assert_true_raise403(customer,{'error': 'Customer not found'})
+        Assertions.assert_true_raise403(customer, {'error': 'Customer not found'})
         offer = self.get_object().first()
-        Assertions.assert_true_raise404(offer,'Customer not found')
-        Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id,'You are not the owner of the offer')
+        Assertions.assert_true_raise404(offer, 'Customer not found')
+        Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id,
+                                        'You are not the owner of the offer')
 
-        return Response({"paymentCode": str(offer.paymentCode)}, status.HTTP_200_OK)
+        return Response({"paymentCode": str(offer.paymentCode),
+                         "qrcode": pyqrcode.create(offer.paymentCode).png_as_base64_str(scale=16)}, status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
         offer = OfferSerializer.service_made_payment_artist(request.data.get("paymentCode"), get_artist(request))
