@@ -18,6 +18,7 @@ spanish = {
     "ERROR_CUSTOM_PACKAGE_NOT_OWNER": "No eres el dueño de este paquete de pago personalizado.",
     "ERROR_PERFORMANCE_PACKAGE_NOT_OWNER": "No eres el dueño de este paquete de actuación.",
     "ERROR_FARE_PACKAGE_NOT_OWNER": "No eres el dueño de esta tarifa.",
+    "ERROR_NO_ARTIST_FOUND": "El artista que buscas no existe.",
 
 }
 
@@ -41,7 +42,7 @@ english = {
     "ERROR_CUSTOM_PACKAGE_NOT_OWNER": "You are not the owner of this custom package.",
     "ERROR_PERFORMANCE_PACKAGE_NOT_OWNER": "You are not the owner of this performance package.",
     "ERROR_FARE_PACKAGE_NOT_OWNER": "You are not the owner of this fare package.",
-
+    "ERROR_NO_ARTIST_FOUND": "The artist you are searching for does not exist.",
 
 }
 

@@ -10,6 +10,7 @@ from utils.authentication_utils import get_logged_user, get_user_type
 from utils.Assertions import Assertions
 from utils.utils import check_accept_language
 from paymentPackage.internationalization import translate
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
@@ -17,8 +18,8 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
     queryset = PaymentPackage.objects.all()
     serializer_class = PaymentPackageListSerializer
 
-    def get_object(self, request, pk=None):
-        language = check_accept_language(request)
+    def get_object(self, pk=None):
+        language = check_accept_language(self.request)
         if pk is None:
             pk = self.kwargs['pk']
         try:
@@ -26,21 +27,24 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
             return PaymentPackage.objects.filter(portfolio=portfolio)
         except PaymentPackage.DoesNotExist:
             raise Assertions.assert_true_raise404(False,
-                                                  translate(keyLanguage=language,
-                                                            keyToTranslate="ERROR_PAYMENT_PACKAGE_NOT_FOUND"))
+                                                  translate(language, "ERROR_PAYMENT_PACKAGE_NOT_FOUND"))
+        except ObjectDoesNotExist:
+            raise Assertions.assert_true_raise404(False,
+                                                  translate(language, "ERROR_NO_ARTIST_FOUND"))
 
     def get(self, request, pk=None, format=None):
         language = check_accept_language(request)
         if pk is None:
             pk = self.kwargs['pk']
         user = get_logged_user(request)
-        Assertions.assert_true_raise403(user is not None, translate(keyLanguage=language,
-                                                            keyToTranslate="ERROR_MUST_BE_LOGGED"))
+        Assertions.assert_true_raise403(user is not None, translate(language, "ERROR_MUST_BE_LOGGED"))
         user_type = get_user_type(user)
-        artist = Artist.objects.get(pk=pk)
-        Assertions.assert_true_raise401((user_type == 'Customer' or user.user_id == artist.user_id), translate(keyLanguage=language,
-                                                            keyToTranslate="ERROR_NOT_OWNER"))
+
         try:
+            artist = Artist.objects.get(pk=pk)
+            Assertions.assert_true_raise401((user_type == 'Customer' or user.user_id == artist.user_id),
+                                            translate(keyLanguage=language,
+                                                      keyToTranslate="ERROR_NOT_OWNER"))
             portfolio = Artist.objects.get(id=pk).portfolio
             paymentPackage = PaymentPackage.objects.filter(portfolio=portfolio)
             serializer = PaymentPackageListSerializer(paymentPackage, many=True)
@@ -49,15 +53,17 @@ class PaymentPackageByArtist(generics.RetrieveUpdateDestroyAPIView):
             raise Assertions.assert_true_raise404(False,
                                                   translate(keyLanguage=language,
                                                             keyToTranslate="ERROR_PAYMENT_PACKAGE_NOT_FOUND"))
-
+        except ObjectDoesNotExist:
+            raise Assertions.assert_true_raise404(False,
+                                                  translate(language, "ERROR_NO_ARTIST_FOUND"))
 
 class PaymentPackageManager(generics.RetrieveUpdateDestroyAPIView):
 
     queryset = PaymentPackage.objects.all()
     serializer_class = PaymentPackageSerializer
 
-    def get_object(self, request,pk=None):
-        language = check_accept_language(request)
+    def get_object(self, pk=None):
+        language = check_accept_language(self.request)
         if pk is None:
             pk = self.kwargs['pk']
         try:
@@ -70,7 +76,7 @@ class PaymentPackageManager(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
-        paymentPackage = PaymentPackage.objects.get(pk=pk)
+        paymentPackage = self.get_object(pk=pk)
         serializer = PaymentPackageSerializerShort(paymentPackage)
         return Response(serializer.data)
 
@@ -131,8 +137,8 @@ class CreateCustomPackage(generics.CreateAPIView):
     queryset = Custom.objects.all()
     serializer_class = CustomSerializer
 
-    def get_object(self, request, pk=None):
-        language = check_accept_language(request)
+    def get_object(self, pk=None):
+        language = check_accept_language(self.request)
         try:
             return Custom.objects.get(pk=pk)
         except Custom.DoesNotExist:
@@ -152,7 +158,8 @@ class CreateCustomPackage(generics.CreateAPIView):
 
         if pk:
             package = PaymentPackage.objects.filter(custom_id=pk).first()
-
+            Assertions.assert_true_raise404(package, translate(keyLanguage=language,
+                                                               keyToTranslate="ERROR_CUSTOM_PACKAGE_NOT_FOUND"))
             owner = package.portfolio.artist
             Assertions.assert_true_raise403(logged_user.user.id == owner.user.id, translate(keyLanguage=language,
                                                             keyToTranslate="ERROR_CUSTOM_PACKAGE_NOT_OWNER"))
@@ -173,8 +180,8 @@ class CreatePerformancePackage(generics.CreateAPIView):
     queryset = Performance.objects.all()
     serializer_class = PerformanceSerializer
 
-    def get_object(self, request, pk=None):
-        language = check_accept_language(request)
+    def get_object(self, pk=None):
+        language = check_accept_language(self.request)
         try:
             return Performance.objects.get(pk=pk)
         except Performance.DoesNotExist:
@@ -193,6 +200,9 @@ class CreatePerformancePackage(generics.CreateAPIView):
 
         if pk:
             package = PaymentPackage.objects.filter(performance_id=pk).first()
+
+            Assertions.assert_true_raise404(package, translate(keyLanguage=language,
+                                                      keyToTranslate="ERROR_PERFORMANCE_PACKAGE_NOT_FOUND"))
 
             owner = package.portfolio.artist
             Assertions.assert_true_raise403(logged_user.user.id == owner.user.id, translate(keyLanguage=language,
@@ -214,8 +224,8 @@ class CreateFarePackage(generics.CreateAPIView):
     queryset = Fare.objects.all()
     serializer_class = FareSerializer
 
-    def get_object(self, request, pk=None):
-        language = check_accept_language(request)
+    def get_object(self, pk=None):
+        language = check_accept_language(self.request)
         try:
             return Fare.objects.get(pk=pk)
         except Fare.DoesNotExist:
@@ -228,13 +238,15 @@ class CreateFarePackage(generics.CreateAPIView):
         user_type = None
         try:
             logged_user = get_logged_user(request)
+            Assertions.assert_true_raise403(logged_user, translate(language, "ERROR_NOT_LOGGED_ID"))
             user_type = get_user_type(logged_user)
         except:
             pass
 
         if pk:
             package = PaymentPackage.objects.filter(fare_id=pk).first()
-
+            Assertions.assert_true_raise404(package, translate(keyLanguage=language,
+                                                               keyToTranslate="ERROR_FARE_PACKAGE_NOT_FOUND"))
             owner = package.portfolio.artist
             Assertions.assert_true_raise403(logged_user.user.id == owner.user.id, translate(keyLanguage=language,
                                                             keyToTranslate="ERROR_FARE_PACKAGE_NOT_OWNER"))
