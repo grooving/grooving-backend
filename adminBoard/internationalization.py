@@ -15,7 +15,8 @@ spanish = {
     "ERROR_ZONE_ALREADY_EXISTS": "La zona introducida ya existe",
     "ERROR_PARENT_ZONE_DOES_NOT_EXIST": "La zona padre no existe",
     "ERROR_ZONE_BELONGS_TO_EVENT": "La zona pertenece a la localización de un artista del sistema,no puede ser borrada",
-    "ERROR_ZONE_MORE_THAN_3_LEVELS": "Una zona no puede tener más de 3 niveles"
+    "ERROR_ZONE_MORE_THAN_3_LEVELS": "Una zona no puede tener más de 3 niveles",
+    "ERROR_INVALID_PARENT_ZONE": "Zona padre inválida",
 }
 
 english = {
@@ -35,8 +36,8 @@ english = {
     "ERROR_ZONE_ALREADY_EXISTS": "Zone name already exists",
     "ERROR_PARENT_ZONE_DOES_NOT_EXIST": "Parent zone does not exists",
     "ERROR_ZONE_BELONGS_TO_EVENT": "Zone belongs to an artist event location, it cannot be deleted",
-    "ERROR_ZONE_MORE_THAN_3_LEVELS": "A zone cannot have more than 3 levels"
-
+    "ERROR_ZONE_MORE_THAN_3_LEVELS": "A zone cannot have more than 3 levels",
+    "ERROR_INVALID_PARENT_ZONE": "Invalid parent zone",
 }
 
 
