@@ -147,7 +147,6 @@ def check_accept_language(request):
 
     return language
 
-
 def check_special_characters_and_numbers(text):
     regex = re.compile("[@_·º!+¬#$%^&*()<>?/|}{~:,.0123456789]")
     result = None

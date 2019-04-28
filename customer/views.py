@@ -33,12 +33,12 @@ class GetPersonalInformationOfCustomer(generics.ListAPIView):
 class GetPublicInformationOfCustomer(generics.ListAPIView):
     serializer_class = PublicCustomerInfoSerializer
 
-    def get_object(self, request, pk=None):
-        language = check_accept_language(request)
+    def get_object(self, pk=None):
+        language = check_accept_language(self.request)
 
         if pk is None:
             pk = self.kwargs['pk']
-
+        language = check_accept_language(self.request)
         try:
             return Customer.objects.get(pk=pk)
         except Customer.DoesNotExist:
@@ -59,8 +59,8 @@ class CustomerRegister(generics.CreateAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
-    def get_object(self, request, pk=None):
-        language = check_accept_language(request)
+    def get_object(self, pk=None):
+        language = check_accept_language(self.request)
 
         try:
             return Customer.objects.get(pk=pk)

@@ -1,15 +1,13 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from django.utils import timezone
 from datetime import datetime, timedelta
-from Grooving.models import Artist, Customer, Offer
+from Grooving.models import Artist, Customer, Offer, Zone, EventLocation
 from rest_framework.response import Response
-from utils.authentication_utils import get_admin, get_logged_user
+from utils.authentication_utils import get_admin_2, get_admin
 from utils.Assertions import Assertions
-from django.db.models import Sum
 from utils.utils import check_accept_language
-from .internationalization import translate
-
-
+from adminBoard.serializers import ZoneSerializer
+from adminBoard.internationalization import translate
 
 
 class GetStatistics(generics.ListAPIView):

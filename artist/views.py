@@ -49,8 +49,8 @@ class ListArtist(generics.ListAPIView):
 class ArtistRegister(generics.CreateAPIView):
     serializer_class = ArtistSerializer
 
-    def get_object(self, request, pk=None):
-        language = check_accept_language(request)
+    def get_object(self, pk=None):
+        language = check_accept_language(self.request)
         try:
             return Artist.objects.get(pk=pk)
         except Artist.DoesNotExist:
@@ -90,7 +90,7 @@ class ArtistRegister(generics.CreateAPIView):
         if pk is None:
             pk = self.kwargs['pk']
 
-        artist = self.get_object(request, pk)
+        artist = self.get_object(pk)
         artist_or_customer = get_logged_user(request)
 
         Assertions.assert_true_raise403(artist_or_customer, translate(language, "ERROR_ARTIST_NOT_LOGGED"))
