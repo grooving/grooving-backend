@@ -100,7 +100,7 @@ class ListZones(generics.RetrieveAPIView):
             Assertions.assert_true_raise400(portfolio is None,
                                             translate(keyLanguage=language, keyToTranslate="ERROR_ZONE_NOT_3_OPTION"))
 
-            zones = SearchZoneSerializer.get_tree()
+            zones = SearchZoneSerializer.get_tree(request)
         elif portfolio is not None:
 
             try:

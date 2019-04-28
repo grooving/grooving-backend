@@ -4,6 +4,7 @@ spanish = {
     "ERROR_ZONE_NOT_3_OPTION": "La zona no tiene 3 opciones",
     "ERROR_INCORRECT_ID": "Id incorrecto",
     "ERROR_PARENT_ZONE_NOT_FOUND": "Zona padre no encontrada",
+    "ERROR_PORTFOLIO_NOT_FOUND": "Porfolio no encontrado",
 }
 
 english = {
@@ -12,6 +13,7 @@ english = {
     "ERROR_ZONE_NOT_3_OPTION": "Portfolio's zones don't have tree option",
     "ERROR_INCORRECT_ID": "Incorrect id",
     "ERROR_PARENT_ZONE_NOT_FOUND": "Parent zone not found",
+    "ERROR_PORTFOLIO_NOT_FOUND": "Porfolio not found",
 }
 
 
