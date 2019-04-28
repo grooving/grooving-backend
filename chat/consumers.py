@@ -7,7 +7,7 @@ from channels.exceptions import DenyConnection, AcceptConnection
 from utils.utils import isPositiveInteger
 from datetime import datetime
 from rest_framework.authtoken.models import Token
-
+import django
 
 class ChatConsumer(WebsocketConsumer):
 
@@ -61,6 +61,7 @@ class ChatConsumer(WebsocketConsumer):
                 self.room_group_name = 'chat_%s' % self.room_name
                 self.is_connect_to_group=False
                 self.accept()
+        django.db.connections.close_all()
 
     def disconnect(self, close_code):
         # Leave room group
@@ -71,6 +72,7 @@ class ChatConsumer(WebsocketConsumer):
             )
         except:
             pass
+        django.db.connections.close_all()
 
     # Receive message from WebSocket
     def receive(self, text_data):
@@ -121,6 +123,7 @@ class ChatConsumer(WebsocketConsumer):
                         'token': token
                     }
                 )
+        django.db.connections.close_all()
 
     # Receive message from room group
     def chat_message(self, event):
@@ -139,6 +142,7 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             "json": message
         }))
+        django.db.connections.close_all()
 
 
 def host_is_allow(host):
