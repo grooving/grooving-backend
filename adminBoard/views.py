@@ -4,9 +4,7 @@ from datetime import datetime, timedelta
 from Grooving.models import Artist, Customer, Offer, Zone, EventLocation
 from rest_framework.response import Response
 from utils.authentication_utils import get_admin_2, get_admin
-from utils.utils import check_accept_language
 from utils.Assertions import Assertions
-from django.db.models import Sum
 from utils.utils import check_accept_language
 from adminBoard.serializers import ZoneSerializer
 from adminBoard.internationalization import translate

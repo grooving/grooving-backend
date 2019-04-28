@@ -905,7 +905,7 @@ def save_data():
     portfolio12 = Portfolio.objects.create(artisticName='Taylor Swift',
                                            artist=artist12,
                                            banner='http://img2.rtve.es/a/4429044?w=1600&preview=1516350190645.jpg',
-                                           biography='Iis an American singer-songwriter. As one of the world`s leading contemporary recording artists, she is known for narrative songs about her personal life, which has received widespread media coverage.')
+                                           biography='Is an American singer-songwriter. As one of the world`s leading contemporary recording artists, she is known for narrative songs about her personal life, which has received widespread media coverage.')
 
     portfolio12.artisticGender.add(artistic_gender1)
     portfolio12.zone.add(zone0)

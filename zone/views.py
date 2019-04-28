@@ -3,9 +3,10 @@ from rest_framework.response import Response
 from rest_framework import generics
 from .serializers import ZoneSerializer, SearchZoneSerializer
 from rest_framework import status
-from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user, get_user_type
 from utils.Assertions import Assertions
+from utils.utils import check_accept_language
+from zone.internationalization import translate
 
 
 class ZoneManager(generics.RetrieveUpdateDestroyAPIView):
@@ -14,13 +15,15 @@ class ZoneManager(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ZoneSerializer
 
     def get_object(self, pk=None):
+        language = check_accept_language(self.request)
         if pk is None:
             pk = self.kwargs['pk']
         try:
             return Zone.objects.get(pk=pk)
         except Zone.DoesNotExist:
             Assertions.assert_true_raise404(False,
-                                            {'error': 'Zone not found'})
+                                            translate(keyLanguage=language,
+                                                      keyToTranslate="ERROR_ZONE_NOT_FOUND"))
 
     def get(self, request, pk=None, format=None):
         if pk is None:
@@ -30,6 +33,7 @@ class ZoneManager(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
     def put(self, request, pk=None):
+        language = check_accept_language(request)
         if pk is None:
             pk = self.kwargs['pk']
         zone = self.get_object(pk)
@@ -44,7 +48,8 @@ class ZoneManager(generics.RetrieveUpdateDestroyAPIView):
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            raise PermissionDenied("The artisticGender is not for yourself")
+            Assertions.assert_true_raise404(False,
+                                            translate(keyLanguage=language, keyToTranslate="ERROR_ZONE_NOT_OWNER"))
 
     def delete(self, request, pk=None, format=None):
         if pk is None:
@@ -59,6 +64,7 @@ class CreateZone(generics.CreateAPIView):
     serializer_class = ZoneSerializer
 
     def post(self, request, *args, **kwargs):
+        language = check_accept_language(request)
         loggedUser = get_logged_user(request)
         type = get_user_type(loggedUser)
         if loggedUser is not None and type == "Artist":
@@ -69,7 +75,8 @@ class CreateZone(generics.CreateAPIView):
                 serialized = ZoneSerializer(zone)
                 return Response(serialized.data, status=status.HTTP_201_CREATED)
         else:
-            raise PermissionDenied("The artisticGender is not for yourself")
+            Assertions.assert_true_raise404(False,
+                                            translate(keyLanguage=language, keyToTranslate="ERROR_ZONE_NOT_OWNER"))
 
 
 class ListZones(generics.RetrieveAPIView):
@@ -81,7 +88,7 @@ class ListZones(generics.RetrieveAPIView):
         return Zone.objects.all()
 
     def get(self, request, *args, **kwargs):
-
+        language = check_accept_language(request)
         tree = request.query_params.get("tree", None)
         portfolio = request.query_params.get("portfolio", None)
         zones = None
@@ -90,18 +97,21 @@ class ListZones(generics.RetrieveAPIView):
             serializer = SearchZoneSerializer(zones, many=True)
             zones = serializer.data
         elif tree == "true":
-            Assertions.assert_true_raise400(portfolio is None, {"error": "Portfolio's zones don't have tree option"})
+            Assertions.assert_true_raise400(portfolio is None,
+                                            translate(keyLanguage=language, keyToTranslate="ERROR_ZONE_NOT_3_OPTION"))
+
             zones = SearchZoneSerializer.get_tree()
         elif portfolio is not None:
 
             try:
                 portfolio = int(portfolio)
             except ValueError:
-                Assertions.assert_true_raise400(False, {"error": "Incorrect format for id"})
+                Assertions.assert_true_raise400(False, translate(keyLanguage=language,
+                                                                 keyToTranslate="ERROR_INCORRECT_ID"))
 
             portfolio = Portfolio.objects.filter(pk=portfolio).first()
             Assertions.assert_true_raise404(portfolio,
-                                            {'error':  'Portfolio not found'})
+                                            translate(keyLanguage=language, keyToTranslate="ERROR_PORTFOLIO_NOT_FOUND"))
             zones = portfolio.zone.all()
             count = zones.count()
             child_zones = []

@@ -5,7 +5,6 @@ from paymentPackage.serializers import PaymentPackageSerializer, PaymentPackageL
     CustomSerializer, PerformanceSerializer
 from .serializers import PaymentPackageSerializerShort
 from rest_framework import status
-from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user, get_user_type
 from utils.Assertions import Assertions
 from utils.utils import check_accept_language
