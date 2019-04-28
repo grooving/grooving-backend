@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from utils.Assertions import Assertions
 import pyqrcode
-from artist.internationalization import translate
+from offer.internationalization import translate
 from utils.utils import check_accept_language
 
 
@@ -24,7 +24,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
         try:
             return Offer.objects.get(pk=pk)
         except Offer.DoesNotExist:
-            Assertions.assert_true_raise404(False, translate(language, "ERROR_OFFER_NOT_FOUND"))
+            Assertions.assert_true_raise404(False, translate(language, "ERROR_OFFER_NOT_EXISTS"))
 
     def get(self, request, pk=None, format=None):
         language = check_accept_language(request)
@@ -38,7 +38,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
 
         if user_type == "Artist":
             if artist_or_customer.user_id == offer.paymentPackage.portfolio.artist.user_id:
-                offer = self.get_object(pk)
+                offer = self.get_object(request, pk)
                 serializer = GetOfferSerializer(offer)
 
                 return Response(serializer.data)
@@ -76,7 +76,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
             if user_type == "Artist":
                 if artist_or_customer.user_id == offer.paymentPackage.portfolio.artist.user_id:
                     serializer = OfferSerializer(offer, data=request.data, partial=True)
-                    serializer.save(pk, logged_user=artist_or_customer)
+                    serializer.save(request=request, pk=pk, logged_user=artist_or_customer)
                     return Response(status=status.HTTP_200_OK)
                 else:
                     Assertions.assert_true_raise403(False, translate(language, "ERROR_OFFER_NOT_FOR_YOURSELF"))
@@ -88,7 +88,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
 
                     if artist_or_customer.user_id == customer_creator.user_id:
                         serializer = OfferSerializer(offer, data=request.data, partial=True)
-                        serializer.save(pk, logged_user=artist_or_customer)
+                        serializer.save(request=request, pk=pk, logged_user=artist_or_customer)
                         return Response(status=status.HTTP_200_OK)
                     else:
                         Assertions.assert_true_raise403(False, translate(language, "ERROR_OFFER_NOT_FOUND"))
@@ -121,7 +121,7 @@ class CreateOffer(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = OfferSerializer(data=request.data, partial=True)
         if serializer.validate(request):
-            offer = serializer.save(logged_user=request.user)
+            offer = serializer.save(request=request, logged_user=request.user)
             serialized = OfferSerializer(offer)
             return Response(serialized.data, status=status.HTTP_201_CREATED)
 
@@ -155,7 +155,7 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
         customer = get_customer(request)
         Assertions.assert_true_raise403(customer, translate(language, "ERROR_CUSTOMER_NOT_FOUND"))
         offer = self.get_object().first()
-        Assertions.assert_true_raise404(offer, translate(language, "ERROR_OFFER_NOT_FOUND"))
+        Assertions.assert_true_raise404(offer, translate(language, "ERROR_OFFER_NOT_EXISTS"))
         Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id,
                                         translate(language, "ERROR_NOT_OFFER_OWNER"))
 

@@ -16,7 +16,7 @@ import requests
 import braintree
 import json
 from requests.auth import HTTPBasicAuth
-from artist.internationalization import translate
+from offer.internationalization import translate
 from utils.utils import check_accept_language
 
 
@@ -85,7 +85,7 @@ class OfferSerializer(serializers.ModelSerializer):
                   'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id', 'rating')
 
     # Esto sobrescribe una función heredada del serializer.
-    def save(self, pk=None, logged_user=None):
+    def save(self, request, pk=None, logged_user=None):
         if self.initial_data.get('id') is None and pk is None:
             # creation
             offer = Offer()
@@ -108,7 +108,7 @@ class OfferSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(paymentCode is not None, translate(language, "ERROR_PAYMENT_CODE_NOT_PROVIDED"))
 
         offer = Offer.objects.filter(paymentCode=paymentCode).first()
-        Assertions.assert_true_raise404(offer, translate(language, "ERROR_OFFER_NOT_FOUND"))
+        Assertions.assert_true_raise404(offer, translate(language, "ERROR_OFFER_NOT_EXISTS"))
         Assertions.assert_true_raise403(offer.paymentPackage.portfolio.artist.id == user_logged.id,
                                         translate(language, "ERROR_NOT_OFFER_OWNER"))
         Assertions.assert_true_raise400(offer.status == 'CONTRACT_MADE',
@@ -188,11 +188,11 @@ class OfferSerializer(serializers.ModelSerializer):
 
         return offer
 
-    def _service_update(self, request, json: dict, offer_in_db: Offer, logged_user: User):
+    def _service_update(self, json: dict, request, offer_in_db: Offer, logged_user: User):
         language = check_accept_language(request)
 
         # Todo: comprobar el is None metido al offer_in_db
-        Assertions.assert_true_raise400(offer_in_db is not None, translate(language, "ERROR_OFFER_NOT_FOUND"))
+        Assertions.assert_true_raise400(offer_in_db is not None, translate(language, "ERROR_OFFER_NOT_EXISTS"))
         print(offer_in_db.date)
         now = timezone.now()
 
@@ -292,7 +292,7 @@ class OfferSerializer(serializers.ModelSerializer):
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
 
-                    braintree.Transaction.void(offer_in_db.transaction.braintree_id)
+                    # braintree.Transaction.void(offer_in_db.transaction.braintree_id)
 
                 elif json_status == 'CANCELLED_ARTIST':
 
@@ -363,8 +363,8 @@ class OfferSerializer(serializers.ModelSerializer):
         payment_code = random_alphanumeric
         return payment_code
 
-    def validate(self, attrs, request):
-        language = check_accept_language(request)
+    def validate(self, attrs):
+        language = check_accept_language(attrs)
 
         # Customer validation
 

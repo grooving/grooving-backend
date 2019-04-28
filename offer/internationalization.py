@@ -5,6 +5,7 @@ spanish = {
     "ERROR_PAYPAL_CANT_TAKE_TOKEN": "Paypal no coge el token.",
     "ERROR_PAYPAL_NEED_ACCOUNT": "Necesitas una cuenta de paypal para realizar esta acción.",
     "ERROR_PAYPAL_NO_RESPONSE_TO_PAY": "No recibo respuesta a la hora de realizar el pago.",
+    "ERROR_OFFER_NOT_EXISTS": "La oferta no existe.",
     "ERROR_OFFER_NOT_FOUND": "La oferta no se ha añadido.",
     "ERROR_OFFER_IN_THE_PAST": "La oferta ocurrió en el pasado.",
     "ERROR_STATUS_NOT_FOUND": "El estado no ha sido especificado.",
@@ -24,6 +25,7 @@ spanish = {
     "ERROR_EMPTY_EVENT_LOCATION": "El campo localización del evento no debe estar vacío.",
     "ERROR_EVENT_LOCATION_DOESNT_EXISTS": "El campo localización del evento no existe.",
     "ERROR_EVENT_LOCATION_CANT_REFERENCE": "El campo localización del evento no puede referenciarse al customer.",
+    "ERROR_NOT_ALLOWED_TRANSITION": "Transición no permitida.",
 
     "ERROR_ARTIST_NOT_LOGGED": "Permiso denegado.",
     "ERROR_CUSTOMER_NOT_LOGGED": "Permiso denegado.",
@@ -42,6 +44,7 @@ english = {
     "ERROR_PAYPAL_CANT_TAKE_TOKEN": "Paypal cannot take token.",
     "ERROR_PAYPAL_NEED_ACCOUNT": "You need to provide a PayPal account to perform this action.",
     "ERROR_PAYPAL_NO_RESPONSE_TO_PAY": "I can\'t receive a payment response.",
+    "ERROR_OFFER_NOT_EXISTS": "Offer doesn\'t exists.",
     "ERROR_OFFER_NOT_FOUND": "Offer not found.",
     "ERROR_OFFER_IN_THE_PAST": "The offer occurred in the past",
     "ERROR_STATUS_NOT_FOUND": "Status field not provided.",
@@ -61,6 +64,7 @@ english = {
     "ERROR_EMPTY_EVENT_LOCATION": "Event location field not provided.",
     "ERROR_EVENT_LOCATION_DOESNT_EXISTS": "Event location does not exist.",
     "ERROR_EVENT_LOCATION_CANT_REFERENCE": "Can\'t reference this eventLocation",
+    "ERROR_NOT_ALLOWED_TRANSITION": "Transition isn\'t allowed.",
 
     "ERROR_ARTIST_NOT_LOGGED": "Permission denied.",
     "ERROR_CUSTOMER_NOT_LOGGED": "Permission denied.",
