@@ -35,6 +35,7 @@ spanish = {
     "ERROR_EMPTY_ARTISTIC_NAME": "El nombre artistico debe ser obligatorio.",
     "ERROR_ARTISTIC_NAME_ALREADY_EXISTS": "El nombre artistico ya existe.",
 
+
     "ERROR_NOT_LOGGED_IN": "Debes estar autenticado para entrar en este sitio.",
     "ERROR_NOT_AN_ARTIST": "No eres un artista, y por tanto no puedes estar en este sitio.",
     "ERROR_NO_ARTIST_FOUND": "El artista que buscas no existe.",
