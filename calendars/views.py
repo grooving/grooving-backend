@@ -34,7 +34,7 @@ class CalendarByArtist(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         calendar = self.get_object(pk)
-        serializer = CalendarSerializer(calendar, many=True)
+        serializer = CalendarSerializer(calendar)
         return Response(serializer.data)
 
 
