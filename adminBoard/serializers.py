@@ -3,7 +3,7 @@ from Grooving.models import Zone
 from utils.Assertions import Assertions
 from utils.utils import check_accept_language
 from adminBoard.internationalization import translate
-
+from utils.utils import isPositiveInteger
 
 class ZoneSerializer(serializers.ModelSerializer):
 
@@ -92,7 +92,16 @@ class ZoneSerializer(serializers.ModelSerializer):
         parentzone = request.data.get("parentZone")
 
         Assertions.assert_true_raise400(parentzone, translate(keyLanguage=language,
-                                                                          keyToTranslate="ERROR_PARENT_ZONE_DOES_NOT_EXIST"))
+                                                              keyToTranslate="ERROR_PARENT_ZONE_DOES_NOT_EXIST"))
+
+        try:
+            Assertions.assert_true_raise400(int(parentzone) > 0, translate(keyLanguage=language,
+                                                                keyToTranslate="ERROR_INVALID_PARENT_ZONE"))
+        except:
+            raise Assertions.assert_true_raise400(False, translate(keyLanguage=language,
+                                                              keyToTranslate="ERROR_INVALID_PARENT_ZONE"))
+
+
         Assertions.assert_true_raise400(request.data, translate(keyLanguage=language,
                                                                           keyToTranslate="ERROR_EMPTY_FORM_NOT_VALID"))
         Assertions.assert_true_raise400(name, translate(keyLanguage=language,
