@@ -27,6 +27,7 @@ spanish = {
     "ERROR_EMAIL_IN_USE": "El email ya está en uso.",
     "ERROR_USERNAME_IN_USE": "El usuario ya existe.",
     "ERROR_EMAIL_INVALID": "Email invalido",
+    "ERROR_NOT_ALLOWED_TRANSITION": "Transición de estado no permitida.",
 
     "ERROR_NO_ARTISTIC_NAME": "No has introducido un nombre artistico.",
     "ERROR_NOTFOUND_PORTFOLIO": "No se encuentra el portfolio",
@@ -79,6 +80,7 @@ english = {
     "ERROR_EMAIL_IN_USE": "Email already in use.",
     "ERROR_USERNAME_IN_USE": "Username already in use.",
     "ERROR_EMAIL_INVALID": "Invalid email",
+    "ERROR_NOT_ALLOWED_TRANSITION": "Not allowed status transition.",
 
     "ERROR_NO_ARTISTIC_NAME": "You did not submit an artistic name.",
     "ERROR_NOTFOUND_PORTFOLIO": "Portfolio not found.",

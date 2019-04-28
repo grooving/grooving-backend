@@ -317,12 +317,11 @@ class OfferSerializer(serializers.ModelSerializer):
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
                                   or artist_flowstop_transitions.get(status_in_db) == json_status
                                   or customer_flowstop_transitions.get(status_in_db) == json_status
-                                  or status_in_db == json_status
-                                  )
+                                  or status_in_db == json_status)
 
             # Todo: ¿Cómo traduzco esto?
-            assert_true(allowed_transition, "Not allowed status transition: " + status_in_db + " to "
-                        + json_status + ".")
+
+            Assertions.assert_true_raise400(allowed_transition, translate(language, "ERROR_NOT_ALLOWED_TRANSITION"))
 
             if json_status == "CONTRACT_MADE":
                 while True:
