@@ -131,10 +131,10 @@ class ListArtisticGenders(generics.RetrieveAPIView):
             genres = serializer.data
         elif tree == "true":
             Assertions.assert_true_raise400(portfolio is None and parentId is None, translate(language,"ERROR_ONLY_ONE_OPTION"))
-            genres = SearchGenreSerializer.get_tree()
+            genres = SearchGenreSerializer.get_tree(language)
         elif parentId == "true":
             Assertions.assert_true_raise400(portfolio is None and tree is None, translate(language,"ERROR_ONLY_ONE_OPTION"))
-            genres = SearchGenreSerializer.get_children()
+            genres = SearchGenreSerializer.get_children(language)
 
         elif parentId is not None:
             try:
@@ -143,7 +143,7 @@ class ListArtisticGenders(generics.RetrieveAPIView):
                 Assertions.assert_true_raise400(False, translate(request.META['HTTP_ACCEPT_LANGUAGE'], "ERROR_INCORRECT_ID"))
 
             Assertions.assert_true_raise400(tree is None and portfolio is None, translate(language, "ERROR_ONLY_ONE_OPTION"))
-            genres = SearchGenreSerializer.get_children(parentId)
+            genres = SearchGenreSerializer.get_children(language,parentId)
 
         elif portfolio is not None:
 
@@ -165,7 +165,7 @@ class ListArtisticGenders(generics.RetrieveAPIView):
                 else:
                     child_genres.extend(childs)
 
-            serializer = SearchGenreSerializer(child_genres, many=True)
+            serializer = SearchGenreSerializer(child_genres, many=True,context={'language': language})
             genres = serializer.data
 
         return Response(genres, status=status.HTTP_200_OK)

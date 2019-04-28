@@ -6,18 +6,18 @@ from utils.utils import check_accept_language
 from .internationalization import translate
 from utils.authentication_utils import get_artist_or_customer_by_user
 
+
 class ArtisticGenderSerializer(serializers.ModelSerializer):
 
-    name = serializers.SerializerMethodField('translate_name')
+    name = serializers.SerializerMethodField()
 
     class Meta:
         model = ArtisticGender
-        fields = ('id', 'name', 'name_es','name_en','parentGender')
+        fields = ('id', 'name', 'name_es', 'name_en', 'parentGender')
 
-    @staticmethod
-    def translate_name(self, obj):
+    def get_name(self, obj):
 
-        genre = ArtisticGender.objects.get(obj)
+        genre = ArtisticGender.objects.filter(id=obj.id).first()
 
         language = self.context.get("language")
 
@@ -25,6 +25,7 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
             name = genre.name_es
         elif language == "en":
             name = genre.name_en
+
         return name
 
     def save(self, pk=None, logged_user=None):
@@ -123,23 +124,24 @@ class ShortArtisticGenderSerializer(serializers.ModelSerializer):
 
 
 class SearchGenreSerializer(serializers.ModelSerializer):
-    name = serializers.SerializerMethodField('translate_name')
+
+    name = serializers.SerializerMethodField()
 
     class Meta:
         model = ArtisticGender
         fields = ('id', 'name', 'parentGender')
 
-    @staticmethod
-    def translate_name(self, obj):
+    def get_name(self, obj):
 
-        genre = ArtisticGender.objects.get(obj)
+        genre = ArtisticGender.objects.filter(id=obj.id).first()
 
         language = self.context.get("language")
-
+        print(language)
         if language == "es":
             name = genre.name_es
         elif language == "en":
             name = genre.name_en
+
         return name
 
     @staticmethod
@@ -148,10 +150,10 @@ class SearchGenreSerializer(serializers.ModelSerializer):
         return parent_of_all
 
     @staticmethod
-    def get_tree():
+    def get_tree(language):
         parent = SearchGenreSerializer._get_parent_of_all()
         Assertions.assert_true_raise404(parent, {'error': 'ERROR_PARENT_GENRE_NOT_FOUND'})
-        return SearchGenreSerializer._get_childs_genre(parent, [])[0]
+        return SearchGenreSerializer._get_childs_genre(language,parent, [])[0]
 
     @staticmethod
     def get_base_childs(genre, total=[]):
@@ -174,11 +176,16 @@ class SearchGenreSerializer(serializers.ModelSerializer):
         return base_childs, total
 
     @staticmethod
-    def _get_childs_genre(genre, total=[]):
+    def _get_childs_genre(language, genre, total=[]):
         total = total
         total.append(genre)
         id = str(genre.id)
-        name = genre.name
+
+        if language == "es":
+            name = genre.name_es
+        elif language == "en":
+            name = genre.name_en
+
         parentGenre = None
         if genre.parentGender is not None:
             parentGenre = str(genre.parentGender.id)
@@ -186,7 +193,7 @@ class SearchGenreSerializer(serializers.ModelSerializer):
         child_dicts_list = []
         for child_genre in genre.artisticgender_set.all():
             if child_genre not in total:
-                recursive_data = SearchGenreSerializer._get_childs_genre(child_genre, total)
+                recursive_data = SearchGenreSerializer._get_childs_genre(language,child_genre, total)
                 total = recursive_data[1]
                 child_dicts_list.append(recursive_data[0])
 
@@ -195,25 +202,35 @@ class SearchGenreSerializer(serializers.ModelSerializer):
         return dictionary, total
 
     @staticmethod
-    def get_children(parentId = None):
+    def get_children(language,parentId = None):
 
         if parentId is None:
             parent = SearchGenreSerializer._get_parent_of_all()
             Assertions.assert_true_raise401(parent, {'error' : 'ERROR_PARENT_GENRE_NOT_FOUND'})
 
-            name = parent.name
+            if language == "es":
+                name = parent.name_es
+            elif language == "en":
+                name = parent.name_en
         else:
             parent = ArtisticGender.objects.filter(id=parentId).first()
             Assertions.assert_true_raise401(parent, {'error': 'ERROR_PARENT_GENRE_NOT_FOUND'})
-            name = parent.name
+            if language == "es":
+                name = parent.name_es
+            elif language == "en":
+                name = parent.name_en
 
         if ArtisticGender.objects.filter(parentGender=parent) is not None:
-            child_dicts_list = ArtisticGender.objects.filter(parentGender=parent).order_by('name')
+            child_dicts_list = ArtisticGender.objects.filter(parentGender=parent).order_by('name_es')
 
         children = []
 
         for child in child_dicts_list:
-            childdict = {"id": child.id, "name": child.name}
+            if language == "es":
+                name_child = child.name_es
+            elif language == "en":
+                name_child = child.name_en
+            childdict = {"id": child.id, "name": name_child}
             children.append(childdict)
 
         granddadId=None
