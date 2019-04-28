@@ -335,7 +335,10 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
 
     def get_object(self,  pk=None):
         if pk is None:
-            pk = self.kwargs['pk']
+            try:
+                pk = self.kwargs['pk']
+            except:
+                pass
         language = check_accept_language(self.request)
         try:
             zone = Zone.objects.get(pk=pk)
@@ -367,7 +370,10 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
     def put(self, request, pk=None):
         language = check_accept_language(request)
         if pk is None:
-            pk = self.kwargs['pk']
+            try:
+                pk = self.kwargs['pk']
+            except:
+                pass
         Assertions.assert_true_raise400(len(request.data) != 0, translate(keyLanguage=language,
                                                                           keyToTranslate="ERROR_EMPTY_FORM_NOT_VALID"))
         language = check_accept_language(request)
@@ -375,6 +381,8 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
 
         Assertions.assert_true_raise403(admin, translate(keyLanguage=language,
                                                          keyToTranslate="ERROR_FORBIDDEN_NO_ADMIN"))
+        Assertions.assert_true_raise400(pk, translate(keyLanguage=language,
+                                                         keyToTranslate="ERROR_ZONE_NOT_FOUND"))
         zone = Zone.objects.get(pk=pk)
         serializer = ZoneSerializer(zone, data=request.data, partial=True)
 
