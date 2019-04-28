@@ -40,8 +40,8 @@ spanish = {
     "ERROR_LAST_NAME_SPECIAL_CHARACTERS": "Los apellidos no pueden contener caracteres especiales ni números.",
     "ERROR_EMPTY_ARTISTIC_NAME": "El nombre artistico debe ser obligatorio.",
 
-    "ERROR_OFFER_NOT_FOUND": "Oferta no encontrada",
-    "ERROR_NOT_OFFER_OWNER": "La oferta no te pertence",
+    "ERROR_OFFER_NOT_FOUND": "Oferta no encontrada.",
+    "ERROR_NOT_OFFER_OWNER": "La oferta no te pertenece.",
     "ERROR_NO_DATA_GIVEN": "El formulario no tiene datos.",
     "ERROR_NO_MATCHING_LANGUAGE": "El idioma que has escogido no esta disponible.",
     "ERROR_ACTOR_NOT_FOUND": "El actor que buscas no existe.",

@@ -14,7 +14,7 @@ class Assertions:
 
     @staticmethod
     def assert_true_raise403(assertion: bool, details: dict = {"code": "Denied permission"}):
-        Assertions.__assert_true(assertion, 403, {"code": "Denied persmission"}, details)
+        Assertions.__assert_true(assertion, 403, {"code": "Denied permission"}, details)
 
     @staticmethod
     def assert_true_raise404(assertion: bool, details: dict = {"code": "Not Found"}):

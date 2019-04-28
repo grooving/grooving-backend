@@ -8,84 +8,98 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from utils.Assertions import Assertions
 import pyqrcode
+from artist.internationalization import translate
+from utils.utils import check_accept_language
+
 
 class OfferManage(generics.RetrieveUpdateDestroyAPIView):
-
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
 
-    def get_object(self, pk=None):
+    def get_object(self, request, pk=None):
+        language = check_accept_language(request)
+
         if pk is None:
             pk = self.kwargs['pk']
         try:
             return Offer.objects.get(pk=pk)
         except Offer.DoesNotExist:
-            Assertions.assert_true_raise404(False,
-                                            {'error': 'Offer not found'})
+            Assertions.assert_true_raise404(False, translate(language, "ERROR_OFFER_NOT_FOUND"))
 
     def get(self, request, pk=None, format=None):
+        language = check_accept_language(request)
+
         if pk is None:
             pk = self.kwargs['pk']
-        offer = self.get_object(pk)
-        articustomer = get_logged_user(request)
-        user_type = get_user_type(articustomer)
+
+        offer = self.get_object(request, pk)
+        artist_or_customer = get_logged_user(request)
+        user_type = get_user_type(artist_or_customer)
+
         if user_type == "Artist":
-            if articustomer.user_id == offer.paymentPackage.portfolio.artist.user_id:
+            if artist_or_customer.user_id == offer.paymentPackage.portfolio.artist.user_id:
                 offer = self.get_object(pk)
                 serializer = GetOfferSerializer(offer)
+
                 return Response(serializer.data)
             else:
-                raise PermissionDenied
+                Assertions.assert_true_raise403(artist_or_customer, translate(language, "ERROR_ARTIST_NOT_LOGGED"))
         else:
             if user_type == "Customer":
                 event_location = offer.eventLocation
                 customer_id = event_location.customer_id
                 customer_creator = Customer.objects.filter(pk=customer_id).first()
 
-                if articustomer.user_id == customer_creator.user_id:
-                    offer = self.get_object(pk)
+                if artist_or_customer.user_id == customer_creator.user_id:
+                    offer = self.get_object(request, pk)
                     serializer = OfferSerializer(offer)
                     return Response(serializer.data)
                 else:
-                    raise PermissionDenied
+                    Assertions.assert_true_raise403(artist_or_customer,
+                                                    translate(language, "ERROR_CUSTOMER_NOT_LOGGED"))
             else:
-                raise PermissionDenied
+                Assertions.assert_true_raise403(artist_or_customer, translate(language, "ERROR_CUSTOMER_NOT_LOGGED"))
 
     def put(self, request, pk=None):
+        language = check_accept_language(request)
+
         if pk is None:
             pk = self.kwargs['pk']
+
         if len(request.data) == 0:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            Assertions.assert_true_raise400(len(request.data) != 0, translate(language, "ERROR_EMPTY_FORM"))
         else:
-            offer = self.get_object(pk)
-            articustomer = get_logged_user(request)
-            user_type = get_user_type(articustomer)
+            offer = self.get_object(request, pk)
+            artist_or_customer = get_logged_user(request)
+            user_type = get_user_type(artist_or_customer)
+
             if user_type == "Artist":
-                if articustomer.user_id == offer.paymentPackage.portfolio.artist.user_id:
+                if artist_or_customer.user_id == offer.paymentPackage.portfolio.artist.user_id:
                     serializer = OfferSerializer(offer, data=request.data, partial=True)
-                    serializer.save(pk,logged_user=articustomer)
+                    serializer.save(pk, logged_user=artist_or_customer)
                     return Response(status=status.HTTP_200_OK)
                 else:
-                    raise PermissionDenied("The offer is not for yourself")
+                    Assertions.assert_true_raise403(False, translate(language, "ERROR_OFFER_NOT_FOR_YOURSELF"))
             else:
                 if user_type == "Customer":
                     event_location = offer.eventLocation
                     customer_id = event_location.customer_id
                     customer_creator = Customer.objects.filter(pk=customer_id).first()
 
-                    if articustomer.user_id == customer_creator.user_id:
+                    if artist_or_customer.user_id == customer_creator.user_id:
                         serializer = OfferSerializer(offer, data=request.data, partial=True)
-                        serializer.save(pk, logged_user=articustomer)
+                        serializer.save(pk, logged_user=artist_or_customer)
                         return Response(status=status.HTTP_200_OK)
                     else:
-                        return Response(status=status.HTTP_400_BAD_REQUEST)
+                        Assertions.assert_true_raise403(False, translate(language, "ERROR_OFFER_NOT_FOUND"))
                 else:
-                    return Response(status=status.HTTP_403_FORBIDDEN)
+                    Assertions.assert_true_raise403(False, translate(language, "ERROR_OFFER_NOT_FOUND"))
 
     def delete(self, request, pk=None, format=None):
+
         if pk is None:
             pk = self.kwargs['pk']
-        offer = self.get_object(pk)
+        offer = self.get_object(request, pk)
         offer.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -93,7 +107,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         partial = kwargs.pop('partial', False)
-        instance = self.get_object(pk)
+        instance = self.get_object(request, pk)
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
@@ -115,13 +129,16 @@ class CreateOffer(generics.CreateAPIView):
 class NumOffers(generics.GenericAPIView):
 
     def get(self, request):
-        articustomer = get_logged_user(request)
-        user_type = get_user_type(articustomer)
+        language = check_accept_language(request)
+
+        artist_or_customer = get_logged_user(request)
+        user_type = get_user_type(artist_or_customer)
         if user_type == "Artist":
-            numOffers = Offer.objects.filter(paymentPackage__portfolio__artist=articustomer, status='PENDING').count()
+            numOffers = Offer.objects.filter(paymentPackage__portfolio__artist=artist_or_customer,
+                                             status='PENDING').count()
             return Response(numOffers, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'user isn\'t authorized'}, status=status.HTTP_403_FORBIDDEN)
+            Assertions.assert_true_raise403(False, translate(language, "ERROR_USER_NOT_AUTHORIZED"))
 
 
 class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
@@ -133,18 +150,21 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
         return offer_queryset
 
     def get(self, request, *args, **kwargs):
+        language = check_accept_language(request)
+
         customer = get_customer(request)
-        Assertions.assert_true_raise403(customer, {'error': 'Customer not found'})
+        Assertions.assert_true_raise403(customer, translate(language, "ERROR_CUSTOMER_NOT_FOUND"))
         offer = self.get_object().first()
-        Assertions.assert_true_raise404(offer, 'Customer not found')
+        Assertions.assert_true_raise404(offer, translate(language, "ERROR_OFFER_NOT_FOUND"))
         Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id,
-                                        'You are not the owner of the offer')
+                                        translate(language, "ERROR_NOT_OFFER_OWNER"))
 
         return Response({"paymentCode": str(offer.paymentCode),
                          "qrcode": pyqrcode.create(offer.paymentCode).png_as_base64_str(scale=16)}, status.HTTP_200_OK)
 
     def put(self, request, *args, **kwargs):
-        offer = OfferSerializer.service_made_payment_artist(request.data.get("paymentCode"), get_artist(request))
+        offer = OfferSerializer.service_made_payment_artist(request, request.data.get("paymentCode"),
+                                                            get_artist(request))
         price = offer.price
         customer = offer.eventLocation.customer
         photo = customer.photo
