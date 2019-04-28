@@ -6,7 +6,7 @@ from utils.authentication_utils import get_logged_user,get_user_type, get_admin_
 from utils.authentication_utils import get_logged_user, get_user_type, get_admin
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import ArtisticGenderSerializer, SearchGenreSerializer
+from .serializers import ArtisticGenderSerializer, SearchGenreSerializer,ArtisticGenderSerializerOut
 from rest_framework import status
 from utils.Assertions import Assertions
 from utils.utils import check_accept_language
@@ -31,8 +31,8 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         language = check_accept_language(request)
-        portfolio = self.get_object(pk)
-        serializer = ArtisticGenderSerializer(portfolio,context={'language': language})
+        genre = self.get_object(pk)
+        serializer = ArtisticGenderSerializerOut(genre,context={'language': language})
         return Response(serializer.data)
 
     def put(self, request, pk=None, format=None):
@@ -94,6 +94,22 @@ class CreateArtisticGender(generics.CreateAPIView):
     queryset = ArtisticGender.objects.all()
     serializer_class = ArtisticGenderSerializer
 
+    def get_object(self, pk=None):
+        language = check_accept_language(self.request)
+        if pk is None:
+            pk = self.kwargs['pk']
+        try:
+            return ArtisticGender.objects.get(pk=pk)
+        except ArtisticGender.DoesNotExist:
+            raise Assertions.assert_true_raise404(False, translate(language, 'ERROR_ARTISTIC_GENRE_NOT_FOUND'))
+
+    def get(self, request, pk=None, format=None):
+        if pk is None:
+            pk = self.kwargs['pk']
+        language = check_accept_language(request)
+        serializer = SearchGenreSerializer.get_parent_children(language, pk)
+        return Response(serializer)
+
     def post(self, request, *args, **kwargs):
 
         admin = get_admin(request)
@@ -123,6 +139,9 @@ class ListArtisticGenders(generics.RetrieveAPIView):
         parentId = request.query_params.get("parentId", None)
 
         language = check_accept_language(request)
+
+        if tree is not None:
+            Assertions.assert_true_raise401(tree=='true', translate(language,"ERROR_TREE_OPTION"))
 
         genres = None
         if tree is None and portfolio is None and parentId is None:

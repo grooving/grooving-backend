@@ -15,6 +15,7 @@ spanish = {
     "ERROR_NO_MATCHING_LANGUAGE": "El idioma que has escogido no esta disponible.",
     "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar.",
     "ERROR_ONLY_ONE_OPTION": "Se ha seleccionado mas de una opcion de edicion.",
+    "ERROR_TREE_OPTION" : "Invalid tree value",
     "ERROR_NO_PORTFOLIO": "Porfolio no existe."
 }
 
@@ -36,6 +37,7 @@ english = {
     "ERROR_NO_MATCHING_LANGUAGE": "This language is not available.",
     "ERROR_NO_GIVEN_LANGUAGE": "You must choose a language.",
     "ERROR_ONLY_ONE_OPTION": "More than one edition option given.",
+    "ERROR_TREE_OPTION" : "Error en el valor de tree",
     "ERROR_NO_PORTFOLIO": "Porfolio does not exist."
 
 }

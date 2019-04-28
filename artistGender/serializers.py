@@ -9,24 +9,10 @@ from utils.authentication_utils import get_artist_or_customer_by_user
 
 class ArtisticGenderSerializer(serializers.ModelSerializer):
 
-    name = serializers.SerializerMethodField()
-
     class Meta:
         model = ArtisticGender
-        fields = ('id', 'name', 'name_es', 'name_en', 'parentGender')
+        fields = ('id', 'name_es', 'name_en', 'parentGender')
 
-    def get_name(self, obj):
-
-        genre = ArtisticGender.objects.filter(id=obj.id).first()
-
-        language = self.context.get("language")
-
-        if language == "es":
-            name = genre.name_es
-        elif language == "en":
-            name = genre.name_en
-
-        return name
 
     def save(self, pk=None, logged_user=None):
 
@@ -84,19 +70,25 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
 
         # Se busca si un artisticGenre con el nombre pedido ya existe
 
-        genre_name_control = ArtisticGender.objects.filter(name=json.get('name')).first()
+        genre_name_control = ArtisticGender.objects.filter(name_es=json.get('name_es')).first()
 
         # Es posible que sólo se quiera cambiar el parent, asi que es necesario ver si el genre con ese nombre y el que estamos editando son el mismo
 
         if genre_name_control is not None and genre_name_control.id != json.get('id'):
             # Si tienen el mismo nombre y son distintos... ¡tenemos un problema! Levantamos excepción.
-            Assertions.assert_true_raise400(ArtisticGender.objects.filter(name=json.get('name')).first() is None,
+            Assertions.assert_true_raise400(ArtisticGender.objects.filter(name_es=json.get('name_es')).first() is None,
                                            translate(language, 'ERROR_GENRE_EXISTS'))
 
-        Assertions.assert_true_raise400(json.get('name') != '',
+        Assertions.assert_true_raise400(json.get('name_es') != '',
                                         translate(language, 'ERROR_GENRE_NULL_NAME'))
 
-        Assertions.assert_true_raise400(json.get('name') is not None,
+        Assertions.assert_true_raise400(json.get('name_es') is not None,
+                                        translate(language, 'ERROR_GENRE_NULL_NAME'))
+
+        Assertions.assert_true_raise400(json.get('name_en') != '',
+                                        translate(language, 'ERROR_GENRE_NULL_NAME'))
+
+        Assertions.assert_true_raise400(json.get('name_en') is not None,
                                         translate(language, 'ERROR_GENRE_NULL_NAME'))
 
         parentGender_control = str(json.get('parentGender'))
@@ -251,3 +243,61 @@ class SearchGenreSerializer(serializers.ModelSerializer):
         dictionary = {"depth": depth, "id": parentId, "name": name, "parent": granddadId, "children": children}
 
         return dictionary
+
+    @staticmethod
+    def get_parent_children(language,parentId = None):
+
+        if parentId is None:
+            parent = SearchGenreSerializer._get_parent_of_all()
+            Assertions.assert_true_raise401(parent, {'error' : 'ERROR_PARENT_GENRE_NOT_FOUND'})
+
+        else:
+            parent = ArtisticGender.objects.filter(id=parentId).first()
+            Assertions.assert_true_raise401(parent, {'error': 'ERROR_PARENT_GENRE_NOT_FOUND'})
+
+        if ArtisticGender.objects.filter(parentGender=parent) is not None:
+            child_dicts_list = ArtisticGender.objects.filter(parentGender=parent).order_by('name_es')
+
+        children = []
+
+        for child in child_dicts_list:
+            if language == "es":
+                name_child = child.name_es
+            elif language == "en":
+                name_child = child.name_en
+            childdict = {"id": child.id, "name": name_child}
+            children.append(childdict)
+
+        granddadId=None
+
+        if parent.parentGender is not None:
+
+            grandad =  parent.parentGender
+            granddadId = grandad.id
+
+        dictionary = {"id": parentId, "name_es": parent.name_es, "name_en": parent.name_en, "parent": granddadId, "children": children}
+
+        return dictionary
+
+
+class ArtisticGenderSerializerOut(serializers.ModelSerializer):
+
+    name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ArtisticGender
+        fields = ('id', 'name', 'parentGender')
+
+
+    def get_name(self, obj):
+
+        genre = ArtisticGender.objects.filter(id=obj.id).first()
+
+        language = self.context.get("language")
+
+        if language == "es":
+            name = genre.name_es
+        elif language == "en":
+            name = genre.name_en
+
+        return name
