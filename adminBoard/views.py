@@ -333,8 +333,10 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = ZoneSerializer
 
-    def get(self, request, pk=None):
-        language = check_accept_language(request)
+    def get_object(self,  pk=None):
+        if pk is None:
+            pk = self.kwargs['pk']
+        language = check_accept_language(self.request)
         try:
             zone = Zone.objects.get(pk=pk)
             serializer = ZoneSerializer(zone)
