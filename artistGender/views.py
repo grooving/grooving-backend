@@ -30,8 +30,9 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
+        language = check_accept_language(request)
         portfolio = self.get_object(pk)
-        serializer = ArtisticGenderSerializer(portfolio)
+        serializer = ArtisticGenderSerializer(portfolio,context={'language': language})
         return Response(serializer.data)
 
     def put(self, request, pk=None, format=None):
@@ -47,7 +48,7 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
             Assertions.assert_true_raise401(str(id_request).isdigit(), translate(language, "ERROR_INCORRECT_ID"))
             Assertions.assert_true_raise401(id_request == pk_compare, translate(language, "ERROR_INCORRECT_ID"))
 
-            serializer = ArtisticGenderSerializer(artisticGender, data=request.data, partial=True)
+            serializer = ArtisticGenderSerializer(artisticGender, data=request.data, partial=True,context={'language': language})
             if serializer.validate(request.data):
                 serializer.is_valid()
                 serializer.save(pk, loggedUser)
@@ -99,11 +100,11 @@ class CreateArtisticGender(generics.CreateAPIView):
         language = check_accept_language(request)
         Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
-        serializer = ArtisticGenderSerializer(data=request.data, partial=True)
+        serializer = ArtisticGenderSerializer(data=request.data, partial=True,context={'language': language})
         if serializer.validate(request.data):
             serializer.is_valid()
             artisticGender = serializer.save()
-            serialized = ArtisticGenderSerializer(artisticGender)
+            serialized = ArtisticGenderSerializer(artisticGender,context={'language': language})
             return Response(serialized.data, status=status.HTTP_201_CREATED)
 
 
@@ -121,25 +122,27 @@ class ListArtisticGenders(generics.RetrieveAPIView):
         portfolio = request.query_params.get("portfolio", None)
         parentId = request.query_params.get("parentId", None)
 
+        language = check_accept_language(request)
+
         genres = None
         if tree is None and portfolio is None and parentId is None:
             genres = list(ArtisticGender.objects.all())
-            serializer = SearchGenreSerializer(genres, many=True)
+            serializer = SearchGenreSerializer(genres, many=True,context={'language': language})
             genres = serializer.data
         elif tree == "true":
-            Assertions.assert_true_raise400(portfolio is None and parentId is None, {"error": "ERROR_ONLY_ONE_OPTION"})
+            Assertions.assert_true_raise400(portfolio is None and parentId is None, translate(language,"ERROR_ONLY_ONE_OPTION"))
             genres = SearchGenreSerializer.get_tree()
         elif parentId == "true":
-            Assertions.assert_true_raise400(portfolio is None and tree is None, {"error": "ERROR_ONLY_ONE_OPTION"})
+            Assertions.assert_true_raise400(portfolio is None and tree is None, translate(language,"ERROR_ONLY_ONE_OPTION"))
             genres = SearchGenreSerializer.get_children()
 
         elif parentId is not None:
             try:
                 parentId = int(parentId)
             except ValueError:
-                Assertions.assert_true_raise400(False, translate(request.headers['Accept-Language'], "ERROR_INCORRECT_ID"))
+                Assertions.assert_true_raise400(False, translate(request.META['HTTP_ACCEPT_LANGUAGE'], "ERROR_INCORRECT_ID"))
 
-            Assertions.assert_true_raise400(tree is None and portfolio is None, {"error": "ERROR_ONLY_ONE_OPTION"})
+            Assertions.assert_true_raise400(tree is None and portfolio is None, translate(language, "ERROR_ONLY_ONE_OPTION"))
             genres = SearchGenreSerializer.get_children(parentId)
 
         elif portfolio is not None:
@@ -147,11 +150,11 @@ class ListArtisticGenders(generics.RetrieveAPIView):
             try:
                 portfolio = int(portfolio)
             except ValueError:
-                Assertions.assert_true_raise400(False, {"error": "ERROR_INCORRECT_ID"})
+                Assertions.assert_true_raise400(False, translate(language, "ERROR_INCORRECT_ID"))
 
             portfolio = Portfolio.objects.filter(pk=portfolio).first()
             Assertions.assert_true_raise404(portfolio,
-                                            {'error': 'ERROR_NO_PORTFOLIO'})
+                                            translate(language,'ERROR_NO_PORTFOLIO'))
             genres = portfolio.artisticGender.all()
             count = genres.count()
             child_genres = []

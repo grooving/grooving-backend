@@ -85,9 +85,9 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                   'artist', 'zone')
 
     @staticmethod
-    def list_images(self):
+    def list_images(self, obj):
 
-        modules = PortfolioModule.objects.filter(type='PHOTO', portfolio=self)
+        modules = PortfolioModule.objects.filter(type='PHOTO', portfolio=obj)
         images = []
         for image in modules:
             images.append(image.link)
@@ -95,9 +95,9 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
         return images
 
     @staticmethod
-    def list_videos(self):
+    def list_videos(self, obj):
 
-        modules = PortfolioModule.objects.filter(type='VIDEO', portfolio=self)
+        modules = PortfolioModule.objects.filter(type='VIDEO', portfolio=obj)
         videos = []
         for video in modules:
             videos.append(video.link)
@@ -105,9 +105,9 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
         return videos
 
     @staticmethod
-    def list_photo(self):
+    def list_photo(self, obj):
 
-        artist = Artist.objects.filter(portfolio=self).first()
+        artist = Artist.objects.filter(portfolio=obj).first()
         photo = ""
         if artist.photo:
             photo = artist.photo
@@ -115,18 +115,18 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
         return photo
 
     @staticmethod
-    def list_genders(self):
+    def list_genders(self, obj):
 
-        genders = ArtisticGender.objects.filter(portfolio=self)
+        genders = ArtisticGender.objects.filter(portfolio=obj)
         genderlist = []
         for gender in genders:
             genderlist.append(gender.name)
         return genderlist
 
     @staticmethod
-    def list_artist(self):
+    def list_artist(self, obj):
 
-        artist = Artist.objects.filter(portfolio=self).first()
+        artist = Artist.objects.filter(portfolio=obj).first()
         artistId = artist.id
 
         return artistId

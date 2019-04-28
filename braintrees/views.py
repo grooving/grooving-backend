@@ -69,11 +69,15 @@ class BraintreeViews(generics.GenericAPIView):
 
         Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
         # Configure Braintree
-        braintree.Configuration.configure(
-            environment=braintree_env,
-            merchant_id=settings.BRAINTREE_MERCHANT_ID,
-            public_key=settings.BRAINTREE_PUBLIC_KEY,
-            private_key=settings.BRAINTREE_PRIVATE_KEY,
+
+        gateway = braintree.BraintreeGateway(
+            braintree.Configuration(
+                braintree.Environment.Sandbox,
+                access_token="access_token$sandbox$3gp8pgjq8wbkcfw6$39361513dad49f914668dcce063893eb",
+                merchant_id=settings.BRAINTREE_MERCHANT_ID,
+                public_key=settings.BRAINTREE_PUBLIC_KEY,
+                private_key=settings.BRAINTREE_PRIVATE_KEY
+            )
         )
 
         serializer = TransactionSerializer(data=request.data, partial=True)
@@ -96,7 +100,7 @@ class BraintreeViews(generics.GenericAPIView):
 
         #if request.data['paypalCustomer'] is None or request.data['paypalCustomer'] == "":
 
-        customer = braintree.Customer.create(customer_kwargs)
+        customer = gateway.customer.create(customer_kwargs)
         Assertions.assert_true_raise400(serializer.data['payment_method_nonce'], {'error': 'No nounce was given'})
         Assertions.assert_true_raise400(customer, {'error': 'No customer was created'})
         Assertions.assert_true_raise400(serializer.data['id_offer'], {'error': 'No offer was given'})
@@ -113,7 +117,7 @@ class BraintreeViews(generics.GenericAPIView):
         print(amount)
         Assertions.assert_true_raise400(amount > 0, {'error': 'Amount is 0 or lower'})
 
-        result = braintree.Transaction.sale({
+        result = gateway.transaction.sale({
             "customer_id": customer.customer.id,
             "amount": str(amount),
             "payment_method_nonce": serializer.data['payment_method_nonce'],

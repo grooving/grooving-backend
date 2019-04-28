@@ -8,9 +8,24 @@ from utils.authentication_utils import get_artist_or_customer_by_user
 
 class ArtisticGenderSerializer(serializers.ModelSerializer):
 
+    name = serializers.SerializerMethodField('translate_name')
+
     class Meta:
         model = ArtisticGender
-        fields = ('id', 'name', 'parentGender')
+        fields = ('id', 'name', 'name_es','name_en','parentGender')
+
+    @staticmethod
+    def translate_name(self, obj):
+
+        genre = ArtisticGender.objects.get(obj)
+
+        language = self.context.get("language")
+
+        if language == "es":
+            name = genre.name_es
+        elif language == "en":
+            name = genre.name_en
+        return name
 
     def save(self, pk=None, logged_user=None):
 
@@ -37,7 +52,8 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise401(json.get('name') != "",{'error': 'ERROR_GENRE_NULL_NAME'})
         Assertions.assert_true_raise401(json.get('name') is not None, {'error': 'ERROR_GENRE_NULL_NAME'})
 
-        genre.name = json.get('name')
+        genre.name_en = json.get('name_en')
+        genre.name_es = json.get('name_es')
 
         if json.get('parentGender') is not None:
             Assertions.assert_true_raise401(ArtisticGender.objects.filter(id=json.get('parentGender')).first() is not None,
@@ -89,7 +105,8 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise404(ArtisticGender.objects.filter(id=json.get('parentGender')).first(),
                                         translate(language, 'ERROR_PARENT_GENRE_NOT_FOUND'))
 
-        genre.name = json.get('name')
+        genre.name_en = json.get('name_en')
+        genre.name_es = json.get('name_es')
 
         genre.parentGender = ArtisticGender.objects.filter(id=json.get('parentGender')).first()
 
@@ -106,10 +123,24 @@ class ShortArtisticGenderSerializer(serializers.ModelSerializer):
 
 
 class SearchGenreSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField('translate_name')
 
     class Meta:
         model = ArtisticGender
         fields = ('id', 'name', 'parentGender')
+
+    @staticmethod
+    def translate_name(self, obj):
+
+        genre = ArtisticGender.objects.get(obj)
+
+        language = self.context.get("language")
+
+        if language == "es":
+            name = genre.name_es
+        elif language == "en":
+            name = genre.name_en
+        return name
 
     @staticmethod
     def _get_parent_of_all():

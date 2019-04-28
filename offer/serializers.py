@@ -131,7 +131,7 @@ class OfferSerializer(serializers.ModelSerializer):
                                         {'paypal': ' You need to provide a PayPal account to perform this action' })
 
         response = requests.post('https://api.sandbox.paypal.com/v1/payments/payouts',
-                                 data='{"sender_batch_header": {"sender_batch_id": "Payment_Offer_'+str(paymentCode)+'","email_subject": "You have a payout!","email_message": "You have received a payout! Thanks for using our service!"},"items": [{"recipient_type": "EMAIL","amount": {"value": "'+str(offer.transaction.amount)+'","currency": "EUR"},"note": "Thanks for your patronage!","receiver": "'+str(user_logged.paypalAccount)+'"}]}',
+                                 data='{"sender_batch_header": {"sender_batch_id": "Payment_Offer_'+str(paymentCode)+'","email_subject": "You have a payout!","email_message": "You have received a payout! Thanks for using our service!"},"items": [{"recipient_type": "EMAIL","amount": {"value": "'+str(offer.transaction.amount * 0.964)+'","currency": "EUR"},"note": "Thanks for your patronage!","receiver": "'+str(user_logged.paypalAccount)+'"}]}',
                                  headers={'content-type': 'application/json',
                                           'authorization': 'Bearer ' + access_token})
 
@@ -220,7 +220,9 @@ class OfferSerializer(serializers.ModelSerializer):
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
 
-                    braintree.Transaction.refund(offer_in_db.transaction.braintree_id)
+                    amount = offer_in_db.transaction.amount * 0.949
+
+                    braintree.Transaction.refund(offer_in_db.transaction.braintree_id, str(amount))
 
             artistReceiver = Artist.objects.filter(pk=offer_in_db.paymentPackage.portfolio.artist.id).first()
 
