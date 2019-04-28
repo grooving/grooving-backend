@@ -51,7 +51,7 @@ class UserAbstract(Actor):
 
 
 class ArtisticGender(AbstractEntity):
-    name = models.CharField(max_length=140)
+    name_en = models.CharField(max_length=140)
     name_es = models.CharField(max_length=140)
     parentGender = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 
