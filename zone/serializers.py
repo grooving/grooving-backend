@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from Grooving.models import Zone
 from utils.Assertions import Assertions
+from utils.utils import check_accept_language
+from zone.internationalization import translate
 
 
 class ZoneSerializer(serializers.ModelSerializer):
@@ -22,9 +24,11 @@ class SearchZoneSerializer(serializers.ModelSerializer):
         return parent_of_all
 
     @staticmethod
-    def get_tree():
+    def get_tree(request):
+        language = check_accept_language(request)
         parent = SearchZoneSerializer._get_parent_of_all()
-        Assertions.assert_true_raise404(parent,"Parent zone not found")
+        Assertions.assert_true_raise404(parent,translate(keyLanguage=language,
+                                                      keyToTranslate="ERROR_PARENT_ZONE_NOT_FOUND"))
         return SearchZoneSerializer._get_childs_zone(parent, [])[0]
 
     @staticmethod

@@ -98,8 +98,6 @@ class ZoneSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(name, translate(keyLanguage=language,
                                                              keyToTranslate="ERROR_ZONE_NAME_NOT_PROVIDED"))
 
-
-
         Assertions.assert_true_raise400(int(parentzone) in parentzonesid, translate(keyLanguage=language,
                                                              keyToTranslate="ERROR_PARENT_ZONE_DOES_NOT_EXIST"))
         Assertions.assert_true_raise400(len(name) > 1, translate(keyLanguage=language,

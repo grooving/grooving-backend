@@ -5,7 +5,6 @@ from paymentPackage.serializers import PaymentPackageSerializer, PaymentPackageL
     CustomSerializer, PerformanceSerializer
 from .serializers import PaymentPackageSerializerShort
 from rest_framework import status
-from django.core.exceptions import PermissionDenied
 from utils.authentication_utils import get_logged_user, get_user_type
 from utils.Assertions import Assertions
 from utils.utils import check_accept_language
@@ -152,6 +151,7 @@ class CreateCustomPackage(generics.CreateAPIView):
 
         try:
             logged_user = get_logged_user(request)
+            Assertions.assert_true_raise403(logged_user is not None, translate(language, "ERROR_NOT_LOGGED_IN"))
             user_type = get_user_type(logged_user)
         except:
             pass
@@ -194,6 +194,7 @@ class CreatePerformancePackage(generics.CreateAPIView):
         user_type = None
         try:
             logged_user = get_logged_user(request)
+            Assertions.assert_true_raise403(logged_user is not None, translate(language, "ERROR_NOT_LOGGED_IN"))
             user_type = get_user_type(logged_user)
         except:
             pass
@@ -236,12 +237,10 @@ class CreateFarePackage(generics.CreateAPIView):
     def post(self, request, pk=None):
         language = check_accept_language(request)
         user_type = None
-        try:
-            logged_user = get_logged_user(request)
-            Assertions.assert_true_raise403(logged_user, translate(language, "ERROR_NOT_LOGGED_ID"))
-            user_type = get_user_type(logged_user)
-        except:
-            pass
+
+        logged_user = get_logged_user(request)
+        Assertions.assert_true_raise403(logged_user is not None, translate(language, "ERROR_NOT_LOGGED_IN"))
+        user_type = get_user_type(logged_user)
 
         if pk:
             package = PaymentPackage.objects.filter(fare_id=pk).first()
