@@ -38,33 +38,7 @@ class ShortPortfolioSerializer(serializers.ModelSerializer):
         model = Portfolio
         fields = ('id', 'artisticName', 'artisticGender')
         search_fields = ['artisticName', 'artisticGender__name']
-
-    def get_name(self, obj):
-
-        genre = ArtisticGender.objects.filter(id=obj.id).first()
-
-        language = self.context.get("language")
-
-        if language == "es":
-            name = genre.name_es
-        elif language == "en":
-            name = genre.name_en
-
-        return name
-
-    def get_artisticGender(self, obj):
-
-        genre = ArtisticGender.objects.filter(id=obj.id).first()
-
-
-        language = self.context.get("language")
-
-        if language == "es":
-            name = genre.name_es
-        elif language == "en":
-            name = genre.name_en
-
-        return Response(genre)
+        
 
 class ListArtistSerializer(serializers.HyperlinkedModelSerializer):
     portfolio = ShortPortfolioSerializer(read_only=True)
