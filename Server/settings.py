@@ -17,7 +17,7 @@ import django_heroku
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
 
-STATIC_URL = '/static/'
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -52,7 +52,9 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'login',
     'channels',
-    'chat'
+    'chat',
+    'storages',
+    'cdn',
 ]
 
 REST_FRAMEWORK = {
@@ -195,3 +197,33 @@ BRAINTREE_PRODUCTION = False  # We'll need this later to switch between the sand
 BRAINTREE_MERCHANT_ID = "2jr4z6qz4rf4n5xt"
 BRAINTREE_PUBLIC_KEY = "dqgwkcsmb7j68wf7"
 BRAINTREE_PRIVATE_KEY = "7d71536e5952a2a492855762b66ba75d"
+
+
+#cdn confi
+
+USE_S3 = True
+
+if USE_S3:
+    # aws settings
+    AWS_ACCESS_KEY_ID = 'AKIAVVXCLMXMQK55KTW2'
+    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_STORAGE_BUCKET_NAME = 'grooving-cdn'
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    # s3 static settings
+    AWS_LOCATION = 'static'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    #Media location
+    PUBLIC_MEDIA_LOCATION = 'media'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+    DEFAULT_FILE_STORAGE = 'cdn.storage_backends.PublicMediaStorage'
+else:
+    STATIC_URL = '/staticfiles/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    MEDIA_URL = '/mediafiles/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
