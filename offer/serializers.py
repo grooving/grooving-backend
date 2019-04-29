@@ -222,6 +222,9 @@ class OfferSerializer(serializers.ModelSerializer):
 
                     amount = offer_in_db.transaction.amount * 0.949
 
+                    Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id, {'error':
+                                                                                               'La oferta no posee los credenciales de Braintree'})
+
                     braintree.Transaction.refund(offer_in_db.transaction.braintree_id, str(amount))
 
             artistReceiver = Artist.objects.filter(pk=offer_in_db.paymentPackage.portfolio.artist.id).first()
@@ -274,6 +277,9 @@ class OfferSerializer(serializers.ModelSerializer):
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
 
+                    Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id, {'error':
+                                                                                               'La oferta no posee los credenciales de Braintree'})
+
                     braintree.Transaction.void(offer_in_db.transaction.braintree_id)
 
                 elif json_status == 'CANCELLED_ARTIST':
@@ -292,6 +298,9 @@ class OfferSerializer(serializers.ModelSerializer):
                         public_key=settings.BRAINTREE_PUBLIC_KEY,
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
+
+                    Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id, {'error':
+                                                                                               'La oferta no posee los credenciales de Braintree'})
 
                     braintree.Transaction.refund(offer_in_db.transaction.braintree_id)
 

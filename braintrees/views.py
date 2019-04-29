@@ -127,7 +127,7 @@ class BraintreeViews(generics.GenericAPIView):
                 # Use this option to directly settle the transaction
                 # If you want to settle the transaction later, use ``False`` and later on
                 # ``braintree.Transaction.submit_for_settlement("the_transaction_id")``
-                'submit_for_settlement': False,
+                'submit_for_settlement': False
             }
         })
 
@@ -143,6 +143,8 @@ class BraintreeViews(generics.GenericAPIView):
                     ' input or use another payment method and try again.')
             }
             Assertions.assert_true_raise400(result.is_success, {'error': 'Your payment could not be processed. Please check your input or use another payment method and try again.'})
+
+
 
         offer.transaction.braintree_id = result.transaction.id
         offer.transaction.amount = amount
