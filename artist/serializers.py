@@ -31,8 +31,8 @@ class ArtistInfoSerializer(serializers.HyperlinkedModelSerializer):
 
 class ShortPortfolioSerializer(serializers.ModelSerializer):
 
-    #artisticGender = ArtisticGenderSerializer(read_only=True, many=True)
-    artisticGender = serializers.SerializerMethodField()
+    artisticGender = ArtisticGenderSerializer(read_only=True, many=True)
+    #artisticGender = serializers.SerializerMethodField()
 
     class Meta:
         model = Portfolio
