@@ -291,13 +291,19 @@ class Notifications:
         if offer.paymentPackage.performance is not None:
             context_pdf['event_payment_package'] = 'Performance'  # Informaremos el precio total y la duración
             context_body['event_payment_package'] = 'Performance'
+            context_pdf['event_price'] = offer.price
+            context_body['event_price'] = offer.price
         elif offer.paymentPackage.fare is not None:
             context_pdf['event_payment_package'] = 'Fare'  # Informaremos del precio multiplicado por la hora
             context_pdf['event_payment_package_price_per_hour'] = offer.paymentPackage.fare.priceHour
             context_body['event_payment_package'] = 'Fare'
+            context_pdf['event_price'] = offer.price * offer.hour
+            context_body['event_price'] = offer.price * offer.hour
         else:
             context_pdf['event_payment_package'] = 'Custom'  # Informaremos del precio total y la duración
             context_body['event_payment_package'] = 'Custom'
+            context_pdf['event_price'] = offer.price * offer.hour
+            context_body['event_price'] = offer.price * offer.hour
 
         # Email - PDF generator
 
@@ -745,7 +751,7 @@ class Notifications:
                                                               values_list("name_es", flat=True)))
             elif language == "en":
                 context_pdf["artist_genders"] = ",".join(list(artist_or_customer.portfolio.artisticGender.
-                                                              values_list("name_en", flat=True)))
+                                                              values_list("name", flat=True)))
 
             # print(Offer.objects.filter(paymentPackage__portfolio__artist__id=artist_or_customer.id))
             pdf_html = translate_render(language, "PDF_DOWNLOAD_DATA_ARTIST", context_pdf)
