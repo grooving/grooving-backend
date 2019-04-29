@@ -149,11 +149,6 @@
 <h2>Offers received</h2>
 {% if artist_offers %}
     {% for offer in artist_offers %}
-        {% if offer.chat.json %}
-            Lo ve
-        {% else %}
-            No lo ve
-        {% endif %}
         <h3>Offer {{ forloop.counter }}</h3>
         <table>
             <tr>
