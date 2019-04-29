@@ -489,8 +489,8 @@ class Notifications:
             'event_duration': offer.hours,
             'event_total': offer.price,
             'event_currency': offer.currency,
-            'system_configuration_profit': system_configuration.profit.normalize(),
-            'invoice_grooving_benefit': round(offer.price * (system_configuration.profit / 100), 2),
+            'system_configuration_profit': system_configuration.paypalTax.normalize(),
+            'invoice_grooving_benefit': round(offer.price * (system_configuration.paypalTax / 100), 2),
             'invoice_customer_benefit': artist_benefit,
         }
 
