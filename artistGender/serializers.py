@@ -15,7 +15,7 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         fields = ('id', 'name_es', 'name_en', 'parentGender')
 
 
-    def save(self, pk=None, logged_user=None, language = None):
+    def save(self, language = None, pk=None, logged_user=None):
 
         if self.initial_data.get('id') is None and pk is None:
             genre = ArtisticGender()
@@ -36,9 +36,11 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
     @staticmethod
     def _service_create(json: dict, genre: ArtisticGender, language):
 
-        Assertions.assert_true_raise401(ArtisticGender.objects.filter(name=json.get('name')).first() is None, translate(language, 'ERROR_GENRE_EXISTS'))
-        Assertions.assert_true_raise401(json.get('name') != "",translate(language, 'ERROR_GENRE_NULL_NAME'))
-        Assertions.assert_true_raise401(json.get('name') is not None, translate(language, 'ERROR_GENRE_NULL_NAME'))
+        Assertions.assert_true_raise401(ArtisticGender.objects.filter(name_es=json.get('name_es')).first() is None, translate(language, 'ERROR_GENRE_EXISTS'))
+        Assertions.assert_true_raise401(json.get('name_es') != "",translate(language, 'ERROR_GENRE_NULL_NAME'))
+        Assertions.assert_true_raise401(json.get('name_es') is not None, translate(language, 'ERROR_GENRE_NULL_NAME'))
+        Assertions.assert_true_raise401(json.get('name_en') != "", translate(language, 'ERROR_GENRE_NULL_NAME'))
+        Assertions.assert_true_raise401(json.get('name_en') is not None, translate(language, 'ERROR_GENRE_NULL_NAME'))
 
         genre.name_en = json.get('name_en')
         genre.name_es = json.get('name_es')

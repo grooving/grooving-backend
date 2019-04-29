@@ -51,7 +51,7 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
             serializer = ArtisticGenderSerializer(artisticGender, data=request.data, partial=True,context={'language': language})
             if serializer.validate(request.data):
                 serializer.is_valid()
-                serializer.save(pk, loggedUser, language)
+                serializer.save(language, pk, loggedUser)
                 return Response(status=status.HTTP_201_CREATED)
             else:
                 raise Assertions.assert_true_raise400(False,
