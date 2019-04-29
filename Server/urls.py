@@ -34,7 +34,7 @@ from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
 from utils.utils import TermsAndConditions, Privacy, AboutUs
 from braintrees.views import BraintreeViews,PayPaypal,CreatePaypal
-from emails.views import SendMailDataBreach
+from emails.views import SendMailDataBreach, DownloadPersonalData
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
 from chat.views import index, room, ListChatMesages
