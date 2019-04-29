@@ -647,7 +647,8 @@ class Notifications:
             to = [customer.user.email]
             body_content_type = "html"
 
-            custom_body = translate(customer.language, "BREACH_NOTIFICATION_BODY") + "<p>" + breach_explanation + "</p>" + \
+            custom_body = translate(customer.language,
+                                    "BREACH_NOTIFICATION_BODY") + "<p>" + breach_explanation + "</p>" + \
                           Notifications.footer(customer.language)
 
             EmailMessageThread.send_mail(from_email, to, custom_body, subject, body_content_type, True)
@@ -686,7 +687,7 @@ class Notifications:
                 body = "<p>Hola,</p>" + \
                        "<p>Esta cuenta ha sido temporalmente desactivada por violación de los Terminos " + \
                        "y condiciones de Grooving. Por favor, contacte con el equipo de grooving en " + \
-                        system_configuration.reportEmail + "</p>" + Notifications.footer(language)
+                       system_configuration.reportEmail + "</p>" + Notifications.footer(language)
             elif language == "es":
                 body = "<p>Hello,</p>" + \
                        "<p>This account has been temporaly banned to a violation of ours Terms & " + \
@@ -732,14 +733,20 @@ class Notifications:
             context_pdf = {
                 "artist": artist_or_customer,
                 "artist_unavailable_days": ", ".join(list(artist_or_customer.portfolio.calendar.days)),
-                "artist_genders": ",".join(list(artist_or_customer.portfolio.artisticGender.
-                                                values_list("name", flat=True))),
                 "artist_portfoliomodules": PortfolioModule.objects.filter(
                     portfolio__artist__id=artist_or_customer.id).distinct(),
                 "artist_zones": ",".join(list(artist_or_customer.portfolio.zone.values_list("name", flat=True))),
                 "artist_offers": Offer.objects
                     .filter(paymentPackage__portfolio__artist__id=artist_or_customer.id).distinct()
             }
+
+            if language == "es":
+                context_pdf["artist_genders"] = ",".join(list(artist_or_customer.portfolio.artisticGender.
+                                                              values_list("name_es", flat=True)))
+            elif language == "en":
+                context_pdf["artist_genders"] = ",".join(list(artist_or_customer.portfolio.artisticGender.
+                                                              values_list("name_en", flat=True)))
+
             # print(Offer.objects.filter(paymentPackage__portfolio__artist__id=artist_or_customer.id))
             pdf_html = translate_render(language, "PDF_DOWNLOAD_DATA_ARTIST", context_pdf)
         elif isinstance(artist_or_customer, Customer):
