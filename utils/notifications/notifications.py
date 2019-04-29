@@ -751,7 +751,7 @@ class Notifications:
                                                               values_list("name_es", flat=True)))
             elif language == "en":
                 context_pdf["artist_genders"] = ",".join(list(artist_or_customer.portfolio.artisticGender.
-                                                              values_list("name", flat=True)))
+                                                              values_list("name_en", flat=True)))
 
             # print(Offer.objects.filter(paymentPackage__portfolio__artist__id=artist_or_customer.id))
             pdf_html = translate_render(language, "PDF_DOWNLOAD_DATA_ARTIST", context_pdf)
