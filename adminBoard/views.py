@@ -8,6 +8,7 @@ from utils.Assertions import Assertions
 from utils.utils import check_accept_language
 from adminBoard.serializers import ZoneSerializer
 from adminBoard.internationalization import translate
+from Grooving.models import SystemConfiguration
 
 
 class GetStatistics(generics.ListAPIView):
@@ -259,7 +260,10 @@ class GetStatistics(generics.ListAPIView):
         for offer in paymentoffers:
             totalPrice = totalPrice + float(offer.price)
 
-        return float(totalPrice) * 0.07
+        sysconfi = SystemConfiguration.objects.first()
+
+        return float(totalPrice) * float(sysconfi.profit/100)
+
 
     def get_total_money_last_month(self, request, *args, **kwargs):
         admin = get_admin(request)
@@ -291,7 +295,9 @@ class GetStatistics(generics.ListAPIView):
         for offer in paymentoffers:
             totalPrice = totalPrice + float(offer.price)
 
-        return float(totalPrice) * 0.07
+        sysconfi = SystemConfiguration.objects.first()
+
+        return float(totalPrice) * float(sysconfi.profit/100)
         #serializer_class =
 
     def get(self, request, *args, **kwargs):
