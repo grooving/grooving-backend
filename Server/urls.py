@@ -39,11 +39,13 @@ from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
 from chat.views import index, room, ListChatMesages
 from languageChooser.views import LanguageChooser
-from adminBoard.views import GetRegisteredArtistsAllTime, GetRegisteredCustomersAllTime, GetPendingOffersAllTime, \
+from adminBoard.views import GetStatistics,AdminZoneManagement
+'''
+GetRegisteredArtistsAllTime, GetRegisteredCustomersAllTime, GetPendingOffersAllTime, \
     GetRejectedOffersAllTime, GetContractMadeOffersAllTime, GetPaymentOffersAllTime, GetContractMadeOffersLastMonth, \
     GetPaymentOffersLastMonth, GetPendingOffersLastMonth, GetRejectedOffersLastMonth, GetRegisteredCustomersLastMonth, \
-    GetRegisteredArtistsLastMonth, GetTotalMoney, GetMoneyEarned, GetMoneyEarnedLastMonth, GetTotalMoneyLastMonth
-
+    GetRegisteredArtistsLastMonth, GetTotalMoney, GetMoneyEarned, GetMoneyEarnedLastMonth, GetTotalMoneyLastMonth, \
+'''
 router = routers.DefaultRouter()
 
 urlpatterns = [
@@ -79,8 +81,6 @@ urlpatterns = [
     url(r'^signupCustomer/$', CustomerRegister.as_view()),
     url(r'^artist/offers/$', ListArtistOffers.as_view()),
     url(r'^customer/offers/$', ListCustomerOffers.as_view()),
-    url(r'^artist/(?P<pk>[0-9]+)/$', ArtistRegister.as_view()),
-    url(r'^customer/(?P<pk>[0-9]+)/$', CustomerRegister.as_view()),
     url(r'^artist/ratings/(?P<pk>[0-9]+)/$', GetRatings.as_view()),
     url(r'^customer/rating/(?P<pk>[0-9]+)/$', PostRating.as_view()),
     url(r'^paymentCode/$', PaymentCode.as_view()),
@@ -110,23 +110,26 @@ urlpatterns = [
     url(r'^users/$', ListUsers.as_view()),
     url(r'^language/$', LanguageChooser.as_view()),
 
-    url(r'^admin/totalArtists/$', GetRegisteredArtistsAllTime.as_view()),
-    url(r'^admin/totalCustomers/$', GetRegisteredCustomersAllTime.as_view()),
-    url(r'^admin/ratioPending/$', GetPendingOffersAllTime.as_view()),
-    url(r'^admin/ratioRejected/$', GetRejectedOffersAllTime.as_view()),
-    url(r'^admin/ratioContractMade/$', GetContractMadeOffersAllTime.as_view()),
-    url(r'^admin/ratioPaymentMade/$', GetPaymentOffersAllTime.as_view()),
-    url(r'^admin/totalArtistsLastMonth/$', GetRegisteredArtistsLastMonth.as_view()),
-    url(r'^admin/totalCustomersLastMonth/$', GetRegisteredCustomersLastMonth.as_view()),
-    url(r'^admin/ratioPendingLastMonth/$', GetPendingOffersLastMonth.as_view()),
-    url(r'^admin/ratioRejectedLastMonth/$', GetRejectedOffersLastMonth.as_view()),
-    url(r'^admin/ratioContractMadeLastMonth/$', GetContractMadeOffersLastMonth.as_view()),
-    url(r'^admin/ratioPaymentMadeLastMonth/$', GetPaymentOffersLastMonth.as_view()),
+#    url(r'^admin/totalArtists/$', GetRegisteredArtistsAllTime.as_view()),
+#    url(r'^admin/totalCustomers/$', GetRegisteredCustomersAllTime.as_view()),
+#    url(r'^admin/ratioPending/$', GetPendingOffersAllTime.as_view()),
+#    url(r'^admin/ratioRejected/$', GetRejectedOffersAllTime.as_view()),
+#    url(r'^admin/ratioContractMade/$', GetContractMadeOffersAllTime.as_view()),
+#    url(r'^admin/ratioPaymentMade/$', GetPaymentOffersAllTime.as_view()),
+#    url(r'^admin/totalArtistsLastMonth/$', GetRegisteredArtistsLastMonth.as_view()),
+#    url(r'^admin/totalCustomersLastMonth/$', GetRegisteredCustomersLastMonth.as_view()),
+#    url(r'^admin/ratioPendingLastMonth/$', GetPendingOffersLastMonth.as_view()),
+#    url(r'^admin/ratioRejectedLastMonth/$', GetRejectedOffersLastMonth.as_view()),
+#    url(r'^admin/ratioContractMadeLastMonth/$', GetContractMadeOffersLastMonth.as_view()),
+#    url(r'^admin/ratioPaymentMadeLastMonth/$', GetPaymentOffersLastMonth.as_view()),
     url(r'^chat/(?P<pk>[0-9]+)/$', ListChatMesages.as_view()),
-    url(r'^admin/totalMoney/$', GetTotalMoney.as_view()),
-    url(r'^admin/moneyEarned/$', GetMoneyEarned.as_view()),
-    url(r'^admin/totalMoneyLastMonth/$', GetTotalMoneyLastMonth.as_view()),
-    url(r'^admin/moneyEarnedLastMonth/$', GetMoneyEarnedLastMonth.as_view()),
+#    url(r'^admin/totalMoney/$', GetTotalMoney.as_view()),
+#    url(r'^admin/moneyEarned/$', GetMoneyEarned.as_view()),
+#    url(r'^admin/totalMoneyLastMonth/$', GetTotalMoneyLastMonth.as_view()),
+#    url(r'^admin/moneyEarnedLastMonth/$', GetMoneyEarnedLastMonth.as_view()),
+    url(r'^admin/statistics/$', GetStatistics.as_view()),
     url(r'^downloadPersonalData/$', DownloadPersonalData.as_view()),
+    url(r'^admin/zone/(?P<pk>[0-9]+)/$', AdminZoneManagement.as_view()),
+    url(r'^admin/zone/', AdminZoneManagement.as_view()),
 
 ]

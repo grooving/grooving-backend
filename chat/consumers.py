@@ -7,7 +7,7 @@ from channels.exceptions import DenyConnection, AcceptConnection
 from utils.utils import isPositiveInteger
 from datetime import datetime
 from rest_framework.authtoken.models import Token
-
+import django
 
 class ChatConsumer(WebsocketConsumer):
 
@@ -35,21 +35,33 @@ class ChatConsumer(WebsocketConsumer):
             self.close()
         else:
             self.offer = Offer.objects.filter(isHidden=False, pk=int(self.room_name)).first()
-            self.customer = self.offer.eventLocation.customer
-            self.artist = self.offer.paymentPackage.portfolio.artist
-            self.chat = Chat.objects.filter(offer=self.offer).first()
-            if self.chat is None:
-                chat = Chat(json={"init": False, "messages": None})
-                chat.save()
-                self.offer.chat=chat
-                self.offer.save()
-                self.chat = chat
-            if self.chat is not None and self.chat.json is None:
-                self.chat.json = {"init": False, "messages": None}
-                self.chat.save()
-            self.room_group_name = 'chat_%s' % self.room_name
-            self.is_connect_to_group=False
-            self.accept()
+            if self.offer.status != "CONTRACT_MADE":
+                self.accept()
+                self.send(text_data=json.dumps({"json":
+                    {
+                        'mode': 'ERROR',
+                        'error': 'OFFER_NOT_IN_CONTRACT_MADE'
+                    }
+                }))
+                self.close()
+
+            else:
+                self.customer = self.offer.eventLocation.customer
+                self.artist = self.offer.paymentPackage.portfolio.artist
+                self.chat = Chat.objects.filter(offer=self.offer).first()
+                if self.chat is None:
+                    chat = Chat(json={"init": False, "messages": None})
+                    chat.save()
+                    self.offer.chat=chat
+                    self.offer.save()
+                    self.chat = chat
+                if self.chat is not None and self.chat.json is None:
+                    self.chat.json = {"init": False, "messages": None}
+                    self.chat.save()
+                self.room_group_name = 'chat_%s' % self.room_name
+                self.is_connect_to_group=False
+                self.accept()
+        django.db.connections.close_all()
 
     def disconnect(self, close_code):
         # Leave room group
@@ -60,6 +72,7 @@ class ChatConsumer(WebsocketConsumer):
             )
         except:
             pass
+        django.db.connections.close_all()
 
     # Receive message from WebSocket
     def receive(self, text_data):
@@ -110,6 +123,7 @@ class ChatConsumer(WebsocketConsumer):
                         'token': token
                     }
                 )
+        django.db.connections.close_all()
 
     # Receive message from room group
     def chat_message(self, event):
@@ -128,6 +142,7 @@ class ChatConsumer(WebsocketConsumer):
         self.send(text_data=json.dumps({
             "json": message
         }))
+        django.db.connections.close_all()
 
 
 def host_is_allow(host):

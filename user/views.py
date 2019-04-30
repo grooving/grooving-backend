@@ -76,7 +76,10 @@ class ListUsers(generics.RetrieveAPIView):
         dataUsers = []
         if artists:
             dataUsers = ListArtistSerializer(artists, many=True).data
+            [artist.update({"userType": "artist"})for artist in dataUsers]
             if customers:
-                dataUsers.extend(PublicCustomerInfoSerializer(customers, many=True).data)
+                cust = PublicCustomerInfoSerializer(customers, many=True).data
+                [customer.update({"userType": "customer"}) for customer in cust]
+                dataUsers.extend(cust)
 
         return Response(dataUsers, status=status.HTTP_200_OK)

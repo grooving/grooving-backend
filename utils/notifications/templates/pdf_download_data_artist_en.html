@@ -49,6 +49,8 @@
         {% if artist_genders %}
             <td><b>Artistic gender</b>: {{ artist_genders }}</td>
         {% endif %}
+    </tr>
+    <tr>
         {% if artist_zones %}
             <td><b>Performance zones</b>: {{ artist_zones }}</td>
         {% endif %}
@@ -73,7 +75,7 @@
 {% endif %}
 
 <h3>Available payment packages</h3>
-{% if not artist.portfolio.paymentPackages %}
+{% if not artist.portfolio.paymentPackages.all %}
     <p>None created.</p>
 {% else %}
     {% for payment_package in artist.portfolio.paymentPackages.all %}
@@ -247,6 +249,24 @@
                 {% endif %}
             </tr>
         </table>
+        {% if offer.chat.json %}
+            <h4>Conversaciones</h4>
+
+            {% for message in offer.chat.json.messages %}
+                <table>
+                    <tr>
+                        <td><b>Sent by</b>: {{ message.json.username }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Date</b>: {{ message.json.date }} a las {{ message.json.hour }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Message</b>: {{ message.json.message }}</td>
+                    </tr>
+                </table>
+                <br/>
+            {% endfor %}
+        {% endif %}
         <br/>
     {% endfor %}
 {% else %}

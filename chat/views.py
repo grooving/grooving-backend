@@ -35,6 +35,7 @@ class ListChatMesages(generics.RetrieveAPIView):
 
         customer = offer.eventLocation.customer
         artist = offer.paymentPackage.portfolio.artist
+        Assertions.assert_true_raise403(artist is not None and customer is not None, {"error": "DENIED_PEMISSION_CHAT"})
         logedCustomer = get_customer(request)
         logedArtist = get_artist(request)
         Assertions.assert_true_raise403(logedArtist is not None or logedCustomer is not None, {"error": "DENIED_PEMISSION_CHAT"})
@@ -50,5 +51,7 @@ class ListChatMesages(generics.RetrieveAPIView):
         else:
             messages = chat.json.get("messages")
 
-        return Response({"customerPhoto": customer.photo, "artistPhoto": artist.photo, "messages": messages},
+        return Response({"customerPhoto": customer.photo, "customerUsername": customer.user.username, "customerName": customer.user.first_name,
+                         "artistPhoto": artist.photo, "artistUsername": artist.user.username, "artistName": artist.user.first_name,
+                         "messages": messages},
                         status=status.HTTP_200_OK)

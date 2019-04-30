@@ -49,6 +49,8 @@
         {% if artist_genders %}
             <td><b>Género artístico</b>: {{ artist_genders }}</td>
         {% endif %}
+    </tr>
+    <tr>
         {% if artist_zones %}
             <td><b>Zonas de actuación</b>: {{ artist_zones }}</td>
         {% endif %}
@@ -73,7 +75,7 @@
 {% endif %}
 
 <h3>Paquetes de pago disponibles</h3>
-{% if not artist.portfolio.paymentPackages %}
+{% if not artist.portfolio.paymentPackages.all %}
     <p>No ha creado ninguno.</p>
 {% else %}
     {% for payment_package in artist.portfolio.paymentPackages.all %}
@@ -165,7 +167,7 @@
                 <td><b>Zona</b>: {{ offer.eventLocation.zone }}</td>
             </tr>
             <tr>
-                <td colspan="2"><b>Event date</b>: {{ offer.date|date:'Y-m-d' }} at {{ offer.date|date:'H:i' }}
+                <td colspan="2"><b>Día del evento</b>: {{ offer.date|date:'Y-m-d' }} at {{ offer.date|date:'H:i' }}
                     for {{ offer.hours }} hour/s
                 </td>
             </tr>
@@ -248,6 +250,24 @@
                 {% endif %}
             </tr>
         </table>
+        {% if offer.chat.json %}
+            <h4>Conversaciones</h4>
+
+            {% for message in offer.chat.json.messages %}
+                <table>
+                    <tr>
+                        <td><b>Enviado por</b>: {{ message.json.username }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Fecha</b>: {{ message.json.date }} a las {{ message.json.hour }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Mensaje</b>: {{ message.json.message }}</td>
+                    </tr>
+                </table>
+                <br/>
+            {% endfor %}
+        {% endif %}
         <br/>
     {% endfor %}
 {% else %}

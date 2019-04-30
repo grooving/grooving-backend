@@ -1,6 +1,5 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from django.core.exceptions import FieldError
 from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist, Transaction, Rating, \
     SystemConfiguration
 from utils.Assertions import assert_true, Assertions
@@ -9,8 +8,6 @@ from decimal import Decimal
 import random
 import string
 import datetime
-import pycard
-from validate_email_address import validate_email
 from django.utils import timezone
 from utils.authentication_utils import get_user_type
 from utils.notifications.notifications import Notifications

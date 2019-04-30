@@ -22,15 +22,15 @@ def _service_generate_unique_payment_code():
 
 def save_data():
     # System configuration
-    system_configuration1 = SystemConfiguration.objects.create(minimumPrice='20', currency='EUR', paypalTax='2.9',
+    system_configuration1 = SystemConfiguration.objects.create(minimumPrice='20', currency='EUR', paypalTax='3.4',
         creditCardTax='1.9',
-        vat='21', profit='7',
+        vat='21', profit='10',
         corporateEmail='grupogrooving@gmail.com',
         reportEmail='grupogrooving@gmail.com',
         appName='Grooving',
         slogan='Connecting artist with you',
         logo='',
-        privacyText_es="<h2>Introduction</h2>" +
+        privacyText_en="<h2>Introduction</h2>" +
                     "<p>At Grooving, accessible from https://grooving-frontend-d3.herokuapp.com, one of our main " +
                     "priorities is the privacy of our visitors. This Privacy Policy document contains types of " +
                     "information that is collected and recorded by Grooving and how we use it.</p>" +
@@ -81,7 +81,7 @@ def save_data():
                     "<h2>Consent</h2>" +
                     "<p>By using our website, you hereby consent to our Privacy Policy and agree to its Terms and " +
                     "Conditions.</p>",
-        privacyText_en =
+        privacyText_es =
                     "<h2>Introducción</h2>" +
                     "<p>En Grooving, accesible desde https://grooving-frontend-d3.herokuapp.com, una de nuestras " +
                     "principales prioridades es la privacidad de nuestros visitantes. Este documento de Política de " +
@@ -134,15 +134,20 @@ def save_data():
                     "<h2>Consentimiento</h2>" +
                     "<p>Al utilizar nuestro sitio web, usted acepta nuestra Política de privacidad y acepta sus " +
                     "Términos y condiciones.</p>",
-        aboutUs_es="<p> At Grooving, we all come to work every day because we want to solve the biggest " +
-                   "problems for the artists: empower artists by giving visibility and improving their " +
-                   "monetization. What is our mission? Simplifying the search and hiring made easy.</p>" +
-                   "<p>With all this, we can ensure that <b>Grooving makes the difference</b>.</p>",
-        aboutUs_en="<h2>Sobre nosotros</h2>" +
-                   "<p>En Grooving, trabajamos todos los días porque queremos resolver los grandes problemas a los " +
-                   "que se enfrentan los artistas mejorando su visibilidad y monetización de su actividad. ¿Cómo lo " +
-                   "conseguimos? Simplificando la búsqueda y la contratación de manera fácil, sencilla y fiable.</p>" +
-                  "<p>Podemos asegurar que <b>Grooving marca la diferencia</b>.</p>",
+        aboutUs_en="<p> At Grooving, we work hard to solve the daily problems of the artists by making them known " +
+                   "and increasing their daily activity in an easy, simple and reliable way. </p>" +
+                   "<h2> Do you think it's impossible? </h2> +"
+                   "<p> With <b> Grooving </b>, we managed to make it real by simplifying the search and hiring of " +
+                   "artists. </p>",
+        aboutUs_es="<h2>Sobre nosotros</h2>" +
+                   "<p>En Grooving, trabajamos duro para resolver los problemas diarios de los artistas dándoles a " +
+                   "conocer e incrementando su actividad diaria de una forma fácil, sencilla y fiable.</p>" +
+
+                   "<h2>¿Piensas que es imposible? </h2>" +
+
+                   "<p>Con <b>Grooving</b> conseguimos hacerlo realidad simplificando la búsqueda y contratación de " +
+                   "artistas.</p>",
+
         termsText_es = "<p>Las condiciones de uso de la página web, las reglas de uso y el uso de grooving.com, la " +
                        "propiedad de Grooving SL y el correo electrónico grupogrooving@gmail.com, en adelante, " +
                        "Grooving, que el usuario del portal debe aceptar para utilizar todos los servicios e " +
@@ -250,8 +255,10 @@ def save_data():
                        "usuario que desea informar, el motivo y alguna prueba (vídeo, imágenes, enlaces, ...) .</p>" +
 
                        "<h2>GPDR - Regulación de Protección General de Datos</h2>" +
-                       "<p>Grooving cumple con las regulaciones de la Unión Europea desde el nacimiento de la " +
-                       "compañía, cumpliendo con cada uno de sus artículos y sometiendo auditorías regularmente.</p>" +
+                       "<p>Este documento está adaptado al Reglamento Europeo de Protección de Datos (RGPD) y a la " +
+                       "reciente Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y " +
+                       "garantía de los derechos digitales cumpliendo con cada uno de sus artículos y sometiéndose " +
+                       "a auditorías regularmente.</p>" +
 
                        "<h3>Derecho a ser informado sobre brechas de seguridad</h3>" +
                        "<p>En caso de que se detecte una brecha de seguridad en Grooving, se le notificará un máximo " +
@@ -362,8 +369,10 @@ def save_data():
                      "report, the reason, and some proof (video, images, links, ...).</p>"
 
                      "<h2>GPDR - General Data Protection Regulation</h2>" +
-                     "<p>Grooving complies with the regulations of the European Union since the company " +
-                     "birth, complying with each of its articles and subjecting audits on a regular basis.</p>" +
+                     "<p> This document is adapted to the European Data Protection Regulation (RGPD) and to the " +
+                     "recent Organic Law 3/2018, of December 5th, on the Protection of Personal Data and guarantee " +
+                     "of the digital rights that comply with each of its articles and submitting to audits " +
+                     "regularly.</p>" +
 
                      "<h3>Right to be informed with breaches</h3>" +
                      "<p>In case a security breach is detected in the Grooving system, it will be notified a maximum " +
@@ -380,46 +389,46 @@ def save_data():
     system_configuration1.save()
 
     # ArtisticGenders
-    artistic_gender0 = ArtisticGender.objects.create(name='All genres')
+    artistic_gender0 = ArtisticGender.objects.create(name='All genres', name_es="Todos los géneros")
     artistic_gender0.save()
 
-    artistic_gender1 = ArtisticGender.objects.create(name='Music', parentGender=artistic_gender0)
+    artistic_gender1 = ArtisticGender.objects.create(name='Music', parentGender=artistic_gender0, name_es="Música")
     artistic_gender1.save()
 
-    artistic_gender2 = ArtisticGender.objects.create(name='DJ', parentGender=artistic_gender1)
+    artistic_gender2 = ArtisticGender.objects.create(name='DJ', parentGender=artistic_gender1, name_es="Pincha discos")
     artistic_gender2.save()
 
-    artistic_gender3 = ArtisticGender.objects.create(name='Pop', parentGender=artistic_gender1)
+    artistic_gender3 = ArtisticGender.objects.create(name='Pop', parentGender=artistic_gender1, name_es="Pop")
     artistic_gender3.save()
 
-    artistic_gender4 = ArtisticGender.objects.create(name='Rock', parentGender=artistic_gender1)
+    artistic_gender4 = ArtisticGender.objects.create(name='Rock', parentGender=artistic_gender1, name_es="Rock")
     artistic_gender4.save()
 
-    artistic_gender5 = ArtisticGender.objects.create(name='Flamenco', parentGender=artistic_gender1)
+    artistic_gender5 = ArtisticGender.objects.create(name='Flamenco', parentGender=artistic_gender1, name_es="Flamenco")
     artistic_gender5.save()
 
-    artistic_gender6 = ArtisticGender.objects.create(name='Magician', parentGender=artistic_gender0)
+    artistic_gender6 = ArtisticGender.objects.create(name='Magician', parentGender=artistic_gender0, name_es="Mago")
     artistic_gender6.save()
 
-    artistic_gender7 = ArtisticGender.objects.create(name='Comedian', parentGender=artistic_gender0)
+    artistic_gender7 = ArtisticGender.objects.create(name='Comedian', parentGender=artistic_gender0, name_es="Comedia")
     artistic_gender7.save()
 
-    artistic_gender8 = ArtisticGender.objects.create(name='Carnival', parentGender=artistic_gender0)
+    artistic_gender8 = ArtisticGender.objects.create(name='Carnival', parentGender=artistic_gender0, name_es="Carnaval")
     artistic_gender8.save()
 
-    artistic_gender9 = ArtisticGender.objects.create(name='Clowns', parentGender=artistic_gender7)
+    artistic_gender9 = ArtisticGender.objects.create(name='Clowns', parentGender=artistic_gender7, name_es="Payasos")
     artistic_gender9.save()
 
-    artistic_gender11 = ArtisticGender.objects.create(name='Mariachis', parentGender=artistic_gender1)
+    artistic_gender11 = ArtisticGender.objects.create(name='Mariachis', parentGender=artistic_gender1, name_es="Mariachis")
     artistic_gender11.save()
 
-    artistic_gender12 = ArtisticGender.objects.create(name='Animation', parentGender=artistic_gender0)
+    artistic_gender12 = ArtisticGender.objects.create(name='Animation', parentGender=artistic_gender0, name_es="Animación")
     artistic_gender12.save()
 
-    artistic_gender13 = ArtisticGender.objects.create(name='Theater', parentGender=artistic_gender0)
+    artistic_gender13 = ArtisticGender.objects.create(name='Theater', parentGender=artistic_gender0, name_es="Teatro")
     artistic_gender13.save()
 
-    artistic_gender10 = ArtisticGender.objects.create(name='Drag Queen', parentGender=artistic_gender12)
+    artistic_gender10 = ArtisticGender.objects.create(name='Drag Queen', parentGender=artistic_gender12, name_es="Drag queen")
     artistic_gender10.save()
     # Zones
 
@@ -896,7 +905,7 @@ def save_data():
     portfolio12 = Portfolio.objects.create(artisticName='Taylor Swift',
                                            artist=artist12,
                                            banner='http://img2.rtve.es/a/4429044?w=1600&preview=1516350190645.jpg',
-                                           biography='Iis an American singer-songwriter. As one of the world`s leading contemporary recording artists, she is known for narrative songs about her personal life, which has received widespread media coverage.')
+                                           biography='Is an American singer-songwriter. As one of the world`s leading contemporary recording artists, she is known for narrative songs about her personal life, which has received widespread media coverage.')
 
     portfolio12.artisticGender.add(artistic_gender1)
     portfolio12.zone.add(zone0)
@@ -1072,8 +1081,10 @@ def save_data():
                                                           link='https://www.youtube.com/watch?v=UxxajLWwzqY')
     portfolio13_module10.save()
 
-    availableDays13 = ['2019-07-21', '2019-07-22', '2019-07-23', '2019-07-24', '2019-07-25', '2019-07-26',
-                       '2019-07-27', '2019-07-28', '2019-08-16', '2019-08-17', '2019-08-18', '2019-08-19']
+    availableDays13 = []
+
+    calendar13 = Calendar.objects.create(days=availableDays13, portfolio=portfolio13)
+    calendar13.save()
 
     # ...admins
 
@@ -1428,6 +1439,10 @@ def save_data():
                                                         description='Foto 3',
                                                         link='https://scontent-mad1-1.xx.fbcdn.net/v/t1.0-9/14519937_1111631358927775_3967127956346645930_n.jpg?_nc_cat=103&_nc_ht=scontent-mad1-1.xx&oh=b1fd94a5cb7933883de0e6e6d34672b9&oe=5D39423E')
     portfolio9_module4.save()
+    availableDays9 = []
+
+    calendar9 = Calendar.objects.create(days=availableDays9, portfolio=portfolio9)
+    calendar9.save()
 
     # Calendar
 
