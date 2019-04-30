@@ -80,15 +80,20 @@ class GetStatistics(generics.ListAPIView):
 
         contractoffers = len(Offer.objects.filter(status='CONTRACT_MADE'))
 
+        paymentoffers = len(Offer.objects.filter(status='PAYMENT_MADE'))
+
+        acceptedoffers = contractoffers + paymentoffers
+
         if totaloffers == 0:
 
             return 0.0
 
         else:
 
-            ratio = contractoffers / totaloffers
+            ratio = acceptedoffers / totaloffers
 
             return ratio
+
 
     def get_payment_offers_all_time(self, request, *args, **kwargs):
 
@@ -186,6 +191,9 @@ class GetStatistics(generics.ListAPIView):
             # Se aplica un doble filtro para sacar las ofertas en este estado Y que sean del último mes (31 días en todos los casos, aun si tiene 30 días o es febrero)
         contractoffers = len(
             Offer.objects.filter(status='CONTRACT_MADE').filter(creationMoment__gt=time_threshold))
+        paymentoffers = len(Offer.objects.filter(status='PAYMENT_MADE').filter(creationMoment__gt=time_threshold))
+
+        acceptedoffers = contractoffers + paymentoffers
 
         if totaloffers == 0:
 
@@ -193,7 +201,7 @@ class GetStatistics(generics.ListAPIView):
 
         else:
 
-            ratio = contractoffers / totaloffers
+            ratio = acceptedoffers / totaloffers
 
             return ratio
 
