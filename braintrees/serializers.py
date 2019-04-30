@@ -18,6 +18,5 @@ class PaypalSerializer(serializers.Serializer):
 
 
 class PaypalSerializer2(serializers.Serializer):
-
-    payment_id = serializers.CharField()
-    payer_id = serializers.CharField()
+    id_offer = serializers.CharField()
+    authorization_id = serializers.CharField()

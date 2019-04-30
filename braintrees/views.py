@@ -11,17 +11,17 @@ import braintree
 from rest_framework import generics
 from Server import settings
 from rest_framework.response import Response
-from Grooving.models import Transaction
-from .serializers import TransactionSerializer,PaypalSerializer,PaypalSerializer2
+from .serializers import TransactionSerializer,PaypalSerializer2
 from utils.authentication_utils import get_logged_user,get_user_type
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from utils.Assertions import Assertions
-from Grooving.models import Offer, Customer
-from django.core.exceptions import PermissionDenied
+from Grooving.models import Offer
+from rest_framework import status
 import requests
 import braintree
 import json
 from requests.auth import HTTPBasicAuth
+from utils.utils import check_accept_language
+from .internationalization import translate
 
 
 class BraintreeViews(generics.GenericAPIView):
@@ -30,12 +30,14 @@ class BraintreeViews(generics.GenericAPIView):
 
     def get(self, request, format=None):
 
+        language = check_accept_language(self.request)
+
         if settings.BRAINTREE_PRODUCTION:
             braintree_env = braintree.Environment.Production
         else:
             braintree_env = braintree.Environment.Sandbox
 
-        Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+        Assertions.assert_true_raise400(braintree_env, translate(language, 'ERROR_ENVIROMENT'))
 
         # Configure Braintree
         braintree.Configuration.configure(
@@ -51,7 +53,7 @@ class BraintreeViews(generics.GenericAPIView):
         # if you've already saved the ID
         self.braintree_client_token = braintree.ClientToken.generate({})
 
-        Assertions.assert_true_raise400(self.braintree_client_token, {'error': 'There was an error generating the token'})
+        Assertions.assert_true_raise400(self.braintree_client_token, translate(language, 'ERROR_TOKEN'))
 
         return Response(self.braintree_client_token)
 
@@ -60,18 +62,20 @@ class BraintreeViews(generics.GenericAPIView):
         # You can, for sure, use several approaches to gather customer infos
         # For now, we'll simply use the given data of the user instance
 
+        language = check_accept_language(self.request)
+
         logged_user = get_logged_user(request)
         type = get_user_type(logged_user)
 
-        Assertions.assert_true_raise401(logged_user, {'error': 'You are not logged in'})
-        Assertions.assert_true_raise401(type == "Customer", {'error': 'You are not customer'})
+        Assertions.assert_true_raise401(logged_user, translate(language, "ERROR_NOT_LOGGED_IN"))
+        Assertions.assert_true_raise401(type == "Customer", translate(language, 'ERROR_NO_CUSTOMER'))
 
         if settings.BRAINTREE_PRODUCTION:
             braintree_env = braintree.Environment.Production
         else:
             braintree_env = braintree.Environment.Sandbox
 
-        Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+        Assertions.assert_true_raise400(braintree_env, translate(language, 'ERROR_ENVIROMENT'))
         # Configure Braintree
 
         gateway = braintree.BraintreeGateway(
@@ -105,21 +109,21 @@ class BraintreeViews(generics.GenericAPIView):
         #if request.data['paypalCustomer'] is None or request.data['paypalCustomer'] == "":
 
         customer = gateway.customer.create(customer_kwargs)
-        Assertions.assert_true_raise400(serializer.data['payment_method_nonce'], {'error': 'No nounce was given'})
-        Assertions.assert_true_raise400(customer, {'error': 'No customer was created'})
-        Assertions.assert_true_raise400(serializer.data['id_offer'], {'error': 'No offer was given'})
+        Assertions.assert_true_raise400(serializer.data['payment_method_nonce'], translate(language, 'ERROR_INCORRECT_ID'))
+        Assertions.assert_true_raise400(customer, translate(language, 'ERROR_CUSTOMER'))
+        Assertions.assert_true_raise400(serializer.data['id_offer'], translate(language, "ERROR_NO_OFFER"))
 
         offer = Offer.objects.filter(id=serializer.data['id_offer']).first()
-        Assertions.assert_true_raise400(offer, {'error': 'No offer with this id'})
+        Assertions.assert_true_raise400(offer, translate(language, "ERROR_NO_OFFER"))
 
-        Assertions.assert_true_raise401(offer.eventLocation.customer.user_id == logged_user.user_id, {'error': 'Offer not from this customer'})
+        Assertions.assert_true_raise401(offer.eventLocation.customer.user_id == logged_user.user_id, translate(language, 'ERROR_OFFER_CUSTOMER'))
 
         if offer.paymentPackage.performance is not None:
             amount = offer.paymentPackage.performance.price
         else:
             amount = offer.price * offer.hours
 
-        Assertions.assert_true_raise400(amount > 0, {'error': 'Amount is 0 or lower'})
+        Assertions.assert_true_raise400(amount > 0, translate(language, 'ERROR_AMOUNT'))
 
         result = gateway.transaction.sale({
             "customer_id": customer.customer.id,
@@ -161,7 +165,7 @@ class BraintreeViews(generics.GenericAPIView):
                     'Your payment could not be processed. Please check your'
                     ' input or use another payment method and try again.')
             }
-            Assertions.assert_true_raise400(result.is_success, {'error': 'Your payment could not be processed. Please check your input or use another payment method and try again.'})
+            Assertions.assert_true_raise400(result.is_success, translate(language, 'ERROR_PAYMENT'))
 
 
 
@@ -177,86 +181,61 @@ class BraintreeViews(generics.GenericAPIView):
         return Response()
 
 
-class CreatePaypal(generics.GenericAPIView):
-
-    serializer_class = PaypalSerializer
-
-    def post(self, request, *args, **kwargs):
-
-        logged_user = get_logged_user(request)
-        type = get_user_type(logged_user)
-
-        Assertions.assert_true_raise401(logged_user, {'error': 'You are not logged in'})
-        Assertions.assert_true_raise401(type == "Customer", {'error': 'You are not customer'})
-
-        serializer = PaypalSerializer(data=request.data, partial=True)
-        serializer.is_valid()
-
-        offer = Offer.objects.filter(id=serializer.data['id_offer']).first()
-        Assertions.assert_true_raise400(offer, {'error': 'No offer with this id'})
-
-        if offer.paymentPackage.performance is not None:
-            amount = offer.paymentPackage.performance.price
-        else:
-            amount = offer.price * offer.hours
-
-        Assertions.assert_true_raise400(amount > 0, {'error': 'Amount is 0 or lower'})
-
-        response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
-                             headers={'Accept': 'application/json', 'Accept-Language': 'en_US',
-                                      'content-type': 'application/x-www-form-urlencoded'},
-                             params={'grant_type': 'client_credentials'},
-                             auth=HTTPBasicAuth(
-                                 'AZUNfuWGR6SWVjXJo82ariPtUrGOgA7L_QP2sxe8_QHaBuQ2JUT7AN9KnQKTpjT20yOr8l4G_3zlvx3B',
-                                 'EPyiDZA9P9vGWLXihX-p5qTfVBZRtMvE1gCV5G2eLHgzbZXWo5VlctjQgIIUr1WPZT-haW5Db_pDJ-3t'))
-
-        Assertions.assert_true_raise400(response, {'error': 'Credential error with paypal'})
-
-        access_token = json.loads(response.content.decode("utf-8"))['access_token']
-
-        response2 = requests.post('https://api.sandbox.paypal.com/v1/payments/payment',
-                                 data='{"intent": "sale" ,"payer": {"payment_method": "paypal"},"transactions": [{"amount":'+amount+' {"total": ,"currency": "USD"}}]}',
-                                 headers={'content-type': 'application/json','authorization': 'Bearer ' + access_token})
-
-        Assertions.assert_true_raise400(response2, {'error': 'No hay respuesta desde Paypal'})
-
-        return response2
-
-
 class PayPaypal(generics.GenericAPIView):
 
     serializer_class = PaypalSerializer2
 
     def post(self, request, *args, **kwargs):
 
+        language = check_accept_language(self.request)
+
         logged_user = get_logged_user(request)
         type = get_user_type(logged_user)
 
-        Assertions.assert_true_raise401(logged_user, {'error': 'You are not logged in'})
-        Assertions.assert_true_raise401(type == "Customer", {'error': 'You are not customer'})
+        Assertions.assert_true_raise401(logged_user, translate(language, "ERROR_NOT_LOGGED_IN"))
+        Assertions.assert_true_raise401(type == "Customer", translate(language, 'ERROR_NO_CUSTOMER'))
 
         serializer = PaypalSerializer2(data=request.data, partial=True)
         serializer.is_valid()
 
-        Assertions.assert_true_raise400(serializer.data['payment_id'], {'error': 'No payment id was given'})
-        Assertions.assert_true_raise400(serializer.data['payer_id'], {'error': 'No payer id was given'})
+        Assertions.assert_true_raise400(serializer.data['authorization_id'], translate(language, 'ERROR_INCORRECT_ID'))
+
+        Assertions.assert_true_raise400(serializer.data['id_offer'], translate(language, "ERROR_NO_OFFER"))
+        offer = Offer.objects.filter(id=serializer.data['id_offer']).first()
+        Assertions.assert_true_raise400(offer, translate(language, "ERROR_NO_OFFER"))
+
+        Assertions.assert_true_raise401(offer.eventLocation.customer.user_id == logged_user.user_id,
+                                        translate(language, 'ERROR_OFFER_CUSTOMER'))
+
+        if offer.paymentPackage.performance is not None:
+            amount = offer.paymentPackage.performance.price
+        else:
+            amount = offer.price * offer.hours
+
+        Assertions.assert_true_raise400(amount > 0, translate(language, 'ERROR_AMOUNT'))
 
         response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
                                  headers={'Accept': 'application/json', 'Accept-Language': 'en_US',
                                           'content-type': 'application/x-www-form-urlencoded'},
                                  params={'grant_type': 'client_credentials'},
                                  auth=HTTPBasicAuth(
-                                     'AZUNfuWGR6SWVjXJo82ariPtUrGOgA7L_QP2sxe8_QHaBuQ2JUT7AN9KnQKTpjT20yOr8l4G_3zlvx3B',
-                                     'EPyiDZA9P9vGWLXihX-p5qTfVBZRtMvE1gCV5G2eLHgzbZXWo5VlctjQgIIUr1WPZT-haW5Db_pDJ-3t'))
+                                     'AVwB_2wUfHN5UCJO1Ik6uWkFbALgetwYKS5_BJ6gr9bR6wcEP5iFK84Nme_ebMbXI4yQdgH5BX2Tld2o',
+                                     'EEZqYac8yorxpDQNojGYT0vWxP6VVBDIOSCuCgyQB6B7zTwdEG1uuRZS52DytG-qlLAY1vtMrZG60hgB'))
 
-        Assertions.assert_true_raise400(response, {'error': 'Credential error with paypal'})
+        Assertions.assert_true_raise400(response, translate(language, 'ERROR_CREDENTIAL'))
 
         access_token = json.loads(response.content.decode("utf-8"))['access_token']
 
-        response2 = requests.post('https://api.sandbox.paypal.com/v1/payments/payment/'+serializer.data['payment_id']+'/execute',
-                                 data='{"payer_id": "'+serializer.data['payer_id']+'"}',
-                                 headers={'content-type': 'application/json',
-                                          'authorization': 'Bearer ' + access_token})
+        response2 = requests.get('https://api.sandbox.paypafrom rest_framework import statusl.com/v2/checkout/orders/'+serializer.data['authorization_id'],
+                                  headers={'content-type': 'application/json',
+                                           'authorization': 'Bearer ' + access_token})
 
-        Assertions.assert_true_raise400(response2, {'error': 'No hay respuesta desde Paypal'})
-        return response2
+        Assertions.assert_true_raise400(response2, translate(language, 'ERROR_RESPONSE'))
+
+        print(response2.json())
+        offer.transaction.braintree_id = response2.json()['purchase_units'][0]['payments']['authorizations'][0]['id']
+        offer.transaction.amount = amount
+        offer.transaction.save()
+        offer.save()
+
+        return Response(response2.json(), status=status.HTTP_201_CREATED)
