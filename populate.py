@@ -1945,7 +1945,7 @@ def save_data():
 
     offer3_performance1 = Offer.objects.create(description='Oferta 3 to Carlos DJ by performance',
                                                status='PAYMENT_MADE',
-                                               date='2019-08-25 12:00:00', hours=1.5, price='120', currency='EUR',
+                                               date='2019-02-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
                                                appliedVAT=7, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location1, transaction=transaction_offer3,
@@ -1957,7 +1957,8 @@ def save_data():
                                                date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
                                                appliedVAT=7, paymentPackage=paymentPackage1_performance1,
-                                               eventLocation=event_location2, transaction=transaction_offer4)
+                                               eventLocation=event_location2, transaction=transaction_offer4,
+                                               reason='Due to personal problems, we must cancel the performance.')
     offer4_performance1.save()
 
     offer5_fare1 = Offer.objects.create(description='Oferta 5 to Carlos DJ by fare', status='PENDING',
@@ -1976,14 +1977,16 @@ def save_data():
     offer7_custom1 = Offer.objects.create(description='Oferta 7 to Carlos DJ by custom', status='REJECTED',
                                           date='2019-10-25 19:00:00', hours=1.5, price='100', currency='EUR',
                                           appliedVAT=7, paymentPackage=paymentPackage3_custom1,
-                                          eventLocation=event_location1, transaction=transaction_offer7)
+                                          eventLocation=event_location1, transaction=transaction_offer7,
+                                          reason='Your local has a bad reputation.')
     offer7_custom1.save()
 
     offer8_performance2 = Offer.objects.create(description='Oferta 8 to From the noise by performance',
                                                status='REJECTED',
                                                date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
                                                appliedVAT=7, paymentPackage=paymentPackage4_performance2,
-                                               eventLocation=event_location1, transaction=transaction_offer8)
+                                               eventLocation=event_location1, transaction=transaction_offer8,
+                                               reason='I will be in another country.')
     offer8_performance2.save()
 
     offer9_performance2 = Offer.objects.create(description='Oferta 9 to From the noise by performance',
@@ -1998,7 +2001,8 @@ def save_data():
                                          date='2019-03-27 00:00:00', hours=1.5, price='140', currency='EUR',
                                          paymentCode=_service_generate_unique_payment_code(),
                                          appliedVAT=7, paymentPackage=paymentPackage5_fare2,
-                                         eventLocation=event_location4, transaction=transaction_offer10)
+                                         eventLocation=event_location4, transaction=transaction_offer10,
+                                         reason='I will be in another country.')
     offer10_fare2.save()
 
     offer11_fare2 = Offer.objects.create(description='Oferta 11 to From the noise by fare', status='CONTRACT_MADE',
@@ -2008,11 +2012,12 @@ def save_data():
                                          eventLocation=event_location4, transaction=transaction_offer11)
     offer11_fare2.save()
 
-    offer12_custom2 = Offer.objects.create(description='Oferta 12 to From the noise by fare', status='CONTRACT_MADE',
+    offer12_custom2 = Offer.objects.create(description='Oferta 12 to From the noise by fare', status='CANCELLED_ARTIST',
                                            date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                            paymentCode=_service_generate_unique_payment_code(),
                                            appliedVAT=7, paymentPackage=paymentPackage5_fare2,
-                                           eventLocation=event_location3, transaction=transaction_offer12)
+                                           eventLocation=event_location3, transaction=transaction_offer12,
+                                           reason='The singer is aphonic')
     offer12_custom2.save()
 
     offer13_custom2 = Offer.objects.create(description='Oferta 13 to From the noise by fare',
@@ -2020,7 +2025,8 @@ def save_data():
                                            date='2017-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                            paymentCode=_service_generate_unique_payment_code(),
                                            appliedVAT=7, paymentPackage=paymentPackage5_fare2,
-                                           eventLocation=event_location3, transaction=transaction_offer13)
+                                           eventLocation=event_location3, transaction=transaction_offer13,
+                                           reason='The establishment will be refurbished.')
     offer13_custom2.save()
 
     offer14_performance2 = Offer.objects.create(description='Oferta 14 to From the noise by performance',
@@ -2071,6 +2077,71 @@ def save_data():
 
     offer19_performance1.save()
 
+
+    # Data for teachers
+
+    # Portfolio from teachers
+
+    portfolio14_prof = Portfolio.objects.create(artisticName='The great magician')
+    portfolio14_prof.save()
+
+    calendar14 = Calendar.objects.create(days=[], portfolio=portfolio14_prof)
+    calendar14.save()
+
+    portfolio15_prof = Portfolio.objects.create(artisticName='The pianist')
+    portfolio15_prof.save()
+
+    calendar15 = Calendar.objects.create(days=[], portfolio=portfolio15_prof)
+    calendar15.save()
+
+
+    # ...user artist from teachers
+
+    email_to_send_mail_teachers = 'ispp.profesores@gmail.com'
+
+    user15_artist10_prof = User.objects.create(username='rafael',
+                                               password=make_password('rafaelrafael'),
+                                               first_name='Rafael', last_name='Corchuelo',
+                                               email=email_to_send_mail_teachers)
+    user15_artist10_prof.save()
+
+    user16_artist11_prof = User.objects.create(username='pablo',
+                                               password=make_password('pablopablo'),
+                                               first_name='Pablo', last_name='Trinidad',
+                                               email=email_to_send_mail_teachers)
+    user16_artist11_prof.save()
+
+    # ...user customer from teachers
+
+    user17_customer5_prof = User.objects.create(username='patricia',
+                                                password=make_password('patriciapatricia'),
+                                                first_name='Patricia', last_name='Jimenez',
+                                                email=email_to_send_mail_teachers)
+    user17_customer5_prof.save()
+
+    user18_customer6_prof = User.objects.create(username='inmaculada',
+                                                password=make_password('inmaculadainmaculada'),
+                                                first_name='Inmaculada', last_name='Hernández',
+                                                email=email_to_send_mail_teachers)
+    user18_customer6_prof.save()
+
+    # ...artists from teachers
+
+    artist10_prof = Artist.objects.create(user=user15_artist10_prof, rating=1, portfolio=portfolio14_prof,
+                                          photo='https://raw.githubusercontent.com/Iriabow/pepe/master/magician-circus-ladies-b75b24-1024.jpg')
+    artist10_prof.save()
+
+    artist11_prof = Artist.objects.create(user=user16_artist11_prof, rating=1, portfolio=portfolio15_prof,
+                                          photo='https://raw.githubusercontent.com/Iriabow/pepe/master/pianista.jpg')
+    artist11_prof.save()
+
+    # ...customer from teachers
+
+    artist15_prof = Customer.objects.create(user=user17_customer5_prof)
+    artist15_prof.save()
+
+    artist16_prof = Customer.objects.create(user=user18_customer6_prof)
+    artist16_prof.save()
 
 os.system('python3 manage.py sqlflush | python3 manage.py dbshell')
 save_data()
