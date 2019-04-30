@@ -130,15 +130,6 @@ class ImageManager(generics.GenericAPIView):
         return Response({"route": image_url}, status=status.HTTP_200_OK)
         """
 
-    def delete(self, request):
-
-        url = request.query_params.get("url", None)
-        name = url.split("media/")[1]
-        file = Upload.objects.filter(file=name).first()
-        delete_completely(file)
-
-        return Response(status=status.HTTP_200_OK)
-
 
 def delete_completely(filemodel):
     if filemodel is not None:
