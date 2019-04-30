@@ -11,6 +11,7 @@ from utils.searcher.searcher import searchAdmin
 from utils.authentication_utils import get_admin
 from utils.notifications.notifications import Notifications
 
+
 class UserManage(generics.DestroyAPIView):
     queryset = User.objects.all()
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -34,29 +35,27 @@ class UserManage(generics.DestroyAPIView):
 
     def delete(self, request):
         try:
-            email = ""
-            language = ""
-
+            email = ''
+            language = ''
             if Artist.objects.filter(user=request.user).first() is not None:
                 artist = Artist.objects.get(user=request.user)
+                UserSerializer.anonymize_and_hide_artist(artist)
                 email = artist.user.email
                 language = artist.language
-                portfolio = Portfolio.objects.filter(artist=artist).update(isHidden=True)
-                PortfolioModule.objects.filter(portfolio=portfolio).update(isHidden=True)
-                Calendar.objects.filter(portfolio=portfolio).update(isHidden=True)
             elif Customer.objects.filter(user=request.user).first() is not None:
                 customer = Customer.objects.get(user=request.user)
+                UserSerializer.anonymize_and_hide_customer(customer)
                 email = customer.user.email
                 language = customer.language
-                EventLocation.objects.filter(customer=customer).update(isHidden=True)
             else:
                 Assertions.assert_true_raise400(False, {'error': 'ERROR_DELETE_USER_UNKNOWN'})
             request.user.delete()
 
             Notifications.send_email_right_to_be_forgotten(email=email, language=language)
         except TypeError:
-            Assertions.assert_true_raise401(False, {'error': 'ERROR_DELETE_USER'})
+            return Response({'error': 'ERROR_DELETE_USER'}, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class ListUsers(generics.RetrieveAPIView):
 
