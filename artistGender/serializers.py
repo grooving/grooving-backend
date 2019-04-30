@@ -29,7 +29,7 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
             genre_id_control = str(self.initial_data.get('id'))
 
             genre = ArtisticGender.objects.filter(pk=id_genre).first()
-            genre = self._service_update(self.initial_data, genre, logged_user)
+            genre = self._service_update(self.initial_data, genre, logged_user,language)
             genre.save()
             return genre
 
@@ -56,10 +56,9 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         return genre
 
     @staticmethod
-    def _service_update(json: dict, genre: ArtisticGender, loggedUser: User):
+    def _service_update(json: dict, genre: ArtisticGender, loggedUser: User, language):
 
         user = get_artist_or_customer_by_user(loggedUser)
-        language = user.language
 
         genre_id_control = str(json.get('id'))
 
