@@ -7,6 +7,17 @@ from django.utils import timezone
 
 # Create your models here.
 
+fotoType = (
+    ('PROFILE', 'PROFILE'),
+    ('BANNER', 'BANNER'),
+    ('CAROUSEL', 'CAROUSEL'),
+    )
+
+class Upload(models.Model):
+    file = models.FileField()
+    type = models.CharField(choices=fotoType, max_length=50)
+    userId = models.IntegerField()
+
 
 class AbstractEntity(models.Model):
     creationMoment = models.DateTimeField(auto_now_add=True)

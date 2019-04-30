@@ -214,16 +214,19 @@ if USE_S3:
     # s3 static settings
     AWS_LOCATION = 'static'
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATICFILES_STORAGE = 'cdn.storage_backends.PublicMediaStorage'
     #Media location
     PUBLIC_MEDIA_LOCATION = 'media'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
     DEFAULT_FILE_STORAGE = 'cdn.storage_backends.PublicMediaStorage'
 else:
-    STATIC_URL = '/staticfiles/'
+    STATIC_URL = '/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
     MEDIA_URL = '/mediafiles/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
+FILE_UPLOAD_MAX_MEMORY_SIZE = "10145728"
+MAX_CONTENT_LENGTH = "10145728"
+MAX_UPLOAD_SIZE = "10145728"

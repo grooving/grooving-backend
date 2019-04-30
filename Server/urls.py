@@ -40,7 +40,7 @@ from utils.utils import TermsAndConditions
 from chat.views import index, room, ListChatMesages
 from languageChooser.views import LanguageChooser
 from adminBoard.views import GetStatistics,AdminZoneManagement
-from cdn.views import ImageUpload
+from cdn.views import ImageManager
 '''
 GetRegisteredArtistsAllTime, GetRegisteredCustomersAllTime, GetPendingOffersAllTime, \
     GetRejectedOffersAllTime, GetContractMadeOffersAllTime, GetPaymentOffersAllTime, GetContractMadeOffersLastMonth, \
@@ -132,6 +132,6 @@ urlpatterns = [
     url(r'^downloadPersonalData/$', DownloadPersonalData.as_view()),
     url(r'^admin/zone/(?P<pk>[0-9]+)/$', AdminZoneManagement.as_view()),
     url(r'^admin/zone/', AdminZoneManagement.as_view()),
-    url(r'^image/', ImageUpload.as_view()),
+    url(r'^image/', ImageManager.as_view()),
 
 ]
