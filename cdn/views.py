@@ -13,15 +13,15 @@ from utils.Assertions import Assertions
 import boto3
 from utils.authentication_utils import get_customer, get_artist
 
-class ImageManager(generics.GenericAPIView):
+class ImageManager(generics.UpdateAPIView):
     serializer_class = UselessSerializer
-
-    def get_queryset(self):
-        return ["Use HTTP POST method",]
+    queryset = Upload.objects.all()
+    def get_object(self):
+        return {"use": "PUT HTTP method"}
 
     def put(self, request):
-        customer = get_customer()
-        artist = get_artist()
+        customer = get_customer(request)
+        artist = get_artist(request)
         user = None
         if customer is not None:
             user = customer
@@ -49,17 +49,19 @@ class ImageManager(generics.GenericAPIView):
             elif customer is not None:
                 Assertions.assert_true_raise400(type == 'PROFILE',
                                                 {'error': 'ERROR_NOT_TYPE_NEW_IMAGE_CUSTOMER'})
+        if old_url is not None:
+            old_url = old_url.strip()
 
-        edit = contains_newimage and old_url.strip() and (settings.PUBLIC_MEDIA_LOCATION+"/") in old_url
-        create = contains_newimage and not old_url.strip()
-        delete = not contains_newimage and old_url.strip() and (settings.PUBLIC_MEDIA_LOCATION+"/") in old_url
+        edit = contains_newimage and old_url and (settings.PUBLIC_MEDIA_LOCATION+"/") in old_url
+        create = contains_newimage and not old_url
+        delete = not contains_newimage and old_url and (settings.PUBLIC_MEDIA_LOCATION+"/") in old_url
         if edit:
             split_url = old_url.split("media/")
             file = None
             if len(split_url) == 2:
                 file = split_url[1]
 
-            fileInDB = Upload.objects.filter(userId=user.user_id, file=file)
+            fileInDB = Upload.objects.filter(userId=user.user_id, file=file).first()
             isBlock = True
             try:
                 delete_completely(fileInDB)
@@ -69,7 +71,7 @@ class ImageManager(generics.GenericAPIView):
 
             if not isBlock:
                 random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(30))
-                name = random_alphanumeric + img_extension
+                name = random_alphanumeric + '.'+img_extension
                 img_decode_data = base64.b64decode(img_data)
                 img_size = len(img_decode_data)
                 Assertions.assert_true_raise400(img_size <= 2097152, {"error": "ERROR_IMAGE_MORE_THAN_2MB"})
@@ -78,14 +80,15 @@ class ImageManager(generics.GenericAPIView):
                 fileInDB.save()
 
                 return Response({"imgUrl": fileInDB.file.url}, status=status.HTTP_200_OK)
+            return Response({"imgUrl": "fail"}, status=status.HTTP_200_OK)
 
         if create:
             if type == "PROFILE" or type == "BANNER":
-                fileInDB = Upload.objects.filter(userId=user.user_id, type=type)
+                fileInDB = Upload.objects.filter(userId=user.user_id, type=type).first()
                 delete_completely(fileInDB)
 
                 random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(30))
-                name = random_alphanumeric + img_extension
+                name = random_alphanumeric + "."+img_extension
                 img_decode_data = base64.b64decode(img_data)
                 img_size = len(img_decode_data)
                 Assertions.assert_true_raise400(img_size <= 2097152, {"error": "ERROR_IMAGE_MORE_THAN_2MB"})
@@ -101,7 +104,7 @@ class ImageManager(generics.GenericAPIView):
                 Assertions.assert_true_raise400(nFiles<=10,{"error": "ERROR_CAROUSEL_PHOTO_LIMIT"})
 
                 random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(30))
-                name = random_alphanumeric + img_extension
+                name = random_alphanumeric + "."+img_extension
                 img_decode_data = base64.b64decode(img_data)
                 img_size = len(img_decode_data)
                 Assertions.assert_true_raise400(img_size <= 2097152, {"error": "ERROR_IMAGE_MORE_THAN_2MB"})
