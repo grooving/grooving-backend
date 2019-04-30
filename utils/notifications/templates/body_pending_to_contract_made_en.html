@@ -41,8 +41,11 @@
     <h1>Payment code</h1>
     <table>
         <tr>
-            <td rowspan="8"><p><img
-                    src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ event_payment_code }}"></p>
+            <td rowspan="8"><p>
+                <a href="http://localhost:8000/receivePayment?paymentCode={{ event_payment_code }}"><img
+                        src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:8000/receivePayment?paymentCode={{ event_payment_code }}">
+                </a>
+            </p>
                 <p style="font-size: 22px">{{ event_payment_code }}</p>
             </td>
         </tr>
