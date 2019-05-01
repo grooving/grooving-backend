@@ -37,7 +37,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         # Data validation
 
         json = attrs.data
-        Assertions.assert_true_raise400(json.get('id'), translate(language, 'ERROR_FIELD_ID'))
+        Assertions.assert_true_raise400(json.get('id') and str(json.get('id')).isdigit(), translate(language, 'ERROR_FIELD_ID'))
 
         # Ban user validation
 
