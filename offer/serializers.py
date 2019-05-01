@@ -284,6 +284,9 @@ class OfferSerializer(serializers.ModelSerializer):
                     'ERROR_CREDENTIAL_BRAINTREE'))
 
                     if len(offer_in_db.transaction.braintree_id) > 8:
+                        delta = datetime.now().date() - offer_in_db.creationMoment
+
+                        Assertions.assert_true_raise401( delta < 29, translate(language,'ERROR_DATE_PAYMENT'))
 
                         response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
                                                  headers={'Accept': 'application/json', 'Accept-Language': 'en_US',
