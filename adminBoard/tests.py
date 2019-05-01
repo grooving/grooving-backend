@@ -11,7 +11,7 @@ class ZoneTestCase(APITransactionTestCase):
         your_email = 'utri1990@gmail.com'
         print('-------- Setup test --------')
 
-        print('---- Creating user test ----')
+        print('---- Creating Zone Tests ----')
 
         user3_admin = User.objects.create(username='admin', password=make_password('admin'), is_staff=True,
                                            is_superuser=True, first_name='Chema', last_name='Alonso',
@@ -39,7 +39,7 @@ class ZoneTestCase(APITransactionTestCase):
                                             language='en',
                                             paypalAccount='rafesqram@gmail.com')
 
-        zone1 = Zone.objects.create(name='Andalucía')
+        zone1 = Zone.objects.create(name='Murcia')
 
         event_location1 = EventLocation.objects.create(name="Sala Custom", address="C/Madrid",
                                                        equipment="Speakers and microphone",
@@ -81,6 +81,9 @@ class ZoneTestCase(APITransactionTestCase):
         zone_lvl2_aragon = Zone.objects.create(name="Aragón", parentZone=zone_lvl1_spain)
         zone_lvl2_aragon.save()
 
+        zone_lvl2_galicia = Zone.objects.create(name="Galicia", parentZone=zone_lvl1_spain)
+        zone_lvl2_galicia.save()
+
         zone_lvl3_sevilla = Zone.objects.create(name="Sevilla", parentZone=zone_lvl2_andalucia)
         zone_lvl3_sevilla.save()
 
@@ -93,17 +96,21 @@ class ZoneTestCase(APITransactionTestCase):
         zone_lvl3_teruel = Zone.objects.create(name="Teruel", parentZone=zone_lvl2_aragon)
         zone_lvl3_teruel.save()
 
-    # Driver function
+        zone_lvl3_lugo = Zone.objects.create(name="Lugo", parentZone=zone_lvl2_galicia)
+        zone_lvl3_lugo.save()
+
+        zone_lvl3_pontevedra = Zone.objects.create(name="Pontevedra", parentZone=zone_lvl2_galicia)
+        zone_lvl3_pontevedra.save()
 
     def test_driver_create_zone(self):
 
-        print('Start test')
+        print('---- Starting Zone tests ----')
         data1 = {"username": "admin", "password": "admin"}
         response = self.client.post("/api/admin/login/", data1, format='json')
 
         token_num = response.get('x-auth')
 
-        #Para evitar problemas con el token si no existiera
+        # Para evitar problemas con el token si no existiera
         token = ''
         try:
             token = Token.objects.all().filter(pk=token_num).first().key
@@ -116,6 +123,8 @@ class ZoneTestCase(APITransactionTestCase):
         payload = [
 
                 # TESTS EN ESPAÑOL
+                # Token, Nombre de la zona, zona padre, language, mensaje HTTP
+
                 # Test positivo, crear una zona con padre lvl 1
                 [token, 'Comunidad Valenciana', spain_id,'es', 201],
                 # Test positivo, crear una zona con padre lvl 2
@@ -125,11 +134,12 @@ class ZoneTestCase(APITransactionTestCase):
                 # Test negativo, crear una zona sin estar logueado
                 ['390494jdididij', 'Inglaterra', andalucia_id,'es', 401],
                 # Test negativo, crear una zona de lvl4
-                [token, 'Morón de la frontera', sevilla_id,'es', 400],
+                [token, 'Morón de la frontera', sevilla_id, 'es', 400],
                 # Test negativo, crear una zona ya existente
                 [token, 'Sevilla', andalucia_id, 'es', 400],
 
-                #TESTS EN INGLES
+
+                # TESTS EN INGLES
                 # Test positivo, crear una zona con padre lvl 1
                 [token, 'Comunidat Valenciana', spain_id, 'en', 201],
                 # Test positivo, crear una zona con padre lvl 2
@@ -142,10 +152,13 @@ class ZoneTestCase(APITransactionTestCase):
                 [token, 'Morón de la frontera', sevilla_id, 'en', 400],
                 # Test negativo, crear una zona ya existente
                 [token, 'Sevilla', andalucia_id, 'en', 400],
+                # Test negativo, idioma no permitido
+                [token, 'Galicia', spain_id, 'catalan', 400],
 
         ]
 
         for data in payload:
+            print("---> Test " + str(payload.index(data)+1))
             self.template_create_zone(data)
 
     def generateData(self, args):
@@ -158,8 +171,135 @@ class ZoneTestCase(APITransactionTestCase):
 
         data = self.generateData(args)
 
-        response_es = self.client.post('/admin/zone/', data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+        response_create = self.client.post('/admin/zone/', data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
                                     HTTP_ACCEPT_LANGUAGE=args[3])
 
-        self.assertEqual(args[-1], response_es.status_code)
+        self.assertEqual(args[-1], response_create.status_code)
 
+    def test_driver_edit_zone(self):
+
+        print('Start test')
+        data1 = {"username": "admin", "password": "admin"}
+        response = self.client.post("/api/admin/login/", data1, format='json')
+
+        token_num = response.get('x-auth')
+
+        # Para evitar problemas con el token si no existiera
+        token = ''
+        try:
+            token = Token.objects.all().filter(pk=token_num).first().key
+        except:
+            pass
+        # Data payload
+
+        spain_id = Zone.objects.get(name='España').id
+        andalucia_id = Zone.objects.get(name='Andalucia').id
+        sevilla_id = Zone.objects.get(name='Sevilla').id
+        cordoba_id = Zone.objects.get(name='Cordoba').id
+        galicia_id = Zone.objects.get(name='Galicia').id
+        teruel_id = Zone.objects.get(name='Teruel').id
+        murcia_id = Zone.objects.get(name='Murcia').id
+        payload = [
+
+                # TESTS EN ESPAÑOL
+                # Token, Nombre de la zona, zona padre, zona que se edita, language, mensaje HTTP
+
+                # Test positivo, editar una zona con padre lvl 1
+                [token, 'Comunidad Valenciana', spain_id,sevilla_id,'es', 200],
+                # Test positivo, editar una zona con padre lvl 2
+                [token, 'Sevilia', andalucia_id,sevilla_id,'es', 200],
+                # Test negativo, editar una zona sin padre
+                [token, 'Perro', None, sevilla_id, 'es', 400],
+                # Test negativo, editar una zona sin estar logueado
+                ['390494jdididij', 'Inglaterra', andalucia_id,sevilla_id,'es', 401],
+                # Test negativo, editar una zona y ponerla en lvl4
+                [token, 'Morón de la frontera', sevilla_id,galicia_id,'es', 400],
+
+                #TESTS EN INGLES
+                # Test positivo, editar una zona con padre lvl 1
+                [token, 'Comunidat Valenciana', spain_id, sevilla_id, 'en', 200],
+                # Test positivo, editar una zona con padre lvl 2
+                [token, 'Cadiz', andalucia_id, sevilla_id, 'en', 200],
+                # Test negativo, editar una zona sin padre
+                [token, 'Perro', None, sevilla_id, 'en', 400],
+                # Test negativo, editar una zona sin estar logueado
+                ['390494jdididij', 'Inglaterra', andalucia_id, sevilla_id, 'en', 401],
+                # Test negativo, editar una zona y ponerla en lvl4
+                [token, 'Morón de la frontera', teruel_id, cordoba_id, 'en', 400],
+
+
+                # Test negativo, idioma no permitido
+                [token, 'Comunitate Valenciana', spain_id, sevilla_id, 'cat', 400],
+
+
+        ]
+
+        for data in payload:
+            print("---> Test " + str(payload.index(data) + 1))
+            self.template_edit_zone(data)
+
+    # Template function
+
+    def template_edit_zone(self, args):
+
+        data = self.generateData(args)
+        response_edit = self.client.put('/admin/zone/{}/'.format(str(args[3])), data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+                                    HTTP_ACCEPT_LANGUAGE=args[4])
+
+        self.assertEqual(args[-1], response_edit.status_code)
+
+    def test_driver_delete_zone(self):
+
+        print('Start test')
+        data1 = {"username": "admin", "password": "admin"}
+        response = self.client.post("/api/admin/login/", data1, format='json')
+
+        token_num = response.get('x-auth')
+
+        # Para evitar problemas con el token si no existiera
+        token = ''
+        try:
+            token = Token.objects.all().filter(pk=token_num).first().key
+        except:
+            pass
+        # Data payload
+
+        andalucia_id = Zone.objects.get(name='Andalucia').id
+        sevilla_id = Zone.objects.get(name='Sevilla').id
+        spain_id = Zone.objects.get(name='España').id
+        # Murcia pertenece a un event location de un artista
+        murcia_id = Zone.objects.get(name='Murcia').id
+        payload = [
+
+            # Token, zona que se borra, language, mensaje HTTP
+
+            # Test negativo, borrar una zona sin estar logueado
+            ['390494jdididij', sevilla_id, 'es', 401],
+            # Test negativo, borrar una zona que pertenece a un event location de un artista
+            [token, murcia_id, 'es', 400],
+            # Test negativo, borrar una zona que pertenece a un event location de un artista
+            [token, murcia_id, 'en', 400],
+            # Test positivo, eliminar una zona lvl 3
+            [token, sevilla_id, 'es', 200],
+            # Test positivo, eliminar una zona  lvl 2
+            [token, andalucia_id, 'es', 200],
+            # Test positivo, eliminar una zona  lvl 1
+            [token, spain_id, 'es', 200],
+
+
+        ]
+
+        for data in payload:
+            print("---> Test " + str(payload.index(data) + 1))
+            self.template_delete_zone(data)
+
+        # Template function
+
+    def template_delete_zone(self, args):
+
+        data = self.generateData(args)
+        response_delete = self.client.delete('/admin/zone/{}/'.format(str(args[1])), data, format='json',
+                                        HTTP_AUTHORIZATION='Token ' + args[0],
+                                        HTTP_ACCEPT_LANGUAGE=args[2])
+
+        self.assertEqual(args[-1], response_delete.status_code)
