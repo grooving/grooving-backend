@@ -81,7 +81,6 @@ class BraintreeViews(generics.GenericAPIView):
         gateway = braintree.BraintreeGateway(
             braintree.Configuration(
                 braintree.Environment.Sandbox,
-                access_token="access_token$sandbox$3gp8pgjq8wbkcfw6$39361513dad49f914668dcce063893eb",
                 merchant_id=settings.BRAINTREE_MERCHANT_ID,
                 public_key=settings.BRAINTREE_PUBLIC_KEY,
                 private_key=settings.BRAINTREE_PRIVATE_KEY
