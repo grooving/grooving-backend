@@ -10,3 +10,13 @@ class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = ('id_offer', 'payment_method_nonce')
+
+
+class PaypalSerializer(serializers.Serializer):
+
+    id_offer = serializers.CharField()
+
+
+class PaypalSerializer2(serializers.Serializer):
+    id_offer = serializers.CharField()
+    authorization_id = serializers.CharField()

@@ -33,7 +33,7 @@ from zone.views import ZoneManager, CreateZone, ListZones
 from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
 from utils.utils import TermsAndConditions, Privacy, AboutUs
-from braintrees.views import BraintreeViews
+from braintrees.views import BraintreeViews,PayPaypal
 from emails.views import SendMailDataBreach, DownloadPersonalData
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
@@ -132,5 +132,7 @@ urlpatterns = [
     url(r'^downloadPersonalData/$', DownloadPersonalData.as_view()),
     url(r'^admin/zone/(?P<pk>[0-9]+)/$', AdminZoneManagement.as_view()),
     url(r'^admin/zone/', AdminZoneManagement.as_view()),
+
+    url(r'^payPaypal/$', PayPaypal.as_view())
 
 ]

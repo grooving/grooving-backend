@@ -5,6 +5,7 @@ from utils.Assertions import Assertions
 from utils.utils import check_accept_language
 from .internationalization import translate
 from utils.authentication_utils import get_artist_or_customer_by_user
+from .internationalization import translate
 
 
 class ArtisticGenderSerializer(serializers.ModelSerializer):
@@ -14,13 +15,13 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         fields = ('id', 'name_es', 'name_en', 'parentGender')
 
 
-    def save(self, pk=None, logged_user=None):
+    def save(self, language = None, pk=None, logged_user=None):
 
         if self.initial_data.get('id') is None and pk is None:
             genre = ArtisticGender()
-            genre = self._service_create(self.initial_data, genre)
+            genre = self._service_create(self.initial_data, genre, language)
             genre.save()
-            Assertions.assert_true_raise401(genre, {'error': 'ERROR_IN_CREATION'})
+            Assertions.assert_true_raise401(genre, translate(language, 'ERROR_IN_CREATION'))
             return genre
         else:
 
@@ -28,23 +29,25 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
             genre_id_control = str(self.initial_data.get('id'))
 
             genre = ArtisticGender.objects.filter(pk=id_genre).first()
-            genre = self._service_update(self.initial_data, genre, logged_user)
+            genre = self._service_update(self.initial_data, genre, logged_user,language)
             genre.save()
             return genre
 
     @staticmethod
-    def _service_create(json: dict, genre: ArtisticGender):
+    def _service_create(json: dict, genre: ArtisticGender, language):
 
-        Assertions.assert_true_raise401(ArtisticGender.objects.filter(name=json.get('name')).first() is None, {'error': 'ERROR_GENRE_EXISTS'})
-        Assertions.assert_true_raise401(json.get('name') != "",{'error': 'ERROR_GENRE_NULL_NAME'})
-        Assertions.assert_true_raise401(json.get('name') is not None, {'error': 'ERROR_GENRE_NULL_NAME'})
+        Assertions.assert_true_raise401(ArtisticGender.objects.filter(name_es=json.get('name_es')).first() is None, translate(language, 'ERROR_GENRE_EXISTS'))
+        Assertions.assert_true_raise401(json.get('name_es') != "",translate(language, 'ERROR_GENRE_NULL_NAME'))
+        Assertions.assert_true_raise401(json.get('name_es') is not None, translate(language, 'ERROR_GENRE_NULL_NAME'))
+        Assertions.assert_true_raise401(json.get('name_en') != "", translate(language, 'ERROR_GENRE_NULL_NAME'))
+        Assertions.assert_true_raise401(json.get('name_en') is not None, translate(language, 'ERROR_GENRE_NULL_NAME'))
 
         genre.name_en = json.get('name_en')
         genre.name_es = json.get('name_es')
 
         if json.get('parentGender') is not None:
             Assertions.assert_true_raise401(ArtisticGender.objects.filter(id=json.get('parentGender')).first() is not None,
-                                        {'error': 'ERROR_GENRE_DOESNT_EXIST'})
+                                        translate(language, 'ERROR_GENRE_DOESNT_EXIST'))
 
         genre.parentGender = ArtisticGender.objects.filter(id=json.get('parentGender')).first()
 
@@ -53,10 +56,9 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         return genre
 
     @staticmethod
-    def _service_update(json: dict, genre: ArtisticGender, loggedUser: User):
+    def _service_update(json: dict, genre: ArtisticGender, loggedUser: User, language):
 
         user = get_artist_or_customer_by_user(loggedUser)
-        language = user.language
 
         genre_id_control = str(json.get('id'))
 
@@ -144,7 +146,7 @@ class SearchGenreSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_tree(language):
         parent = SearchGenreSerializer._get_parent_of_all()
-        Assertions.assert_true_raise404(parent, {'error': 'ERROR_PARENT_GENRE_NOT_FOUND'})
+        Assertions.assert_true_raise404(parent, translate(language, 'ERROR_PARENT_GENRE_NOT_FOUND'))
         return SearchGenreSerializer._get_childs_genre(language,parent, [])[0]
 
     @staticmethod
@@ -196,9 +198,11 @@ class SearchGenreSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_children(language,parentId = None):
 
+        Assertions.assert_true_raise401(language is not None, translate(language, 'ERROR_NO_GIVEN_LANGUAGE'))
+
         if parentId is None:
             parent = SearchGenreSerializer._get_parent_of_all()
-            Assertions.assert_true_raise401(parent, {'error' : 'ERROR_PARENT_GENRE_NOT_FOUND'})
+            Assertions.assert_true_raise401(parent, translate(language, 'ERROR_PARENT_GENRE_NOT_FOUND'))
 
             if language == "es":
                 name = parent.name_es
@@ -206,22 +210,25 @@ class SearchGenreSerializer(serializers.ModelSerializer):
                 name = parent.name_en
         else:
             parent = ArtisticGender.objects.filter(id=parentId).first()
-            Assertions.assert_true_raise401(parent, {'error': 'ERROR_PARENT_GENRE_NOT_FOUND'})
+            Assertions.assert_true_raise401(parent, translate(language, 'ERROR_PARENT_GENRE_NOT_FOUND'))
             if language == "es":
                 name = parent.name_es
             elif language == "en":
                 name = parent.name_en
 
+        child_dicts_list = {}
         if ArtisticGender.objects.filter(parentGender=parent) is not None:
             child_dicts_list = ArtisticGender.objects.filter(parentGender=parent).order_by('name_es')
 
         children = []
 
         for child in child_dicts_list:
+            name_child = ""
             if language == "es":
                 name_child = child.name_es
             elif language == "en":
                 name_child = child.name_en
+            Assertions.assert_true_raise401(name_child != '', translate(language, 'ERROR_GENRE_NULL_NAME'))
             childdict = {"id": child.id, "name": name_child}
             children.append(childdict)
 
@@ -249,11 +256,11 @@ class SearchGenreSerializer(serializers.ModelSerializer):
 
         if parentId is None:
             parent = SearchGenreSerializer._get_parent_of_all()
-            Assertions.assert_true_raise401(parent, {'error' : 'ERROR_PARENT_GENRE_NOT_FOUND'})
+            Assertions.assert_true_raise401(parent, translate(language, 'ERROR_PARENT_GENRE_NOT_FOUND'))
 
         else:
             parent = ArtisticGender.objects.filter(id=parentId).first()
-            Assertions.assert_true_raise401(parent, {'error': 'ERROR_PARENT_GENRE_NOT_FOUND'})
+            Assertions.assert_true_raise401(parent, translate(language, 'ERROR_PARENT_GENRE_NOT_FOUND'))
 
         if ArtisticGender.objects.filter(parentGender=parent) is not None:
             child_dicts_list = ArtisticGender.objects.filter(parentGender=parent).order_by('name_es')

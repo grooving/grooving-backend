@@ -51,7 +51,7 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
             serializer = ArtisticGenderSerializer(artisticGender, data=request.data, partial=True,context={'language': language})
             if serializer.validate(request.data):
                 serializer.is_valid()
-                serializer.save(pk, loggedUser)
+                serializer.save(language, pk, loggedUser)
                 return Response(status=status.HTTP_201_CREATED)
             else:
                 raise Assertions.assert_true_raise400(False,
@@ -119,7 +119,7 @@ class CreateArtisticGender(generics.CreateAPIView):
         serializer = ArtisticGenderSerializer(data=request.data, partial=True,context={'language': language})
         if serializer.validate(request.data):
             serializer.is_valid()
-            artisticGender = serializer.save()
+            artisticGender = serializer.save(language)
             serialized = ArtisticGenderSerializer(artisticGender,context={'language': language})
             return Response(serialized.data, status=status.HTTP_201_CREATED)
 
@@ -141,7 +141,7 @@ class ListArtisticGenders(generics.RetrieveAPIView):
         language = check_accept_language(request)
 
         if tree is not None:
-            Assertions.assert_true_raise401(tree=='true', translate(language,"ERROR_TREE_OPTION"))
+            Assertions.assert_true_raise401(tree == 'true', translate(language,"ERROR_TREE_OPTION"))
 
         genres = None
         if tree is None and portfolio is None and parentId is None:

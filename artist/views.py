@@ -33,17 +33,29 @@ class GetPersonalInformationOfArtist(generics.ListAPIView):
 
 
 class ListArtist(generics.ListAPIView):
-    model = Artist
+
     serializer_class = ListArtistSerializer
 
-    def get_queryset(self):
+    def get_object(self, pk=None):
+
+        language = check_accept_language(self.request)
+        try:
+            return Artist.objects.get(pk=pk)
+        except Artist.DoesNotExist:
+            Assertions.assert_true_raise404(False, translate(language, "ERROR_NO_ARTIST_FOUND"))
+
+    def get(self, request, *args, **kwargs):
+        language = check_accept_language(request)
         artistic_name = self.request.query_params.get('artisticName')
         artistic_gender = self.request.query_params.get('artisticGender')
         zone = self.request.query_params.get('zone')
         order = self.request.query_params.get('order')
 
         queryset = search(artisticName=artistic_name, categoria=artistic_gender, zone=zone, order=order)
-        return queryset
+
+        serializer = ListArtistSerializer(queryset, context={'language': language}, many=True)
+
+        return Response(serializer.data)
 
 
 class ArtistRegister(generics.CreateAPIView):
