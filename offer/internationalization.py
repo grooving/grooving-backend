@@ -27,7 +27,7 @@ spanish = {
     "ERROR_EVENTLOCATION_NOT_PROVIDED": "No se ha suministrado la localización del evento",
     "ERROR_EVENTLOCATION_NOT_FOUND": "La localización del evento no existe",
     "ERROR_EVENTLOCATION_CAN_NOT_ASSIGNED": "No puedes asignar esta localización",
-    "ERROR_CUSTOMER_NOT_FOUND": "El cliente no existe"
+    "ERROR_CUSTOMER_NOT_FOUND": "El cliente no existe",
     "ERROR_NO_USER": "No hay usuarios de este tipo",
     "ERROR_NOT_ALLOWED_USER": "No tienes los privilegios para ver esta página o realizar esta acción.",
     "ERROR_NOT_LOGGED_IN": "Debes estar autenticado para entrar en este sitio.",
@@ -71,7 +71,7 @@ english = {
     "ERROR_EVENTLOCATION_NOT_PROVIDED": "Event location hasn't provided",
     "ERROR_EVENTLOCATION_NOT_FOUND": "Event location hasn't exist",
     "ERROR_EVENTLOCATION_CAN_NOT_ASSIGNED": "Event location can't be assigned",
-    "ERROR_CUSTOMER_NOT_FOUND": "Customer doesn't exist"
+    "ERROR_CUSTOMER_NOT_FOUND": "Customer doesn't exist",
     "ERROR_NO_USER": "There are no users of this type",
     "ERROR_NOT_LOGGED_IN": "You must be logged in to access this page.",
     "ERROR_NOT_AN_ARTIST": "You are not an artist, and therefore you cannot be here.",

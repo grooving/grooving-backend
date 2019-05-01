@@ -14,7 +14,10 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
     queryset = Portfolio.objects.all()
     serializer_class = PortfolioSerializer
 
-    def get_object(self, pk=None, language='en'):
+    def get_object(self, pk=None):
+
+        language = check_accept_language(self.request)
+
         if pk is None:
             pk = self.kwargs['pk']
         try:
@@ -45,7 +48,7 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
                 serializer = PortfolioSerializer(portfolio, data=request.data, partial=True)
                 if serializer.is_valid():
                     serializer.save(loggedUser, language=language)
-                    portfolio = self.get_object(pk, language=language)
+                    portfolio = self.get_object(pk)
                     serializer = PortfolioSerializer(portfolio, data=serializer.data, partial=True)
                     serializer.is_valid()
                     return Response(serializer.data)
@@ -58,11 +61,9 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, pk=None, format=None):
 
-        language = check_accept_language(request)
-
         if pk is None:
             pk = self.kwargs['pk']
-        portfolio = self.get_object(pk, language=language)
+        portfolio = self.get_object(pk)
         portfolio.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

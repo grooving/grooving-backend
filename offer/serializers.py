@@ -17,6 +17,7 @@ import braintree
 import json
 from requests.auth import HTTPBasicAuth
 from .internationalization import translate
+from utils.utils import check_accept_language
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -340,7 +341,9 @@ class OfferSerializer(serializers.ModelSerializer):
         payment_code = random_alphanumeric
         return payment_code
 
-    def validate(self, attrs, language='en'):
+    def validate(self, attrs):
+
+        language = check_accept_language(attrs)
 
         # Customer validation
 

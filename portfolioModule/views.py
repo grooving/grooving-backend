@@ -36,7 +36,7 @@ class PortfolioModuleManager(generics.RetrieveUpdateDestroyAPIView):
         language = check_accept_language(request)
         if pk is None:
             pk = self.kwargs['pk']
-        portfolioModule = self.get_object(pk=pk, language=language)
+        portfolioModule = self.get_object(pk=pk)
         loggedUser = get_logged_user(request)
         artist = Artist.objects.filter(portfolio=portfolioModule.portfolio).first()
         if loggedUser is not None and loggedUser.id == artist.id:
@@ -52,11 +52,9 @@ class PortfolioModuleManager(generics.RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, pk=None, format=None):
 
-        language = check_accept_language(request)
-
         if pk is None:
             pk = self.kwargs['pk']
-        portfolioModule = self.get_object(pk=pk, language=language)
+        portfolioModule = self.get_object(pk=pk)
         portfolioModule.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
