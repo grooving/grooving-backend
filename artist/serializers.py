@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from Grooving.models import Artist, Portfolio, Calendar, ArtisticGender
 from user.serializers import UserSerializer
-from portfolio.serializers import ArtisticGenderSerializer
+from artistGender.serializers import ArtisticGenderSerializerOut
 from django.contrib.auth.hashers import make_password
 from user.serializers import UserRegisterSerializer
 from utils.Assertions import Assertions
@@ -31,8 +31,8 @@ class ArtistInfoSerializer(serializers.HyperlinkedModelSerializer):
 
 class ShortPortfolioSerializer(serializers.ModelSerializer):
 
-    artisticGender = ArtisticGenderSerializer(read_only=True, many=True)
-    #artisticGender = serializers.SerializerMethodField()
+    artisticGender = ArtisticGenderSerializerOut(read_only=True, many=True)
+
 
     class Meta:
         model = Portfolio
