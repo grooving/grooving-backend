@@ -16,25 +16,24 @@ class PortfolioModuleManager(generics.RetrieveUpdateDestroyAPIView):
     queryset = PortfolioModule.objects.all()
     serializer_class = PortfolioModuleSerializer
 
-    def get_object(self, pk=None, language='en'):
+    def get_object(self, pk=None):
+        language = check_accept_language(self.request)
         if pk is None:
             pk = self.kwargs['pk']
         try:
             return PortfolioModule.objects.get(pk=pk)
         except PortfolioModule.DoesNotExist:
-            raise Assertions.assert_true_raise404(False, translate(language, 'ERROR_PROTFOLIOMODULE_NOT_FOUND'))
+            raise Assertions.assert_true_raise404(False, translate(language, 'ERROR_PORTFOLIOMODULE_NOT_FOUND'))
 
     def get(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
-        portfolioModule = PortfolioModule.objects.get(pk=pk)
+        portfolioModule = self.get_object(pk)
         serializer = PortfolioModuleSerializer(portfolioModule)
         return Response(serializer.data)
 
     def put(self, request, pk=None):
-
         language = check_accept_language(request)
-
         if pk is None:
             pk = self.kwargs['pk']
         portfolioModule = self.get_object(pk=pk, language=language)
@@ -42,13 +41,14 @@ class PortfolioModuleManager(generics.RetrieveUpdateDestroyAPIView):
         artist = Artist.objects.filter(portfolio=portfolioModule.portfolio).first()
         if loggedUser is not None and loggedUser.id == artist.id:
             serializer = PortfolioModuleSerializer(portfolioModule, data=request.data, partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
+            if serializer.validate(request):
+                module = serializer.save(pk, logged_user=request.user)
+                serialized = PortfolioModuleSerializer(module)
+                return Response(serialized.data, status=status.HTTP_200_OK)
             else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                raise Assertions.assert_true_raise400(False, translate(language, "ERROR_INVALID_PARAMETERS"))
         else:
-            raise PermissionDenied("The artisticGender is not for yourself")
+            raise Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_AN_ARTIST"))
 
     def delete(self, request, pk=None, format=None):
 
@@ -69,8 +69,11 @@ class CreatePortfolioModule(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
 
         language = check_accept_language(request)
-
+        user = get_logged_user(request)
+        user_type = get_user_type(user)
+        Assertions.assert_true_raise403(user and user_type == 'Artist', translate(language, "ERROR_NOT_AN_ARTIST"))
         serializer = PortfolioModuleSerializer(data=request.data, partial=True)
+
         if serializer.validate(request):
             module = serializer.save(logged_user=request.user)
             serialized = PortfolioModuleSerializer(module)

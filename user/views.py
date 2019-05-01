@@ -43,29 +43,27 @@ class UserManage(generics.DestroyAPIView):
         language = check_accept_language(request)
 
         try:
-            email = ""
-            language = ""
-
+            email = ''
+            language = ''
             if Artist.objects.filter(user=request.user).first() is not None:
                 artist = Artist.objects.get(user=request.user)
+                UserSerializer.anonymize_and_hide_artist(artist)
                 email = artist.user.email
                 language = artist.language
-                portfolio = Portfolio.objects.filter(artist=artist).update(isHidden=True)
-                PortfolioModule.objects.filter(portfolio=portfolio).update(isHidden=True)
-                Calendar.objects.filter(portfolio=portfolio).update(isHidden=True)
             elif Customer.objects.filter(user=request.user).first() is not None:
                 customer = Customer.objects.get(user=request.user)
+                UserSerializer.anonymize_and_hide_customer(customer)
                 email = customer.user.email
                 language = customer.language
-                EventLocation.objects.filter(customer=customer).update(isHidden=True)
             else:
                 Assertions.assert_true_raise400(False, translate(language, 'ERROR_DELETE_USER_UNKNOWN'))
             request.user.delete()
 
             Notifications.send_email_right_to_be_forgotten(email=email, language=language)
         except TypeError:
-            Assertions.assert_true_raise401(False, translate(language, 'ERROR_DELETE_USER'))
+            Assertions.assert_true_raise400(False, translate(language, 'ERROR_DELETE_USER'))
         return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class ListUsers(generics.RetrieveAPIView):
 

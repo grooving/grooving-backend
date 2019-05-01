@@ -20,6 +20,9 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self, pk=None, language='en'):
         if pk is None:
             pk = self.kwargs['pk']
+
+        user = get_logged_user(self.request)
+        language = check_accept_language(self.request)
         try:
             return Offer.objects.get(pk=pk)
         except Offer.DoesNotExist:
@@ -35,13 +38,15 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
         offer = self.get_object(pk, language=language)
         articustomer = get_logged_user(request)
         user_type = get_user_type(articustomer)
+        user = get_logged_user(self.request)
+        language = check_accept_language(request)
         if user_type == "Artist":
             if articustomer.user_id == offer.paymentPackage.portfolio.artist.user_id:
                 offer = self.get_object(pk, language=language)
                 serializer = GetOfferSerializer(offer)
                 return Response(serializer.data)
             else:
-                raise PermissionDenied
+                Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_AN_ARTIST"))
         else:
             if user_type == "Customer":
                 event_location = offer.eventLocation
@@ -53,9 +58,9 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
                     serializer = OfferSerializer(offer)
                     return Response(serializer.data)
                 else:
-                    raise PermissionDenied
+                    Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_A_CUSTOMER"))
             else:
-                raise PermissionDenied
+                raise Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_LOGGED_IN"))
 
     def put(self, request, pk=None):
 
@@ -63,6 +68,8 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
 
         if pk is None:
             pk = self.kwargs['pk']
+        user = get_logged_user(self.request)
+        language = check_accept_language(request)
         if len(request.data) == 0:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
@@ -75,7 +82,7 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
                     serializer.save(pk,logged_user=articustomer, language=language)
                     return Response(status=status.HTTP_200_OK)
                 else:
-                    raise PermissionDenied(translate(language, 'ERROR_OFFER_NOT_OWNER'))
+                    Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_AN_ARTIST"))
             else:
                 if user_type == "Customer":
                     event_location = offer.eventLocation
@@ -87,9 +94,9 @@ class OfferManage(generics.RetrieveUpdateDestroyAPIView):
                         serializer.save(pk, logged_user=articustomer, language=language)
                         return Response(status=status.HTTP_200_OK)
                     else:
-                        return Response(status=status.HTTP_400_BAD_REQUEST)
+                        Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_A_CUSTOMER"))
                 else:
-                    return Response(status=status.HTTP_403_FORBIDDEN)
+                    Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_ALLOWED_USER"))
 
     def delete(self, request, pk=None, format=None):
 
@@ -138,11 +145,13 @@ class NumOffers(generics.GenericAPIView):
 
         articustomer = get_logged_user(request)
         user_type = get_user_type(articustomer)
+
+        language = check_accept_language(request)
         if user_type == "Artist":
             numOffers = Offer.objects.filter(paymentPackage__portfolio__artist=articustomer, status='PENDING').count()
             return Response(numOffers, status=status.HTTP_200_OK)
         else:
-            return Response(translate(language, 'ERROR_USER_NOT_AUTHORIZED'), status=status.HTTP_403_FORBIDDEN)
+            Assertions.assert_true_raise403(False, translate(language, "ERROR_USER_NOT_AUTHORIZED"))
 
 
 class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
@@ -158,7 +167,9 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
         language = check_accept_language(request)
 
         customer = get_customer(request)
-        Assertions.assert_true_raise403(customer, {'error': 'Customer not found'})
+
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(customer, translate(language, "ERROR_NOT_A_CUSTOMER"))
         offer = self.get_object().first()
         Assertions.assert_true_raise404(offer, translate(language, 'ERROR_CUSTOMER_NOT_FOUND'))
         Assertions.assert_true_raise403(offer.eventLocation.customer.id == customer.id,

@@ -43,7 +43,13 @@ spanish = {
     "ERROR_NO_DATA_GIVEN": "El formulario no tiene datos.",
     "ERROR_NO_MATCHING_LANGUAGE": "El idioma que has escogido no esta disponible.",
     "ERROR_ACTOR_NOT_FOUND": "El actor que buscas no existe.",
-    "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar."
+    "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar.",
+    "ERROR_INVALID_DATA": "El formulario contiene datos inválidos.",
+    "ERROR_CALENDAR_ALREADY_EXISTS": "Este artista ya tiene un calendario asignado.",
+    "ERROR_NO_DAYS_GIVEN": "Debes indicar los días.",
+    "ERROR_INCORRECT_FORMAT": "Formato de fecha incorrecto. El formato esperado es YYYY-MM-DD.",
+    "ERROR_CALENDAR_NOT_THE_OWNER": "Tú no eres el propietario de este calendario.",
+    "ERROR_CALENDAR_NOT_FOUND": "El calendario que buscas no existe.",
 }
 
 english = {
@@ -91,7 +97,13 @@ english = {
     "ERROR_NO_DATA_GIVEN": "The form has no data.",
     "ERROR_NO_MATCHING_LANGUAGE": "The language you want is not available.",
     "ERROR_ACTOR_NOT_FOUND": "The actor you are searching does not exist.",
-    "ERROR_NO_GIVEN_LANGUAGE": "You must give a language to switch to."
+    "ERROR_NO_GIVEN_LANGUAGE": "You must give a language to switch to.",
+    "ERROR_INVALID_DATA": "The form contains invalid data.",
+    "ERROR_CALENDAR_ALREADY_EXISTS": "This artist already has a calendar.",
+    "ERROR_NO_DAYS_GIVEN": "You must select the days.",
+    "ERROR_INCORRECT_FORMAT": "Incorrect format. expected format is YYYY-MM-DD.",
+    "ERROR_CALENDAR_NOT_THE_OWNER": "You are not the owner of this calendar.",
+    "ERROR_CALENDAR_NOT_FOUND": "This calendar does not exist",
 
 }
 

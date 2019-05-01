@@ -4,7 +4,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from utils.Assertions import Assertions
 from Grooving.models import Artist, Customer
-
+import re
 
 def auto_update_old_offers(offers):
     now = timezone.now()
@@ -141,8 +141,21 @@ def check_accept_language(request):
         else:
             raise ValueError("This language is not supported")
     except ValueError as e:
-        Assertions.assert_true_raise403(False, {"error": e.args[0]})
+        Assertions.assert_true_raise400(False, {"error": e.args[0]})
     except:
-        Assertions.assert_true_raise403(False, {"error": "Language not found"})
+        Assertions.assert_true_raise400(False, {"error": "Language not found"})
 
     return language
+
+def check_special_characters_and_numbers(text):
+    regex = re.compile("[@_·º!+¬#$%^&*()<>?/|}{~:,.0123456789]")
+    result = None
+
+    # Pass the string in search
+    # method of regex object.
+    if regex.search(text) is None:
+        result = True
+    else:
+        result = False
+
+    return result

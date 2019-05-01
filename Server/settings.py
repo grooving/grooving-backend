@@ -84,6 +84,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'utils.CorsMiddleware.CorsMiddleware',
+    'utils.CloseOldConnectionsMiddelware.CloseOldConnectionsMiddelware',
 
 
     #whitenoise middleware for static files. #http://sayhelloworld.co/using-white-noise-to-server-django-static-files-on-heroku/
@@ -136,6 +137,7 @@ DATABASES = {
         #'PASSWORD': 'grooving',
         'USER': 'root',
         'PASSWORD': 'root',
+        'CONN_MAX_AGE': 0,
         'TEST': {
             'NAME': 'test_grooving',
         }

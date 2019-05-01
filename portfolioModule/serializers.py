@@ -7,6 +7,7 @@ from utils.Assertions import Assertions
 from urllib.parse import urlparse
 from utils.utils import check_accept_language
 from .internationalization import translate
+from utils.authentication_utils import get_logged_user
 
 
 class PortfolioModuleSerializer(serializers.ModelSerializer):
@@ -21,11 +22,11 @@ class PortfolioModuleSerializer(serializers.ModelSerializer):
         if self.initial_data.get('id') is None and pk is None:
             # creation
             module = self._service_create(self.initial_data, module)
-        # else:
-        #     # edit
-        #     id = (self.initial_data, pk)[pk is not None]
-        #     module = PortfolioModule.objects.filter(pk=id).first()
-        #     module = self._service_update(self.initial_data, module, logged_user)
+        else:
+             # edit
+            id = (self.initial_data, pk)[pk is not None]
+            module = PortfolioModule.objects.filter(pk=id).first()
+            module = self._service_update(self.initial_data, module)
         return module
 
     # Se pondrá service delante de nuestros métodos para no sobrescribir por error métodos del serializer
@@ -38,11 +39,24 @@ class PortfolioModuleSerializer(serializers.ModelSerializer):
         module.save()
         return module
 
+    @staticmethod
+    def _service_update(json: dict, module: PortfolioModule):
+        module.type = json.get('type')
+        module.link = json.get('link')
+        module.description = json.get('description')
+        module.portfolio_id = json.get('portfolio')
+        module.save()
+        return module
+
     def validate(self, attrs):
 
         language = check_accept_language(attrs)
 
         # Artist validation
+
+        language = check_accept_language(attrs)
+
+        Assertions.assert_true_raise400(attrs, translate(language, "ERROR_NO_DATA_GIVEN"))
 
         artist = Artist.objects.filter(user_id=attrs.user.id).first()
 

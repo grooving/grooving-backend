@@ -1,4 +1,4 @@
-from Grooving.models import Admin, Artist, Customer, Portfolio
+from Grooving.models import Admin, Artist, Customer, Portfolio, Calendar, PortfolioModule, PaymentPackage, Offer, EventLocation, Zone
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from utils.Assertions import Assertions
@@ -45,6 +45,53 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(user is not None, translate(language, 'ERROR_BAN_USER_UNKNOWN'))
 
         return True
+
+    @staticmethod
+    def anonymize_and_hide_artist(artist: Artist):
+        portfolio = Portfolio.objects.filter(artist=artist).first()
+        portfolio.isHidden = True
+        portfolio.artistictName = None
+        portfolio.banner = None
+        portfolio.biography = None
+        portfolio.save()
+
+        PortfolioModule.objects.filter(portfolio=portfolio).delete()
+        Calendar.objects.filter(portfolio=portfolio).update(days=[])
+
+        for p in PaymentPackage.objects.filter(portfolio=portfolio):
+
+            p.description = None
+            p.save()
+            if p.performance:
+                p.performance.info = "****"
+                p.performance.save()
+
+            for o in Offer.objects.filter(paymentPackage=p):
+
+                if o.chat:
+                    o.chat.delete()
+                if o.transaction:
+                    o.transaction.paypalArtist = None
+                    o.transaction.save()
+
+    @staticmethod
+    def anonymize_and_hide_customer(customer: Customer):
+        for e in EventLocation.objects.filter(customer=customer):
+
+            e.isHidden = True
+            e.name = None
+            e.address = "****"
+            e.equipment = None
+            e.description = None
+            e.save()
+
+            for o in Offer.objects.filter(eventLocation=e):
+
+                if o.chat:
+                    o.chat.delete()
+                if o.rating:
+                    o.rating.comment = None
+                    o.rating.save()
 
 
 class ShortUserSerializer(serializers.HyperlinkedModelSerializer):
