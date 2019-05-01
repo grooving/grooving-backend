@@ -43,7 +43,8 @@ spanish = {
     "ERROR_RESPONSE": "No hay respuesta desde Paypal",
     "ERROR_CREDENTIAL": "Error de credenciales de Paypal",
     "ERROR_CREDENTIAL_BRAINTREE": "Error de credencial Braintree",
-    "ERROR_DATE_PAYMENT" : "Psypal no puede procesar un pago realizado hace mas de 29 dias"
+    "ERROR_DATE_PAYMENT" : "Paypal no puede procesar un pago realizado hace mas de 29 dias",
+    "ERROR_REASON_NOT_PROVIDED": "No se ha suministrado una razón"
 }
 
 english = {
@@ -91,7 +92,8 @@ english = {
     "ERROR_RESPONSE": "No response from Paypal",
     "ERROR_CREDENTIAL": "Credential error with paypal",
     "ERROR_CREDENTIAL_BRAINTREE": "Credential error with paypal",
-    "ERROR_DATE_PAYMENT" : "PAypal cannot process a payment more than 29 days old"
+    "ERROR_DATE_PAYMENT" : "Paypal cannot process a payment more than 29 days old",
+    "ERROR_REASON_NOT_PROVIDED": "Reason isn't provided"
 }
 
 
