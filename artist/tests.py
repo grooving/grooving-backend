@@ -1,12 +1,129 @@
-from django.test import TestCase
+from rest_framework.test import APITransactionTestCase
+from rest_framework import status
 from rest_framework.authtoken.models import Token
-from Grooving.models import Performance, ArtisticGender, Customer, Artist, Portfolio, User, Calendar,PaymentPackage,EventLocation,Zone
+from Grooving.models import Performance, ArtisticGender, Customer, Artist, Portfolio, User, Calendar, PaymentPackage, \
+    EventLocation, Zone
 from datetime import datetime
 from django.contrib.auth.hashers import make_password
 
 
-class ShowArtistInformation(TestCase):
+class RegisterTestCase(APITransactionTestCase):
 
+    def generateData(self, args):
+        return {
+            "first_name": args[0],
+            "last_name": args[1],
+            "username": args[2],
+            "password": args[3],
+            "confirm_password": args[4],
+            "email": args[5],
+            "photo": args[6],
+            "artisticName": args[7]
+        }
+
+    def test_driver_register_user(self):
+        print("------------- Starting test -------------")
+
+        payload = [
+            # Test positivo 1, crea un artista con language en español
+            ["David", "Romero Esparraga", "artist1", "elArtistaEspañol", "elArtistaEspañol", "utri2099@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Pinoloco", "es", status.HTTP_201_CREATED],
+
+            # Test positivo 2, crea un artista con language en inglés
+            ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_201_CREATED],
+
+            # Test positivo 3, crea un artista con el nombre artístico ya existente
+            ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri210das0@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test positivo 4, crea un artista con un correo ya existente
+            ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test positivo 5, crea un artista con el nombre None
+            [None, "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 6, crea un artista con el nombre vacío
+            ["", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 7, crea un artista con el nombre con números y caracteres especiales
+            ["Poli111$car", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 8, crea un artista con el apellido None
+            ["Policarco", None, "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 9, crea un artista con el apellido vacío
+            ["Policarco", "", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 10, crea un artista con el apellido con números y caracteres
+            ["Policarco", "Mi123$", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 11, crea un artista con password None
+            ["Policarco", "Mi123$", "artist2", None, "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 12, crea un artista con password vacía
+            ["Policarco", "Miguelin", "artist2", "", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 13, crea un artista con tamaño menor a 7 caracteres
+            ["Policarco", "Miguelin", "artist2", "123456", "123456", "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 14, crea un artista con tamaño menor a 7 caracteres
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", None, "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 15, crea un artista con tamaño menor a 7 caracteres
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", "", "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 16, crea un artista con contraseñas que no coinciden
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", "fsdgsdfgsdfgs", "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 17, crea un artista con contraseñas que no coinciden
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", "fsdgsdfgsdfgs", "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 18, crea un artista con contraseñas que no coinciden
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 19, crea un artista con contraseñas que no coinciden
+            ["Policarco", "Miguelin", "artist2", "1234g6g123t", "1234g6g123t", "hola@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+        ]
+        print("-------- Creating artist testing --------")
+        for data in payload:
+            print("---> Test " + str(payload.index(data) + 1))
+            self.template_register_user(data)
+
+    def template_register_user(self, args):
+        status_expected = args[-1]
+        language = args[-2]
+
+        data = self.generateData(args)
+
+        response = self.client.post("/signupArtist/", data, format="json", HTTP_ACCEPT_LANGUAGE=language)
+        self.assertEqual(status_expected, response.status_code)
+
+        print("\nOk - Status expected: " + str(status_expected) + "\n")
+
+
+
+
+'''
+class ShowArtistInformation(TestCase):
+    
     def test_show_personal_information_artist(self):
 
         user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
@@ -436,3 +553,4 @@ class ListArtistTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertTrue(len(item_dict['results']) != 0)
+    '''
