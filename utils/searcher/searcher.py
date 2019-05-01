@@ -73,7 +73,7 @@ def compare(portfolio, artisticName="", categoria="", zone=""):
 def gender_to_string(portfolio):
     genders = portfolio.artisticGender.all()
     all_child = get_parents_gender(genders)
-    string = array_to_string(all_child)
+    string = array_to_string_es(all_child)+" "+array_to_string_en(all_child)
     return string
 
 
@@ -126,6 +126,19 @@ def array_to_string(array):
 
     return result
 
+def array_to_string_es(array):
+    result = ""
+    for a in array:
+        result = result + " " +str(a.name_es.replace(" ", "#").lower())
+
+    return result
+
+def array_to_string_en(array):
+    result = ""
+    for a in array:
+        result = result + " " +str(a.name_en.replace(" ", "#").lower())
+
+    return result
 
 def array_of_id_to_string(array):
     result = ""

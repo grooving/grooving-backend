@@ -32,17 +32,12 @@ class GetPersonalInformationOfArtist(generics.ListAPIView):
             Assertions.assert_true_raise400(False, translate(language, "ERROR_NO_ARTIST_FOUND"))
 
 
-class ListArtist(generics.ListAPIView):
+class ListArtist(generics.RetrieveAPIView):
 
     serializer_class = ListArtistSerializer
 
-    def get_object(self, pk=None):
-
-        language = check_accept_language(self.request)
-        try:
-            return Artist.objects.get(pk=pk)
-        except Artist.DoesNotExist:
-            Assertions.assert_true_raise404(False, translate(language, "ERROR_NO_ARTIST_FOUND"))
+    def get_queryset(self):
+        return Artist.objects.all()
 
     def get(self, request, *args, **kwargs):
         language = check_accept_language(request)
