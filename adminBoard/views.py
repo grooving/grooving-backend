@@ -359,8 +359,8 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
             serializer = ZoneSerializer(zone)
             return Response(serializer.data)
 
-        except Zone.DoesNotExist:
-            Assertions.assert_true_raise404(False,
+        except:
+            return Assertions.assert_true_raise404(False,
                                             translate(keyLanguage=language, keyToTranslate="ERROR_ZONE_NOT_FOUND"))
 
     def post(self, request):
@@ -397,7 +397,12 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
                                                          keyToTranslate="ERROR_FORBIDDEN_NO_ADMIN"))
         Assertions.assert_true_raise400(pk, translate(keyLanguage=language,
                                                          keyToTranslate="ERROR_ZONE_NOT_FOUND"))
-        zone = Zone.objects.get(pk=pk)
+        try:
+            zone = Zone.objects.get(pk=pk)
+        except:
+            return Assertions.assert_true_raise404(False,
+                                                   translate(keyLanguage=language,
+                                                             keyToTranslate="ERROR_ZONE_NOT_FOUND"))
         serializer = ZoneSerializer(zone, data=request.data, partial=True)
 
         if serializer.validate_zone(request):
@@ -407,9 +412,15 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
         return Response(status=status.HTTP_200_OK)
 
     def delete(self, request, pk=None):
-        if pk is None:
-            pk = self.kwargs['pk']
         language = check_accept_language(request)
+        if pk is None:
+            try:
+                pk = self.kwargs['pk']
+            except:
+                Assertions.assert_true_raise404(False, translate(keyLanguage=language,
+                                                                          keyToTranslate="ERROR_ZONE_NOT_FOUND"))
+
+
         pks = list(Zone.objects.values_list("id", flat=True))
         Assertions.assert_true_raise400(pk, translate(keyLanguage=language,
                                                         keyToTranslate="ERROR_ZONE_NOT_FOUND"))
@@ -420,7 +431,13 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
 
         Assertions.assert_true_raise400(int(pk) in pks, translate(keyLanguage=language,
                                                                      keyToTranslate="ERROR_ZONE_NOT_FOUND"))
-        zone = Zone.objects.get(id=pk)
+        try:
+            zone = Zone.objects.get(id=pk)
+        except:
+            return Assertions.assert_true_raise404(False,
+                                                   translate(keyLanguage=language,
+                                                             keyToTranslate="ERROR_ZONE_NOT_FOUND"))
+
         Assertions.assert_true_raise400(zone, translate(keyLanguage=language,
                                                         keyToTranslate="ERROR_ZONE_NOT_FOUND"))
         events = EventLocation.objects.all()

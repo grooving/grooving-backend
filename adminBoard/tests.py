@@ -137,9 +137,12 @@ class ZoneTestCase(APITransactionTestCase):
                 [token, 'Morón de la frontera', sevilla_id, 'es', 400],
                 # Test negativo, crear una zona ya existente
                 [token, 'Sevilla', andalucia_id, 'es', 400],
+                 # Test negativo, id que no está en base de datos
+                [token, 'Sevilla', 50, 'es', 400],
+                # Test negativo, id None
+                [token, 'Sevilla', None, 'es', 400],
 
-
-                # TESTS EN INGLES
+            # TESTS EN INGLES
                 # Test positivo, crear una zona con padre lvl 1
                 [token, 'Comunidat Valenciana', spain_id, 'en', 201],
                 # Test positivo, crear una zona con padre lvl 2
@@ -154,6 +157,10 @@ class ZoneTestCase(APITransactionTestCase):
                 [token, 'Sevilla', andalucia_id, 'en', 400],
                 # Test negativo, idioma no permitido
                 [token, 'Galicia', spain_id, 'catalan', 400],
+                # Test negativo, id que no está en base de datos
+                [token, 'Sevilla', 50, 'en', 400],
+                # Test negativo, id None
+                [token, 'Sevilla', None, 'en', 400],
 
         ]
 
@@ -175,6 +182,8 @@ class ZoneTestCase(APITransactionTestCase):
                                     HTTP_ACCEPT_LANGUAGE=args[3])
 
         self.assertEqual(args[-1], response_create.status_code)
+
+    #TEST EDIT ZONE
 
     def test_driver_edit_zone(self):
 
@@ -215,6 +224,15 @@ class ZoneTestCase(APITransactionTestCase):
                 # Test negativo, editar una zona y ponerla en lvl4
                 [token, 'Morón de la frontera', sevilla_id,galicia_id,'es', 400],
 
+                # Test negativo, id de parent zone que no está en base de datos
+                [token, 'Sevilla', 50,sevilla_id,'es', 400],
+                # Test negativo, id de parent zone None
+                 [token, 'Sevilla', None,sevilla_id, 'es', 400],
+                # Test negativo, id de zone inexistente
+                [token, 'Sevilla', andalucia_id, 50, 'es', 404],
+                # Test negativo, id de zone None
+                [token, 'Sevilla', andalucia_id, None, 'es', 400],
+
                 #TESTS EN INGLES
                 # Test positivo, editar una zona con padre lvl 1
                 [token, 'Comunidat Valenciana', spain_id, sevilla_id, 'en', 200],
@@ -226,6 +244,10 @@ class ZoneTestCase(APITransactionTestCase):
                 ['390494jdididij', 'Inglaterra', andalucia_id, sevilla_id, 'en', 401],
                 # Test negativo, editar una zona y ponerla en lvl4
                 [token, 'Morón de la frontera', teruel_id, cordoba_id, 'en', 400],
+                # Test negativo, id de zone inexistente
+                [token, 'Sevilla', 50, sevilla_id, 'en', 400],
+                # Test negativo, id de zone None
+                [token, 'Sevilla', None, sevilla_id, 'en', 400],
 
 
                 # Test negativo, idioma no permitido
@@ -275,16 +297,22 @@ class ZoneTestCase(APITransactionTestCase):
 
             # Test negativo, borrar una zona sin estar logueado
             ['390494jdididij', sevilla_id, 'es', 401],
-            # Test negativo, borrar una zona que pertenece a un event location de un artista
+            # Test negativo español, borrar una zona que pertenece a un event location de un artista
             [token, murcia_id, 'es', 400],
-            # Test negativo, borrar una zona que pertenece a un event location de un artista
+            # Test negativo inglés, borrar una zona que pertenece a un event location de un artista
             [token, murcia_id, 'en', 400],
+            # Test negativo, eliminar una zona con id inexistente
+            [token, 'Sevilla', andalucia_id, 50, 'es', 400],
+            # Test negativo, eliminar zona con id None
+            [token, 'Sevilla', andalucia_id, None, 'es', 400],
+
             # Test positivo, eliminar una zona lvl 3
             [token, sevilla_id, 'es', 200],
             # Test positivo, eliminar una zona  lvl 2
             [token, andalucia_id, 'es', 200],
             # Test positivo, eliminar una zona  lvl 1
             [token, spain_id, 'es', 200],
+
 
 
         ]
