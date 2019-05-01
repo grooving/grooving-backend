@@ -1,4 +1,5 @@
 spanish = {
+    "ERROR_USER_FORBIDDEN": "El usuario tiene prohibido esta acción",
     "ERROR_NO_ARTISTIC_NAME": "No has introducido un nombre artistico.",
     "ERROR_NOT_LOGGED_IN": "Debes estar autenticado para entrar en este sitio.",
     "ERROR_NOT_AN_ARTIST": "No eres un artista, y por tanto no puedes estar en este sitio.",
@@ -21,10 +22,10 @@ spanish = {
     "ERROR_CREATEMODULE_TWITTER": "No se ha proporcionado un módulo de Twitter",
     "ERROR_CREATEMODULE_INSTAGRAM": "No se ha dado un módulo de Instagram.",
     "ERROR_REFERENCE_PORTFOLIO": "No eres el dueño de este portfolio."
-
 }
 
 english = {
+    "ERROR_USER_FORBIDDEN": "User has forbidden this action",
     "ERROR_NO_ARTISTIC_NAME": "You did not submit an artistic name.",
     "ERROR_NOT_LOGGED_IN": "You must be logged in to do this action.",
     "ERROR_NOT_AN_ARTIST": "You are not an artist, and therefore you cannot be here.",
@@ -47,7 +48,6 @@ english = {
     "ERROR_CREATEMODULE_TWITTER": "You must provide an Twitter module",
     "ERROR_CREATEMODULE_INSTAGRAM": "You must provide an Instagram module.",
     "ERROR_REFERENCE_PORTFOLIO": "You are not the owner of this portfolio."
-
 }
 
 
