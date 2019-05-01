@@ -115,6 +115,7 @@ class ZoneTestCase(APITransactionTestCase):
         sevilla_id = Zone.objects.get(name='Sevilla').id
         payload = [
 
+                # TESTS EN ESPAÑOL
                 # Test positivo, crear una zona con padre lvl 1
                 [token, 'Comunidad Valenciana', spain_id,'es', 201],
                 # Test positivo, crear una zona con padre lvl 2
@@ -127,6 +128,20 @@ class ZoneTestCase(APITransactionTestCase):
                 [token, 'Morón de la frontera', sevilla_id,'es', 400],
                 # Test negativo, crear una zona ya existente
                 [token, 'Sevilla', andalucia_id, 'es', 400],
+
+                #TESTS EN INGLES
+                # Test positivo, crear una zona con padre lvl 1
+                [token, 'Comunidat Valenciana', spain_id, 'en', 201],
+                # Test positivo, crear una zona con padre lvl 2
+                [token, 'Cadiz', andalucia_id, 'en', 201],
+                # Test negativo, crear una zona sin padre
+                [token, 'Perro', None, 'es', 400],
+                # Test negativo, crear una zona sin estar logueado
+                ['390494jdididij', 'Inglaterra', andalucia_id, 'en', 401],
+                # Test negativo, crear una zona de lvl4
+                [token, 'Morón de la frontera', sevilla_id, 'en', 400],
+                # Test negativo, crear una zona ya existente
+                [token, 'Sevilla', andalucia_id, 'en', 400],
 
         ]
 
