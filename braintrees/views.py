@@ -226,7 +226,7 @@ class PayPaypal(generics.GenericAPIView):
 
         access_token = json.loads(response.content.decode("utf-8"))['access_token']
 
-        response2 = requests.get('https://api.sandbox.paypafrom rest_framework import statusl.com/v2/checkout/orders/'+serializer.data['authorization_id'],
+        response2 = requests.post('https://api.sandbox.paypal.com/v2/checkout/orders/'+serializer.data['authorization_id']+'/authorize',
                                   headers={'content-type': 'application/json',
                                            'authorization': 'Bearer ' + access_token})
 

@@ -124,7 +124,7 @@ class OfferSerializer(serializers.ModelSerializer):
 
         Assertions.assert_true_raise400(response, {'error': 'No hay respuesta desde Paypal'})
 
-        access_token = json.loads(response.content.decode("utf-8"))['access_token']
+        access_token = response.json()['access_token']
 
         Assertions.assert_true_raise400(response, {'error': 'No coge el token'})
         Assertions.assert_true_raise401(user_logged.paypalAccount,
@@ -225,7 +225,30 @@ class OfferSerializer(serializers.ModelSerializer):
                     Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id, {'error':
                                                                                                'La oferta no posee los credenciales de Braintree'})
 
-                    braintree.Transaction.refund(offer_in_db.transaction.braintree_id, str(amount))
+                    if len(offer_in_db.transaction.braintree_id) > 8:
+                        response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
+                                                 headers={'Accept': 'application/json', 'Accept-Language': 'en_US',
+                                                          'content-type': 'application/x-www-form-urlencoded'},
+                                                 params={'grant_type': 'client_credentials'},
+                                                 auth=HTTPBasicAuth(
+                                                     'AVwB_2wUfHN5UCJO1Ik6uWkFbALgetwYKS5_BJ6gr9bR6wcEP5iFK84Nme_ebMbXI4yQdgH5BX2Tld2o',
+                                                     'EEZqYac8yorxpDQNojGYT0vWxP6VVBDIOSCuCgyQB6B7zTwdEG1uuRZS52DytG-qlLAY1vtMrZG60hgB'))
+
+                        Assertions.assert_true_raise400(response, {'error': 'Credential error with paypal'})
+
+                        access_token = response.json()['access_token']
+
+                        response2 = requests.post(
+                            'https://api.sandbox.paypal.com/v2/payments/captures/' + offer_in_db.transaction.braintree_id + '/refund',
+                            headers={'content-type': 'application/json',
+                                     'authorization': 'Bearer ' + access_token})
+
+                        Assertions.assert_true_raise400(response2, {'error': 'No hay respuesta desde Paypal'})
+
+
+                    else:
+
+                        braintree.Transaction.refund(offer_in_db.transaction.braintree_id, str(amount))
 
             artistReceiver = Artist.objects.filter(pk=offer_in_db.paymentPackage.portfolio.artist.id).first()
 
@@ -259,7 +282,34 @@ class OfferSerializer(serializers.ModelSerializer):
                     )
                     Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id,{'error':
                     'La oferta no posee los credenciales de Braintree'})
-                    braintree.Transaction.submit_for_settlement(offer_in_db.transaction.braintree_id)
+
+                    if len(offer_in_db.transaction.braintree_id) > 8:
+
+                        response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
+                                                 headers={'Accept': 'application/json', 'Accept-Language': 'en_US',
+                                                          'content-type': 'application/x-www-form-urlencoded'},
+                                                 params={'grant_type': 'client_credentials'},
+                                                 auth=HTTPBasicAuth(
+                                                     'AVwB_2wUfHN5UCJO1Ik6uWkFbALgetwYKS5_BJ6gr9bR6wcEP5iFK84Nme_ebMbXI4yQdgH5BX2Tld2o',
+                                                     'EEZqYac8yorxpDQNojGYT0vWxP6VVBDIOSCuCgyQB6B7zTwdEG1uuRZS52DytG-qlLAY1vtMrZG60hgB'))
+
+                        Assertions.assert_true_raise400(response, {'error': 'Credential error with paypal'})
+
+                        access_token = response.json()['access_token']
+
+                        response2 = requests.post(
+                            'https://api.sandbox.paypal.com/v2/payments/authorizations/' + offer_in_db.transaction.braintree_id + '/capture',
+                            headers={'content-type': 'application/json',
+                                     'authorization': 'Bearer ' + access_token})
+
+                        Assertions.assert_true_raise400(response2, {'error': 'No hay respuesta desde Paypal'})
+
+                        offer_in_db.transaction.braintree_id = response2.json()['id']
+                        offer_in_db.transaction.save()
+
+                    else:
+                        braintree.Transaction.submit_for_settlement(offer_in_db.transaction.braintree_id)
+
                 elif json_status == 'REJECTED':
 
                     if settings.BRAINTREE_PRODUCTION:
@@ -279,8 +329,28 @@ class OfferSerializer(serializers.ModelSerializer):
 
                     Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id, {'error':
                                                                                                'La oferta no posee los credenciales de Braintree'})
+                    if len(offer_in_db.transaction.braintree_id) > 8:
+                        response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
+                                                 headers={'Accept': 'application/json', 'Accept-Language': 'en_US',
+                                                          'content-type': 'application/x-www-form-urlencoded'},
+                                                 params={'grant_type': 'client_credentials'},
+                                                 auth=HTTPBasicAuth(
+                                                     'AVwB_2wUfHN5UCJO1Ik6uWkFbALgetwYKS5_BJ6gr9bR6wcEP5iFK84Nme_ebMbXI4yQdgH5BX2Tld2o',
+                                                     'EEZqYac8yorxpDQNojGYT0vWxP6VVBDIOSCuCgyQB6B7zTwdEG1uuRZS52DytG-qlLAY1vtMrZG60hgB'))
 
-                    braintree.Transaction.void(offer_in_db.transaction.braintree_id)
+                        Assertions.assert_true_raise400(response, {'error': 'Credential error with paypal'})
+
+                        access_token = response.json()['access_token']
+
+                        response2 = requests.post(
+                            'https://api.sandbox.paypal.com/v2/payments/authorizations/' + offer_in_db.transaction.braintree_id + '/void',
+                            headers={'content-type': 'application/json',
+                                     'authorization': 'Bearer ' + access_token})
+
+                        Assertions.assert_true_raise400(response2, {'error': 'No hay respuesta desde Paypal'})
+
+                    else:
+                        braintree.Transaction.void(offer_in_db.transaction.braintree_id)
 
                 elif json_status == 'CANCELLED_ARTIST':
 
@@ -301,8 +371,28 @@ class OfferSerializer(serializers.ModelSerializer):
 
                     Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id, {'error':
                                                                                                'La oferta no posee los credenciales de Braintree'})
+                    if len(offer_in_db.transaction.braintree_id) > 8:
+                        response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
+                                                 headers={'Accept': 'application/json', 'Accept-Language': 'en_US',
+                                                          'content-type': 'application/x-www-form-urlencoded'},
+                                                 params={'grant_type': 'client_credentials'},
+                                                 auth=HTTPBasicAuth(
+                                                     'AVwB_2wUfHN5UCJO1Ik6uWkFbALgetwYKS5_BJ6gr9bR6wcEP5iFK84Nme_ebMbXI4yQdgH5BX2Tld2o',
+                                                     'EEZqYac8yorxpDQNojGYT0vWxP6VVBDIOSCuCgyQB6B7zTwdEG1uuRZS52DytG-qlLAY1vtMrZG60hgB'))
 
-                    braintree.Transaction.refund(offer_in_db.transaction.braintree_id)
+                        Assertions.assert_true_raise400(response, {'error': 'Credential error with paypal'})
+
+                        access_token = response.json()['access_token']
+
+                        response2 = requests.post(
+                            'https://api.sandbox.paypal.com/v2/payments/captures/' + offer_in_db.transaction.braintree_id + '/refund',
+                            headers={'content-type': 'application/json',
+                                     'authorization': 'Bearer ' + access_token})
+
+                        Assertions.assert_true_raise400(response2, {'error': 'No hay respuesta desde Paypal'})
+
+                    else:
+                        braintree.Transaction.refund(offer_in_db.transaction.braintree_id)
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
                                   or artist_flowstop_transitions.get(status_in_db) == json_status
