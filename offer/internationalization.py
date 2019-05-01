@@ -39,7 +39,9 @@ spanish = {
     "ERROR_NO_PAYMENTCODE_FOUND": "No se pudo encontrar el código de pago que buscas.",
     "ERROR_NO_DATA_GIVEN": "El formulario no tiene datos.",
     "ERROR_NO_MATCHING_LANGUAGE": "El idioma que has escogido no esta disponible.",
-    "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar."
+    "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar.",
+    "ERROR_RESPONSE": "No hay respuesta desde Paypal",
+    "ERROR_CREDENTIAL": "Error de credenciales de Paypal",
 }
 
 english = {
@@ -83,7 +85,10 @@ english = {
     "ERROR_NOT_ALLOWED_USER": "You lack the privileges to view this page or perform this action.",
     "ERROR_NO_DATA_GIVEN": "The form has no data.",
     "ERROR_NO_MATCHING_LANGUAGE": "This language is not available.",
-    "ERROR_NO_GIVEN_LANGUAGE": "You must choose a language."
+    "ERROR_NO_GIVEN_LANGUAGE": "You must choose a language.",
+    "ERROR_RESPONSE": "No response from Paypal",
+    "ERROR_CREDENTIAL": "Credential error with paypal",
+    "ERROR_CREDENTIAL_BRAINTREE": "Credential error with paypal"
 }
 
 
