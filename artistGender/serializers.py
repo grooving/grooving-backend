@@ -131,6 +131,7 @@ class SearchGenreSerializer(serializers.ModelSerializer):
 
         language = self.context.get("language")
         print(language)
+        name = ""
         if language == "es":
             name = genre.name_es
         elif language == "en":
@@ -302,6 +303,7 @@ class ArtisticGenderSerializerOut(serializers.ModelSerializer):
 
         language = self.context.get("language")
 
+        name = ""
         if language == "es":
             name = genre.name_es
         elif language == "en":

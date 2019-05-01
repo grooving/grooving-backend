@@ -2,6 +2,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from Grooving.models import Portfolio, Calendar, ArtisticGender, PortfolioModule, PaymentPackage, Artist, Zone
 from utils.Assertions import Assertions
+from artistGender.serializers import ArtisticGenderSerializerOut
 import re
 from utils.strings import Strings
 from .internationalization import translate
@@ -41,7 +42,7 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ArtisticGender
-        fields = ('id', 'name', 'parentGender')
+        fields = ('id', 'name_es', 'name_en', 'parentGender')
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -76,14 +77,18 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
     videos = serializers.SerializerMethodField('list_videos')
     main_photo = serializers.SerializerMethodField('list_photo')
     artist = ArtistSerializer(read_only=True)
-    artisticGender = ArtisticGenderSerializer(read_only=True, many=True)
+    language = serializers.SerializerMethodField()
+    artisticGender = ArtisticGenderSerializerOut(read_only=True, many=True,context={'language': language})
     zone = ZoneSerializer(read_only=True, many=True)
 
     class Meta:
         model = Portfolio
 
-        fields = ('id', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGender',
+        fields = ('id','language', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGender',
                   'artist', 'zone')
+
+    def get_language(self,obj):
+        return self.context.get('language')
 
     @staticmethod
     def list_images(self):
@@ -115,13 +120,16 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
 
         return photo
 
-    @staticmethod
-    def list_genders(self):
+    def list_genders(self,obj):
 
-        genders = ArtisticGender.objects.filter(portfolio=self)
+        genders = ArtisticGender.objects.filter(portfolio=obj)
         genderlist = []
+        language = self.context.get("language")
         for gender in genders:
-            genderlist.append(gender.name)
+            if language == 'es':
+                genderlist.append(gender.name_es)
+            elif language == 'en':
+                genderlist.append(gender.name_en)
         return genderlist
 
     @staticmethod

@@ -27,10 +27,13 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
                                             translate(language, 'ERROR_PORTFOLIO_NOT_FOUND'))
 
     def get(self, request, pk=None, format=None):
+
+        language = check_accept_language(request)
+
         if pk is None:
             pk = self.kwargs['pk']
         portfolio = self.get_object(pk)
-        serializer = PortfolioSerializer(portfolio, partial=True)
+        serializer = PortfolioSerializer(portfolio, partial=True,context={'language':language})
         return Response(serializer.data)
 
     def put(self, request, pk=None):
@@ -45,11 +48,11 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
             user_type = get_user_type(loggedUser)
             artist = Artist.objects.filter(portfolio=portfolio).first()
             if loggedUser is not None and loggedUser.id == artist.id and user_type == "Artist":
-                serializer = PortfolioSerializer(portfolio, data=request.data, partial=True)
+                serializer = PortfolioSerializer(portfolio, data=request.data, partial=True,context={'language':language})
                 if serializer.is_valid():
                     serializer.save(loggedUser, language=language)
                     portfolio = self.get_object(pk)
-                    serializer = PortfolioSerializer(portfolio, data=serializer.data, partial=True)
+                    serializer = PortfolioSerializer(portfolio, data=serializer.data, partial=True,context={'language':language})
                     serializer.is_valid()
                     return Response(serializer.data)
                 else:
