@@ -45,37 +45,51 @@ def save_data():
                                                                               "The purpose of the information is for analyzing trends, administering the site, tracking users' " +
                                                                               "movement on the website, and gathering demographic information.</p>" +
 
-                                                                              "<h2>Cookies and Web Beacons</h2>" +
-                                                                              "<p>Grooving uses cookies to store information including visitors' preferences, and the pages " +
-                                                                              "on the website that the visitor accessed or visited. The information is used to optimize the " +
-                                                                              "users' experience by customizing our web page content based on visitors' browser type and/or " +
-                                                                              "other information.</p>" +
+                                                                              "<h2>Cookies policy</h2>" +
 
-                                                                              "<h2>Privacy Policies</h2>" +
+                                                                              "<p>For the operation of our application we use cookies to optimize user experience. Once you " +
+                                                                              "access and browse the application for the first time, a window will appear in which you agree " +
+                                                                              "to use cookies in accordance with our Privacy Policy. If you continue to browse the application " +
+                                                                              "without accepting them, Grooving will consider that you have accepted our Privacy Policy " +
+                                                                              "automatically.</p>" +
+
+                                                                              "<h3>Third Party Privacy Policies</h3>" +
+
+                                                                              "<p>In addition, third-party cookies are used for the development of your activity. Paypal and " +
+                                                                              "Braintree cookies are used for payment security, to keep the users active session we use Django " +
+                                                                              "cookies and for the management of images we use GitHub and Amazon cookies.</p>" +
+
+                                                                              "<p>Note that Grooving has no access to or control over these cookies.</p>" +
                                                                               "<p>This Privacy Policy applies only to our online activities and is valid for visitors to our " +
                                                                               "website with regards to the information that they shared and/or collect in Grooving. This " +
                                                                               "policy is not applicable to any information collected offline or via channels other than this " +
                                                                               "website.</p>" +
-                                                                              "<p>Note that Grooving has no access to or control over these cookies.</p>" +
 
-                                                                              "<p>This Privacy Policy applies only to our online activities and is valid for visitors to " +
-                                                                              "our website with regards to the information that they shared and/or collect in Grooving. " +
-                                                                              "This policy is not applicable to any information collected offline or via channels other than " +
-                                                                              "this website.</p>" +
-
-                                                                              "<h2>Third Party Privacy Policies</h2>" +
                                                                               "<p>Grooving's Privacy Policy does not apply to other websites. Thus, we are advising you to " +
                                                                               "consult the respective Privacy Policies of these third-party servers for more detailed " +
                                                                               "information. You may find a complete list of these Privacy Policies bellow:</p>" +
 
-                                                                              "<h3>Braintree</h3>" +
-                                                                              "<a href=”https://www.braintreepayments.com/legal/acceptable-use-policy”>Braintree</a>" +
-                                                                              "<h3>Heroku</h3>" +
-                                                                              "<a href=”https://www.heroku.com/policy/security”>Heroku</a>" +
+                                                                              "<h4>Braintree</h4>" +
+                                                                              "<p>For more information visit the following link:" +
+                                                                              "<a href=\"https://www.braintreepayments.com/legal/acceptable-use-policy\">" +
+                                                                              "Braintree cookies policy</a></p>" +
 
-                                                                              "<p>You can choose to disable cookies through your individual browser options. To know more " +
-                                                                              "detailed information about cookie management with specific web browsers, it can be found at " +
-                                                                              "the browsers' respective websites.</p>" +
+                                                                              "<h4>Heroku</h4>" +
+                                                                              "<p>For more information visit the following link: " +
+                                                                              "<a href=\"https://www.salesforce.com/company/privacy/full_privacy.jsp#nav_info\">" +
+                                                                              "Heroku cookies policy</a>" +
+
+                                                                              "<h4>GitHub</h4>" +
+                                                                              "<p>For more information visit the following link: " +
+                                                                              "<a href=\"https://github.com/github/site-policy\"></a>Github cookies policy</p>" +
+
+                                                                              "<h4>Amazon</h4>" +
+                                                                              "<p>For more information visit the following link: " +
+                                                                              "<a href=\"https://aws.amazon.com/es/compliance/data-privacy-faq/\">Amazon cookies privacy.</a>" +
+
+                                                                              "<h4>Paypal</h4>" +
+                                                                              "<p> For more information visit the following link: " +
+                                                                              "<a href=\"https://www.paypal.com/uk/webapps/mpp/ua/cookie-full\">Paypal cookies policy</a></p>" +
 
                                                                               "<h2>Consent</h2>" +
                                                                               "<p>By using our website, you hereby consent to our Privacy Policy and agree to its Terms and " +
@@ -100,17 +114,19 @@ def save_data():
                                                                "el sitio, rastrear el movimiento de los usuarios en el sitio web y recopilar información "
                                                                "demográfica.</p>" +
 
-                                                               "<h2>Cookies y Web Beacons</h2>" +
-                                                               "<p>Grooving utiliza cookies para almacenar información, incluidas las preferencias de los " +
-                                                               "visitantes, y las páginas del sitio web a las que el visitante accedió o visitó. La información " +
-                                                               "se utiliza para optimizar la experiencia de los usuarios mediante la personalización del " +
-                                                               "contenido de nuestra página web en función del tipo de navegador de los visitantes yu otra " +
-                                                               "información. </p>" +
+                                                               "<h2>Política de cookies</h2>" +
+                                                               "<p>Para el correcto funcionamiento de nuestra aplicación utilizamos cookies para optimizar la " +
+                                                               "experiencia de usuario. Una vez que acceda y navegue por primera vez en la aplicación se " +
+                                                               "mostrará una ventana en la que usted acepta utilizar las cookies de acuerdo a nuestra Política " +
+                                                               "de privacidad. Si usted continua navegando por la aplicación sin aceptarlas, Grooving " +
+                                                               "considerará que usted ha aceptado nuestra Política de privacidad de forma automática.</p>" +
 
-                                                               "<h2>Política de privacidad de terceros</h2>" +
-                                                               "<p>Los servidores de terceros utilizan tecnologías como cookies, JavaScript que se usan en los " +
-                                                               "enlaces que aparecen en Grooving, que se envían directamente al navegador de los usuarios. " +
-                                                               "Reciben automáticamente su dirección IP cuando esto ocurre.</p>" +
+                                                               "<h3>Política de privacidad de terceros</h3>" +
+
+                                                               "<p>Además se utilizan cookies de terceros para el desarrollo de su actividad. Para la seguridad " +
+                                                               "de los pagos se utilizan las cookies de Paypal y Braintree, para mantener la sesión activa de " +
+                                                               "los usuarios utilizamos cookies de Django y para la gestión de imágenes utilizamos las cookies " +
+                                                               "de GitHub y Amazon.</p>" +
 
                                                                "<p>Tenga en cuenta que Grooving no tiene acceso ni control sobre estas cookies.</p>" +
 
@@ -120,29 +136,45 @@ def save_data():
                                                                "línea o a través de canales que no sean este sitio web.</p>" +
 
                                                                "<p>La política de privacidad de Grooving no se aplica a otros sitios web. Por lo tanto, le " +
-                                                               "recomendamos que consulte las políticas de privacidad. Puede incluir sus prácticas e " +
-                                                               "instrucciones sobre cómo optar por no participar en ciertas opciones. Puede encontrar una " +
-                                                               "lista completa de estas Políticas de privacidad y sus enlaces a continuación:</p>" +
+                                                               "recomendamos que consulte las políticas de privacidad. Puede encontrar una lista completa de " +
+                                                               "estas Políticas de privacidad y sus enlaces a continuación:</p>" +
 
-                                                               "<h3>Braintree</h3>" +
-                                                               "<a href=”https://www.braintreepayments.com/legal/acceptable-use-policy”>Braintree</a>" +
+                                                               "<h4>Braintree</h4>" +
+                                                               "<p>Para más información visita el siguiente link: " +
+                                                               "<a href=\"https://www.braintreepayments.com/legal/acceptable-use-policy\">" +
+                                                               "Braintree cookies policy</a></p>" +
 
-                                                               "<h3>Heroku</h3>" +
-                                                               "<a href=”https://www.heroku.com/policy/security”>Heroku</a>" +
+                                                               "<h4>Heroku</h4>" +
+                                                               "<p>Para más información visita el siguiente link: " +
+                                                               "<a href=\"https://www.salesforce.com/company/privacy/full_privacy.jsp#nav_info\">Heroku cookies policy</a>" +
+
+                                                               "<h4>GitHub</h4>" +
+                                                               "<p>Para más información visita el siguiente link: " +
+                                                               "<a href=\"https://github.com/github/site-policy\"></a>Github cookies policy</p>" +
+
+                                                               "<h4>Amazon</h4>" +
+                                                               "<p>Para más información visita el siguiente link: " +
+                                                               "<a href=\"https://aws.amazon.com/es/compliance/data-privacy-faq/\">Amazon cookies privacy.</a>" +
+
+                                                               "<h4>Paypal</h4>" +
+                                                               "<p>Para más información visita el siguiente link: " +
+                                                               "<a href=\"https://www.paypal.com/uk/webapps/mpp/ua/cookie-full\">Paypal cookies policy</a></p>" +
 
                                                                "<h2>Consentimiento</h2>" +
                                                                "<p>Al utilizar nuestro sitio web, usted acepta nuestra Política de privacidad y acepta sus " +
                                                                "Términos y condiciones.</p>",
-                                                               aboutUs_en="<p> At Grooving, we work hard to solve the daily problems of the artists by making them known " +
+                                                               aboutUs_en="<p>At Grooving, we work hard to solve the daily problems of the artists by making them known " +
                                                                           "and increasing their daily activity in an easy, simple and reliable way. </p>" +
-                                                                          "<h2> Do you think it's impossible? </h2> +"
-                                                                          "<p> With <b> Grooving </b>, we managed to make it real by simplifying the search and hiring of " +
+
+                                                                          "<h2>Do you think it's impossible? </h2>" +
+
+                                                                          "<p>With <b>Grooving</b>, we managed to make it real by simplifying the search and hiring of " +
                                                                           "artists. </p>",
                                                                aboutUs_es="<h2>Sobre nosotros</h2>" +
                                                                           "<p>En Grooving, trabajamos duro para resolver los problemas diarios de los artistas dándoles a " +
                                                                           "conocer e incrementando su actividad diaria de una forma fácil, sencilla y fiable.</p>" +
 
-                                                                          "<h2>¿Piensas que es imposible? </h2>" +
+                                                                          "<h2>¿Piensas que es imposible?</h2>" +
 
                                                                           "<p>Con <b>Grooving</b> conseguimos hacerlo realidad simplificando la búsqueda y contratación de " +
                                                                           "artistas.</p>",
@@ -255,21 +287,63 @@ def save_data():
 
                                                                             "<h2>GPDR - Regulación de Protección General de Datos</h2>" +
                                                                             "<p>Este documento está adaptado al Reglamento Europeo de Protección de Datos (RGPD) y a la " +
-                                                                            "reciente Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y " +
+                                                                            "reciente Ley Orgánica 3/2018, del 5 de diciembre, de Protección de Datos Personales y " +
                                                                             "garantía de los derechos digitales cumpliendo con cada uno de sus artículos y sometiéndose " +
                                                                             "a auditorías regularmente.</p>" +
 
-                                                                            "<h3>Derecho a ser informado sobre brechas de seguridad</h3>" +
-                                                                            "<p>En caso de que se detecte una brecha de seguridad en Grooving, se le notificará un máximo " +
-                                                                            "de 72 horas después de su detección.</p>" +
+                                                                            "<p>Todos los datos generados en Grooving son almacenados en nuestros servidores y utilizando " +
+                                                                            "protocolos seguros de comunicación.</p>" +
 
-                                                                            "<h3>Derecho al olvido</h3>" +
-                                                                            "<p>Cualquier usuario que utilice Grooving puede solicitar la eliminación de sus datos desde " +
-                                                                            "su perfil de usuario.</p>" +
+                                                                            "<h3>Derecho a ser informado sobre brechas de seguridad</h3>" +
+                                                                            "<p>En caso de que el equipo de Grooving detecte una brecha de seguridad, a todas aquellas " +
+                                                                            "personas afectadas se les notificará en un máximo de 72 horas posteriores a su detección.</p>" +
 
                                                                             "<h3>Derecho a exportar tus datos personales</h3>" +
                                                                             "<p>Todos los usuarios que utilizan Grooving pueden solicitar los datos que nuestra empresa " +
-                                                                            "tiene sobre ellos desde su perfil de usuario.</p>",
+                                                                            "tiene sobre ellos desde su perfil de usuario y serán enviadas en formato PDF adjunto al " +
+                                                                            "correo vinculado con el usuario en Grooving.</p>" +
+
+                                                                            "<p>Los datos que se enviarán a los artistas que lo hayan solicitado serán los siguientes:</p>" +
+
+                                                                            "<ul>" +
+                                                                            "<li type=”circle”><b>Información artística</b>: nombre artístico, género artístico, zonas de " +
+                                                                            "actuación, puntuación del grupo, días no disponibles, biografía, paquetes de pago " +
+                                                                            "disponibles y contenido adicional.</li>" +
+
+                                                                            "<li type=”circle”><b>Ofertas</b>: nombre del evento, contratante, día del evento, dirección, " +
+                                                                            "zona de actuación, descripción de la oferta, estado de la oferta, precio, cuenta de paypal " +
+                                                                            "en la que se vaya a realizar el pago y valoración por parte del cliente.</li>" +
+                                                                            "</ul>" +
+
+                                                                            "<p>Los datos que se enviarán a los clientes que lo hayan solicitado serán los siguientes:</p>" +
+                                                                            "<ul>" +
+                                                                            "<li type=”circle”><b>Eventos</b>: nombre, dirección, equipamiento necesario y zona.</li>" +
+                                                                            "<li type=”circle”><b>Ofertas realizadas</b>: artista, día del evento, paquete de pago " +
+                                                                            "seleccionado, precio y estado de la oferta.</li>" +
+                                                                            "</ul>" +
+
+                                                                            "<h3>Derecho al olvido</h3>" +
+                                                                            "<ul>" +
+                                                                            "<li type=”circle”><b>Artistas</b>: se anonimiza el portfolio (banner, biografía y nombre " +
+                                                                            "artistico).</li>" +
+                                                                            "<li type=”circle”><b>Paquetes de pago</b>: descripción, información sobre la actuación.</li>" +
+                                                                            "<li type=”circle”><b>Ofertas</b>: las credenciales de paypal del artista.</li>" +
+                                                                            "</ul>" +
+
+                                                                            "<p>Todas aquellas interacciones que el cliente haya realizado en la aplicación serán " +
+                                                                            "eliminadas a excepción de:</p>" +
+
+                                                                            "<ul>" +
+                                                                            "<li><b>Localizaciones de los eventos</b>: equipamiento, descripción, dirección y nombre</li>" +
+                                                                            "<li><b>Valoraciones</b>: se anonimizan los comentarios realizados.</li>" +
+                                                                            "</ul>" +
+
+                                                                            "<p>Para mantener la privacidad de los usuarios se eliminarán todas aquellas conversaciones " +
+                                                                            "en las que haya participado.</p>" +
+
+                                                                            "<p>Al aplicar este derecho, los datos de la aplicación se anonimizarán en nuestros " +
+                                                                            "servidores con motivo de mantener un histórico de datos para realizar opearaciones " +
+                                                                            "estadísticas.</p>",
 
                                                                termsText_en="<p>The conditions of use of the web page, the rules of use and the use of " +
                                                                             "grooving.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
@@ -368,22 +442,65 @@ def save_data():
                                                                             "report, the reason, and some proof (video, images, links, ...).</p>"
 
                                                                             "<h2>GPDR - General Data Protection Regulation</h2>" +
-                                                                            "<p> This document is adapted to the European Data Protection Regulation (RGPD) and to the " +
-                                                                            "recent Organic Law 3/2018, of December 5th, on the Protection of Personal Data and guarantee " +
-                                                                            "of the digital rights that comply with each of its articles and submitting to audits " +
-                                                                            "regularly.</p>" +
+                                                                            "<p>This document is adapted to the European Data Protection Regulation (RGPD) and to the " +
+                                                                            "recent Organic Law 3/2018, of December 5, on the Protection of Personal Data and guarantee of " +
+                                                                            "digital rights complying with each of its articles and undergoing regular audits. </p>" +
+
+                                                                            "<p>All the data generated in Grooving is stored on our servers and using secure communication " +
+                                                                            "protocols.</p>" +
 
                                                                             "<h3>Right to be informed with breaches</h3>" +
-                                                                            "<p>In case a security breach is detected in the Grooving system, it will be notified a maximum " +
-                                                                            "of 72 hours after its detection.</p>" +
+                                                                            "<p>In the event that the Grooving team detects a security breach, all those affected will be " +
+                                                                            "notified within a maximum of 72 hours after detection.</p>" +
+
+                                                                            "<h3>Right to export personal information</h3>" +
+                                                                            "<p>All users who use Grooving can request the data that our company has about them from their " +
+                                                                            "user profile and they will be sent in PDF format attached to the mail linked with the user in " +
+                                                                            "Grooving.</p>" +
+
+                                                                            "<p>The data that will be sent to the artists that have requested it will be: </p>" +
+                                                                            "<ul>" +
+                                                                            "<li><b>Artistic information</b>: artistic name, artistic genre, performance areas, group score, " +
+                                                                            "days not available, biography, available payment packages and additional content.</li> " +
+
+                                                                            "<li type><b>Offers</b>: name of the event, contractor, day of the event, address, area of " +
+                                                                            "​​action, description of the offer, status of the offer, price, paypal account in the that the " +
+                                                                            "payment and valuation by the client will be made.</li>" +
+                                                                            "</ul>" +
+
+                                                                            "<p>The data that will be sent to the clients that have requested it will be:</p>" +
+                                                                            "<ul>" +
+                                                                            "<li><b>Events</b>: name, address, necessary equipment and area.</li>" +
+                                                                            "<li type><b>Offers made</b>: artist, day of the event, selected payment package, price and " +
+                                                                            "status of the offer.</li>" +
+                                                                            "</ul>" +
 
                                                                             "<h3>Right to be forgotten</h3>" +
-                                                                            "<p> Any user who uses Grooving can request the removal of their data from their user " +
-                                                                            "profile.</p>" +
+                                                                            "<p>Any user of the application can benefit from the right to be forgotten. This right will be " +
+                                                                            "made by removing all personal data of said user.</p>" +
 
-                                                                            "<h3>Right to export your personal information</h3>" +
-                                                                            "<p>All users who use Grooving can request the data that our company has about them from their " +
-                                                                            "user profile.</p>")
+                                                                            "<p>All interactions that the artist has made in the application will be eliminated with the " +
+                                                                            "following exceptions:</p>" +
+
+                                                                            "<ul>" +
+                                                                            "<li><b>Artists</b>: the portfolio is anonymized (banner, biography and artistic name).</li>" +
+                                                                            "<li><b>Payment packages</b>: description, information about the performance.</li>" +
+                                                                            "<li><b>Offers</ b>: the artist's paypal credentials.</li>" +
+                                                                            "</ul>" +
+
+                                                                            "<p>All those interactions that the client has made in the application will be eliminated with " +
+                                                                            "the exception of:</p>" +
+
+                                                                            "<ul>" +
+                                                                            "<li><b>Event location</ b>: equipment, description, address and name.</li>" +
+                                                                            "<li><b>Ratings</b>: Comments made anonymized.</li>" +
+                                                                            "</ul>" +
+
+                                                                            "<p>To maintain the privacy of users, all conversations in which you have participated will be " +
+                                                                            "deleted.</p>" +
+
+                                                                            "<p>By applying this right, the application data will be anonymized on our servers in order to " +
+                                                                            "maintain a data history to perform statistical operations.</p>")
 
     system_configuration1.save()
 
@@ -1603,21 +1720,23 @@ def save_data():
 
     # Event location
 
-    event_location1 = EventLocation.objects.create(name='Festival Rockupo',
-                                                   address='Universidad Pablo de Olavide', equipment='No', zone=zone2,
+    event_location1 = EventLocation.objects.create(name="Festival Rockupo",
+                                                   address="Universidad Pablo de Olavide",
+                                                   equipment="We only provide the stage with microphones, speakers and a sound technician.",
+                                                   zone=zone2,
                                                    customer=customer1)
     event_location1.save()
-    event_location2 = EventLocation.objects.create(name='La Posada Sevilla',
-                                                   address='C/Astronomía, 42, 41015',
-                                                   equipment='Yes, we have al equipment necessary, we have concerts every week, we have all you need for this job.',
+    event_location2 = EventLocation.objects.create(name="La Posada Sevilla",
+                                                   address="C/Astronomía, 42, 41015",
+                                                   equipment="Yes, we have al equipment necessary, we have concerts every week, we have all you need for this job.",
                                                    zone=zone2,
                                                    customer=customer2)
     event_location2.save()
-    event_location3 = EventLocation.objects.create(name='Rosalia en vivo', address='C/Sol, 45, 41652',
-                                                   equipment='No', zone=zone2, customer=customer3)
+    event_location3 = EventLocation.objects.create(name="Rosalia en vivo", address="C/Sol, 45, 41652",
+                                                   equipment="We provided a full sound & video equipment for the event", zone=zone2, customer=customer3)
     event_location3.save()
-    event_location4 = EventLocation.objects.create(name='Charlie XCX', address='C/Amalgama, 2, 41609',
-                                                   equipment='Yes, we have a stage of 30 square meters, a system of loudspeakers distributed by the local, with a total of 16 loudspeakers and a complete system of LED lights that can be adjusted to the intensity and color desired.',
+    event_location4 = EventLocation.objects.create(name="Charlie XCX", address='C/Amalgama, 2, 41609',
+                                                   equipment="Yes, we have a stage of 30 square meters, a system of loudspeakers distributed by the local, with a total of 16 loudspeakers and a complete system of LED lights that can be adjusted to the intensity and color desired.",
                                                    zone=zone4, customer=customer4)
     event_location4.save()
 
