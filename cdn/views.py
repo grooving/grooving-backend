@@ -80,7 +80,7 @@ class ImageManager(generics.UpdateAPIView):
                 fileInDB.save()
 
                 return Response({"imgUrl": fileInDB.file.url}, status=status.HTTP_200_OK)
-            return Response({"imgUrl": "fail"}, status=status.HTTP_200_OK)
+            return Response({"imgUrl": old_url}, status=status.HTTP_200_OK)
 
         if create:
             if type == "PROFILE" or type == "BANNER":
