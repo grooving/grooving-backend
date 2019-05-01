@@ -1,11 +1,11 @@
 from Grooving.models import  Artist, Portfolio, User,  PaymentPackage, Customer, EventLocation, Zone, \
-    Performance, SystemConfiguration
+    Performance, SystemConfiguration,Admin
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITransactionTestCase
 
 
-class OfferTestCase(APITransactionTestCase):
+class ZoneTestCase(APITransactionTestCase):
 
     def setUp(self):
         your_email = 'utri1990@gmail.com'
@@ -13,6 +13,12 @@ class OfferTestCase(APITransactionTestCase):
 
         print('---- Creating user test ----')
 
+        user3_admin = User.objects.create(username='admin', password=make_password('admin'), is_staff=True,
+                                           is_superuser=True, first_name='Chema', last_name='Alonso',
+                                           email="grupogrooving@gmail.com")
+        user3_admin.save()
+        admin = Admin.objects.create(user=user3_admin, language='es')
+        admin.save()
         user1_artist10 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
                                              first_name='Carlos', last_name='Campos Cuesta',
                                              email=your_email)
@@ -67,53 +73,78 @@ class OfferTestCase(APITransactionTestCase):
                                            aboutUs_es='Sobre nosotros',
                                            termsText_es='Términos y condiciones',
                                            termsText_en='Terms and conditions')
+        zone_lvl1_spain = Zone.objects.create(name="España", parentZone=None)
+        zone_lvl1_spain.save()
+
+        zone_lvl2_andalucia = Zone.objects.create(name="Andalucia", parentZone=zone_lvl1_spain)
+        zone_lvl2_andalucia.save()
+        zone_lvl2_aragon = Zone.objects.create(name="Aragón", parentZone=zone_lvl1_spain)
+        zone_lvl2_aragon.save()
+
+        zone_lvl3_sevilla = Zone.objects.create(name="Sevilla", parentZone=zone_lvl2_andalucia)
+        zone_lvl3_sevilla.save()
+
+        zone_lvl3_cordoba = Zone.objects.create(name="Cordoba", parentZone=zone_lvl2_andalucia)
+        zone_lvl3_cordoba.save()
+
+        zone_lvl3_zaragoza = Zone.objects.create(name="Zaragoza", parentZone=zone_lvl2_aragon)
+        zone_lvl3_zaragoza.save()
+
+        zone_lvl3_teruel = Zone.objects.create(name="Teruel", parentZone=zone_lvl2_aragon)
+        zone_lvl3_teruel.save()
+
     # Driver function
 
-    def test_driver_create_offer(self):
+    def test_driver_create_zone(self):
 
         print('Start test')
-        data1 = {"username": "customer1", "password": "customer1customer1"}
-        response = self.client.post("/api/login/", data1, format='json')
+        data1 = {"username": "admin", "password": "admin"}
+        response = self.client.post("/api/admin/login/", data1, format='json')
 
         token_num = response.get('x-auth')
 
-        #Para evitar problemas si el token no existe en bd
+        #Para evitar problemas con el token si no existiera
         token = ''
         try:
             token = Token.objects.all().filter(pk=token_num).first().key
         except:
             pass
         # Data payload
-        portfolio1 = Portfolio.objects.get(artisticName="Los rebujitos")
+        spain_id = Zone.objects.get(name='España').id
+        andalucia_id = Zone.objects.get(name='Andalucia').id
+        sevilla_id = Zone.objects.get(name='Sevilla').id
         payload = [
-                # Test positivo, crear oferta a un PERFORMANCE package
-                [token, 'Descripcion1', '2019-05-10T10:00:00', 1, portfolio1.id, 201],
-                # Test negativo - Fecha incorrecta
-                [token, 'Descripcion2', '2019 10:00:00', 1, portfolio1.id, 400],
-                # Test negativo - Descripcion incorrecta
-                [token, '', '2019-05-10T10:00:00', 1, portfolio1.id, 400]]
+
+                # Test positivo, crear una zona con padre lvl 1
+                [token, 'Comunidad Valenciana', spain_id,'es', 201],
+                # Test positivo, crear una zona con padre lvl 2
+                [token, 'Huelva', andalucia_id,'es', 201],
+                # Test negativo, crear una zona sin padre
+                [token, 'Perro',None,'es', 400],
+                # Test negativo, crear una zona sin estar logueado
+                ['390494jdididij', 'Inglaterra', andalucia_id,'es', 401],
+                # Test negativo, crear una zona de lvl4
+                [token, 'Morón de la frontera', sevilla_id,'es', 400],
+                # Test negativo, crear una zona ya existente
+                [token, 'Sevilla', andalucia_id, 'es', 400],
+
+        ]
 
         for data in payload:
-            self.template_create_offer(data)
+            self.template_create_zone(data)
 
     def generateData(self, args):
-        return {'description': args[1],
-                'date': args[2],
-                'paymentPackage_id': args[3],
-                'eventLocation_id': args[4]}
+        return {'name': args[1],
+                'parentZone': args[2]}
 
     # Template function
 
-    def template_create_offer(self, args):
+    def template_create_zone(self, args):
 
         data = self.generateData(args)
 
-        response_es = self.client.post('/offer/', data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
-                                    HTTP_ACCEPT_LANGUAGE='es')
+        response_es = self.client.post('/admin/zone/', data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+                                    HTTP_ACCEPT_LANGUAGE=args[3])
 
         self.assertEqual(args[-1], response_es.status_code)
 
-        response_en = self.client.post('/offer/', data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
-                                    HTTP_ACCEPT_LANGUAGE='en')
-
-        self.assertEqual(args[-1], response_en.status_code)
