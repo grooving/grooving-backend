@@ -395,7 +395,7 @@ def save_data():
     artistic_gender1 = ArtisticGender.objects.create(name_en='Music', parentGender=artistic_gender0, name_es="Música")
     artistic_gender1.save()
 
-    artistic_gender2 = ArtisticGender.objects.create(name_en='DJ', parentGender=artistic_gender1, name_es="Pincha discos")
+    artistic_gender2 = ArtisticGender.objects.create(name_en='DJ', parentGender=artistic_gender1, name_es="DJ")
     artistic_gender2.save()
 
     artistic_gender3 = ArtisticGender.objects.create(name_en='Pop', parentGender=artistic_gender1, name_es="Pop")
