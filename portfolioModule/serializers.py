@@ -50,6 +50,8 @@ class PortfolioModuleSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
 
+        language = check_accept_language(attrs)
+
         # Artist validation
 
         language = check_accept_language(attrs)
@@ -57,7 +59,8 @@ class PortfolioModuleSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(attrs, translate(language, "ERROR_NO_DATA_GIVEN"))
 
         artist = Artist.objects.filter(user_id=attrs.user.id).first()
-        Assertions.assert_true_raise403(artist, translate(language, 'ERROR_NOT_AN_ARTIST'))
+
+        Assertions.assert_true_raise403(artist, translate(language, 'ERROR_USER_FORBIDDEN'))
 
         # Body request validation
 

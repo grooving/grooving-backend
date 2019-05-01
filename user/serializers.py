@@ -4,6 +4,8 @@ from rest_framework import serializers
 from utils.Assertions import Assertions
 from eventLocation.serializers import ShortEventLocationSerializer
 from portfolio.serializers import ArtisticGenderSerializer
+from utils.utils import check_accept_language
+from .internationalization import translate
 
 
 class ShortPortfolioSerializer(serializers.ModelSerializer):
@@ -25,20 +27,22 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     @staticmethod
     def validate_ban_user(attrs):
 
+        language = check_accept_language(attrs)
+
         # Admin validation
 
         admin = Admin.objects.filter(user=attrs.user).first()
-        Assertions.assert_true_raise403(admin is not None, {'error': 'ERROR_USER_FORBIDDEN'})
+        Assertions.assert_true_raise403(admin is not None, translate(language, 'ERROR_USER_FORBIDDEN'))
 
         # Data validation
 
         json = attrs.data
-        Assertions.assert_true_raise400(json.get('id'), {'error': 'ERROR_FIELD_ID'})
+        Assertions.assert_true_raise400(json.get('id'), translate(language, 'ERROR_FIELD_ID'))
 
         # Ban user validation
 
         user = User.objects.filter(id=json.get('id')).first()
-        Assertions.assert_true_raise400(user is not None, {'error': 'ERROR_BAN_USER_UNKNOWN'})
+        Assertions.assert_true_raise400(user is not None, translate(language, 'ERROR_BAN_USER_UNKNOWN'))
 
         return True
 
