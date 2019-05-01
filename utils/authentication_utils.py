@@ -107,7 +107,6 @@ def get_admin_2(request):
 
 
 def get_user_type(user):
-    print("utils.authentication_utils.get_user_type is deprecated.")
     if user:
         artist = Artist.objects.filter(user_id=user.user_id).first()
         if artist is not None:
