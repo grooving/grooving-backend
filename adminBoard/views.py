@@ -8,6 +8,7 @@ from utils.Assertions import Assertions
 from utils.utils import check_accept_language
 from adminBoard.serializers import ZoneSerializer
 from adminBoard.internationalization import translate
+from Grooving.models import SystemConfiguration
 
 
 class GetStatistics(generics.ListAPIView):
@@ -80,15 +81,20 @@ class GetStatistics(generics.ListAPIView):
 
         contractoffers = len(Offer.objects.filter(status='CONTRACT_MADE'))
 
+        paymentoffers = len(Offer.objects.filter(status='PAYMENT_MADE'))
+
+        acceptedoffers = contractoffers + paymentoffers
+
         if totaloffers == 0:
 
             return 0.0
 
         else:
 
-            ratio = contractoffers / totaloffers
+            ratio = acceptedoffers / totaloffers
 
             return ratio
+
 
     def get_payment_offers_all_time(self, request, *args, **kwargs):
 
@@ -186,6 +192,9 @@ class GetStatistics(generics.ListAPIView):
             # Se aplica un doble filtro para sacar las ofertas en este estado Y que sean del último mes (31 días en todos los casos, aun si tiene 30 días o es febrero)
         contractoffers = len(
             Offer.objects.filter(status='CONTRACT_MADE').filter(creationMoment__gt=time_threshold))
+        paymentoffers = len(Offer.objects.filter(status='PAYMENT_MADE').filter(creationMoment__gt=time_threshold))
+
+        acceptedoffers = contractoffers + paymentoffers
 
         if totaloffers == 0:
 
@@ -193,7 +202,7 @@ class GetStatistics(generics.ListAPIView):
 
         else:
 
-            ratio = contractoffers / totaloffers
+            ratio = acceptedoffers / totaloffers
 
             return ratio
 
@@ -251,7 +260,10 @@ class GetStatistics(generics.ListAPIView):
         for offer in paymentoffers:
             totalPrice = totalPrice + float(offer.price)
 
-        return float(totalPrice) * 0.07
+        sysconfi = SystemConfiguration.objects.first()
+
+        return float(totalPrice) * float(sysconfi.profit/100)
+
 
     def get_total_money_last_month(self, request, *args, **kwargs):
         admin = get_admin(request)
@@ -283,7 +295,9 @@ class GetStatistics(generics.ListAPIView):
         for offer in paymentoffers:
             totalPrice = totalPrice + float(offer.price)
 
-        return float(totalPrice) * 0.07
+        sysconfi = SystemConfiguration.objects.first()
+
+        return float(totalPrice) * float(sysconfi.profit/100)
         #serializer_class =
 
     def get(self, request, *args, **kwargs):
@@ -333,15 +347,20 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = ZoneSerializer
 
-    def get(self, request, pk=None):
-        language = check_accept_language(request)
+    def get_object(self,  pk=None):
+        if pk is None:
+            try:
+                pk = self.kwargs['pk']
+            except:
+                pass
+        language = check_accept_language(self.request)
         try:
             zone = Zone.objects.get(pk=pk)
             serializer = ZoneSerializer(zone)
             return Response(serializer.data)
 
-        except Zone.DoesNotExist:
-            Assertions.assert_true_raise404(False,
+        except:
+            return Assertions.assert_true_raise404(False,
                                             translate(keyLanguage=language, keyToTranslate="ERROR_ZONE_NOT_FOUND"))
 
     def post(self, request):
@@ -365,7 +384,10 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
     def put(self, request, pk=None):
         language = check_accept_language(request)
         if pk is None:
-            pk = self.kwargs['pk']
+            try:
+                pk = self.kwargs['pk']
+            except:
+                pass
         Assertions.assert_true_raise400(len(request.data) != 0, translate(keyLanguage=language,
                                                                           keyToTranslate="ERROR_EMPTY_FORM_NOT_VALID"))
         language = check_accept_language(request)
@@ -373,7 +395,14 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
 
         Assertions.assert_true_raise403(admin, translate(keyLanguage=language,
                                                          keyToTranslate="ERROR_FORBIDDEN_NO_ADMIN"))
-        zone = Zone.objects.get(pk=pk)
+        Assertions.assert_true_raise400(pk, translate(keyLanguage=language,
+                                                         keyToTranslate="ERROR_ZONE_NOT_FOUND"))
+        try:
+            zone = Zone.objects.get(pk=pk)
+        except:
+            return Assertions.assert_true_raise404(False,
+                                                   translate(keyLanguage=language,
+                                                             keyToTranslate="ERROR_ZONE_NOT_FOUND"))
         serializer = ZoneSerializer(zone, data=request.data, partial=True)
 
         if serializer.validate_zone(request):
@@ -383,9 +412,15 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
         return Response(status=status.HTTP_200_OK)
 
     def delete(self, request, pk=None):
-        if pk is None:
-            pk = self.kwargs['pk']
         language = check_accept_language(request)
+        if pk is None:
+            try:
+                pk = self.kwargs['pk']
+            except:
+                Assertions.assert_true_raise404(False, translate(keyLanguage=language,
+                                                                          keyToTranslate="ERROR_ZONE_NOT_FOUND"))
+
+
         pks = list(Zone.objects.values_list("id", flat=True))
         Assertions.assert_true_raise400(pk, translate(keyLanguage=language,
                                                         keyToTranslate="ERROR_ZONE_NOT_FOUND"))
@@ -396,7 +431,13 @@ class AdminZoneManagement(generics.RetrieveUpdateDestroyAPIView):
 
         Assertions.assert_true_raise400(int(pk) in pks, translate(keyLanguage=language,
                                                                      keyToTranslate="ERROR_ZONE_NOT_FOUND"))
-        zone = Zone.objects.get(id=pk)
+        try:
+            zone = Zone.objects.get(id=pk)
+        except:
+            return Assertions.assert_true_raise404(False,
+                                                   translate(keyLanguage=language,
+                                                             keyToTranslate="ERROR_ZONE_NOT_FOUND"))
+
         Assertions.assert_true_raise400(zone, translate(keyLanguage=language,
                                                         keyToTranslate="ERROR_ZONE_NOT_FOUND"))
         events = EventLocation.objects.all()

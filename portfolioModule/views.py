@@ -51,6 +51,7 @@ class PortfolioModuleManager(generics.RetrieveUpdateDestroyAPIView):
             raise Assertions.assert_true_raise403(False, translate(language, "ERROR_NOT_AN_ARTIST"))
 
     def delete(self, request, pk=None, format=None):
+
         if pk is None:
             pk = self.kwargs['pk']
         portfolioModule = self.get_object(pk=pk)

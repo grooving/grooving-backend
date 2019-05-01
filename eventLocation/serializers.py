@@ -1,6 +1,8 @@
-from utils.Assertions import assert_true
+from utils.Assertions import assert_true, Assertions
 from rest_framework import serializers
 from Grooving.models import EventLocation, Zone, Customer
+from utils.utils import check_accept_language
+from .internationalization import translate
 
 
 class ZoneSerializer(serializers.ModelSerializer):
@@ -55,24 +57,29 @@ class EventLocationSerializer(serializers.ModelSerializer):
         return eventLocation
 
     def _service_update(self, json: dict, offer_in_db: EventLocation):
-        assert_true(offer_in_db, "No existe una oferta con esa id")
+        assert_true(offer_in_db, "Zone provided hasn't been found")
         offer = self._service_update_status(json, offer_in_db)
 
         return offer
 
     def validate(self, request):
+
+        language = check_accept_language(request)
+
         customer = Customer.objects.filter(user_id=request.user.id).first()
-        if customer is None:
-            raise serializers.ValidationError("user isn't authorized")
+
+        Assertions.assert_true_raise403(customer, translate(language, 'ERROR_CUSTOMER_NOT_FOUND'))
+
         json = request.data
-        if json.get("address") is None or len(json.get("address")) == 0:
-            raise serializers.ValidationError("address field not provided")
-        if json.get("zone_id") is None:
-            raise serializers.ValidationError("zone_id field not provided")
-        else:
-            zone: Zone = Zone.objects.filter(pk=json.get("zone_id")).first()
-            if zone is None:
-                raise serializers.ValidationError("zone doesn't exist")
-            elif zone.zone_set.count() != 0:
-                raise serializers.ValidationError("zone_id " + str(zone.id) + " can't be assigned")
+
+        Assertions.assert_true_raise400(json.get("address"), translate(language, 'ERROR_ADDRESS_NOT_PROVIDED'))
+
+        Assertions.assert_true_raise400(json.get("zone_id"), translate(language, 'ERROR_ZONE_NOT_PROVIDED'))
+
+        zone: Zone = Zone.objects.filter(pk=json.get("zone_id")).first()
+
+        Assertions.assert_true_raise400(zone, translate(language, 'ERROR_ZONE_NOT_FOUND'))
+
+        Assertions.assert_true_raise400(zone.zone_set.count() == 0, translate(language, 'ERROR_ZONE_CAN_NOT_ASSIGNED'))
+
         return True
