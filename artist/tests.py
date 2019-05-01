@@ -25,6 +25,7 @@ class RegisterTestCase(APITransactionTestCase):
         print("------------- Starting test -------------")
 
         payload = [
+
             # Test positivo 1, crea un artista con language en español
             ["David", "Romero Esparraga", "artist1", "elArtistaEspañol", "elArtistaEspañol", "utri2099@gmail.com",
              "http://www.google.com/image.png", "El chungo de Pinoloco", "es", status.HTTP_201_CREATED],
@@ -34,7 +35,7 @@ class RegisterTestCase(APITransactionTestCase):
              "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_201_CREATED],
 
             # Test positivo 3, crea un artista con el nombre artístico ya existente
-            ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri210das0@gmail.com",
+            ["Miguel", "Barahona Estevez", "sdadwa", "elArtistaIngles", "elArtistaIngles", "utri210das0@gmail.com",
              "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
 
             # Test positivo 4, crea un artista con un correo ya existente
@@ -65,41 +66,69 @@ class RegisterTestCase(APITransactionTestCase):
             ["Policarco", "Mi123$", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 11, crea un artista con password None
+            # Test negativo 11, crea un artista con username None
+            ["Policarco", "Mi123$", None, "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 12, crea un artista con username vacío
+            ["Policarco", "Hernandez", "", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 13, crea un artista con username ya existente
+            ["Policarco", "Hernandez", "artist1", "elArtistaIngles", "elArtistaIngles", "utri28100@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 14, crea un artista con password None
             ["Policarco", "Mi123$", "artist2", None, "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 12, crea un artista con password vacía
+            # Test negativo 15, crea un artista con password vacía
             ["Policarco", "Miguelin", "artist2", "", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 13, crea un artista con tamaño menor a 7 caracteres
+            # Test negativo 16, crea un artista con tamaño menor a 7 caracteres
             ["Policarco", "Miguelin", "artist2", "123456", "123456", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 14, crea un artista con tamaño menor a 7 caracteres
+            # Test negativo 17, crea un artista con tamaño menor a 7 caracteres
             ["Policarco", "Miguelin", "artist2", "1234g6gt", None, "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 15, crea un artista con tamaño menor a 7 caracteres
+            # Test negativo 18, crea un artista con tamaño menor a 7 caracteres
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 16, crea un artista con contraseñas que no coinciden
+            # Test negativo 19, crea un artista con contraseñas que no coinciden
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "fsdgsdfgsdfgs", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 17, crea un artista con contraseñas que no coinciden
-            ["Policarco", "Miguelin", "artist2", "1234g6gt", "fsdgsdfgsdfgs", "utri210dada0@gmail.com",
-             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
-
-            # Test negativo 18, crea un artista con contraseñas que no coinciden
+            # Test negativo 20, crea un artista con contraseñas poco seguras
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "",
              "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 19, crea un artista con contraseñas que no coinciden
-            ["Policarco", "Miguelin", "artist2", "1234g6g123t", "1234g6g123t", "hola@gmail.com",
+            # Test negativo 21, crea un artista con contraseñas poco seguras
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 22, crea un artista con email no valido
+            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "holdasda",
+             "http://www.google.com/image.png", "El chungo de Amate", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 23, crea un artista con imagen no válida
+            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
+             "http:/ /www.google.com/image.png", "El chungo de Torreblanca", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 24, crea un artista con imagen vacío
+            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
+             "h", "El chungo de Torreblanca", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 25, crea un artista con language None
+            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "El chungo de Torreblanca", None, status.HTTP_400_BAD_REQUEST],
+
+            # Test negativo 26, crea un artista con language no soportado
+            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
+             "http:/ /www.google.com/image.png", "El chungo de Torreblanca", "pt", status.HTTP_400_BAD_REQUEST],
 
         ]
         print("-------- Creating artist testing --------")
