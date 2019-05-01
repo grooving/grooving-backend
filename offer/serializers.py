@@ -204,7 +204,8 @@ class OfferSerializer(serializers.ModelSerializer):
                                                  'CONTRACT_MADE': 'CANCELLED_CUSTOMER'}
 
                 if json_status == 'CANCELLED_CUSTOMER':
-
+                    Assertions.assert_true_raise400(json.get('reason'),
+                                                    translate(language, 'ERROR_REASON_NOT_PROVIDED'))
                     if settings.BRAINTREE_PRODUCTION:
                         braintree_env = braintree.Environment.Production
                     else:
@@ -315,6 +316,9 @@ class OfferSerializer(serializers.ModelSerializer):
 
                 elif json_status == 'REJECTED':
 
+                    Assertions.assert_true_raise400(json.get('reason'),
+                                                    translate(language, 'ERROR_REASON_NOT_PROVIDED'))
+
                     if settings.BRAINTREE_PRODUCTION:
                         braintree_env = braintree.Environment.Production
                     else:
@@ -356,6 +360,9 @@ class OfferSerializer(serializers.ModelSerializer):
                         braintree.Transaction.void(offer_in_db.transaction.braintree_id)
 
                 elif json_status == 'CANCELLED_ARTIST':
+
+                    Assertions.assert_true_raise400(json.get('reason'),
+                                                    translate(language, 'ERROR_REASON_NOT_PROVIDED'))
 
                     if settings.BRAINTREE_PRODUCTION:
                         braintree_env = braintree.Environment.Production
@@ -419,7 +426,7 @@ class OfferSerializer(serializers.ModelSerializer):
             print("ESTADO DB ANTES:" + offer_in_db.status)
             offer_in_db.status = json_status
             offer_in_db.reason = json.get('reason')
-            #Assertions.assert_true_raise400(json.get('reason'), translate(language, 'ERROR_REASON_NOT_PROVIDED'))
+
             if json_status == "CONTRACT_MADE" or json_status == "PAYMENT_MADE":
                 offer_in_db.reason = None
             offer_in_db.save()
