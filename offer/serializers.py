@@ -493,7 +493,7 @@ class OfferSerializer(serializers.ModelSerializer):
 
         elif paymentPackage.custom is not None:
             price = json.get('price')
-            Assertions.assert_true_raise400(json.get("price"),
+            Assertions.assert_true_raise400(json.get("price") and isinstance(json.get("price"), float),
                                             translate(language, 'ERROR_PRICE_NOT_PROVIDED'))
             Assertions.assert_true_raise400(0.0 < price and price >= paymentPackage.custom.minimumPrice,
                                             translate(language, 'ERROR_PRICE_BELOW_MUNIMUM'))
