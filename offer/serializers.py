@@ -419,7 +419,7 @@ class OfferSerializer(serializers.ModelSerializer):
             print("ESTADO DB ANTES:" + offer_in_db.status)
             offer_in_db.status = json_status
             offer_in_db.reason = json.get('reason')
-            Assertions.assert_true_raise400(json.get('reason'), translate(language, 'ERROR_REASON_NOT_PROVIDED'))
+            #Assertions.assert_true_raise400(json.get('reason'), translate(language, 'ERROR_REASON_NOT_PROVIDED'))
             if json_status == "CONTRACT_MADE" or json_status == "PAYMENT_MADE":
                 offer_in_db.reason = None
             offer_in_db.save()

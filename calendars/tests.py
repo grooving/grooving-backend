@@ -1,62 +1,113 @@
-'''from Grooving.models import Offer,  Artist, Portfolio, User, Calendar, PaymentPackage, Customer
-from Grooving.models import EventLocation, Zone, Performance
+'''from Grooving.models import  Artist, Portfolio, User,  PaymentPackage, Customer, EventLocation, Zone, \
+    Performance, SystemConfiguration
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
-from rest_framework.test import APITestCase
-import datetime
-import pytz
+from rest_framework.test import APITransactionTestCase
 
 
-class CalendarTestCase(APITestCase):
+class CalendarTestCase(APITransactionTestCase):
 
-    def test_manage_calendar_artist(self):
+    def setUp(self):
+        your_email = 'pruebatestinggrooving@gmail.com'
+        print('-------- Setup test --------')
 
-        days = ['2019-06-02', '2019-08-02', '2019-10-15', '2019-11-02']
-        date = datetime.datetime(2020,2,7,8,49,56,81433, pytz.UTC)
+        print('---- Creating calendar test ----')
 
-        user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
-                                            first_name='Cdds', last_name='Pedro',
-                                            email='artist1@gmail.com')
-        user1_artist1.save()
+        print('---- Creating user ----')
 
-        user1_customer1 = User.objects.create(username='customer1', password=make_password('customer1customer1'),
-                                              first_name='Cdds', last_name='Pedro',
-                                              email='customer1@gmail.com')
-        user1_customer1.save()
+        user1_artist10 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
+                                             first_name='Carlos', last_name='Campos Cuesta',
+                                             email=your_email)
+        Token.objects.create(user=user1_artist10)
 
-        zone1 = Zone.objects.create(name="Sevilla Sur")
-        zone1.save()
+        print('---- Creating artist ----')
 
-        portfolio1 = Portfolio.objects.create(artisticName="Juanartist")
+        artist1 = Artist.objects.create(user=user1_artist10, rating=5.0, phone='600304999',
+                                        language='en',
+                                        photo='https://img.discogs.com/jgyNBtPsY4DiLegwMrOC9N_yOc4=/600x600/smart/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/A-1452461-1423476836-6354.jpeg.jpg',
+                                        iban='ES6621000418401234567891', paypalAccount='tamta.info@gmail.com')
+
+        user2_customer1 = User.objects.create(username='customer1', password=make_password('customer1customer1'),
+                                              first_name='Rafael', last_name='Esquivias Ramírez',
+                                              email=your_email)
+        Token.objects.create(user=user2_customer1)
+
+        print('---- Creating customer ----')
+
+        customer1 = Customer.objects.create(user=user2_customer1, phone='639154189', holder='Rafael Esquivias Ramírez',
+                                            expirationDate='2020-10-01', number='4651001401188232',
+                                            language='en',
+                                            paypalAccount='rafesqram@gmail.com')
+
+        print('---- Creating zone ----')
+
+        zone1 = Zone.objects.create(name='Andalucía')
+
+        print('---- Creating portfolio ----')
+
+        portfolio1 = Portfolio.objects.create(artist=artist1, artisticName="Los rebujitos")
         portfolio1.zone.add(zone1)
         portfolio1.save()
 
-        artist1 = Artist.objects.create(user=user1_artist1, portfolio=portfolio1, phone='600304999')
-        artist1.save()
+        SystemConfiguration.objects.create(minimumPrice=20.0, currency='EUR', paypalTax='3.4', creditCardTax='1.9',
+                                           vat='21',
+                                           profit='10',
+                                           corporateEmail='grupogrooving@gmail.com',
+                                           reportEmail='grupogrooving@gmail.com',
+                                           appName='Grooving',
+                                           slogan='Connecting artist with you',
+                                           logo='',
+                                           privacyText_en='Privacity',
+                                           privacyText_es='Privacidad',
+                                           aboutUs_en='About us',
+                                           aboutUs_es='Sobre nosotros',
+                                           termsText_es='Términos y condiciones',
+                                           termsText_en='Terms and conditions')
+    # Driver function
 
-        performance1 = Performance.objects.create(info="info", hours=3, price=200.0, currency="EUR")
-        performance1.save()
-        payment_package1 = PaymentPackage.objects.create(description="Paymentcription", appliedVAT="0.35",
-                                                         portfolio=portfolio1, performance=performance1)
+    def test_driver_create_offer(self):
 
-        payment_package1.save()
-
-        calendar1 = Calendar.objects.create(days=days, portfolio=portfolio1)
-        calendar1.save()
-
-        data1 = {"username": "artist1", "password": "artist1artist1"}
+        print('Start test')
+        data1 = {"username": "customer1", "password": "customer1customer1"}
         response = self.client.post("/api/login/", data1, format='json')
 
         token_num = response.get('x-auth')
-        token = Token.objects.all().filter(pk=token_num).first()
-        print(token.key)
-        self.assertEqual(response.status_code, 200)
 
-        data = {"days": ['2019-06-02', '2019-08-03', '2019-10-15', '2019-11-02']}
+        #Para evitar problemas si el token no existe en bd
+        token = ''
+        try:
+            token = Token.objects.all().filter(pk=token_num).first().key
+        except:
+            pass
+        # Data payload
+        portfolio1 = Portfolio.objects.get(artisticName="Los rebujitos")
+        payload = [
+                # Test positivo, crear un calendar sin incidencias
+                [token, ['2019-09-20'], portfolio1.id, 201]]#,
+                # Test negativo - Fecha incorrecta
+                #[token, 'Descripcion2', '2019 10:00:00', 1, portfolio1.id, 400],
+                # Test negativo - Descripcion incorrecta
+                #[token, '', '2019-05-10T10:00:00', 1, portfolio1.id, 400]]
 
-        response1 = self.client.put('/calendar/{}/'.format(calendar1.id), data, format='json',
-                                    HTTP_AUTHORIZATION='Token '+token.key)
-        self.assertEqual(response1.status_code, 200)
-        print(response1)
+        for data in payload:
+            self.template_create_offer(data)
 
-        print(Calendar.objects.filter(pk=calendar1.id).first().days)'''
+    def generateData(self, args):
+        return {'days': args[1],
+                'portfolio': args[2]}
+
+    # Template function
+
+    def template_create_offer(self, args):
+
+        data = self.generateData(args)
+
+        response_es = self.client.post('/offer/', data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+                                    HTTP_ACCEPT_LANGUAGE='es')
+
+        self.assertEqual(args[-1], response_es.status_code)
+
+        response_en = self.client.post('/offer/', data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+                                    HTTP_ACCEPT_LANGUAGE='en')
+
+        self.assertEqual(args[-1], response_en.status_code)'''
