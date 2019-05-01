@@ -103,6 +103,12 @@ class OfferTestCase(APITransactionTestCase):
 
         data = self.generateData(args)
 
-        response = self.client.post('/offer/', data, format='json',HTTP_AUTHORIZATION='Token ' + str(user.auth_token))
+        response_es = self.client.post('/offer/', data, format='json',HTTP_AUTHORIZATION='Token ' + str(user.auth_token),
+                                    HTTP_ACCEPT_LANGUAGE='es')
 
-        self.assertEqual(args[-1], response.status_code)
+        self.assertEqual(args[-1], response_es.status_code)
+
+        response_en = self.client.post('/offer/', data, format='json', HTTP_AUTHORIZATION='Token ' + str(user.auth_token),
+                                    HTTP_ACCEPT_LANGUAGE='en')
+
+        self.assertEqual(args[-1], response_en.status_code)
