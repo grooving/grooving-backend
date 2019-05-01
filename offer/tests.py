@@ -72,16 +72,21 @@ class OfferTestCase(APITransactionTestCase):
     def test_driver_create_offer(self):
 
         print('Start test')
+        data1 = {"username": "customer1", "password": "customer1customer1"}
+        response = self.client.post("/api/login/", data1, format='json')
+
+        token_num = response.get('x-auth')
+        token = Token.objects.all().filter(pk=token_num).first().key
 
         # Data payload
         portfolio1 = Portfolio.objects.get(artisticName="Los rebujitos")
         payload = [
                 # Test positivo, crear oferta a un PERFORMANCE package
-                ['customer1', 'Descripcion1', '2019-05-10T10:00:00', 1, portfolio1.id, 201],
+                [token, 'Descripcion1', '2019-05-10T10:00:00', 1, portfolio1.id, 201],
                 # Test negativo - Fecha incorrecta
-                ['customer1', 'Descripcion2', '2019 10:00:00', 1, portfolio1.id, 400],
+                [token, 'Descripcion2', '2019 10:00:00', 1, portfolio1.id, 400],
                 # Test negativo - Descripcion incorrecta
-                ['customer1', '', '2019-05-10T10:00:00', 1, portfolio1.id, 400]]
+                [token, '', '2019-05-10T10:00:00', 1, portfolio1.id, 400]]
 
         for data in payload:
             self.template_create_offer(data)
@@ -96,19 +101,14 @@ class OfferTestCase(APITransactionTestCase):
 
     def template_create_offer(self, args):
 
-        # Get user to make request
-        user = User.objects.get(username=args[0])
-        if user is None:
-            raise Exception('Unknown username')
-
         data = self.generateData(args)
 
-        response_es = self.client.post('/offer/', data, format='json',HTTP_AUTHORIZATION='Token ' + str(user.auth_token),
+        response_es = self.client.post('/offer/', data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
                                     HTTP_ACCEPT_LANGUAGE='es')
 
         self.assertEqual(args[-1], response_es.status_code)
 
-        response_en = self.client.post('/offer/', data, format='json', HTTP_AUTHORIZATION='Token ' + str(user.auth_token),
+        response_en = self.client.post('/offer/', data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
                                     HTTP_ACCEPT_LANGUAGE='en')
 
         self.assertEqual(args[-1], response_en.status_code)
