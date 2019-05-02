@@ -26,11 +26,11 @@ class ImageManager(generics.UpdateAPIView):
         user = None
         if customer is not None:
             user = customer
-            #delete_orphan_files(user, "CUSTOMER")
+            delete_orphan_files(user, "CUSTOMER")
         elif artist is not None:
             user = artist
-            #delete_orphan_files(user, "ARTIST")
-            #delete_orphan_carousels(user)
+            delete_orphan_files(user, "ARTIST")
+            delete_orphan_carousels(user)
         Assertions.assert_true_raise403(user is not None, {"error": "ERROR_NOT_LOG_IN"})
 
 
@@ -204,6 +204,7 @@ def register_profile_photo_upload(base64, extension, user):
     file.save()
 
     return file.file.url
+
 
 def delete_all_photos_on_amazon_by_user(user):
     files = Upload.objects.filter(userId=user.user_id)
