@@ -65,9 +65,12 @@ class CalendarTestCase(APITransactionTestCase):
         portfolio1.zone.add(zone1)
 
         calendar = Calendar.objects.create(days=[], portfolio=portfolio1)
-
+        portfolio1.calendar = calendar
+        portfolio1.save()
         portfolio2 = Portfolio.objects.create(artist=artist2, artisticName="El gran Grooviny")
         portfolio2.zone.add(zone1)
+        calendar2 = Calendar.objects.create(days=[], portfolio=portfolio2)
+
 
 
 
@@ -125,8 +128,10 @@ class CalendarTestCase(APITransactionTestCase):
             pass
         # Data payload
         portfolio = Portfolio.objects.get(artisticName="Los rebujitos")
+        portfolio2 = Portfolio.objects.get(artisticName="El gran Grooviny")
 
-        print(portfolio)
+        artist2 = portfolio2.artist
+
 
         portfolioId = portfolio.id
 
@@ -141,27 +146,27 @@ class CalendarTestCase(APITransactionTestCase):
             #Token, days, id portfolio, HTTP response
 
             #Test positivo 1, con dia
-            [token, ['2019-09-20'], portfolioId, calendar.id, 200],
+            [token3, ['2019-09-20'], portfolio2.id, artist2.id, 200],
             #Test negativo 1, fecha equivocada
-            [token, ['2019/08/20'], portfolioId, calendar.id, 400],
+            [token3, ['2019/08/20'], portfolio2.id, artist2.id, 400],
             # Test negativo 2, id invalido
-            [token, ['2019-08-20'], 'a', calendar.id, 400],
+            [token3, ['2019-08-20'], 'a', artist2.id, 400],
             # Test negativo 3, no se pasan días al calendar
-            [token, '', portfolioId, calendar.id, 400],
+            [token3, '', portfolio2.id, artist2.id, 400],
             # Test negativo 4, no se pasan días al calendar (ahora es un None)
-            [token, None, portfolioId, calendar.id, 400],
+            [token3, None, portfolio2.id, artist2.id, 400],
             # Test negativo 5, no se pasa un id de portfolio
-            [token, [], None, calendar.id, 400],
+            [token3, [], None, artist2.id, 400],
             # Test negativo 6, se pasa un id 0 de portfolio
-            [token, [], 0, calendar.id, 400],
+            [token3, [], 0, artist2.id, 400],
             # Test negativo 7, customer
-            [token2, ['2019-09-20'], portfolioId, calendar.id, 403],
+            [token2, ['2019-09-20'], portfolio2.id, artist2.id, 403],
             # Test negativo 8, artist incorrecto
-            [token3, [], portfolioId, calendar.id, 403],
+            [token, [], portfolio2.id, artist2.id, 403],
             #Test negativo 9, no se pasa un array
-            [token, '2019-09-14', portfolioId, calendar.id, 400],
+            [token3, '2019-09-14', portfolio2.id, artist2.id, 400],
             # Test negativo 10, anónimo entra
-            ['Pyke', [], portfolioId, calendar.id, 401]
+            ['Pyke', [], portfolio2.id, artist2.id, 401]
 
         ]
         contador = 0
