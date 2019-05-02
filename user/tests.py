@@ -6,7 +6,6 @@ from django.contrib.auth.hashers import make_password
 
 
 class BanAndUnbanTestCase(APITransactionTestCase):
-
     sharedData = {
     }
 
@@ -58,8 +57,8 @@ class BanAndUnbanTestCase(APITransactionTestCase):
                                            paypalAccount="customer1fortest@gmail.com")
         customer.save()
 
-        self.sharedData["customer_id"] = artist.id
-        self.sharedData["customer_user_id"] = user_artist.id
+        self.sharedData["customer_id"] = customer.id
+        self.sharedData["customer_user_id"] = user_customer.id
 
     def generate_data(self, args):
         return {
@@ -202,6 +201,14 @@ class BanAndUnbanTestCase(APITransactionTestCase):
 
 class RightToBeForgottenUserTestCase(APITransactionTestCase):
 
+    sharedData = {
+    }
+
+    def generate_data(self, args):
+        return {
+            "id": args[1]  # user_id
+        }
+
     def setUp(self):
         # Creating an artist
 
@@ -209,6 +216,7 @@ class RightToBeForgottenUserTestCase(APITransactionTestCase):
                                           first_name='Carlos', last_name='Campos Cuesta',
                                           email="artist1fortest@gmail.com")
         Token.objects.create(user=user_artist)
+
         user_artist.save()
 
         artist = Artist.objects.create(user=user_artist, rating=4.5, phone='600304999',
@@ -218,29 +226,18 @@ class RightToBeForgottenUserTestCase(APITransactionTestCase):
                                        paypalAccount='artist1fortest@gmail.com')
         artist.save()
 
-        user_artist2 = User.objects.create(username='artist2', password=make_password('artista2'),
-                                           first_name='Carlos', last_name='Campos Cuesta',
-                                           email="artist1fortest@gmail.com")
-        Token.objects.create(user=user_artist2)
-        user_artist2.save()
-
-        artist2 = Artist.objects.create(user=user_artist2, rating=4.5, phone='600304999',
-                                        language='en',
-                                        photo='https://upload.wikimedia.org/wikipedia/commons/e/e7/Robin_Clark_%28DJ%29_Live_at_Techno4ever_net_Bday_Rave.jpg',
-                                        iban='ES6621000418401234567891',
-                                        paypalAccount='artist1fortest@gmail.com')
-        artist2.save()
+        self.sharedData["artist_id"] = artist.id
+        self.sharedData["artist_user_id"] = user_artist.id
 
         portfolio = Portfolio.objects.create(artisticName='Tamta',
-                                               artist=artist,
-                                               banner='http://www.ddi.com.au/wp-content/uploads/AdobeStock_115567415.jpeg',
-                                               biography='Tamta, is a Georgian-Greek singer. She first achieved popularity in Greece and Cyprus in 2004 for her participation in Super Idol Greece, in which she placed second. She went on to release several charting albums and singles in Greece and Cyprus. Goduadze became a mentor on X Factor Georgia in 2014, and The X Factor Greece in 2016.')
+                                             artist=artist,
+                                             banner='http://www.ddi.com.au/wp-content/uploads/AdobeStock_115567415.jpeg',
+                                             biography='Tamta, is a Georgian-Greek singer. She first achieved popularity in Greece and Cyprus in 2004 for her participation in Super Idol Greece, in which she placed second. She went on to release several charting albums and singles in Greece and Cyprus. Goduadze became a mentor on X Factor Georgia in 2014, and The X Factor Greece in 2016.')
         portfolio.save()
-
 
         # Creating a customer
 
-        user_customer = User.objects.create(username='customer1', password=make_password('customer1customer1'),
+        user_customer = User.objects.create(username='customer1', password=make_password('cliente1'),
                                             first_name='Rafael', last_name='Esquivias Ramírez',
                                             email="customer1fortest@gmail.com")
         Token.objects.create(user=user_customer)
@@ -250,16 +247,66 @@ class RightToBeForgottenUserTestCase(APITransactionTestCase):
                                            expirationDate='2020-10-01', number='4651001401188232',
                                            language='en',
                                            paypalAccount="customer1fortest@gmail.com")
+        customer.save()
+
+        self.sharedData["customer_id"] = customer.id
+        self.sharedData["customer_user_id"] = user_customer.id
 
         # Andalucía
-        zone2 = Zone.objects.create(name='Sevilla', parentZone=zone1_0)
-        zone2.save()
+        zone = Zone.objects.create(name='Sevilla')
+        zone.save()
 
         event_location1 = EventLocation.objects.create(name='Event 1 - Festival Rockupo',
                                                        address='Universidad Pablo de Olavide', equipment='No',
-                                                       zone=zone2,
+                                                       zone=zone,
                                                        customer=customer)
         event_location1.save()
+
+    def test_right_to_be_forgotten(self):
+        print("------------- Starting test -------------")
+
+        artist_data = {"username": "artist1", "password": "artista1"}
+        response_artist = self.client.post("/api/login/", artist_data, format='json')
+
+        customer_data = {"username": "customer1", "password": "cliente1"}
+        response_customer = self.client.post("/api/login/", customer_data, format='json')
+
+        token_num_artist = response_artist.get("x-auth")
+        token_artist = Token.objects.all().filter(pk=token_num_artist).first().key
+        token_num_customer = response_customer.get("x-auth")
+        token_customer = Token.objects.all().filter(pk=token_num_customer).first().key
+
+        payload = [
+            # Negative test 1, forgotten user that Token is None
+            [None, "es", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 2, forgotten user that Token doesn't exists
+            ["d123dqwd", "es", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 3, forgotten user that Token is integer
+            [1, "es", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 4, forgotten user that language set None
+            [token_customer, None, status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 5, forgotten user that language doesn't exists
+            [token_artist, "ds", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 6, forgotten user that language set to integer
+            [token_artist, 1, status.HTTP_400_BAD_REQUEST],
+
+            # Positive test 7, forgotten artist
+            [token_artist, "es", status.HTTP_204_NO_CONTENT],
+
+            # Negative test 8, forgotten artist that has been deleted previously
+            [token_artist, "es", status.HTTP_401_UNAUTHORIZED],
+
+            # Positive test 9, forgotten customer
+            [token_customer, "es", status.HTTP_204_NO_CONTENT],
+
+            # Negative test 10, forgotten customer that has been deleted previously
+            [token_customer, "es", status.HTTP_401_UNAUTHORIZED],
+        ]
 
         print("-------- Right to be forgotten testing --------")
 
@@ -276,13 +323,15 @@ class RightToBeForgottenUserTestCase(APITransactionTestCase):
 
         data = self.generate_data(args)
 
-        response = self.client.put("/user/", data, format="json",
-                                   HTTP_AUTHORIZATION='Token ' + str(args[0]),
-                                   HTTP_ACCEPT_LANGUAGE=language)
+        response = self.client.delete("/user/", data, format="json",
+                                      HTTP_AUTHORIZATION='Token ' + str(args[0]),
+                                      HTTP_ACCEPT_LANGUAGE=language)
 
         self.assertEqual(status_expected, response.status_code)
 
         print("\nOk - Status expected: " + str(status_expected) + "\n")
+
+
 '''
 class UserTestCase(APITestCase):
 
