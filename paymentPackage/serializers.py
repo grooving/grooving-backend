@@ -124,7 +124,7 @@ class FareSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(price_hour, translate(keyLanguage=language,
                                                               keyToTranslate="ERROR_PRICE_NOT_PROVIDED"))
 
-        Assertions.assert_true_raise400(isPositivefloat(price_hour), translate(keyLanguage=language,
+        Assertions.assert_true_raise400(isPositivefloat(price_hour) and float(price_hour) >= SystemConfiguration.objects.all().first().minimumPrice, translate(keyLanguage=language,
                                                                                keyToTranslate="ERROR_INVALID_PRICE"))
 
 
@@ -143,7 +143,7 @@ class FareSerializer(serializers.ModelSerializer):
         price_hour = json.get('priceHour')
         Assertions.assert_true_raise400(price_hour, translate(keyLanguage=language,
                                                               keyToTranslate="ERROR_PRICE_NOT_PROVIDED"))
-        Assertions.assert_true_raise400(isPositivefloat(price_hour), translate(keyLanguage=language,
+        Assertions.assert_true_raise400(isPositivefloat(price_hour) and float(price_hour) >= SystemConfiguration.objects.all().first().minimumPrice, translate(keyLanguage=language,
                                                                                keyToTranslate="ERROR_INVALID_PRICE"))
 
 
@@ -187,7 +187,7 @@ class CustomSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(minimum_price, translate(keyLanguage=language,
                                                                  keyToTranslate="ERROR_MINIMUM_PRICE_NOT_PROVIDED"))
 
-        Assertions.assert_true_raise400(isPositivefloat(minimum_price), translate(keyLanguage=language,
+        Assertions.assert_true_raise400(isPositivefloat(minimum_price) and float(minimum_price) >= SystemConfiguration.objects.all().first().minimumPrice, translate(keyLanguage=language,
                                                                                   keyToTranslate="ERROR_INVALID_PRICE"))
 
         custom = Custom.objects.create(minimumPrice=minimum_price)
@@ -207,7 +207,7 @@ class CustomSerializer(serializers.ModelSerializer):
                                         translate(keyLanguage=language,
                                                   keyToTranslate="ERROR_MINIMUM_PRICE_NOT_PROVIDED"))
 
-        Assertions.assert_true_raise400(isPositivefloat(minimumPrice),
+        Assertions.assert_true_raise400(isPositivefloat(minimumPrice) and float(minimumPrice) >= SystemConfiguration.objects.all().first().minimumPrice,
                                         translate(keyLanguage=language,
                                                   keyToTranslate="ERROR_INVALID_PRICE"))
 
@@ -280,7 +280,7 @@ class PerformanceSerializer(serializers.ModelSerializer):
                                                         keyToTranslate="ERROR_PRICE_NOT_PROVIDED"))
         Assertions.assert_true_raise400(isPositivefloat(hours), translate(keyLanguage=language,
                                                         keyToTranslate="ERROR_INVALID_HOURS"))
-        Assertions.assert_true_raise400(isPositivefloat(price), translate(keyLanguage=language,
+        Assertions.assert_true_raise400(isPositivefloat(price) and float(price) >= SystemConfiguration.objects.all().first().minimumPrice, translate(keyLanguage=language,
                                                              keyToTranslate="ERROR_INVALID_PRICE"))
 
         performance.hours = json.get('hours')
