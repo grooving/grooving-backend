@@ -98,7 +98,7 @@ class OfferTestCase(APITransactionTestCase):
                              appliedVAT=7, paymentPackage=farePackage,
                              eventLocation=event_location1, transaction=transaction3)
 
-        SystemConfiguration.objects.create(minimumPrice=20.0, currency='EUR', paypalTax='3.4', creditCardTax='1.9',
+        SystemConfiguration.objects.create(pk = 1,minimumPrice=20.0, currency='EUR', paypalTax='3.4', creditCardTax='1.9',
                                            vat='21',
                                            profit='10',
                                            corporateEmail='grupogrooving@gmail.com',
@@ -397,8 +397,8 @@ class OfferTestCase(APITransactionTestCase):
 
         offer.status = 'PENDING'
         offer.save()
-        offer.transaction.paypalArtist = None
-        offer.transaction.braintree_id = None
+        #offer.transaction.paypalArtist = None
+        #offer.transaction.braintree_id = None
         offer.transaction.save()
 
         response_accept_offer_en = self.client.put('/offer/' + str(offer.id) + '/', dataAcceptOffer,

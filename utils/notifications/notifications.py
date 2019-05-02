@@ -251,7 +251,7 @@ class Notifications:
         # Entity database objects (necessary from template & email)
 
         offer = Offer.objects.filter(pk=offer_id).first()
-        system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        system_configuration = SystemConfiguration.objects.all().first()
         language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
         language_customer = get_language(offer.eventLocation.customer.user)
 
@@ -393,7 +393,7 @@ class Notifications:
         # Entity database objects (necessary from template & email)
 
         offer = Offer.objects.filter(pk=offer_id).first()
-        system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        system_configuration = SystemConfiguration.objects.all().first()
         language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
         language_customer = get_language(offer.eventLocation.customer.user)
 
@@ -476,7 +476,7 @@ class Notifications:
         # Entity database objects (necessary from template & email)
 
         offer = Offer.objects.filter(pk=offer_id).first()
-        system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        system_configuration = SystemConfiguration.objects.all().first()
         language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
         language_customer = get_language(offer.eventLocation.customer.user)
 
@@ -554,7 +554,7 @@ class Notifications:
         # Entity database objects (necessary from template & email)
 
         offer = Offer.objects.filter(pk=offer_id).first()
-        system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        system_configuration = SystemConfiguration.objects.all().first()
         language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
         language_customer = get_language(offer.eventLocation.customer.user)
 
@@ -665,7 +665,7 @@ class Notifications:
         # Entity database objects (necessary from template & email)
 
         user = User.objects.filter(pk=user_id).first()
-        system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        system_configuration = SystemConfiguration.objects.all().first()
         language = get_language(user)
 
         # Email
