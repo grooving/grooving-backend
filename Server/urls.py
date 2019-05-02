@@ -33,7 +33,7 @@ from zone.views import ZoneManager, CreateZone, ListZones
 from eventLocation.views import EventLocationManager, CreateEventLocation
 from rating.views import GetRatings, PostRating
 from utils.utils import TermsAndConditions, Privacy, AboutUs
-from braintrees.views import BraintreeViews
+from braintrees.views import BraintreeViews,PayPaypal
 from emails.views import SendMailDataBreach, DownloadPersonalData
 from rest_framework.authtoken.views import obtain_auth_token
 from utils.utils import TermsAndConditions
@@ -73,6 +73,7 @@ urlpatterns = [
     url(r'^artisticGender/$', CreateArtisticGender.as_view()),
     url(r'^artisticGenders/$', ListArtisticGenders.as_view()),
     url(r'^artisticGender/(?P<pk>[0-9]+)/$', ArtisticGenderManager.as_view()),
+    url(r'^artisticGender/admin/(?P<pk>[0-9]+)/$', CreateArtisticGender.as_view()),
     url(r'^zone/$', CreateZone.as_view()),
     url(r'^zone/(?P<pk>[0-9]+)/$', ZoneManager.as_view()),
     path('api/login/', LoginManager.as_view(), name='login'),
@@ -133,5 +134,7 @@ urlpatterns = [
     url(r'^admin/zone/(?P<pk>[0-9]+)/$', AdminZoneManagement.as_view()),
     url(r'^admin/zone/', AdminZoneManagement.as_view()),
     url(r'^image/', ImageManager.as_view()),
+
+    url(r'^payPaypal/$', PayPaypal.as_view())
 
 ]

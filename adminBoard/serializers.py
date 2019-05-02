@@ -3,7 +3,7 @@ from Grooving.models import Zone
 from utils.Assertions import Assertions
 from utils.utils import check_accept_language
 from adminBoard.internationalization import translate
-from utils.utils import isPositiveInteger
+
 
 class ZoneSerializer(serializers.ModelSerializer):
 

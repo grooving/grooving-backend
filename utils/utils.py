@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from utils.Assertions import Assertions
 from Grooving.models import Artist, Customer
 import re
+from utils.internationalization import translate
 
 def auto_update_old_offers(offers):
     now = timezone.now()
@@ -159,3 +160,15 @@ def check_special_characters_and_numbers(text):
         result = False
 
     return result
+
+
+def check_inserted_id(idobject, ObjectType, language):
+
+    Assertions.assert_true_raise400(idobject != '' or idobject != 0, translate(language, 'ERROR_VALUE_NULL')),
+    Assertions.assert_true_raise400(idobject is not None, translate(language, 'ERROR_VALUE_NULL'))
+    Assertions.assert_true_raise400(str(idobject).isdigit(), translate(language, 'ERROR_NOT_A_VALID_ID'))
+
+    objectToFind = ObjectType.objects.filter(id=idobject).first
+
+    Assertions.assert_true_raise400(objectToFind, translate(language, 'ERROR_OBJECT_NOT_FOUND'))
+    return True

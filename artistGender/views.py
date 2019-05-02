@@ -6,7 +6,7 @@ from utils.authentication_utils import get_logged_user,get_user_type, get_admin_
 from utils.authentication_utils import get_logged_user, get_user_type, get_admin
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import ArtisticGenderSerializer, SearchGenreSerializer
+from .serializers import ArtisticGenderSerializer, SearchGenreSerializer,ArtisticGenderSerializerOut
 from rest_framework import status
 from utils.Assertions import Assertions
 from utils.utils import check_accept_language
@@ -30,8 +30,9 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, pk=None, format=None):
         if pk is None:
             pk = self.kwargs['pk']
-        portfolio = self.get_object(pk)
-        serializer = ArtisticGenderSerializer(portfolio)
+        language = check_accept_language(request)
+        genre = self.get_object(pk)
+        serializer = ArtisticGenderSerializerOut(genre,context={'language': language})
         return Response(serializer.data)
 
     def put(self, request, pk=None, format=None):
@@ -47,10 +48,10 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
             Assertions.assert_true_raise401(str(id_request).isdigit(), translate(language, "ERROR_INCORRECT_ID"))
             Assertions.assert_true_raise401(id_request == pk_compare, translate(language, "ERROR_INCORRECT_ID"))
 
-            serializer = ArtisticGenderSerializer(artisticGender, data=request.data, partial=True)
+            serializer = ArtisticGenderSerializer(artisticGender, data=request.data, partial=True,context={'language': language})
             if serializer.validate(request.data):
                 serializer.is_valid()
-                serializer.save(pk, loggedUser)
+                serializer.save(language, pk, loggedUser)
                 return Response(status=status.HTTP_201_CREATED)
             else:
                 raise Assertions.assert_true_raise400(False,
@@ -93,17 +94,33 @@ class CreateArtisticGender(generics.CreateAPIView):
     queryset = ArtisticGender.objects.all()
     serializer_class = ArtisticGenderSerializer
 
+    def get_object(self, pk=None):
+        language = check_accept_language(self.request)
+        if pk is None:
+            pk = self.kwargs['pk']
+        try:
+            return ArtisticGender.objects.get(pk=pk)
+        except ArtisticGender.DoesNotExist:
+            raise Assertions.assert_true_raise404(False, translate(language, 'ERROR_ARTISTIC_GENRE_NOT_FOUND'))
+
+    def get(self, request, pk=None, format=None):
+        if pk is None:
+            pk = self.kwargs['pk']
+        language = check_accept_language(request)
+        serializer = SearchGenreSerializer.get_parent_children(language, pk)
+        return Response(serializer)
+
     def post(self, request, *args, **kwargs):
 
         admin = get_admin(request)
         language = check_accept_language(request)
         Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
-        serializer = ArtisticGenderSerializer(data=request.data, partial=True)
+        serializer = ArtisticGenderSerializer(data=request.data, partial=True,context={'language': language})
         if serializer.validate(request.data):
             serializer.is_valid()
-            artisticGender = serializer.save()
-            serialized = ArtisticGenderSerializer(artisticGender)
+            artisticGender = serializer.save(language)
+            serialized = ArtisticGenderSerializer(artisticGender,context={'language': language})
             return Response(serialized.data, status=status.HTTP_201_CREATED)
 
 
@@ -121,37 +138,42 @@ class ListArtisticGenders(generics.RetrieveAPIView):
         portfolio = request.query_params.get("portfolio", None)
         parentId = request.query_params.get("parentId", None)
 
+        language = check_accept_language(request)
+
+        if tree is not None:
+            Assertions.assert_true_raise401(tree == 'true', translate(language,"ERROR_TREE_OPTION"))
+
         genres = None
         if tree is None and portfolio is None and parentId is None:
             genres = list(ArtisticGender.objects.all())
-            serializer = SearchGenreSerializer(genres, many=True)
+            serializer = SearchGenreSerializer(genres, many=True,context={'language': language})
             genres = serializer.data
         elif tree == "true":
-            Assertions.assert_true_raise400(portfolio is None and parentId is None, {"error": "ERROR_ONLY_ONE_OPTION"})
-            genres = SearchGenreSerializer.get_tree()
+            Assertions.assert_true_raise400(portfolio is None and parentId is None, translate(language,"ERROR_ONLY_ONE_OPTION"))
+            genres = SearchGenreSerializer.get_tree(language)
         elif parentId == "true":
-            Assertions.assert_true_raise400(portfolio is None and tree is None, {"error": "ERROR_ONLY_ONE_OPTION"})
-            genres = SearchGenreSerializer.get_children()
+            Assertions.assert_true_raise400(portfolio is None and tree is None, translate(language,"ERROR_ONLY_ONE_OPTION"))
+            genres = SearchGenreSerializer.get_children(language)
 
         elif parentId is not None:
             try:
                 parentId = int(parentId)
             except ValueError:
-                Assertions.assert_true_raise400(False, translate(request.headers['Accept-Language'], "ERROR_INCORRECT_ID"))
+                Assertions.assert_true_raise400(False, translate(request.META['HTTP_ACCEPT_LANGUAGE'], "ERROR_INCORRECT_ID"))
 
-            Assertions.assert_true_raise400(tree is None and portfolio is None, {"error": "ERROR_ONLY_ONE_OPTION"})
-            genres = SearchGenreSerializer.get_children(parentId)
+            Assertions.assert_true_raise400(tree is None and portfolio is None, translate(language, "ERROR_ONLY_ONE_OPTION"))
+            genres = SearchGenreSerializer.get_children(language,parentId)
 
         elif portfolio is not None:
 
             try:
                 portfolio = int(portfolio)
             except ValueError:
-                Assertions.assert_true_raise400(False, {"error": "ERROR_INCORRECT_ID"})
+                Assertions.assert_true_raise400(False, translate(language, "ERROR_INCORRECT_ID"))
 
             portfolio = Portfolio.objects.filter(pk=portfolio).first()
             Assertions.assert_true_raise404(portfolio,
-                                            {'error': 'ERROR_NO_PORTFOLIO'})
+                                            translate(language,'ERROR_NO_PORTFOLIO'))
             genres = portfolio.artisticGender.all()
             count = genres.count()
             child_genres = []
@@ -162,7 +184,7 @@ class ListArtisticGenders(generics.RetrieveAPIView):
                 else:
                     child_genres.extend(childs)
 
-            serializer = SearchGenreSerializer(child_genres, many=True)
+            serializer = SearchGenreSerializer(child_genres, many=True,context={'language': language})
             genres = serializer.data
 
         return Response(genres, status=status.HTTP_200_OK)

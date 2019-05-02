@@ -16,6 +16,8 @@ import requests
 import braintree
 import json
 from requests.auth import HTTPBasicAuth
+from .internationalization import translate
+from utils.utils import check_accept_language
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -86,7 +88,7 @@ class OfferSerializer(serializers.ModelSerializer):
                       'paymentPackage', 'paymentPackage_id', 'eventLocation', 'eventLocation_id','rating')
 
     # Esto sobrescribe una función heredada del serializer.
-    def save(self, pk=None, logged_user=None):
+    def save(self, pk=None, logged_user=None, language='en'):
         if self.initial_data.get('id') is None and pk is None:
             # creation
             offer = Offer()
@@ -97,21 +99,21 @@ class OfferSerializer(serializers.ModelSerializer):
             id = (self.initial_data, pk)[pk is not None]
 
             offer = Offer.objects.filter(pk=id).first()
-            offer = self._service_update(self.initial_data, offer, logged_user)
+            offer = self._service_update(self.initial_data, offer, logged_user, language)
 
         return offer
 
     @staticmethod
-    def service_made_payment_artist(paymentCode, user_logged):
+    def service_made_payment_artist(paymentCode, user_logged, language='en'):
         Assertions.assert_true_raise403(user_logged is not None)
-        Assertions.assert_true_raise400(paymentCode is not None, {"error": "null payment code"})
+        Assertions.assert_true_raise400(paymentCode is not None, translate(language, 'ERROR_NULL_PAYMENT_CODE'))
 
         offer = Offer.objects.filter(paymentCode=paymentCode).first()
-        Assertions.assert_true_raise404(offer, {'error': 'Offer not found'})
+        Assertions.assert_true_raise404(offer, translate(language, 'ERROR_OFFER_NOT_FOUND'))
         Assertions.assert_true_raise403(offer.paymentPackage.portfolio.artist.id == user_logged.id,
-                                            {'error': 'You are not the owner of the offer'})
+                                            translate(language, 'ERROR_OFFER_NOT_OWNER'))
         Assertions.assert_true_raise400(offer.status == 'CONTRACT_MADE',
-                                        {"error": 'The payment has already been made or is outdated'})
+                                        translate(language, 'ERROR_PAYMENT_COMPLETED'))
 
         offer.status = 'PAYMENT_MADE'
 
@@ -122,20 +124,20 @@ class OfferSerializer(serializers.ModelSerializer):
                       auth=HTTPBasicAuth('AZUNfuWGR6SWVjXJo82ariPtUrGOgA7L_QP2sxe8_QHaBuQ2JUT7AN9KnQKTpjT20yOr8l4G_3zlvx3B',
                                          'EPyiDZA9P9vGWLXihX-p5qTfVBZRtMvE1gCV5G2eLHgzbZXWo5VlctjQgIIUr1WPZT-haW5Db_pDJ-3t'))
 
-        Assertions.assert_true_raise400(response, {'error': 'No hay respuesta desde Paypal'})
+        Assertions.assert_true_raise400(response, translate(language, 'ERROR_PAYPAL_NOT_RESPONSE'))
 
-        access_token = json.loads(response.content.decode("utf-8"))['access_token']
+        access_token = response.json()['access_token']
 
-        Assertions.assert_true_raise400(response, {'error': 'No coge el token'})
+        Assertions.assert_true_raise400(response, translate(language, 'ERROR_TOKEN_NOT_TAKEN'))
         Assertions.assert_true_raise401(user_logged.paypalAccount,
-                                        {'paypal': ' You need to provide a PayPal account to perform this action' })
+                                        translate(language, 'ERROR_PAYPAL_CREDENTIALS'))
 
         response = requests.post('https://api.sandbox.paypal.com/v1/payments/payouts',
-                                 data='{"sender_batch_header": {"sender_batch_id": "Payment_Offer_'+str(paymentCode)+'","email_subject": "You have a payout!","email_message": "You have received a payout! Thanks for using our service!"},"items": [{"recipient_type": "EMAIL","amount": {"value": "'+str(offer.transaction.amount)+'","currency": "EUR"},"note": "Thanks for your patronage!","receiver": "'+str(user_logged.paypalAccount)+'"}]}',
+                                 data='{"sender_batch_header": {"sender_batch_id": "Payment_Offer_'+str(paymentCode)+'","email_subject": "You have a payout!","email_message": "You have received a payout! Thanks for using our service!"},"items": [{"recipient_type": "EMAIL","amount": {"value": "'+str(offer.transaction.amount * 0.964)+'","currency": "EUR"},"note": "Thanks for your patronage!","receiver": "'+str(user_logged.paypalAccount)+'"}]}',
                                  headers={'content-type': 'application/json',
                                           'authorization': 'Bearer ' + access_token})
 
-        Assertions.assert_true_raise400(response, {'error': 'No hay respuesta AL PAGAR'})
+        Assertions.assert_true_raise400(response, translate(language, 'ERROR_PAYMENT_NOT_RESPONSE'))
         # except:
         # offer.status == 'CONTRACT_MADE'
         offer.save()
@@ -168,8 +170,6 @@ class OfferSerializer(serializers.ModelSerializer):
             offer.currency = offer.paymentPackage.currency
 
         transaction = Transaction()
-        #Assertions.assert_true_raise400(json.get('transaction').get('amount'), {'error' : 'No amount recieved'})
-        #transaction.amount = json.get('transaction').get('amount')
 
         transaction.save()
 
@@ -178,22 +178,22 @@ class OfferSerializer(serializers.ModelSerializer):
         offer.save()
         return offer
 
-    def _service_update(self, json: dict, offer_in_db: Offer, logged_user: User):
-        assert_true(offer_in_db, "This offer does not exist")
+    def _service_update(self, json: dict, offer_in_db: Offer, logged_user: User, language='en'):
+        assert_true(offer_in_db, translate(language, 'ERROR_OFFER_NOT_FOUND'))
         print(offer_in_db.date)
         now = timezone.now()
 
-        assert_true(offer_in_db.date > now, "The offer ocurred in the past")
-        offer = self._service_update_status(json, offer_in_db, logged_user)
+        assert_true(offer_in_db.date > now, translate(language, 'ERROR_OFFER_PAST_DATE'))
+        offer = self._service_update_status(json, offer_in_db, logged_user, language)
 
         return offer
 
-    def _service_update_status(self, json: dict, offer_in_db: Offer, logged_user: User):
+    def _service_update_status(self, json: dict, offer_in_db: Offer, logged_user: User, language='en'):
         json_status = json.get('status')
-        Assertions.assert_true_raise400(json_status, {'error': 'status field not provided'})
+        Assertions.assert_true_raise400(json_status, translate(language, 'ERROR_STATUS_NOT_PROVIDED'))
         if json_status:
             status_in_db = offer_in_db.status
-            Assertions.assert_true_raise400(json_status != status_in_db, {'error': 'status provided isn\'t changed'})
+            Assertions.assert_true_raise400(json_status != status_in_db, translate(language, 'ERROR_STATUS_NOT_CHANGED'))
             normal_transitions = {}
             artist_flowstop_transitions = {}
             customer_flowstop_transitions = {}
@@ -204,13 +204,14 @@ class OfferSerializer(serializers.ModelSerializer):
                                                  'CONTRACT_MADE': 'CANCELLED_CUSTOMER'}
 
                 if json_status == 'CANCELLED_CUSTOMER':
-
+                    Assertions.assert_true_raise400(json.get('reason'),
+                                                    translate(language, 'ERROR_REASON_NOT_PROVIDED'))
                     if settings.BRAINTREE_PRODUCTION:
                         braintree_env = braintree.Environment.Production
                     else:
                         braintree_env = braintree.Environment.Sandbox
 
-                    Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+                    Assertions.assert_true_raise400(braintree_env, translate(language, 'ERROR_BRAINTREE_ENV_NOT_SET'))
 
                     # Configure Braintree
                     braintree.Configuration.configure(
@@ -220,7 +221,35 @@ class OfferSerializer(serializers.ModelSerializer):
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
 
-                    braintree.Transaction.refund(offer_in_db.transaction.braintree_id)
+                    amount = offer_in_db.transaction.amount * 0.949
+
+                    Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id, translate(language,
+                                                                                               'ERROR_CREDENTIAL_BRAINTREE'))
+
+                    if len(offer_in_db.transaction.braintree_id) > 8:
+                        response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
+                                                 headers={'Accept': 'application/json', 'Accept-Language': 'en_US',
+                                                          'content-type': 'application/x-www-form-urlencoded'},
+                                                 params={'grant_type': 'client_credentials'},
+                                                 auth=HTTPBasicAuth(
+                                                     'AVwB_2wUfHN5UCJO1Ik6uWkFbALgetwYKS5_BJ6gr9bR6wcEP5iFK84Nme_ebMbXI4yQdgH5BX2Tld2o',
+                                                     'EEZqYac8yorxpDQNojGYT0vWxP6VVBDIOSCuCgyQB6B7zTwdEG1uuRZS52DytG-qlLAY1vtMrZG60hgB'))
+
+                        Assertions.assert_true_raise400(response, translate(language, 'ERROR_CREDENTIAL'))
+
+                        access_token = response.json()['access_token']
+
+                        response2 = requests.post(
+                            'https://api.sandbox.paypal.com/v2/payments/captures/' + offer_in_db.transaction.braintree_id + '/refund',
+                            headers={'content-type': 'application/json',
+                                     'authorization': 'Bearer ' + access_token})
+
+                        Assertions.assert_true_raise400(response2, translate(language, 'ERROR_RESPONSE'))
+
+
+                    else:
+
+                        braintree.Transaction.refund(offer_in_db.transaction.braintree_id, str(amount))
 
             artistReceiver = Artist.objects.filter(pk=offer_in_db.paymentPackage.portfolio.artist.id).first()
 
@@ -231,7 +260,7 @@ class OfferSerializer(serializers.ModelSerializer):
                 if json_status == 'CONTRACT_MADE':
                     print(logged_user.paypalAccount)
                     Assertions.assert_true_raise400(logged_user.paypalAccount,
-                                        {'error': ' You need to provide a PayPal account to perform this action' })
+                                        translate(language, 'ERROR_PAYPAL_CREDENTIALS'))
                     transaccion = offer_in_db.transaction
 
                     transaccion.paypalArtist = logged_user.paypalAccount
@@ -243,7 +272,7 @@ class OfferSerializer(serializers.ModelSerializer):
                     else:
                         braintree_env = braintree.Environment.Sandbox
 
-                    Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+                    Assertions.assert_true_raise400(braintree_env, translate(language, 'ERROR_BRAINTREE_ENV_NOT_SET'))
 
                     # Configure Braintree
                     braintree.Configuration.configure(
@@ -252,17 +281,50 @@ class OfferSerializer(serializers.ModelSerializer):
                         public_key=settings.BRAINTREE_PUBLIC_KEY,
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
-                    Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id,{'error':
-                    'La oferta no posee los credenciales de Braintree'})
-                    braintree.Transaction.submit_for_settlement(offer_in_db.transaction.braintree_id)
+                    Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id,translate(language,
+                    'ERROR_CREDENTIAL_BRAINTREE'))
+
+                    if len(offer_in_db.transaction.braintree_id) > 8:
+                        delta = datetime.now().date() - offer_in_db.creationMoment
+
+                        Assertions.assert_true_raise401( delta < 29, translate(language,'ERROR_DATE_PAYMENT'))
+
+                        response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
+                                                 headers={'Accept': 'application/json', 'Accept-Language': 'en_US',
+                                                          'content-type': 'application/x-www-form-urlencoded'},
+                                                 params={'grant_type': 'client_credentials'},
+                                                 auth=HTTPBasicAuth(
+                                                     'AVwB_2wUfHN5UCJO1Ik6uWkFbALgetwYKS5_BJ6gr9bR6wcEP5iFK84Nme_ebMbXI4yQdgH5BX2Tld2o',
+                                                     'EEZqYac8yorxpDQNojGYT0vWxP6VVBDIOSCuCgyQB6B7zTwdEG1uuRZS52DytG-qlLAY1vtMrZG60hgB'))
+
+                        Assertions.assert_true_raise400(response, translate(language, 'ERROR_CREDENTIAL'))
+
+                        access_token = response.json()['access_token']
+
+                        response2 = requests.post(
+                            'https://api.sandbox.paypal.com/v2/payments/authorizations/' + offer_in_db.transaction.braintree_id + '/capture',
+                            headers={'content-type': 'application/json',
+                                     'authorization': 'Bearer ' + access_token})
+
+                        Assertions.assert_true_raise400(response2, translate(language, 'ERROR_RESPONSE'))
+
+                        offer_in_db.transaction.braintree_id = response2.json()['id']
+                        offer_in_db.transaction.save()
+
+                    else:
+                        braintree.Transaction.submit_for_settlement(offer_in_db.transaction.braintree_id)
+
                 elif json_status == 'REJECTED':
+
+                    Assertions.assert_true_raise400(json.get('reason'),
+                                                    translate(language, 'ERROR_REASON_NOT_PROVIDED'))
 
                     if settings.BRAINTREE_PRODUCTION:
                         braintree_env = braintree.Environment.Production
                     else:
                         braintree_env = braintree.Environment.Sandbox
 
-                    Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+                    Assertions.assert_true_raise400(braintree_env, translate(language, 'ERROR_BRAINTREE_ENV_NOT_SET'))
 
                     # Configure Braintree
                     braintree.Configuration.configure(
@@ -272,16 +334,42 @@ class OfferSerializer(serializers.ModelSerializer):
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
 
-                    braintree.Transaction.void(offer_in_db.transaction.braintree_id)
+                    Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id, translate(language,
+                                                                                               'ERROR_CREDENTIAL_BRAINTREE'))
+                    if len(offer_in_db.transaction.braintree_id) > 8:
+                        response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
+                                                 headers={'Accept': 'application/json', 'Accept-Language': 'en_US',
+                                                          'content-type': 'application/x-www-form-urlencoded'},
+                                                 params={'grant_type': 'client_credentials'},
+                                                 auth=HTTPBasicAuth(
+                                                     'AVwB_2wUfHN5UCJO1Ik6uWkFbALgetwYKS5_BJ6gr9bR6wcEP5iFK84Nme_ebMbXI4yQdgH5BX2Tld2o',
+                                                     'EEZqYac8yorxpDQNojGYT0vWxP6VVBDIOSCuCgyQB6B7zTwdEG1uuRZS52DytG-qlLAY1vtMrZG60hgB'))
+
+                        Assertions.assert_true_raise400(response, translate(language, 'ERROR_CREDENTIAL'))
+
+                        access_token = response.json()['access_token']
+
+                        response2 = requests.post(
+                            'https://api.sandbox.paypal.com/v2/payments/authorizations/' + offer_in_db.transaction.braintree_id + '/void',
+                            headers={'content-type': 'application/json',
+                                     'authorization': 'Bearer ' + access_token})
+
+                        Assertions.assert_true_raise400(response2, translate(language, 'ERROR_RESPONSE'))
+
+                    else:
+                        braintree.Transaction.void(offer_in_db.transaction.braintree_id)
 
                 elif json_status == 'CANCELLED_ARTIST':
 
+                    Assertions.assert_true_raise400(json.get('reason'),
+                                                    translate(language, 'ERROR_REASON_NOT_PROVIDED'))
+
                     if settings.BRAINTREE_PRODUCTION:
                         braintree_env = braintree.Environment.Production
                     else:
                         braintree_env = braintree.Environment.Sandbox
 
-                    Assertions.assert_true_raise400(braintree_env, {'error': 'Enviroment in Braintree not set'})
+                    Assertions.assert_true_raise400(braintree_env, translate(language, 'ERROR_BRAINTREE_ENV_NOT_SET'))
 
                     # Configure Braintree
                     braintree.Configuration.configure(
@@ -291,7 +379,30 @@ class OfferSerializer(serializers.ModelSerializer):
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
 
-                    braintree.Transaction.refund(offer_in_db.transaction.braintree_id)
+                    Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id, translate(language,
+                                                                                               'ERROR_CREDENTIAL_BRAINTREE'))
+                    if len(offer_in_db.transaction.braintree_id) > 8:
+                        response = requests.post('https://api.sandbox.paypal.com/v1/oauth2/token',
+                                                 headers={'Accept': 'application/json', 'Accept-Language': 'en_US',
+                                                          'content-type': 'application/x-www-form-urlencoded'},
+                                                 params={'grant_type': 'client_credentials'},
+                                                 auth=HTTPBasicAuth(
+                                                     'AVwB_2wUfHN5UCJO1Ik6uWkFbALgetwYKS5_BJ6gr9bR6wcEP5iFK84Nme_ebMbXI4yQdgH5BX2Tld2o',
+                                                     'EEZqYac8yorxpDQNojGYT0vWxP6VVBDIOSCuCgyQB6B7zTwdEG1uuRZS52DytG-qlLAY1vtMrZG60hgB'))
+
+                        Assertions.assert_true_raise400(response, translate(language, 'ERROR_CREDENTIAL'))
+
+                        access_token = response.json()['access_token']
+
+                        response2 = requests.post(
+                            'https://api.sandbox.paypal.com/v2/payments/captures/' + offer_in_db.transaction.braintree_id + '/refund',
+                            headers={'content-type': 'application/json',
+                                     'authorization': 'Bearer ' + access_token})
+
+                        Assertions.assert_true_raise400(response2, translate(language, 'ERROR_RESPONSE'))
+
+                    else:
+                        braintree.Transaction.refund(offer_in_db.transaction.braintree_id)
 
             allowed_transition = (normal_transitions.get(status_in_db) == json_status
                                   or artist_flowstop_transitions.get(status_in_db) == json_status
@@ -299,8 +410,7 @@ class OfferSerializer(serializers.ModelSerializer):
                                   or status_in_db == json_status
                                   )
 
-            assert_true(allowed_transition, "Not allowed status transition: " + status_in_db + " to "
-                        + json_status + ".")
+            assert_true(allowed_transition, translate(language, 'ERROR_TRANSACTION_STATUS_NOT_ALLOWED'))
 
             if json_status == "CONTRACT_MADE":
                 while True:
@@ -316,6 +426,7 @@ class OfferSerializer(serializers.ModelSerializer):
             print("ESTADO DB ANTES:" + offer_in_db.status)
             offer_in_db.status = json_status
             offer_in_db.reason = json.get('reason')
+
             if json_status == "CONTRACT_MADE" or json_status == "PAYMENT_MADE":
                 offer_in_db.reason = None
             offer_in_db.save()
@@ -344,72 +455,74 @@ class OfferSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
 
+        language = check_accept_language(attrs)
+
         # Customer validation
 
         customer = Customer.objects.filter(user_id=attrs.user.id).first()
 
-        Assertions.assert_true_raise403(customer is not None, {'error': 'user isn\'t authorized'})
+        Assertions.assert_true_raise403(customer is not None, translate(language, 'ERROR_USER_NOT_AUTHORIZED'))
 
         # Body request validation
 
         json = attrs.data
 
         Assertions.assert_true_raise400(json.get("description"),
-                                        {'error': 'description field not provided'})
+                                        translate(language, 'ERROR_DESCRIPTION_NOT_PROVIDED'))
         Assertions.assert_true_raise400(json.get("date"),
-                                        {'error': 'date field not provided'})
+                                        translate(language, 'ERROR_DATE_NOT_PROVIDED'))
 
         # Past date value validation
 
         try:    
             datetime.datetime.strptime(json.get('date'), '%Y-%m-%dT%H:%M:%S')
         except ValueError:
-            Assertions.assert_true_raise400(False, {'error': 'The format is not correct. It should be YYYY-MM-DDTHH:mm:ss'})
+            Assertions.assert_true_raise400(False, translate(language, 'ERROR_DATE_FORMAT'))
 
         Assertions.assert_true_raise400(datetime.datetime.strptime(json.get('date'),
                                                                    '%Y-%m-%dT%H:%M:%S') > datetime.datetime.now(),
-                                        {'error': 'date value is past'})
+                                        translate(language, 'ERROR_DATE_PAST'))
         Assertions.assert_true_raise400(json.get("paymentPackage_id"),
-                                        {'error': 'payment package field not provided'})
+                                        translate(language, 'ERROR_PAYMENTPACKAGE_NOT_PROVIDED'))
 
         paymentPackage = PaymentPackage.objects.filter(pk=json.get("paymentPackage_id")).first()
 
         Assertions.assert_true_raise400(paymentPackage,
-                                        {'error': 'payment package doesn\'t exist'})
+                                        translate(language, 'ERROR_PAYMENTPACKAGE_NOT_FOUND'))
 
         # Custom offer properties for each paymentPackage type
 
         if paymentPackage.fare is not None:
             Assertions.assert_true_raise400(json.get("hours"),
-                                            {'error': 'hours field not provided'})
+                                            translate(language, 'ERROR_HOURS_NOT_PROVIDED'))
             try:
                 decimal = json.get("hours")-int(json.get("hours"))
                 Assertions.assert_true_raise400(decimal == 0.5 or decimal == 0.0,
-                                                {'error': 'hours value bad provided'})
+                                                translate(language, 'ERROR_HOURS_BAD_PROVIDED'))
             except Exception:
-                raise Assertions.assert_true_raise400(False, {'error': 'hours value bad provided'})
+                raise Assertions.assert_true_raise400(False, translate(language, 'ERROR_HOURS_BAD_PROVIDED'))
 
         elif paymentPackage.custom is not None:
             price = json.get('price')
             Assertions.assert_true_raise400(json.get("price"),
-                                            {'error': 'price field not provided'})
+                                            translate(language, 'ERROR_PRICE_NOT_PROVIDED'))
             Assertions.assert_true_raise400(0.0 < price and price >= paymentPackage.custom.minimumPrice,
-                                            {'error': 'price entered it\'s below of minimum price'})
+                                            translate(language, 'ERROR_PRICE_BELOW_MUNIMUM'))
             Assertions.assert_true_raise400(json.get('hours'),
-                                            {'error': 'hours field not provided'})
+                                            translate(language, 'ERROR_HOURS_NOT_PROVIDED'))
 
         Assertions.assert_true_raise400(json.get("eventLocation_id"),
-                                        {'error': 'event location field not provided'})
+                                        translate(language, 'ERROR_EVENTLOCATION_NOT_PROVIDED'))
 
         eventLocation = EventLocation.objects.filter(pk=attrs.data.get("eventLocation_id")).first()
 
         Assertions.assert_true_raise400(eventLocation,
-                                        {'error': 'event location does not exist'})
+                                        translate(language, 'ERROR_EVENTLOCATION_NOT_FOUND'))
 
         # User owner validation
 
         Assertions.assert_true_raise400(eventLocation.customer.user.id == attrs.user.id,
-                                        {'error': 'can\'t reference this eventLocation'})
+                                        translate(language, 'ERROR_EVENTLOCATION_CAN_NOT_ASSIGNED'))
 
         return True
 
