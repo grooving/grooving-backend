@@ -2,7 +2,7 @@ from Grooving.models import  Artist, Portfolio, User, Customer, Calendar, Zone, 
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITransactionTestCase
-
+import os
 
 class CalendarTestCase(APITransactionTestCase):
 
@@ -19,7 +19,6 @@ class CalendarTestCase(APITransactionTestCase):
                                              email=your_email)
         Token.objects.create(user=user1_artist10)
 
-        user1_artist10.save()
 
         print('---- Creating artist ----')
 
@@ -28,13 +27,10 @@ class CalendarTestCase(APITransactionTestCase):
                                         photo='https://img.discogs.com/jgyNBtPsY4DiLegwMrOC9N_yOc4=/600x600/smart/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/A-1452461-1423476836-6354.jpeg.jpg',
                                         iban='ES6621000418401234567891', paypalAccount='tamta.info@gmail.com')
 
-        artist1.save()
 
         user2_customer1 = User.objects.create(username='customer1', password=make_password('customer1customer1'),
                                               first_name='Rafael', last_name='Esquivias Ramírez',
                                               email=your_email)
-
-        user2_customer1.save()
 
         Token.objects.create(user=user2_customer1)
 
@@ -43,14 +39,12 @@ class CalendarTestCase(APITransactionTestCase):
                                              email=your_email)
         Token.objects.create(user=user1_artist2)
 
-        user1_artist2.save()
 
         artist2 = Artist.objects.create(user=user1_artist2, rating=5.0, phone='600304999',
                                         language='en',
                                         photo='https://img.discogs.com/jgyNBtPsY4DiLegwMrOC9N_yOc4=/600x600/smart/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/A-1452461-1423476836-6354.jpeg.jpg',
                                         iban='ES6621000418401234567891', paypalAccount='tamta.info@gmail.com')
 
-        artist2.save()
 
         print('---- Creating customer ----')
 
@@ -59,25 +53,24 @@ class CalendarTestCase(APITransactionTestCase):
                                         photo='https://img.discogs.com/jgyNBtPsY4DiLegwMrOC9N_yOc4=/600x600/smart/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/A-1452461-1423476836-6354.jpeg.jpg',
                                         iban='ES6621000418401234567891', paypalAccount='tamto.info@gmail.com')
 
-        customer1.save()
-
 
 
         print('---- Creating zone ----')
 
         zone1 = Zone.objects.create(name='Andalucía')
 
-        zone1.save()
-
         print('---- Creating portfolio ----')
 
         portfolio1 = Portfolio.objects.create(artist=artist1, artisticName="Los rebujitos")
         portfolio1.zone.add(zone1)
-        portfolio1.save()
 
         calendar = Calendar.objects.create(days=[], portfolio=portfolio1)
 
-        calendar.save()
+        portfolio2 = Portfolio.objects.create(artist=artist2, artisticName="El gran Grooviny")
+        portfolio2.zone.add(zone1)
+
+
+
 
         SystemConfiguration.objects.create(minimumPrice=20.0, currency='EUR', paypalTax='3.4', creditCardTax='1.9',
                                            vat='21',
@@ -98,7 +91,7 @@ class CalendarTestCase(APITransactionTestCase):
 
     def test_driver_edit_calendar(self):
 
-        print('Start test - edit calendar as the intended artist')
+        print('Start test - edit calendar')
         data1 = {"username": "artist1", "password": "artist1artist1"}
         response = self.client.post("/api/login/", data1, format='json')
 
@@ -131,34 +124,44 @@ class CalendarTestCase(APITransactionTestCase):
         except:
             pass
         # Data payload
-        portfolio1 = Portfolio.objects.all().first().id
+        portfolio = Portfolio.objects.get(artisticName="Los rebujitos")
+
+        print(portfolio)
+
+        portfolioId = portfolio.id
+
+        calendar = portfolio.calendar
+
+        print('Portfolio id: ' + str(portfolioId) + ' - Calendar: ' + str(calendar))
 
         print(token)
 
         payload = [
 
+            #Token, days, id portfolio, HTTP response
+
             #Test positivo 1, con dia
-            [token, ['2019-09-20'], portfolio1, 200],
-            #Test positivo 2, sin dias
-            [token, [], portfolio1, 200],
+            [token, ['2019-09-20'], portfolioId, calendar.id, 200],
             #Test negativo 1, fecha equivocada
-            [token, ['2019/08/20'], portfolio1, 400],
+            [token, ['2019/08/20'], portfolioId, calendar.id, 400],
             # Test negativo 2, id invalido
-            [token, ['2019-08-20'], 'a', 400],
+            [token, ['2019-08-20'], 'a', calendar.id, 400],
             # Test negativo 3, no se pasan días al calendar
-            [token, '', 'a', 400],
+            [token, '', portfolioId, calendar.id, 400],
             # Test negativo 4, no se pasan días al calendar (ahora es un None)
-            [token, None, portfolio1, 400],
+            [token, None, portfolioId, calendar.id, 400],
             # Test negativo 5, no se pasa un id de portfolio
-            [token, [], None, 400],
+            [token, [], None, calendar.id, 400],
             # Test negativo 6, se pasa un id 0 de portfolio
-            [token, [], 0, 400],
+            [token, [], 0, calendar.id, 400],
             # Test negativo 7, customer
-            [token2, ['2019-09-20'], portfolio1, 403],
+            [token2, ['2019-09-20'], portfolioId, calendar.id, 403],
             # Test negativo 8, artist incorrecto
-            [token3, [], portfolio1, 403],
+            [token3, [], portfolioId, calendar.id, 403],
             #Test negativo 9, no se pasa un array
-            [token, '2019-09-14', portfolio1, 400]
+            [token, '2019-09-14', portfolioId, calendar.id, 400],
+            # Test negativo 10, anónimo entra
+            ['Pyke', [], portfolioId, calendar.id, 401]
 
         ]
         contador = 0
@@ -178,12 +181,12 @@ class CalendarTestCase(APITransactionTestCase):
 
         data = self.generateData(args)
 
-        response_es = self.client.put('/calendar/1/', data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+        response_es = self.client.put('/calendar/{}/'.format(str(args[3])), data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
                                     HTTP_ACCEPT_LANGUAGE='es')
 
         self.assertEqual(args[-1], response_es.status_code)
 
-        response_en = self.client.put('/calendar/1/', data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+        response_en = self.client.put('/calendar/{}/'.format(str(args[3])), data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
                                    HTTP_ACCEPT_LANGUAGE='en')
 
         self.assertEqual(args[-1], response_en.status_code)
