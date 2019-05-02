@@ -36,7 +36,8 @@ class UserManage(generics.DestroyAPIView):
             serialized = UserSerializer(user)
             return Response(serialized.data, status=status.HTTP_200_OK)
         else:
-            return Response(translate(language, 'ERROR_VALIDATE'), status=status.HTTP_400_BAD_REQUEST)
+            Assertions.assert_true_raise400(False, translate(language, 'ERROR_VALIDATE'))
+            # return Response(translate(language, 'ERROR_VALIDATE'), status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
 

@@ -38,11 +38,11 @@ class RegisterTestCase(APITransactionTestCase):
             ["Miguel", "Barahona Estevez", "sdadwa", "elArtistaIngles", "elArtistaIngles", "utri210das0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test positivo 4, crea un artista con un correo ya existente
+            # Test negativo 4, crea un artista con un correo ya existente
             ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test positivo 5, crea un artista con el nombre None
+            # Test negativo 5, crea un artista con el nombre None
             [None, "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
