@@ -205,80 +205,80 @@ class PortfolioTestCase(APITransactionTestCase):
 
                 # TESTS EN INGLES
 
-            # Test positivo, editar un artistic name
-            [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
-             [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
-             artist1.id, 'en', 200],
-            # Test positivo, editar biografía
-            [token, portfolio.id, portfolio.artisticName, portfoliomoduleBiography, portfolio.banner,
-             [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
-             artist1.id, 'en', 200],
-            # Test positivo, editar banner
-            [token, portfolio.id, portfolio.artisticName, portfolio.biography, bannerValido,
-             [], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
-             artist1.id, 'en', 200],
-            # Test positivo, editar imagenes
-            [token, portfolio.id, portfolio.artisticName, portfolio.biography, portfolio.banner,
-             [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
-             artist1.id, 'en', 200],
-            # Test positivo, editar videos
-            [token, portfolio.id, portfolio.artisticName, portfolio.biography, portfolio.banner,
-             [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
-             artist1.id, 'en', 200],
-            # Test positivo, editar main photo
-            [token, portfolio.id, portfolio.artisticName, portfolio.biography, portfolio.banner,
-             [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
-             artist1.id, 'en', 200],
-            # Test positivo, cambiar artist genres
-            [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
-             [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida,
-             [artisticGenreValido.name_es], [], artist1.id, 'en', 200],
-            # Test positivo, editar zones
-            [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
-             [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [zone.name],
-             artist1.id, 'en', 200],
+                # Test positivo, editar un artistic name
+                [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
+                [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
+                artist1.id, 'en', 200],
+                # Test positivo, editar biografía
+                [token, portfolio.id, portfolio.artisticName, portfoliomoduleBiography, portfolio.banner,
+                [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
+                artist1.id, 'en', 200],
+                # Test positivo, editar banner
+                [token, portfolio.id, portfolio.artisticName, portfolio.biography, bannerValido,
+                [], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
+                artist1.id, 'en', 200],
+                # Test positivo, editar imagenes
+                [token, portfolio.id, portfolio.artisticName, portfolio.biography, portfolio.banner,
+                [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
+                artist1.id, 'en', 200],
+                # Test positivo, editar videos
+                [token, portfolio.id, portfolio.artisticName, portfolio.biography, portfolio.banner,
+                [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
+                artist1.id, 'en', 200],
+                # Test positivo, editar main photo
+                [token, portfolio.id, portfolio.artisticName, portfolio.biography, portfolio.banner,
+                [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
+                artist1.id, 'en', 200],
+                # Test positivo, cambiar artist genres
+                [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
+                [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida,
+                [artisticGenreValido.name_es], [], artist1.id, 'en', 200],
+                # Test positivo, editar zones
+                [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
+                [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [zone.name],
+                artist1.id, 'en', 200],
 
-            # Test negativo 1, artistic name vacío
+                # Test negativo 1, artistic name vacío
 
-            [token, portfolio.id, '', portfolio.biography, portfolio.banner,
-             [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
-             artist1.id, 'en', 400],
+                [token, portfolio.id, '', portfolio.biography, portfolio.banner,
+                [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
+                artist1.id, 'en', 400],
 
-            # Test negativo 2, banner con url inavlida
+                # Test negativo 2, banner con url inavlida
 
-            [token, portfolio.id, artisticNameNuevo, portfolio.biography, bannerNoValido,
-             [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
-             artist1.id, 'en', 400],
+                [token, portfolio.id, artisticNameNuevo, portfolio.biography, bannerNoValido,
+                [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
+                artist1.id, 'en', 400],
 
-            # Test negativo 3, imagen con url inavlida
+                # Test negativo 3, imagen con url inavlida
 
-            [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
-             [portfoliomoduleImagenNoValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
-             artist1.id, 'en', 400],
+                [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
+                [portfoliomoduleImagenNoValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
+                artist1.id, 'en', 400],
 
-            # Test negativo 4, video invalido
+                # Test negativo 4, video invalido
 
-            [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
-             [portfoliomoduleImagenValida], [portfoliomoduleVideoNoValido], portfoliomoduleImagenValida, [], [],
-             artist1.id, 'en', 400],
+                [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
+                [portfoliomoduleImagenValida], [portfoliomoduleVideoNoValido], portfoliomoduleImagenValida, [], [],
+                artist1.id, 'en', 400],
 
-            # Test negativo 5, main photo inválida
+                # Test negativo 5, main photo inválida
 
-            [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
-             [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenNoValida, [], [],
-             artist1.id, 'en', 400],
+                [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
+                [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenNoValida, [], [],
+                artist1.id, 'en', 400],
 
-            # Test 6, genre inexistente
+                # Test 6, genre inexistente
 
-            [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
-             [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, ['Country'], [],
-             artist1.id, 'en', 400],
+                [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
+                [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, ['Country'], [],
+                artist1.id, 'en', 400],
 
-            # Test 7, zone inexistente
+                # Test 7, zone inexistente
 
-            [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
-             [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], ['París'],
-             artist1.id, 'en', 400],
+                [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
+                [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], ['París'],
+                artist1.id, 'en', 400],
 
         ]
 
