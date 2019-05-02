@@ -935,7 +935,7 @@ def save_data():
 
     portfolio11 = Portfolio.objects.create(artisticName='Rosalía',
                                            artist=artist11,
-                                           banner='https://github.com/grooving/static-content/blob/master/artist11/artist11_banner.jpg',
+                                           banner='https://raw.githubusercontent.com/grooving/static-content/master/artist11/artist11_banner.jpg',
                                            biography='She is a Spanish singer and actress. In 2018 she became the most Latin Grammy Award winning Spaniard for a single work. Her song "Malamente" won two awards out of five nominations.')
 
     portfolio11.artisticGender.add(artistic_gender1)
@@ -1505,7 +1505,7 @@ def save_data():
 
     portfolio8 = Portfolio.objects.create(artisticName='Medictum',
                                           artist=artist8,
-                                          banner='https://github.com/grooving/static-content/blob/master/artist8/artist8_banner.jpg',
+                                          banner='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_banner.jpg',
                                           biography='MedictuM es una banda que surge en 2012 de la mano de los hermanos Antonio y Manuel Medina en su pueblo natal, Morón de la Frontera. Tras el paso de ambos por grupos locales, deciden crear su propio proyecto con toques de thrash metal, heavy metal clásico, pinceladas de hard rock y otros estilos.')
     portfolio8.artisticGender.add(artistic_gender3)
     portfolio8.artisticGender.add(artistic_gender4)
