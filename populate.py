@@ -929,7 +929,7 @@ def save_data():
 
     artist11 = Artist.objects.create(user=user1_artist11, rating=5.0, phone='600304999',
                                      language='en',
-                                     photo='https://github.com/grooving/static-content/blob/master/artist11/artist11_photo.gif',
+                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist11/artist11_photo.gif',
                                      iban='ES6621000418401234567891', paypalAccount='rosalia.info@gmail.com')
     artist11.save()
 
@@ -967,7 +967,7 @@ def save_data():
 
     portfolio11_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
                                                          description='Videoclip malamente',
-                                                         link='https://github.com/grooving/static-content/blob/master/artist11/artist11_porfoliomodule4.gif')
+                                                         link='https://raw.githubusercontent.com/grooving/static-content/master/artist11/artist11_porfoliomodule4.gif')
     portfolio11_module4.save()
 
     portfolio11_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
@@ -1164,7 +1164,7 @@ def save_data():
 
     artist13 = Artist.objects.create(user=user1_artist13, rating=5.0, phone='600304999',
                                      language='en',
-                                     photo='https://github.com/grooving/static-content/blob/master/artist13/artist13_photo.gif',
+                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist13/artist13_photo.gif',
                                      iban='ES6621000418401234567891', paypalAccount='charli.info@gmail.com')
     artist13.save()
 
