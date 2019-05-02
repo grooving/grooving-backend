@@ -155,7 +155,7 @@ def delete_completely(filemodel):
 
 def delete_orphan_files(user, userType):
     files = Upload.objects.filter(userId=user.user_id)
-
+    now = int(round(time.time() * 1000))
     for file in files:
         if file.type == "PROFILE":
             if userType == "ARTIST":
@@ -165,7 +165,10 @@ def delete_orphan_files(user, userType):
                 if Customer.objects.filter(photo=file.file.url).count() <= 0:
                     delete_completely(file)
         if file.type == "BANNER":
-            if Portfolio.objects.filter(banner=file.file.url).count() <= 0:
+            timePass = now - file.timeStamp
+            seconds = 300
+            miliseconds = seconds * 1000
+            if Portfolio.objects.filter(banner=file.file.url).count() <= 0 and timePass >= miliseconds:
                 delete_completely(file)
 
 
