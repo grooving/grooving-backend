@@ -105,7 +105,7 @@ class OfferSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def service_made_payment_artist(paymentCode, user_logged, language='en'):
-        Assertions.assert_true_raise403(user_logged is not None)
+        Assertions.assert_true_raise403(user_logged is not None, translate(language, 'ERROR_NOT_AN_ARTIST'))
         Assertions.assert_true_raise400(paymentCode is not None, translate(language, 'ERROR_NULL_PAYMENT_CODE'))
 
         offer = Offer.objects.filter(paymentCode=paymentCode).first()
