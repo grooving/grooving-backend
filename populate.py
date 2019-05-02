@@ -13,6 +13,7 @@ from django.contrib.auth.hashers import make_password
 users_artists_email = "utri1990@gmail.com"  # 'tucorreo@elquesea.com'     # Preferiblemente gmail
 users_customers_email = "utri1990@gmail.com"  # 'tucorreo@elquesea.com'   # Preferiblemente gmail
 
+
 def _service_generate_unique_payment_code():
     random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
     payment_code = random_alphanumeric
@@ -30,15 +31,15 @@ def save_data():
                                                                slogan='Connecting artist with you',
                                                                logo='',
                                                                privacyText_en="<h2>Introduction</h2>" +
-                                                                              "<p>At Grooving, accessible from https://grooving-frontend-d3.herokuapp.com, one of our main " +
-                                                                              "priorities is the privacy of our visitors. This Privacy Policy document contains types of " +
+                                                                              "<p>For Grooving, accessible from https://grooving-frontend-d3.herokuapp.com, one of our main " +
+                                                                              "priorities is the privacy of our visitors. This Privacy Policy document contains the " +
                                                                               "information that is collected and recorded by Grooving and how we use it.</p>" +
                                                                               "<p>If you have additional questions or require more information about our Privacy Policy, " +
                                                                               "do not hesitate to contact us through email at grupogrooving@gmail.com</p>" +
 
                                                                               "<h2>Log Files</h2>" +
                                                                               "<p>Grooving follows a standard procedure of using log files. These files log visitors when  " +
-                                                                              "they visit websites. All hosting companies do this and a part of hosting services analytics. " +
+                                                                              "they visit websites. All hosting companies use them since they are part of hosting services analytics. " +
                                                                               "The information collected by log files include internet protocol (IP) addresses, browser type, " +
                                                                               "Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the " +
                                                                               "number of clicks. These are not linked to any information that is personally identifiable. " +
@@ -57,11 +58,11 @@ def save_data():
 
                                                                               "<p>In addition, third-party cookies are used for the development of your activity. Paypal and " +
                                                                               "Braintree cookies are used for payment security, to keep the users active session we use Django " +
-                                                                              "cookies and for the management of images we use GitHub and Amazon cookies.</p>" +
+                                                                              "cookies and for the management of images we use GitHub.</p>" +
 
                                                                               "<p>Note that Grooving has no access to or control over these cookies.</p>" +
                                                                               "<p>This Privacy Policy applies only to our online activities and is valid for visitors to our " +
-                                                                              "website with regards to the information that they shared and/or collect in Grooving. This " +
+                                                                              "website regarding the information that they shared and/or collect in Grooving. This " +
                                                                               "policy is not applicable to any information collected offline or via channels other than this " +
                                                                               "website.</p>" +
 
@@ -83,16 +84,12 @@ def save_data():
                                                                               "<p>For more information visit the following link: " +
                                                                               "<a href=\"https://github.com/github/site-policy\"></a>Github cookies policy</p>" +
 
-                                                                              "<h4>Amazon</h4>" +
-                                                                              "<p>For more information visit the following link: " +
-                                                                              "<a href=\"https://aws.amazon.com/es/compliance/data-privacy-faq/\">Amazon cookies privacy.</a>" +
-
                                                                               "<h4>Paypal</h4>" +
                                                                               "<p> For more information visit the following link: " +
                                                                               "<a href=\"https://www.paypal.com/uk/webapps/mpp/ua/cookie-full\">Paypal cookies policy</a></p>" +
 
                                                                               "<h2>Consent</h2>" +
-                                                                              "<p>By using our website, you hereby consent to our Privacy Policy and agree to its Terms and " +
+                                                                              "<p>By using our website, you hereby accept our Privacy Policy and agree to its Terms and " +
                                                                               "Conditions.</p>",
                                                                privacyText_es=
                                                                "<h2>Introducción</h2>" +
@@ -126,7 +123,7 @@ def save_data():
                                                                "<p>Además se utilizan cookies de terceros para el desarrollo de su actividad. Para la seguridad " +
                                                                "de los pagos se utilizan las cookies de Paypal y Braintree, para mantener la sesión activa de " +
                                                                "los usuarios utilizamos cookies de Django y para la gestión de imágenes utilizamos las cookies " +
-                                                               "de GitHub y Amazon.</p>" +
+                                                               "de GitHub.</p>" +
 
                                                                "<p>Tenga en cuenta que Grooving no tiene acceso ni control sobre estas cookies.</p>" +
 
@@ -168,7 +165,7 @@ def save_data():
 
                                                                           "<h2>Do you think it's impossible? </h2>" +
 
-                                                                          "<p>With <b>Grooving</b>, we managed to make it real by simplifying the search and hiring of " +
+                                                                          "<p>With <b>Grooving</b>, we manage to make it real by simplifying the search and hiring of " +
                                                                           "artists. </p>",
                                                                aboutUs_es="<h2>Sobre nosotros</h2>" +
                                                                           "<p>En Grooving, trabajamos duro para resolver los problemas diarios de los artistas dándoles a " +
@@ -928,13 +925,13 @@ def save_data():
 
     artist11 = Artist.objects.create(user=user1_artist11, rating=5.0, phone='600304999',
                                      language='en',
-                                     photo='https://github.com/grooving/static-content/blob/master/artist11/artist11_photo.gif',
+                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist11/artist11_photo.gif',
                                      iban='ES6621000418401234567891', paypalAccount='rosalia.info@gmail.com')
     artist11.save()
 
     portfolio11 = Portfolio.objects.create(artisticName='Rosalía',
                                            artist=artist11,
-                                           banner='https://github.com/grooving/static-content/blob/master/artist11/artist11_banner.jpg',
+                                           banner='https://raw.githubusercontent.com/grooving/static-content/master/artist11/artist11_banner.jpg',
                                            biography='She is a Spanish singer and actress. In 2018 she became the most Latin Grammy Award winning Spaniard for a single work. Her song "Malamente" won two awards out of five nominations.')
 
     portfolio11.artisticGender.add(artistic_gender1)
@@ -966,7 +963,7 @@ def save_data():
 
     portfolio11_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
                                                          description='Videoclip malamente',
-                                                         link='https://github.com/grooving/static-content/blob/master/artist11/artist11_porfoliomodule4.gif')
+                                                         link='https://raw.githubusercontent.com/grooving/static-content/master/artist11/artist11_porfoliomodule4.gif')
     portfolio11_module4.save()
 
     portfolio11_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio11,
@@ -1163,7 +1160,7 @@ def save_data():
 
     artist13 = Artist.objects.create(user=user1_artist13, rating=5.0, phone='600304999',
                                      language='en',
-                                     photo='https://github.com/grooving/static-content/blob/master/artist13/artist13_photo.gif',
+                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist13/artist13_photo.gif',
                                      iban='ES6621000418401234567891', paypalAccount='charli.info@gmail.com')
     artist13.save()
 
@@ -1504,7 +1501,7 @@ def save_data():
 
     portfolio8 = Portfolio.objects.create(artisticName='Medictum',
                                           artist=artist8,
-                                          banner='https://github.com/grooving/static-content/blob/master/artist8/artist8_banner.jpg',
+                                          banner='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_banner.jpg',
                                           biography='MedictuM es una banda que surge en 2012 de la mano de los hermanos Antonio y Manuel Medina en su pueblo natal, Morón de la Frontera. Tras el paso de ambos por grupos locales, deciden crear su propio proyecto con toques de thrash metal, heavy metal clásico, pinceladas de hard rock y otros estilos.')
     portfolio8.artisticGender.add(artistic_gender3)
     portfolio8.artisticGender.add(artistic_gender4)
@@ -1733,7 +1730,12 @@ def save_data():
                                                    customer=customer2)
     event_location2.save()
     event_location3 = EventLocation.objects.create(name="Rosalia en vivo", address="C/Sol, 45, 41652",
+<<<<<<< HEAD
                                                    description="We provided a full sound & video equipment for the event", zone=zone2, customer=customer3)
+=======
+                                                   equipment="We provided a full sound & video equipment for the event",
+                                                   zone=zone2, customer=customer3)
+>>>>>>> 4735b39a9e54d1bf31b66eb959926cb3fd1ecdeb
     event_location3.save()
     event_location4 = EventLocation.objects.create(name="Charlie XCX", address='C/Amalgama, 2, 41609',
                                                    description="Yes, we have a stage of 30 square meters, a system of loudspeakers distributed by the local, with a total of 16 loudspeakers and a complete system of LED lights that can be adjusted to the intensity and color desired.",
@@ -2084,6 +2086,93 @@ def save_data():
                                                paymentCode=_service_generate_unique_payment_code())
     offer1_performance1.save()
 
+    jsonfield = {"init": True,
+                 "messages": [
+                     {
+                         "json": {
+                             "date": "2019-05-02",
+                             "hour": "01:47",
+                             "mode": "MESSAGE",
+                             "name": "Rafael",
+                             "message": "hola",
+                             "username": "customer1"
+                         }
+                     },
+                     {
+                         "json": {
+                             "date": "2019-05-02",
+                             "hour": "01:55",
+                             "mode": "MESSAGE",
+                             "name": "José Antonio",
+                             "message": "hola, ha surgido algo?",
+                             "username": "artist1"
+                         }
+                     },
+                     {
+                         "json": {
+                             "date": "2019-05-02",
+                             "hour": "01:56",
+                             "mode": "MESSAGE",
+                             "name": "Rafael",
+                             "message": "Para comentarte que el aforo sera de 100 personas",
+                             "username": "customer1"
+                         }
+                     },
+                     {
+                         "json": {
+                             "date": "2019-05-02",
+                             "hour": "01:56",
+                             "mode": "MESSAGE",
+                             "name": "José Antonio",
+                             "message": "Ah, ok perfe",
+                             "username": "artist1"
+                         }
+                     },
+                     {
+                         "json": {
+                             "date": "2019-05-02",
+                             "hour": "01:56",
+                             "mode": "MESSAGE",
+                             "name": "Rafael",
+                             "message": "Algo adicional que quieras saber?",
+                             "username": "customer1"
+                         }
+                     },
+                     {
+                         "json": {
+                             "date": "2019-05-02",
+                             "hour": "01:57",
+                             "mode": "MESSAGE",
+                             "name": "José Antonio",
+                             "message": "No nada,gracias",
+                             "username": "artist1"
+                         }
+                     },
+                     {
+                         "json": {
+                             "date": "2019-05-02",
+                             "hour": "01:57",
+                             "mode": "MESSAGE",
+                             "name": "Rafael",
+                             "message": "Ok, adios",
+                             "username": "customer1"
+                         }
+                     },
+                     {
+                         "json": {
+                             "date": "2019-05-02",
+                             "hour": "01:57",
+                             "mode": "MESSAGE",
+                             "name": "José Antonio",
+                             "message": "Ok, adios",
+                             "username": "artist1"
+                         }
+                     }
+                 ]
+                 }
+
+    Chat.objects.create(offer=offer1_performance1, json=jsonfield)
+
     offer2_performance1 = Offer.objects.create(description='Can you make a performance for me?',
                                                status='PAYMENT_MADE',
                                                date='2019-07-25 12:00:00', hours=1.5, price='120', currency='EUR',
@@ -2102,6 +2191,93 @@ def save_data():
                                                rating=rating_offer3)
     offer3_performance1.save()
 
+    jsonfield2 = {"init": True,
+                  "messages": [
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:47",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "Muy buenas",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:55",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "hola, acabo de recibir la oferta",
+                              "username": "artist1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "Si, el aforo será de 100 personas aprox. ¿Sigues interesado?",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "Pues perfecto",
+                              "username": "artist1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "¿Algo más que quieras saber?",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "No nada, nos vemos en allí.",
+                              "username": "artist1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "Ok, adios",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "¡Bye!",
+                              "username": "artist1"
+                          }
+                      }
+                  ]
+                  }
+
+    Chat.objects.create(offer=offer3_performance1, json=jsonfield2)
+
     offer4_performance1 = Offer.objects.create(description='Can you come this day?',
                                                status='CANCELLED_ARTIST',
                                                date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
@@ -2110,6 +2286,94 @@ def save_data():
                                                eventLocation=event_location2, transaction=transaction_offer4,
                                                reason='Due to personal problems, we must cancel the performance.')
     offer4_performance1.save()
+
+    jsonfield3 = {"init": True,
+                  "messages": [
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:47",
+                              "mode": "MESSAGE",
+                              "name": "Jorge",
+                              "message": "Hola, ¿por lo que veo estas interesado?",
+                              "username": "customer2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:55",
+                              "mode": "MESSAGE",
+                              "name": "Carlos",
+                              "message": "Sí, pero aún no conocemos la disponibilidad para ese día debido a unos " +
+                                         "problemas de ultima hora",
+                              "username": "artist1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Jorge",
+                              "message": "Vale, el evento sería para 70 personas entre 20 y 30 años.",
+                              "username": "customer2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Carlos",
+                              "message": "Pues perfecto",
+                              "username": "artist1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Jorge",
+                              "message": "¿Algo más que necesites saber?",
+                              "username": "customer2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "Carlos",
+                              "message": "No nada, te lo confirmaré en los próximos días.",
+                              "username": "artist1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "Jorge",
+                              "message": "Ok, adios",
+                              "username": "customer2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "Carlos",
+                              "message": "¡Hasta luego!",
+                              "username": "artist1"
+                          }
+                      }
+                  ]
+                  }
+
+    Chat.objects.create(offer=offer4_performance1, json=jsonfield3)
 
     offer5_fare1 = Offer.objects.create(description='Rave party at my place', status='PENDING',
                                         date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
@@ -2139,6 +2403,93 @@ def save_data():
                                                reason='I will be in another country.')
     offer8_performance2.save()
 
+    jsonfield4 = {"init": True,
+                  "messages": [
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:47",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "Hola",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:55",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "Buenas, te adelanto que no sabré si podremos ir ese dia.",
+                              "username": "artist2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "Vale, el evento sería para 90 personas con todo el equipo preparado.",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "Pues perfecto",
+                              "username": "artist2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "¿Algo más que necesites saber?",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "No nada, te lo confirmaré en los próximos días.",
+                              "username": "artist2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "Ok, adios",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "¡Hasta luego!",
+                              "username": "artist2"
+                          }
+                      }
+                  ]
+                  }
+
+    Chat.objects.create(offer=offer8_performance2, json=jsonfield4)
+
     offer9_performance2 = Offer.objects.create(description='Come on!',
                                                status='CONTRACT_MADE',
                                                date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
@@ -2146,6 +2497,93 @@ def save_data():
                                                appliedVAT=10, paymentPackage=paymentPackage4_performance2,
                                                eventLocation=event_location1, transaction=transaction_offer9)
     offer9_performance2.save()
+
+    jsonfield5 = {"init": True,
+                  "messages": [
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:47",
+                              "mode": "MESSAGE",
+                              "name": "Miguel",
+                              "message": "Hola, gracias por aceptar la oferta.",
+                              "username": "customer4"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:55",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "Buenas, cuentame un poco las condiciones del evento.",
+                              "username": "artist2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Miguel",
+                              "message": "Vale, el evento sería para bastantes personas y con varios artistas.",
+                              "username": "customer4"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "Pues perfecto",
+                              "username": "artist2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Miguel",
+                              "message": "¿Algo más que necesites saber?",
+                              "username": "customer4"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "No nada, vamos hablando.",
+                              "username": "artist2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "Miguel",
+                              "message": "Ok, hasta luego",
+                              "username": "customer4"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "¡Hasta luego!",
+                              "username": "artist2"
+                          }
+                      }
+                  ]
+                  }
+
+    Chat.objects.create(offer=offer9_performance2, json=jsonfield5)
 
     offer10_fare2 = Offer.objects.create(description='Can you make me very happy?', status='CANCELLED_ARTIST',
                                          date='2019-03-27 00:00:00', hours=1.5, price='140', currency='EUR',
@@ -2155,6 +2593,93 @@ def save_data():
                                          reason='I will be in another country.')
     offer10_fare2.save()
 
+    jsonfield6 = {"init": True,
+                  "messages": [
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:47",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "Hola, ¿cómo va todo?.",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:55",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "Buenas, cuentame un poco las condiciones del evento.",
+                              "username": "artist2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "Vale, el evento sería para 50 personas, ¿sigues interesado.",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "Sí, gracias por la oportunidad.",
+                              "username": "artist2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "¿Algo más que necesites saber?",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "No nada, estamos en contacto.",
+                              "username": "artist2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "Ok, hasta luego",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "¡Hasta luego!",
+                              "username": "artist2"
+                          }
+                      }
+                  ]
+                  }
+
+    Chat.objects.create(offer=offer10_fare2, json=jsonfield6)
+
     offer11_fare2 = Offer.objects.create(description='Please, I need you for my birthday', status='CONTRACT_MADE',
                                          date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                          paymentCode=_service_generate_unique_payment_code(),
@@ -2162,13 +2687,101 @@ def save_data():
                                          eventLocation=event_location4, transaction=transaction_offer11)
     offer11_fare2.save()
 
-    offer12_custom2 = Offer.objects.create(description='Wow, I want to see you again in my place', status='CANCELLED_ARTIST',
+    offer12_custom2 = Offer.objects.create(description='Wow, I want to see you again in my place',
+                                           status='CANCELLED_ARTIST',
                                            date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                            paymentCode=_service_generate_unique_payment_code(),
                                            appliedVAT=10, paymentPackage=paymentPackage5_fare2,
                                            eventLocation=event_location3, transaction=transaction_offer12,
                                            reason='The singer is aphonic')
     offer12_custom2.save()
+
+    jsonfield7 = {"init": True,
+                  "messages": [
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:47",
+                              "mode": "MESSAGE",
+                              "name": "Juan Manuel",
+                              "message": "Hola, ¿qué tal?",
+                              "username": "customer3"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:55",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "Buenas, te cuento un poco sobre el evento.",
+                              "username": "artist2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Juan Manuel",
+                              "message": "Perfecto.",
+                              "username": "customer3"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "El evento será dentro de la sala y para 50 personas. ¿Sigues intresado?",
+                              "username": "artist2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Juan Manuel",
+                              "message": "¿Algo más que necesites saber?",
+                              "username": "customer3"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "No nada, estamos en contacto.",
+                              "username": "artist2"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "Juan Manuel",
+                              "message": "Ok, hasta luego",
+                              "username": "customer3"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "José Antonio",
+                              "message": "¡Hasta luego!",
+                              "username": "artist2"
+                          }
+                      }
+                  ]
+                  }
+
+    Chat.objects.create(offer=offer12_custom2, json=jsonfield7)
 
     offer13_custom2 = Offer.objects.create(description='Formal contract',
                                            status='CANCELLED_CUSTOMER',
@@ -2218,6 +2831,93 @@ def save_data():
 
     offer18_performance1.save()
 
+    jsonfield8 = {"init": True,
+                  "messages": [
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:47",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "Hola, ¿qué tal?",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:55",
+                              "mode": "MESSAGE",
+                              "name": "Carlos",
+                              "message": "Buenas, te cuento un poco sobre el evento.",
+                              "username": "artist1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "Perfecto.",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Carlos",
+                              "message": "El evento será dentro de la sala y para 50 personas. ¿Sigues intresado?",
+                              "username": "artist1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:56",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "¿Algo más que necesites saber?",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "Carlos",
+                              "message": "No nada, estamos en contacto.",
+                              "username": "artist1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "Rafael",
+                              "message": "Ok, hasta luego",
+                              "username": "customer1"
+                          }
+                      },
+                      {
+                          "json": {
+                              "date": "2019-05-02",
+                              "hour": "01:57",
+                              "mode": "MESSAGE",
+                              "name": "Carlos",
+                              "message": "¡Hasta luego!",
+                              "username": "artist1"
+                          }
+                      }
+                  ]
+                  }
+
+    Chat.objects.create(offer=offer18_performance1, json=jsonfield8)
+
     offer19_performance1 = Offer.objects.create(description='The best opportunity for your group',
                                                 status='PAYMENT_MADE',
                                                 date='2019-03-14 12:00:00', hours=3.1, price='1200', currency='EUR',
@@ -2226,7 +2926,6 @@ def save_data():
                                                 paymentCode=_service_generate_unique_payment_code())
 
     offer19_performance1.save()
-
 
     # Data for teachers
 
@@ -2243,7 +2942,6 @@ def save_data():
 
     calendar15 = Calendar.objects.create(days=[], portfolio=portfolio15_prof)
     calendar15.save()
-
 
     # ...user artist from teachers
 
@@ -2292,6 +2990,7 @@ def save_data():
 
     artist16_prof = Customer.objects.create(user=user18_customer6_prof)
     artist16_prof.save()
+
 
 os.system('python3 manage.py sqlflush | python3 manage.py dbshell')
 save_data()
