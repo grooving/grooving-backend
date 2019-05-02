@@ -204,3 +204,8 @@ def register_profile_photo_upload(base64, extension, user):
     file.save()
 
     return file.file.url
+
+def delete_all_photos_on_amazon_by_user(user):
+    files = Upload.objects.filter(userId=user.user_id)
+    for file in files:
+        delete_completely(file)
