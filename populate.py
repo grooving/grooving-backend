@@ -512,7 +512,7 @@ def save_data():
     artistic_gender1.save()
 
     artistic_gender2 = ArtisticGender.objects.create(name_en='DJ', parentGender=artistic_gender1,
-                                                     name_es="Pincha discos")
+                                                     name_es="DJ")
     artistic_gender2.save()
 
     artistic_gender3 = ArtisticGender.objects.create(name_en='Pop', parentGender=artistic_gender1, name_es="Pop")
@@ -898,7 +898,7 @@ def save_data():
     performance1_paymentPackageFamous1.save()
 
     paymentPackage1_performanceFamous1 = PaymentPackage.objects.create(
-        description='Performance Package',
+        description='I can do this for this price, but not include equipment',
         portfolio=portfolio10,
         performance=performance1_paymentPackageFamous1)
     paymentPackage1_performanceFamous1.save()
@@ -907,7 +907,7 @@ def save_data():
 
     fare1_paymentPackageFamous1.save()
 
-    paymentPackage2_fareFamous1 = PaymentPackage.objects.create(description='Fare Package',
+    paymentPackage2_fareFamous1 = PaymentPackage.objects.create(description='I can do this for this price, but not include equipment',
                                                                 portfolio=portfolio10,
                                                                 fare=fare1_paymentPackageFamous1)
     paymentPackage2_fareFamous1.save()
@@ -915,7 +915,7 @@ def save_data():
     custom1_paymentPackageFamous1 = Custom.objects.create(minimumPrice=150)
     custom1_paymentPackageFamous1.save()
 
-    paymentPackage3_customFamous1 = PaymentPackage.objects.create(description='Custom Package',
+    paymentPackage3_customFamous1 = PaymentPackage.objects.create(description='This price include my own performancers',
                                                                   portfolio=portfolio10,
                                                                   custom=custom1_paymentPackageFamous1)
     paymentPackage3_customFamous1.save()
@@ -1006,13 +1006,13 @@ def save_data():
     calendar11.save()
 
     performance1_paymentPackageFamous2 = Performance.objects.create(
-        info='I begin with mi new 7 songs and end with Malamente',
+        info='I can sign my new 7 songs',
         hours=2, price=500)
 
     performance1_paymentPackageFamous2.save()
 
     paymentPackage1_performanceFamous2 = PaymentPackage.objects.create(
-        description='Performance Package',
+        description='This price include my own performancers',
         portfolio=portfolio11,
         performance=performance1_paymentPackageFamous2)
     paymentPackage1_performanceFamous2.save()
@@ -1020,7 +1020,7 @@ def save_data():
     fare1_paymentPackageFamous2 = Fare.objects.create(priceHour=250)
     fare1_paymentPackageFamous2.save()
 
-    paymentPackage2_fareFamous2 = PaymentPackage.objects.create(description='Fare Package',
+    paymentPackage2_fareFamous2 = PaymentPackage.objects.create(description='This price is without equipment',
                                                                 portfolio=portfolio11,
                                                                 fare=fare1_paymentPackageFamous2)
     paymentPackage2_fareFamous2.save()
@@ -1029,7 +1029,7 @@ def save_data():
     custom1_paymentPackageFamous2.save()
 
     paymentPackage3_customFamous2 = PaymentPackage.objects.create(
-        description='Custom Package',
+        description='This price is without equipment',
         portfolio=portfolio11,
         custom=custom1_paymentPackageFamous2)
     paymentPackage3_customFamous2.save()
@@ -1125,13 +1125,13 @@ def save_data():
     calendar12.save()
 
     performance1_paymentPackageFamous3 = Performance.objects.create(
-        info='I only play my songs of Reputation',
+        info='I only play my songs of Reputation disc',
         hours=2, price=325)
 
     performance1_paymentPackageFamous3.save()
 
     paymentPackage1_performanceFamous3 = PaymentPackage.objects.create(
-        description='Performance Package',
+        description='This price is with equipment',
         portfolio=portfolio12,
         performance=performance1_paymentPackageFamous3)
     paymentPackage1_performanceFamous3.save()
@@ -1140,7 +1140,7 @@ def save_data():
     fare1_paymentPackageFamous3.save()
 
     paymentPackage2_fareFamous3 = PaymentPackage.objects.create(
-        description='Fare Package',
+        description='This price is without equipment, if you need equipment, use my performance package',
         portfolio=portfolio12,
         fare=fare1_paymentPackageFamous3)
     paymentPackage2_fareFamous3.save()
@@ -1149,7 +1149,7 @@ def save_data():
     custom1_paymentPackageFamous3.save()
 
     paymentPackage3_customFamous3 = PaymentPackage.objects.create(
-        description='Custom Package',
+        description='This price is without equipment',
         portfolio=portfolio12,
         custom=custom1_paymentPackageFamous3)
     paymentPackage3_customFamous3.save()
@@ -1722,32 +1722,32 @@ def save_data():
 
     event_location1 = EventLocation.objects.create(name="Festival Rockupo",
                                                    address="Universidad Pablo de Olavide",
-                                                   equipment="We only provide the stage with microphones, speakers and a sound technician.",
+                                                   description="We only provide the stage with microphones, speakers and a sound technician.",
                                                    zone=zone2,
                                                    customer=customer1)
     event_location1.save()
     event_location2 = EventLocation.objects.create(name="La Posada Sevilla",
                                                    address="C/Astronomía, 42, 41015",
-                                                   equipment="Yes, we have al equipment necessary, we have concerts every week, we have all you need for this job.",
+                                                   description="Yes, we have al equipment necessary, we have concerts every week, we have all you need for this job.",
                                                    zone=zone2,
                                                    customer=customer2)
     event_location2.save()
     event_location3 = EventLocation.objects.create(name="Rosalia en vivo", address="C/Sol, 45, 41652",
-                                                   equipment="We provided a full sound & video equipment for the event", zone=zone2, customer=customer3)
+                                                   description="We provided a full sound & video equipment for the event", zone=zone2, customer=customer3)
     event_location3.save()
     event_location4 = EventLocation.objects.create(name="Charlie XCX", address='C/Amalgama, 2, 41609',
-                                                   equipment="Yes, we have a stage of 30 square meters, a system of loudspeakers distributed by the local, with a total of 16 loudspeakers and a complete system of LED lights that can be adjusted to the intensity and color desired.",
+                                                   description="Yes, we have a stage of 30 square meters, a system of loudspeakers distributed by the local, with a total of 16 loudspeakers and a complete system of LED lights that can be adjusted to the intensity and color desired.",
                                                    zone=zone4, customer=customer4)
     event_location4.save()
 
     # Payment packages with Payment types
 
-    performance1_paymentPackage1 = Performance.objects.create(info='Performance Package',
+    performance1_paymentPackage1 = Performance.objects.create(info='This price is with equipment',
                                                               hours=1.5, price=50)
     performance1_paymentPackage1.save()
 
     paymentPackage1_performance1 = PaymentPackage.objects.create(
-        description='Performance Package',
+        description='This price is with equipment',
         portfolio=portfolio1,
         performance=performance1_paymentPackage1)
     paymentPackage1_performance1.save()
@@ -1755,7 +1755,7 @@ def save_data():
     fare1_paymentPackage2 = Fare.objects.create(priceHour=45)
     fare1_paymentPackage2.save()
 
-    paymentPackage2_fare1 = PaymentPackage.objects.create(description='Fare Package',
+    paymentPackage2_fare1 = PaymentPackage.objects.create(description='This price is without equipment',
                                                           portfolio=portfolio1,
                                                           fare=fare1_paymentPackage2)
     paymentPackage2_fare1.save()
@@ -1763,19 +1763,19 @@ def save_data():
     custom1_paymentPackage3 = Custom.objects.create(minimumPrice=60)
     custom1_paymentPackage3.save()
 
-    paymentPackage3_custom1 = PaymentPackage.objects.create(description='Custom Package',
+    paymentPackage3_custom1 = PaymentPackage.objects.create(description='This price include the equipment',
                                                             portfolio=portfolio1,
                                                             custom=custom1_paymentPackage3)
     paymentPackage3_custom1.save()
 
     # ----
 
-    performance2_paymentPackage4 = Performance.objects.create(info='Performance Type',
+    performance2_paymentPackage4 = Performance.objects.create(info='This price is without equipment',
                                                               hours=1.5, price=50)
     performance2_paymentPackage4.save()
 
     paymentPackage4_performance2 = PaymentPackage.objects.create(
-        description='Performance Package',
+        description='This price include an especial begining',
         portfolio=portfolio2,
         performance=performance2_paymentPackage4)
     paymentPackage4_performance2.save()
@@ -1783,7 +1783,7 @@ def save_data():
     fare2_paymentPackage5 = Fare.objects.create(priceHour=45)
     fare2_paymentPackage5.save()
 
-    paymentPackage5_fare2 = PaymentPackage.objects.create(description='Fare Package',
+    paymentPackage5_fare2 = PaymentPackage.objects.create(description='This price is without equipment',
                                                           portfolio=portfolio2,
                                                           fare=fare2_paymentPackage5)
     paymentPackage5_fare2.save()
@@ -1792,7 +1792,7 @@ def save_data():
     custom2_paymentPackage6.save()
 
     paymentPackage6_custom2 = PaymentPackage.objects.create(
-        description='Custom Package',
+        description='This price include the equipment',
         portfolio=portfolio2,
         custom=custom2_paymentPackage6)
     paymentPackage6_custom2.save()
@@ -1804,7 +1804,7 @@ def save_data():
     performance3_paymentPackage7.save()
 
     paymentPackage7_performance3 = PaymentPackage.objects.create(
-        description='Performance Package',
+        description='This price include the equipment',
         portfolio=portfolio3,
         performance=performance3_paymentPackage7)
     paymentPackage7_performance3.save()
@@ -1812,7 +1812,7 @@ def save_data():
     fare3_paymentPackage8 = Fare.objects.create(priceHour=45)
     fare3_paymentPackage8.save()
 
-    paymentPackage8_fare3 = PaymentPackage.objects.create(description='Fare Package',
+    paymentPackage8_fare3 = PaymentPackage.objects.create(description='I only need a chair that is not include in the price',
                                                           portfolio=portfolio3,
                                                           fare=fare3_paymentPackage8)
     paymentPackage8_fare3.save()
@@ -1820,14 +1820,14 @@ def save_data():
     custom3_paymentPackage9 = Custom.objects.create(minimumPrice=60)
     custom3_paymentPackage9.save()
 
-    paymentPackage9_custom3 = PaymentPackage.objects.create(description='Custom Package',
+    paymentPackage9_custom3 = PaymentPackage.objects.create(description='This price include the equipment',
                                                             portfolio=portfolio3,
                                                             custom=custom3_paymentPackage9)
     paymentPackage9_custom3.save()
 
     # ----
 
-    performance4_paymentPackage10 = Performance.objects.create(info='Performance Package',
+    performance4_paymentPackage10 = Performance.objects.create(info='This price include the equipment',
                                                                hours=1.5, price=50)
     performance4_paymentPackage10.save()
 
@@ -1840,7 +1840,7 @@ def save_data():
     fare4_paymentPackage11 = Fare.objects.create(priceHour=45)
     fare4_paymentPackage11.save()
 
-    paymentPackage11_fare3 = PaymentPackage.objects.create(description='Fare Package',
+    paymentPackage11_fare3 = PaymentPackage.objects.create(description='I need equipment',
                                                            portfolio=portfolio4,
                                                            fare=fare4_paymentPackage11)
     paymentPackage11_fare3.save()
@@ -1848,7 +1848,7 @@ def save_data():
     custom4_paymentPackage12 = Custom.objects.create(minimumPrice=60)
     custom4_paymentPackage12.save()
 
-    paymentPackage12_custom4 = PaymentPackage.objects.create(description='Custom Package',
+    paymentPackage12_custom4 = PaymentPackage.objects.create(description='This price include the equipment and my own performances',
                                                              portfolio=portfolio4,
                                                              custom=custom4_paymentPackage12)
     paymentPackage12_custom4.save()
@@ -1856,12 +1856,12 @@ def save_data():
     # ----
 
     performance5_paymentPackage13 = Performance.objects.create(
-        info='Performance Type',
+        info='This price include the equipment',
         hours=1.5, price=50)
     performance5_paymentPackage13.save()
 
     paymentPackage13_performance5 = PaymentPackage.objects.create(
-        description='Performance Package',
+        description='This price include the equipment',
         portfolio=portfolio5,
         performance=performance5_paymentPackage13)
     paymentPackage13_performance5.save()
@@ -1870,7 +1870,7 @@ def save_data():
     fare5_paymentPackage14.save()
 
     paymentPackage14_fare5 = PaymentPackage.objects.create(
-        description='Fare Package',
+        description='This is whithout equipment',
         portfolio=portfolio5,
         fare=fare5_paymentPackage14)
     paymentPackage14_fare5.save()
@@ -1879,7 +1879,7 @@ def save_data():
     custom5_paymentPackage15.save()
 
     paymentPackage15_custom5 = PaymentPackage.objects.create(
-        description='Custom Package',
+        description='This price include the equipment',
         portfolio=portfolio5,
         custom=custom5_paymentPackage15)
     paymentPackage15_custom5.save()
@@ -1887,12 +1887,12 @@ def save_data():
     # ----
 
     performance6_paymentPackage16 = Performance.objects.create(
-        info='This is Performance Package from Una chirigota con clase',
+        info='Una chirigota con clase dont need anything',
         hours=1.5, price=50)
     performance6_paymentPackage16.save()
 
     paymentPackage16_performance6 = PaymentPackage.objects.create(
-        description='Performance Package',
+        description='We have all you need for the performance',
         portfolio=portfolio6,
         performance=performance6_paymentPackage16)
     paymentPackage16_performance6.save()
@@ -1901,7 +1901,7 @@ def save_data():
     fare6_paymentPackage17.save()
 
     paymentPackage17_fare6 = PaymentPackage.objects.create(
-        description='Fare Package',
+        description='We have all you need for the performance',
         portfolio=portfolio6,
         fare=fare6_paymentPackage17)
     paymentPackage17_fare6.save()
@@ -1910,19 +1910,19 @@ def save_data():
     custom6_paymentPackage18.save()
 
     paymentPackage18_custom6 = PaymentPackage.objects.create(
-        description='Custom Package',
+        description='We have all you need for the performance but if you want us in outside, we cant do it',
         portfolio=portfolio6,
         custom=custom6_paymentPackage18)
     paymentPackage18_custom6.save()
 
     # ----
 
-    performance7_paymentPackage19 = Performance.objects.create(info='This is performance Package from Batracio',
+    performance7_paymentPackage19 = Performance.objects.create(info='This price is whith the equipment',
                                                                hours=1.5, price=50)
     performance7_paymentPackage19.save()
 
     paymentPackage19_performance7 = PaymentPackage.objects.create(
-        description='Performance Package',
+        description='This price is whithout the equipment',
         portfolio=portfolio7,
         performance=performance7_paymentPackage19)
     paymentPackage19_performance7.save()
@@ -1930,7 +1930,7 @@ def save_data():
     fare7_paymentPackage20 = Fare.objects.create(priceHour=45)
     fare7_paymentPackage20.save()
 
-    paymentPackage20_fare7 = PaymentPackage.objects.create(description='Fare Package',
+    paymentPackage20_fare7 = PaymentPackage.objects.create(description='This price include my own performancer',
                                                            portfolio=portfolio7,
                                                            fare=fare7_paymentPackage20)
     paymentPackage20_fare7.save()
@@ -1938,19 +1938,19 @@ def save_data():
     custom7_paymentPackage21 = Custom.objects.create(minimumPrice=60)
     custom7_paymentPackage21.save()
 
-    paymentPackage21_custom7 = PaymentPackage.objects.create(description='Custom Package',
+    paymentPackage21_custom7 = PaymentPackage.objects.create(description='This price is whith the equipment',
                                                              portfolio=portfolio7,
                                                              custom=custom7_paymentPackage21)
     paymentPackage21_custom7.save()
 
     # ----
 
-    performance8_paymentPackage22 = Performance.objects.create(info='This is Performance Package from Medictum',
+    performance8_paymentPackage22 = Performance.objects.create(info='I do all in my portolio video carrousel',
                                                                hours=1.5, price=50)
     performance8_paymentPackage22.save()
 
     paymentPackage22_performance8 = PaymentPackage.objects.create(
-        description='Performance Package',
+        description='This price is with equipment',
         portfolio=portfolio8,
         performance=performance8_paymentPackage22)
     paymentPackage22_performance8.save()
@@ -1958,7 +1958,7 @@ def save_data():
     fare8_paymentPackage23 = Fare.objects.create(priceHour=45)
     fare8_paymentPackage23.save()
 
-    paymentPackage23_fare8 = PaymentPackage.objects.create(description='Fare Package',
+    paymentPackage23_fare8 = PaymentPackage.objects.create(description='This price is whithout equipment',
                                                            portfolio=portfolio8,
                                                            fare=fare8_paymentPackage23)
     paymentPackage23_fare8.save()
@@ -1966,19 +1966,19 @@ def save_data():
     custom8_paymentPackage24 = Custom.objects.create(minimumPrice=60)
     custom8_paymentPackage24.save()
 
-    paymentPackage24_custom8 = PaymentPackage.objects.create(description='Custom Package',
+    paymentPackage24_custom8 = PaymentPackage.objects.create(description='This price is whithout equipment',
                                                              portfolio=portfolio8,
                                                              custom=custom8_paymentPackage24)
     paymentPackage24_custom8.save()
 
     # ----
 
-    performance9_paymentPackage25 = Performance.objects.create(info='This is performance Package Type from Waterdogs',
+    performance9_paymentPackage25 = Performance.objects.create(info='This performance dont need nothing',
                                                                hours=1.5, price=50)
     performance9_paymentPackage25.save()
 
     paymentPackage25_performance9 = PaymentPackage.objects.create(
-        description='Performance Package',
+        description='We have all we need for this performance',
         portfolio=portfolio9,
         performance=performance9_paymentPackage25)
     paymentPackage25_performance9.save()
@@ -1986,7 +1986,7 @@ def save_data():
     fare9_paymentPackage26 = Fare.objects.create(priceHour=45)
     fare9_paymentPackage26.save()
 
-    paymentPackage26_fare9 = PaymentPackage.objects.create(description='Fare Package',
+    paymentPackage26_fare9 = PaymentPackage.objects.create(description='This price is whithout equipment',
                                                            portfolio=portfolio9,
                                                            fare=fare9_paymentPackage26)
     paymentPackage26_fare9.save()
@@ -1994,7 +1994,7 @@ def save_data():
     custom9_paymentPackage27 = Custom.objects.create(minimumPrice=60)
     custom9_paymentPackage27.save()
 
-    paymentPackage27_custom9 = PaymentPackage.objects.create(description='Custom Package',
+    paymentPackage27_custom9 = PaymentPackage.objects.create(description='This price is whithout equipment',
                                                              portfolio=portfolio9,
                                                              custom=custom9_paymentPackage27)
     paymentPackage27_custom9.save()
@@ -2071,15 +2071,15 @@ def save_data():
     transaction_offer19.save()  # PAYMENT_MADE - OK
 
     # Rating
-    rating_offer2 = Rating.objects.create(score=5, comment="Lo ha hecho explendido")
-    rating_offer3 = Rating.objects.create(score=4, comment="Lo ha hecho muy bien")
+    rating_offer2 = Rating.objects.create(score=5, comment="Excellent")
+    rating_offer3 = Rating.objects.create(score=4, comment="Very good, I will hire him another time")
 
     # Offers
 
     offer1_performance1 = Offer.objects.create(description='This offer interests you',
                                                status='CONTRACT_MADE',
                                                date='2019-04-29 12:00:00', hours=2.5, price='120', currency='EUR',
-                                               appliedVAT=7, paymentPackage=paymentPackage1_performance1,
+                                               appliedVAT=10, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location1, transaction=transaction_offer1,
                                                paymentCode=_service_generate_unique_payment_code())
     offer1_performance1.save()
@@ -2088,7 +2088,7 @@ def save_data():
                                                status='PAYMENT_MADE',
                                                date='2019-07-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               appliedVAT=7, paymentPackage=paymentPackage1_performance1,
+                                               appliedVAT=10, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location1, transaction=transaction_offer2,
                                                rating=rating_offer2)
     offer2_performance1.save()
@@ -2097,7 +2097,7 @@ def save_data():
                                                status='PAYMENT_MADE',
                                                date='2019-02-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               appliedVAT=7, paymentPackage=paymentPackage1_performance1,
+                                               appliedVAT=10, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location1, transaction=transaction_offer3,
                                                rating=rating_offer3)
     offer3_performance1.save()
@@ -2106,27 +2106,27 @@ def save_data():
                                                status='CANCELLED_ARTIST',
                                                date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               appliedVAT=7, paymentPackage=paymentPackage1_performance1,
+                                               appliedVAT=10, paymentPackage=paymentPackage1_performance1,
                                                eventLocation=event_location2, transaction=transaction_offer4,
                                                reason='Due to personal problems, we must cancel the performance.')
     offer4_performance1.save()
 
     offer5_fare1 = Offer.objects.create(description='Rave party at my place', status='PENDING',
                                         date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
-                                        appliedVAT=7, paymentPackage=paymentPackage2_fare1,
+                                        appliedVAT=10, paymentPackage=paymentPackage2_fare1,
                                         eventLocation=event_location2, transaction=transaction_offer5)
     offer5_fare1.save()
 
     offer6_custom1 = Offer.objects.create(description='You cannot miss this opportunity', status='CONTRACT_MADE',
                                           date='2019-8-25 12:00:00', hours=1.5, price='115', currency='EUR',
-                                          appliedVAT=7, paymentCode=_service_generate_unique_payment_code(),
+                                          appliedVAT=10, paymentCode=_service_generate_unique_payment_code(),
                                           paymentPackage=paymentPackage3_custom1,
                                           eventLocation=event_location1, transaction=transaction_offer6)
     offer6_custom1.save()
 
     offer7_custom1 = Offer.objects.create(description='I need a DJ for my sisters weeding', status='REJECTED',
                                           date='2019-10-25 19:00:00', hours=1.5, price='100', currency='EUR',
-                                          appliedVAT=7, paymentPackage=paymentPackage3_custom1,
+                                          appliedVAT=10, paymentPackage=paymentPackage3_custom1,
                                           eventLocation=event_location1, transaction=transaction_offer7,
                                           reason='Your local has a bad reputation.')
     offer7_custom1.save()
@@ -2134,7 +2134,7 @@ def save_data():
     offer8_performance2 = Offer.objects.create(description='I want you to my event!',
                                                status='REJECTED',
                                                date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
-                                               appliedVAT=7, paymentPackage=paymentPackage4_performance2,
+                                               appliedVAT=10, paymentPackage=paymentPackage4_performance2,
                                                eventLocation=event_location1, transaction=transaction_offer8,
                                                reason='I will be in another country.')
     offer8_performance2.save()
@@ -2143,14 +2143,14 @@ def save_data():
                                                status='CONTRACT_MADE',
                                                date='2019-10-25 15:00:00', hours=1.5, price='140', currency='EUR',
                                                paymentCode=_service_generate_unique_payment_code(),
-                                               appliedVAT=7, paymentPackage=paymentPackage4_performance2,
+                                               appliedVAT=10, paymentPackage=paymentPackage4_performance2,
                                                eventLocation=event_location1, transaction=transaction_offer9)
     offer9_performance2.save()
 
     offer10_fare2 = Offer.objects.create(description='Can you make me very happy?', status='CANCELLED_ARTIST',
                                          date='2019-03-27 00:00:00', hours=1.5, price='140', currency='EUR',
                                          paymentCode=_service_generate_unique_payment_code(),
-                                         appliedVAT=7, paymentPackage=paymentPackage5_fare2,
+                                         appliedVAT=10, paymentPackage=paymentPackage5_fare2,
                                          eventLocation=event_location4, transaction=transaction_offer10,
                                          reason='I will be in another country.')
     offer10_fare2.save()
@@ -2158,14 +2158,14 @@ def save_data():
     offer11_fare2 = Offer.objects.create(description='Please, I need you for my birthday', status='CONTRACT_MADE',
                                          date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                          paymentCode=_service_generate_unique_payment_code(),
-                                         appliedVAT=7, paymentPackage=paymentPackage5_fare2,
+                                         appliedVAT=10, paymentPackage=paymentPackage5_fare2,
                                          eventLocation=event_location4, transaction=transaction_offer11)
     offer11_fare2.save()
 
     offer12_custom2 = Offer.objects.create(description='Wow, I want to see you again in my place', status='CANCELLED_ARTIST',
                                            date='2019-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                            paymentCode=_service_generate_unique_payment_code(),
-                                           appliedVAT=7, paymentPackage=paymentPackage5_fare2,
+                                           appliedVAT=10, paymentPackage=paymentPackage5_fare2,
                                            eventLocation=event_location3, transaction=transaction_offer12,
                                            reason='The singer is aphonic')
     offer12_custom2.save()
@@ -2174,7 +2174,7 @@ def save_data():
                                            status='CANCELLED_CUSTOMER',
                                            date='2017-01-06 01:00:00', hours=1.5, price='140', currency='EUR',
                                            paymentCode=_service_generate_unique_payment_code(),
-                                           appliedVAT=7, paymentPackage=paymentPackage5_fare2,
+                                           appliedVAT=10, paymentPackage=paymentPackage5_fare2,
                                            eventLocation=event_location3, transaction=transaction_offer13,
                                            reason='The establishment will be refurbished.')
     offer13_custom2.save()
@@ -2182,7 +2182,7 @@ def save_data():
     offer14_performance2 = Offer.objects.create(description='Can you miss this opportunity?',
                                                 status='PENDING',
                                                 date='2019-07-07 15:00:00', hours=2.5, price='115', currency='EUR',
-                                                appliedVAT=7, paymentPackage=paymentPackage4_performance2,
+                                                appliedVAT=10, paymentPackage=paymentPackage4_performance2,
                                                 eventLocation=event_location1, transaction=transaction_offer14)
 
     offer14_performance2.save()
@@ -2190,21 +2190,21 @@ def save_data():
     offer15_performance2 = Offer.objects.create(description='I want to hear us again!',
                                                 status='PENDING',
                                                 date='2019-07-11 15:00:00', hours=1.5, price='80', currency='EUR',
-                                                appliedVAT=7, paymentPackage=paymentPackage4_performance2,
+                                                appliedVAT=10, paymentPackage=paymentPackage4_performance2,
                                                 eventLocation=event_location2, transaction=transaction_offer19)
 
     offer15_performance2.save()
 
     offer16_performance1 = Offer.objects.create(description='Come on!', status='PENDING',
                                                 date='2019-07-11 15:00:00', hours=2.5, price='160', currency='EUR',
-                                                appliedVAT=7, paymentPackage=paymentPackage1_performance1,
+                                                appliedVAT=10, paymentPackage=paymentPackage1_performance1,
                                                 eventLocation=event_location1, transaction=transaction_offer15)
 
     offer16_performance1.save()
 
     offer17_performance1 = Offer.objects.create(description='I want a great party to my friend', status='PENDING',
                                                 date='2019-07-14 08:00:00', hours=1.5, price='800', currency='EUR',
-                                                appliedVAT=7, paymentPackage=paymentPackage1_performance1,
+                                                appliedVAT=10, paymentPackage=paymentPackage1_performance1,
                                                 eventLocation=event_location2, transaction=transaction_offer16)
 
     offer17_performance1.save()
@@ -2212,7 +2212,7 @@ def save_data():
     offer18_performance1 = Offer.objects.create(description='Can you interested to my offer?',
                                                 status='PAYMENT_MADE',
                                                 date='2019-03-14 08:00:00', hours=3, price='1000', currency='EUR',
-                                                appliedVAT=21, paymentPackage=paymentPackage4_performance2,
+                                                appliedVAT=10, paymentPackage=paymentPackage4_performance2,
                                                 eventLocation=event_location1, transaction=transaction_offer17,
                                                 paymentCode=_service_generate_unique_payment_code())
 
@@ -2221,7 +2221,7 @@ def save_data():
     offer19_performance1 = Offer.objects.create(description='The best opportunity for your group',
                                                 status='PAYMENT_MADE',
                                                 date='2019-03-14 12:00:00', hours=3.1, price='1200', currency='EUR',
-                                                appliedVAT=21, paymentPackage=paymentPackage4_performance2,
+                                                appliedVAT=10, paymentPackage=paymentPackage4_performance2,
                                                 eventLocation=event_location1, transaction=transaction_offer18,
                                                 paymentCode=_service_generate_unique_payment_code())
 
@@ -2249,39 +2249,39 @@ def save_data():
 
     email_to_send_mail_teachers = 'ispp.profesores@gmail.com'
 
-    user15_artist10_prof = User.objects.create(username='rafael',
-                                               password=make_password('rafaelrafael'),
-                                               first_name='Rafael', last_name='Corchuelo',
+    user15_artist10_prof = User.objects.create(username='PabloArtist',
+                                               password=make_password('PabloArtistPabloArtist'),
+                                               first_name='Pablo', last_name='Trinidad Fernandez',
                                                email=email_to_send_mail_teachers)
     user15_artist10_prof.save()
 
-    user16_artist11_prof = User.objects.create(username='pablo',
-                                               password=make_password('pablopablo'),
-                                               first_name='Pablo', last_name='Trinidad',
+    user16_artist11_prof = User.objects.create(username='CarlosArtist',
+                                               password=make_password('CarlosArtistCarlosArtist'),
+                                               first_name='Carlos', last_name='Müller',
                                                email=email_to_send_mail_teachers)
     user16_artist11_prof.save()
 
     # ...user customer from teachers
 
-    user17_customer5_prof = User.objects.create(username='patricia',
-                                                password=make_password('patriciapatricia'),
-                                                first_name='Patricia', last_name='Jimenez',
+    user17_customer5_prof = User.objects.create(username='PabloCustomer',
+                                                password=make_password('PabloCustomer'),
+                                                first_name='Pablo', last_name='Trinidad Fernandez',
                                                 email=email_to_send_mail_teachers)
     user17_customer5_prof.save()
 
-    user18_customer6_prof = User.objects.create(username='inmaculada',
-                                                password=make_password('inmaculadainmaculada'),
-                                                first_name='Inmaculada', last_name='Hernández',
+    user18_customer6_prof = User.objects.create(username='CarlosCustomer',
+                                                password=make_password('CarlosCustomer'),
+                                                first_name='Carlos', last_name='Müller',
                                                 email=email_to_send_mail_teachers)
     user18_customer6_prof.save()
 
     # ...artists from teachers
 
-    artist10_prof = Artist.objects.create(user=user15_artist10_prof, rating=1, portfolio=portfolio14_prof,
+    artist10_prof = Artist.objects.create(user=user15_artist10_prof, rating=0, portfolio=portfolio14_prof,
                                           photo='https://raw.githubusercontent.com/Iriabow/pepe/master/magician-circus-ladies-b75b24-1024.jpg')
     artist10_prof.save()
 
-    artist11_prof = Artist.objects.create(user=user16_artist11_prof, rating=1, portfolio=portfolio15_prof,
+    artist11_prof = Artist.objects.create(user=user16_artist11_prof, rating=0, portfolio=portfolio15_prof,
                                           photo='https://raw.githubusercontent.com/Iriabow/pepe/master/pianista.jpg')
     artist11_prof.save()
 
