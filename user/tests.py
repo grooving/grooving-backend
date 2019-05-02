@@ -201,9 +201,6 @@ class BanAndUnbanTestCase(APITransactionTestCase):
 
 class RightToBeForgottenUserTestCase(APITransactionTestCase):
 
-    sharedData = {
-    }
-
     def generate_data(self, args):
         return {
             "id": args[1]  # user_id
@@ -226,9 +223,6 @@ class RightToBeForgottenUserTestCase(APITransactionTestCase):
                                        paypalAccount='artist1fortest@gmail.com')
         artist.save()
 
-        self.sharedData["artist_id"] = artist.id
-        self.sharedData["artist_user_id"] = user_artist.id
-
         portfolio = Portfolio.objects.create(artisticName='Tamta',
                                              artist=artist,
                                              banner='http://www.ddi.com.au/wp-content/uploads/AdobeStock_115567415.jpeg',
@@ -248,9 +242,6 @@ class RightToBeForgottenUserTestCase(APITransactionTestCase):
                                            language='en',
                                            paypalAccount="customer1fortest@gmail.com")
         customer.save()
-
-        self.sharedData["customer_id"] = customer.id
-        self.sharedData["customer_user_id"] = user_customer.id
 
         # Andalucía
         zone = Zone.objects.create(name='Sevilla')
@@ -332,24 +323,98 @@ class RightToBeForgottenUserTestCase(APITransactionTestCase):
         print("\nOk - Status expected: " + str(status_expected) + "\n")
 
 
-'''
-class UserTestCase(APITestCase):
+class LogInUserTestCase(APITransactionTestCase):
 
-    def test_signup_artist(self):
+    def generate_data(self, args):
+        return {
+            "username": args[0],
+            "password": args[1]
+        }
 
-        data1={"first_name": "deffefeeffefe", "last_name": "david1", "password": "perroperro",
-                "confirm_password": "perroperro", "username": "customer100", "email": "kiqo@gmail.com"}
+    def setUp(self):
+        # Creating an artist
 
-        response = self.client.post("/signupArtist/",data1,format='json')
-        self.assertEqual(response.status_code, 201)
+        user_artist = User.objects.create(username='artist1', password=make_password('artista1'),
+                                          first_name='Carlos', last_name='Campos Cuesta',
+                                          email="artist1fortest@gmail.com")
+        Token.objects.create(user=user_artist)
 
+        user_artist.save()
 
-    def test_signup_customer(self):
+        artist = Artist.objects.create(user=user_artist, rating=4.5, phone='600304999',
+                                       language='en',
+                                       photo='https://upload.wikimedia.org/wikipedia/commons/e/e7/Robin_Clark_%28DJ%29_Live_at_Techno4ever_net_Bday_Rave.jpg',
+                                       iban='ES6621000418401234567891',
+                                       paypalAccount='artist1fortest@gmail.com')
+        artist.save()
 
-        data1={"first_name": "deffefeeffefe", "last_name": "david1", "password": "perroperro",
-              "confirm_password": "perroperro", "username": "customer101", "email": "kiqo@gmail.com"}
+        portfolio = Portfolio.objects.create(artisticName='Tamta',
+                                             artist=artist,
+                                             banner='http://www.ddi.com.au/wp-content/uploads/AdobeStock_115567415.jpeg',
+                                             biography='Tamta, is a Georgian-Greek singer. She first achieved popularity in Greece and Cyprus in 2004 for her participation in Super Idol Greece, in which she placed second. She went on to release several charting albums and singles in Greece and Cyprus. Goduadze became a mentor on X Factor Georgia in 2014, and The X Factor Greece in 2016.')
+        portfolio.save()
 
-        response = self.client.post("/signupCustomer/",data1,format='json')
-        self.assertEqual(response.status_code, 201)
-        
-'''
+        # Creating a customer
+
+        user_customer = User.objects.create(username='customer1', password=make_password('cliente1'),
+                                            first_name='Rafael', last_name='Esquivias Ramírez',
+                                            email="customer1fortest@gmail.com")
+        Token.objects.create(user=user_customer)
+        user_customer.save()
+
+        customer = Customer.objects.create(user=user_customer, phone='639154189', holder='Rafael Esquivias Ramírez',
+                                           expirationDate='2020-10-01', number='4651001401188232',
+                                           language='en',
+                                           paypalAccount="customer1fortest@gmail.com")
+        customer.save()
+
+    def test_login_users(self):
+        print("------------- Starting test -------------")
+
+        payload = [
+            # Positive test 1, login as artist
+            ["artist1", "artista1", status.HTTP_200_OK],
+
+            # Positive test 2, login as customer
+            ["customer1", "cliente1", status.HTTP_200_OK],
+
+            # Negative test 3, login as user that not exists
+            ["Dont", "Exists", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 4, login as user that not exists
+            ["Dont", "Exists", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 5, login as user that username set to None
+            [None, "Exists", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 6, login as user that username is a Integer
+            [1, "artista1", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 7, login as user that password set to None
+            ["artist1", None, status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 8, login as user that password is a Integer
+            ["artist1", 1, status.HTTP_400_BAD_REQUEST],
+        ]
+
+        print("-------- Login users testing --------")
+
+        indice = 1
+
+        for data in payload:
+            print("---> Test " + str(indice))
+            self.template_login_users(data)
+            indice += 1
+
+    def template_login_users(self, args):
+        status_expected = args[-1]
+        language = args[-2]
+
+        data = self.generate_data(args)
+
+        response = self.client.post("/api/login/", data, format="json",
+                                    HTTP_ACCEPT_LANGUAGE=language)
+
+        self.assertEqual(status_expected, response.status_code)
+
+        print("\nOk - Status expected: " + str(status_expected) + "\n")
