@@ -31,15 +31,15 @@ def save_data():
                                                                slogan='Connecting artist with you',
                                                                logo='',
                                                                privacyText_en="<h2>Introduction</h2>" +
-                                                                              "<p>At Grooving, accessible from https://grooving-frontend-d3.herokuapp.com, one of our main " +
-                                                                              "priorities is the privacy of our visitors. This Privacy Policy document contains types of " +
+                                                                              "<p>For Grooving, accessible from https://grooving-frontend-d3.herokuapp.com, one of our main " +
+                                                                              "priorities is the privacy of our visitors. This Privacy Policy document contains the " +
                                                                               "information that is collected and recorded by Grooving and how we use it.</p>" +
                                                                               "<p>If you have additional questions or require more information about our Privacy Policy, " +
                                                                               "do not hesitate to contact us through email at grupogrooving@gmail.com</p>" +
 
                                                                               "<h2>Log Files</h2>" +
                                                                               "<p>Grooving follows a standard procedure of using log files. These files log visitors when  " +
-                                                                              "they visit websites. All hosting companies do this and a part of hosting services analytics. " +
+                                                                              "they visit websites. All hosting companies use them since they are part of hosting services analytics. " +
                                                                               "The information collected by log files include internet protocol (IP) addresses, browser type, " +
                                                                               "Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the " +
                                                                               "number of clicks. These are not linked to any information that is personally identifiable. " +
@@ -58,11 +58,11 @@ def save_data():
 
                                                                               "<p>In addition, third-party cookies are used for the development of your activity. Paypal and " +
                                                                               "Braintree cookies are used for payment security, to keep the users active session we use Django " +
-                                                                              "cookies and for the management of images we use GitHub and Amazon cookies.</p>" +
+                                                                              "cookies and for the management of images we use GitHub.</p>" +
 
                                                                               "<p>Note that Grooving has no access to or control over these cookies.</p>" +
                                                                               "<p>This Privacy Policy applies only to our online activities and is valid for visitors to our " +
-                                                                              "website with regards to the information that they shared and/or collect in Grooving. This " +
+                                                                              "website regarding the information that they shared and/or collect in Grooving. This " +
                                                                               "policy is not applicable to any information collected offline or via channels other than this " +
                                                                               "website.</p>" +
 
@@ -84,16 +84,12 @@ def save_data():
                                                                               "<p>For more information visit the following link: " +
                                                                               "<a href=\"https://github.com/github/site-policy\"></a>Github cookies policy</p>" +
 
-                                                                              "<h4>Amazon</h4>" +
-                                                                              "<p>For more information visit the following link: " +
-                                                                              "<a href=\"https://aws.amazon.com/es/compliance/data-privacy-faq/\">Amazon cookies privacy.</a>" +
-
                                                                               "<h4>Paypal</h4>" +
                                                                               "<p> For more information visit the following link: " +
                                                                               "<a href=\"https://www.paypal.com/uk/webapps/mpp/ua/cookie-full\">Paypal cookies policy</a></p>" +
 
                                                                               "<h2>Consent</h2>" +
-                                                                              "<p>By using our website, you hereby consent to our Privacy Policy and agree to its Terms and " +
+                                                                              "<p>By using our website, you hereby accept our Privacy Policy and agree to its Terms and " +
                                                                               "Conditions.</p>",
                                                                privacyText_es=
                                                                "<h2>Introducción</h2>" +
@@ -127,7 +123,7 @@ def save_data():
                                                                "<p>Además se utilizan cookies de terceros para el desarrollo de su actividad. Para la seguridad " +
                                                                "de los pagos se utilizan las cookies de Paypal y Braintree, para mantener la sesión activa de " +
                                                                "los usuarios utilizamos cookies de Django y para la gestión de imágenes utilizamos las cookies " +
-                                                               "de GitHub y Amazon.</p>" +
+                                                               "de GitHub.</p>" +
 
                                                                "<p>Tenga en cuenta que Grooving no tiene acceso ni control sobre estas cookies.</p>" +
 
@@ -169,7 +165,7 @@ def save_data():
 
                                                                           "<h2>Do you think it's impossible? </h2>" +
 
-                                                                          "<p>With <b>Grooving</b>, we managed to make it real by simplifying the search and hiring of " +
+                                                                          "<p>With <b>Grooving</b>, we manage to make it real by simplifying the search and hiring of " +
                                                                           "artists. </p>",
                                                                aboutUs_es="<h2>Sobre nosotros</h2>" +
                                                                           "<p>En Grooving, trabajamos duro para resolver los problemas diarios de los artistas dándoles a " +
