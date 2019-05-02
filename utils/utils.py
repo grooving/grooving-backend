@@ -168,7 +168,4 @@ def check_inserted_id(idobject, ObjectType, language):
     Assertions.assert_true_raise400(idobject is not None, translate(language, 'ERROR_VALUE_NULL'))
     Assertions.assert_true_raise400(str(idobject).isdigit(), translate(language, 'ERROR_NOT_A_VALID_ID'))
 
-    objectToFind = ObjectType.objects.filter(id=idobject).first
-
-    Assertions.assert_true_raise400(objectToFind, translate(language, 'ERROR_OBJECT_NOT_FOUND'))
     return True

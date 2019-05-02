@@ -40,6 +40,7 @@ class CalendarSerializer(serializers.ModelSerializer):
 
         r = re.compile('\d{4}-\d{4}-\d{2}')
         Assertions.assert_true_raise400(json.get('days') is not None, translate(language, 'ERROR_NO_DAYS_GIVEN'))
+        Assertions.assert_true_raise400(json.get('days') != '', translate(language, 'ERROR_NO_DAYS_GIVEN'))
         for day in json['days']:
             Assertions.assert_true_raise400(r.match(day), translate(language, 'ERROR_INCORRECT_FORMAT'))
             calendar.days.append(day)
