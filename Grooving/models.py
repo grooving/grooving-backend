@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.utils import timezone
-
+import time
 # Create your models here.
 
 fotoType = (
@@ -17,6 +17,8 @@ class Upload(models.Model):
     file = models.FileField()
     type = models.CharField(choices=fotoType, max_length=50)
     userId = models.IntegerField()
+    timeStamp = models.IntegerField(default=int(round(time.time() * 1000)))
+
 
 
 class AbstractEntity(models.Model):
