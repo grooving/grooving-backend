@@ -86,65 +86,98 @@ class BanAndUnbanTestCase(APITransactionTestCase):
 
         payload = [
 
-            # Test positivo 1, banear un artista
+            # Positive test 1, ban artist
             [token, 2, "es", status.HTTP_200_OK],
 
-            # Test positivo 2, desbanear un artista
+            # Positive test 2, unban artist
             [token, 2, "es", status.HTTP_200_OK],
 
-            # Test negativo 3, banear un artista con Token None
+            # Negative test 3, ban artist with token None
             [None, 2, "es", status.HTTP_401_UNAUTHORIZED],
 
-            # Test negativo 4: banear un artista con Token vacío
+            # Negative test 4: ban artist with empty Token
             ["", 2, "es", status.HTTP_401_UNAUTHORIZED],
 
-            # Test negativo 5: banear un artista con Token inexistente
+            # Negative test 5: ban artist with token that not exists
             ["dada21231d11", 2, "es", status.HTTP_401_UNAUTHORIZED],
 
-            # Test negativo 6: banear un artista con lenguage a None
-            [token, 2, None, status.HTTP_400_BAD_REQUEST],
-
-            # Test negativo 7: banear un artista con lenguage vacío
-            [token, 2, "", status.HTTP_400_BAD_REQUEST],
-
-            # Test negativo 8: banear un artista con lenguage no existente
-            [token, 2, "pt", status.HTTP_400_BAD_REQUEST],
-
-            # Test positivo 9, banear un customer
+            # Positive test 6, ban customer
             [token, 3, "es", status.HTTP_200_OK],
 
-            # Test positivo 10, desbanear un customer
+            # Positive test 7, unban customer
             [token, 3, "es", status.HTTP_200_OK],
 
-            # Test negativo 11, banear un customer con Token None
+            # Negative test 8, ban customer with token None
             [None, 3, "es", status.HTTP_401_UNAUTHORIZED],
 
-            # Test negativo 12: banear un customer con Token vacío
+            # Negative test 9: ban customer with empty Token
             ["", 3, "es", status.HTTP_401_UNAUTHORIZED],
 
-            # Test negativo 13: banear un customer con Token inexistente
+            # Negative test 10: ban customer with Token that not exist
             ["dada21231d11", 3, "es", status.HTTP_401_UNAUTHORIZED],
 
-            # Test negativo 14: banear un customer con lenguage a None
-            [token, 3, None, status.HTTP_400_BAD_REQUEST],
-
-            # Test negativo 15: banear un customer con lenguage vacío
-            [token, 3, "", status.HTTP_400_BAD_REQUEST],
-
-            # Test negativo 16: banear un customer con lenguage no existente
-            [token, 3, "pt", status.HTTP_400_BAD_REQUEST],
-
-            # Test negativo 17: banear un customer con lenguage como integer
-            [token, 3, 1, status.HTTP_400_BAD_REQUEST],
-
-            # Test negativo 18: banear un customer con user_id a None
+            # Negative test 11: ban user with user_id None
             [token, None, "es", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 19: banear un customer con user_id como cadena
+            # Negative test 12: ban user with user_id like string
             [token, "", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 20: banear un customer con user_id no existente
-            [token, "1dasdads", "es", status.HTTP_400_BAD_REQUEST],
+            # Negative test 13: ban user with user_id that not exists
+            [token, 564, "es", status.HTTP_400_BAD_REQUEST],
+
+            # Positive test 14, ban artist
+            [token, 2, "en", status.HTTP_200_OK],
+
+            # Positive test 15, unban artist
+            [token, 2, "en", status.HTTP_200_OK],
+
+            # Negative test 16, ban artist with token None
+            [None, 2, "en", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 17: ban artist with empty Token
+            ["", 2, "en", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 18: ban artist with token that not exists
+            ["dada21231d11", 2, "en", status.HTTP_401_UNAUTHORIZED],
+
+            # Positive test 19, ban customer
+            [token, 3, "en", status.HTTP_200_OK],
+
+            # Positive test 20, unban customer
+            [token, 3, "en", status.HTTP_200_OK],
+
+            # Negative test 21, ban customer with token None
+            [None, 3, "en", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 22: ban customer with empty Token
+            ["", 3, "en", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 23: ban customer with Token that not exist
+            ["dada21231d11", 3, "en", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 24: ban user with user_id None
+            [token, None, "en", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 25: ban user with user_id like string
+            [token, "", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 26: ban user with user_id that not exists
+            [token, 564, "en", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 27: ban user with language like integer
+            [token, 3, 1, status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 28: ban user with lenguage set to None
+            [token, 3, None, status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 29: ban user with empty language
+            [token, 3, "", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 30: ban user with language that not exists
+            [token, 3, "pt", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 31: ban user with lenguage set to None
+            [token, 2, None, status.HTTP_400_BAD_REQUEST],
         ]
 
         print("-------- Ban & unban testing --------")

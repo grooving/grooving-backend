@@ -26,109 +26,201 @@ class RegisterTestCase(APITransactionTestCase):
 
         payload = [
 
-            # Test positivo 1, crea un artista con language en español
+            # Positive test 1, create an artist with language spanish
             ["David", "Romero Esparraga", "artist1", "elArtistaEspañol", "elArtistaEspañol", "utri2099@gmail.com",
              "http://www.google.com/image.png", "El pescailla", "es", status.HTTP_201_CREATED],
 
-            # Test positivo 2, crea un artista con language en inglés
+            # Positive test 2, create an artist with english language
             ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_201_CREATED],
 
-            # Test positivo 3, crea un artista con el nombre artístico ya existente
+            # Negative test 3, create an artist with existing artisticName
             ["Miguel", "Barahona Estevez", "sdadwa", "elArtistaIngles", "elArtistaIngles", "utri210das0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 4, crea un artista con un correo ya existente
+            # Negative test 4, create an artist with existing username
             ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 5, crea un artista con el nombre None
+            # Negative test 5, create an artist with first_name set to None
             [None, "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 6, crea un artista con el nombre vacío
+            # Negative test 6, create an artist with empty first_name
             ["", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 7, crea un artista con el nombre con números y caracteres especiales
+            # Negative test 7, create an artist with first_name with number & special characters
             ["Poli111$car", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 8, crea un artista con el apellido None
+            # Negative test 8, create an artist with last_name set to None
             ["Policarco", None, "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 9, crea un artista con el apellido vacío
+            # Negative test 9, create an artist with empty last_name
             ["Policarco", "", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 10, crea un artista con el apellido con números y caracteres
+            # Negative test 10, create an artist with last_name with special characters
             ["Policarco", "Mi123$", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 11, crea un artista con username None
+            # Negative test 11, create an artist with username set to None
             ["Policarco", "Mi123$", None, "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 12, crea un artista con username vacío
+            # Negative test 12, create an artist with empty username
             ["Policarco", "Hernandez", "", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 13, crea un artista con username ya existente
+            # Negative test 13, create an artist with existing username
             ["Policarco", "Hernandez", "artist1", "elArtistaIngles", "elArtistaIngles", "utri28100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 14, crea un artista con password None
+            # Negative test 14, create an artist with password None
             ["Policarco", "Mi123$", "artist2", None, "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 15, crea un artista con password vacía
+            # Negative test 15, create an artist with empty password
             ["Policarco", "Miguelin", "artist2", "", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 16, crea un artista con tamaño menor a 7 caracteres
+            # Negative test 16, create an artist with passwords that size lower than 7
             ["Policarco", "Miguelin", "artist2", "123456", "123456", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 17, crea un artista con tamaño menor a 7 caracteres
+            # Negative test 17, create an artist with confirm_password set to None
             ["Policarco", "Miguelin", "artist2", "1234g6gt", None, "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 18, crea un artista con tamaño menor a 7 caracteres
+            # Negative test 18, create an artist with passwords that size lower than 7
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 19, crea un artista con contraseñas que no coinciden
+            # Negative test 19, create an artist with passwords that not match
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "fsdgsdfgsdfgs", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 20, crea un artista con contraseñas poco seguras
+            # Negative test 20, create an artist with insecure password
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 21, crea un artista con contraseñas poco seguras
+            # Negative test 21, create an artist with insecure password
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 22, crea un artista con email no valido
+            # Negative test 22, create an artist with not valid email
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "holdasda",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 23, crea un artista con imagen no válida
+            # Negative test 23, create an artist with not valid image
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
              "http:/ /www.google.com/image.png", "Camela", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 24, crea un artista con imagen vacío
+            # Negative test 24, create an artist with empty image
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
              "h", "Camela", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 25, crea un artista con language None
+            # Negative test 25, create an artist with language set to None
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "Camela", None, status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 26, crea un artista con language no soportado
+            # Negative test 26, create an artist with language not supported
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
              "http:/ /www.google.com/image.png", "Camela", "pt", status.HTTP_400_BAD_REQUEST],
+
+
+
+
+
+            # Negative test 27, create an artist with existing artisticName
+            ["Miguel", "Barahona Estevez", "sdadwa", "elArtistaIngles", "elArtistaIngles", "utri210das0@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 28, create an artist with existing username
+            ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 29, create an artist with first_name set to None
+            [None, "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 30, create an artist with empty first_name
+            ["", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 31, create an artist with first_name with number & special characters
+            ["Poli111$car", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 32, create an artist with last_name set to None
+            ["Policarco", None, "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 33, create an artist with empty last_name
+            ["Policarco", "", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 34, create an artist with last_name with special characters
+            ["Policarco", "Mi123$", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 35, create an artist with username set to None
+            ["Policarco", "Mi123$", None, "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 36, create an artist with empty username
+            ["Policarco", "Hernandez", "", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 37, create an artist with existing username
+            ["Policarco", "Hernandez", "artist1", "elArtistaIngles", "elArtistaIngles", "utri28100@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 38, create an artist with password None
+            ["Policarco", "Mi123$", "artist2", None, "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 39, create an artist with empty password
+            ["Policarco", "Miguelin", "artist2", "", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 40, create an artist with passwords that size lower than 7
+            ["Policarco", "Miguelin", "artist2", "123456", "123456", "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 41, create an artist with confirm_password set to None
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", None, "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 42, create an artist with passwords that size lower than 7
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", "", "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 43, create an artist with passwords that not match
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", "fsdgsdfgsdfgs", "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 44, create an artist with insecure password
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 45, create an artist with insecure password
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 46, create an artist with not valid email
+            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "holdasda",
+             "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 47, create an artist with not valid image
+            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
+             "http:/ /www.google.com/image.png", "Camela", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 48 create an artist with empty image
+            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
+             "h", "Camela", "es", status.HTTP_400_BAD_REQUEST]
 
         ]
         print("-------- Creating artist testing --------")
