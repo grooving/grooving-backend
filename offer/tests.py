@@ -1,5 +1,5 @@
-from Grooving.models import  Artist, Portfolio, User,  PaymentPackage, Customer, EventLocation, Zone, \
-    Performance, SystemConfiguration
+from Grooving.models import Artist, Portfolio, User,  PaymentPackage, Customer, EventLocation, Zone, \
+    Performance, SystemConfiguration, Fare, Custom
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITransactionTestCase
@@ -16,7 +16,6 @@ class OfferTestCase(APITransactionTestCase):
         user1_artist10 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
                                              first_name='Carlos', last_name='Campos Cuesta',
                                              email=your_email)
-        Token.objects.create(user=user1_artist10)
 
         artist1 = Artist.objects.create(user=user1_artist10, rating=5.0, phone='600304999',
                                         language='en',
@@ -26,7 +25,6 @@ class OfferTestCase(APITransactionTestCase):
         user2_customer1 = User.objects.create(username='customer1', password=make_password('customer1customer1'),
                                               first_name='Rafael', last_name='Esquivias Ramírez',
                                               email=your_email)
-        Token.objects.create(user=user2_customer1)
 
         customer1 = Customer.objects.create(user=user2_customer1, phone='639154189', holder='Rafael Esquivias Ramírez',
                                             expirationDate='2020-10-01', number='4651001401188232',
@@ -35,23 +33,42 @@ class OfferTestCase(APITransactionTestCase):
 
         zone1 = Zone.objects.create(name='Andalucía')
 
-        event_location1 = EventLocation.objects.create(name="Sala Custom", address="C/Madrid",
+        EventLocation.objects.create(name="Sala Custom", address="C/Madrid",
                                                        equipment="Speakers and microphone",
                                                        description="The best event location",
                                                        zone=zone1, customer_id=customer1.id)
 
-        event_location1.save()
+        user3_customer2 = User.objects.create(username='customer2', password=make_password('customer2customer2'),
+                                              first_name='Rafael', last_name='Esquivias Ramírez',
+                                              email=your_email)
+
+        customer2 = Customer.objects.create(user=user3_customer2, phone='639154189', holder='Rafael Esquivias Ramírez',
+                                            expirationDate='2020-10-01', number='4651001401188232',
+                                            language='en',
+                                            paypalAccount='rafesqram@gmail.com')
+
+        zone2 = Zone.objects.create(name='Madrid')
+
+        EventLocation.objects.create(name="Sala Custom", address="C/Madrid",
+                                       equipment="Speakers and microphone",
+                                       description="The best event location",
+                                       zone=zone2, customer_id=customer2.id)
 
         portfolio1 = Portfolio.objects.create(artist=artist1, artisticName="Los rebujitos")
         portfolio1.zone.add(zone1)
         portfolio1.save()
 
         performance1 = Performance.objects.create(info="Informacion", hours=3, price=200)
-        payment_package1 = PaymentPackage.objects.create(description="Descripcion", currency="€", portfolio=portfolio1,
-                                                         performance=performance1)
-        payment_package1.save()
+        PaymentPackage.objects.create(description="Descripcion", currency="€", portfolio=portfolio1,
+                                        performance=performance1)
 
-        performance1.save()
+        fare1 = Fare.objects.create(priceHour=25.0)
+        PaymentPackage.objects.create(description='Fare Payment Package Type from Taylor Swift', portfolio=portfolio1,
+                                        fare=fare1)
+
+        custom1 = Custom.objects.create(minimumPrice=100.0)
+        PaymentPackage.objects.create(description='Custom Payment Package Type from Rosalía', portfolio=portfolio1,
+                                        custom=custom1)
 
         SystemConfiguration.objects.create(minimumPrice=20.0, currency='EUR', paypalTax='3.4', creditCardTax='1.9',
                                            vat='21',
@@ -71,36 +88,91 @@ class OfferTestCase(APITransactionTestCase):
 
     def test_driver_create_offer(self):
 
-        print('Start test')
-        data1 = {"username": "customer1", "password": "customer1customer1"}
-        response = self.client.post("/api/login/", data1, format='json')
+        print('---- Starting Create Offer tests ----')
 
-        token_num = response.get('x-auth')
+        # Generate tokens
 
-        #Para evitar problemas si el token no existe en bd
-        token = ''
+        bodyCustomer = {"username": "customer1", "password": "customer1customer1"}
+        bodyArtist = {"username": "artist1", "password": "artist1artist1"}
+
+        requestCustomer = self.client.post("/api/login/", bodyCustomer, format='json')
+        requestArtist = self.client.post("/api/login/", bodyArtist, format='json')
+
+        tokenCustomer = ''
+        tokenArtist = ''
         try:
-            token = Token.objects.all().filter(pk=token_num).first().key
+            tokenCustomer = Token.objects.all().filter(pk=requestCustomer.get('x-auth')).first().key
+            tokenArtist = Token.objects.all().filter(pk=requestArtist.get('x-auth')).first().key
         except:
-            pass
+            print('---- Token doesn\'t retreive ----')
+
+        # References
+
+        eventLocation1 = EventLocation.objects.filter(customer__user__username='customer1').first()
+        eventLocation2 = EventLocation.objects.filter(customer__user__username='customer2').first()
+        performancePackage = PaymentPackage.objects.filter(performance__isnull=False).first()
+        farePackage = PaymentPackage.objects.filter(fare__isnull=False).first()
+        customPackage = PaymentPackage.objects.filter(custom__isnull=False).first()
+
         # Data payload
-        portfolio1 = Portfolio.objects.get(artisticName="Los rebujitos")
+        # ['Token', 'description', 'date', 'hours', 'price', paymentPackage_id', 'eventLocation_id']
+
         payload = [
-                # Test positivo, crear oferta a un PERFORMANCE package
-                [token, 'Descripcion1', '2019-05-10T10:00:00', 1, portfolio1.id, 201],
-                # Test negativo - Fecha incorrecta
-                [token, 'Descripcion2', '2019 10:00:00', 1, portfolio1.id, 400],
-                # Test negativo - Descripcion incorrecta
-                [token, '', '2019-05-10T10:00:00', 1, portfolio1.id, 400]]
+                # POSITIVE TESTS
+                # Offer with Performanace package
+                [tokenCustomer, 'Descripcion1', '2019-05-11T10:00:00', None, None, performancePackage.id, eventLocation1.id, 201],
+                # Offer with Fare package
+                [tokenCustomer, 'Descripcion2', '2019-05-12T10:00:00', 3.5, None, farePackage.id, eventLocation1.id, 201],
+                # Offer with Custom package
+                [tokenCustomer, 'Descripcion3', '2019-05-13T10:00:00', 3.5, 1000.0, customPackage.id, eventLocation1.id, 201],
+
+                #NEGATIVE TESTS
+                # Unauthenticated user
+                ['', 'Descripcion1', '2019-05-10T10:00:00', None, None, performancePackage.id, eventLocation1.id, 401],
+                # User unauthorized
+                [tokenArtist, 'Descripcion1', '2019-05-10T10:00:00', None, None, performancePackage.id, eventLocation1.id, 403],
+                # Description not provided
+                [tokenCustomer, None, '2019-05-10T10:00:00', None, None, performancePackage.id, eventLocation1.id, 400],
+                # Date not provided
+                [tokenCustomer, 'Descripcion1', None, None, None, performancePackage.id, eventLocation1.id, 400],
+                # Date bad provided
+                [tokenCustomer, 'Descripcion1', '2019-05-10', None, None, performancePackage.id, eventLocation1.id, 400],
+                # Past date
+                [tokenCustomer, 'Descripcion1', '2018-05-10T10:00:00', None, None, performancePackage.id, eventLocation1.id, 400],
+                # Payment package not provided
+                [tokenCustomer, 'Descripcion1', '2018-05-10T10:00:00', None, None, None, eventLocation1.id, 400],
+                # Payment package not exist
+                [tokenCustomer, 'Descripcion1', '2018-05-10T10:00:00', None, None, 999, eventLocation1.id, 400],
+                # Fare package - hours not provided
+                [tokenCustomer, 'Descripcion1', '2018-05-10T10:00:00', None, None, farePackage.id, eventLocation1.id, 400],
+                # Fare package - hours bad provided
+                [tokenCustomer, 'Descripcion1', '2018-05-10T10:00:00', None, 1.3, farePackage.id, eventLocation1.id, 400],
+                # Custom package - price not provided
+                [tokenCustomer, 'Descripcion1', '2018-05-10T10:00:00', None, None, customPackage.id, eventLocation1.id, 400],
+                # Custom package - price below minimum
+                [tokenCustomer, 'Descripcion1', '2018-05-10T10:00:00', 10.0, None, customPackage.id, eventLocation1.id, 400],
+                # Event location not provided
+                [tokenCustomer, 'Descripcion1', '2018-05-10T10:00:00', None, None, performancePackage.id, None, 400],
+                # Event location not exist
+                [tokenCustomer, 'Descripcion1', '2018-05-10T10:00:00', None, None, performancePackage.id, 999, 400],
+                # Event location not belong to user
+                [tokenCustomer, 'Descripcion1', '2018-05-10T10:00:00', None, None, performancePackage.id, eventLocation2.id, 400],
+        ]
 
         for data in payload:
+            print('Payload index ' + str(payload.index(data)) + ': ' + str(data))
             self.template_create_offer(data)
+            print('\n')
+
+        print('---- Create Offer tests finished ----')
 
     def generateData(self, args):
         return {'description': args[1],
                 'date': args[2],
-                'paymentPackage_id': args[3],
-                'eventLocation_id': args[4]}
+                'hours': args[3],
+                'price': args[4],
+                'paymentPackage_id': args[5],
+                'eventLocation_id': args[6]}
 
     # Template function
 
