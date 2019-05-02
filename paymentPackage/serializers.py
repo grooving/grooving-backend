@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from Grooving.models import PaymentPackage, Custom, Fare, Performance
+from Grooving.models import PaymentPackage, Custom, Fare, Performance, SystemConfiguration
 from utils.Assertions import Assertions
 from utils.utils import isPositivefloat
 from utils.utils import check_accept_language
@@ -251,7 +251,7 @@ class PerformanceSerializer(serializers.ModelSerializer):
 
         Assertions.assert_true_raise400(isPositivefloat(hours), translate(keyLanguage=language,
                                                                           keyToTranslate="ERROR_INVALID_HOURS"))
-        Assertions.assert_true_raise400(isPositivefloat(price), translate(keyLanguage=language,
+        Assertions.assert_true_raise400(isPositivefloat(price) and float(price) >= SystemConfiguration.objects.all().first().minimumPrice, translate(keyLanguage=language,
                                                                           keyToTranslate="ERROR_INVALID_PRICE"))
 
 
