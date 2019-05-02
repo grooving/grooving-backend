@@ -14,7 +14,7 @@ from utils.notifications.notifications import Notifications
 from Server import settings
 import requests
 import braintree
-import json
+import decimal
 from requests.auth import HTTPBasicAuth
 from .internationalization import translate
 from utils.utils import check_accept_language
@@ -133,13 +133,16 @@ class OfferSerializer(serializers.ModelSerializer):
                                         translate(language, 'ERROR_PAYPAL_CREDENTIALS'))
 
         system_configuration = SystemConfiguration.objects.filter(pk=1).first()
-        amount = offer.transaction.amount * ((100.0 - (10 - system_configuration.creditCardTax - system_configuration.paypalTax)) / 100)
+        amount = offer.transaction.amount * ((decimal.Decimal(100.0) - (decimal.Decimal(10.0) - system_configuration.creditCardTax - system_configuration.paypalTax)) / decimal.Decimal(100.0))
+        amount = round(amount,2)
+        print(amount)
 
         response = requests.post('https://api.sandbox.paypal.com/v1/payments/payouts',
                                  data='{"sender_batch_header": {"sender_batch_id": "Payment_Offer_'+str(paymentCode)+'","email_subject": "You have a payout!","email_message": "You have received a payout! Thanks for using our service!"},"items": [{"recipient_type": "EMAIL","amount": {"value": "'+str(amount)+'","currency": "EUR"},"note": "Thanks for your patronage!","receiver": "'+str(user_logged.paypalAccount)+'"}]}',
                                  headers={'content-type': 'application/json',
                                           'authorization': 'Bearer ' + access_token})
 
+        print(response.json())
         Assertions.assert_true_raise400(response, translate(language, 'ERROR_PAYMENT_NOT_RESPONSE'))
         # except:
         # offer.status == 'CONTRACT_MADE'

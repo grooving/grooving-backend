@@ -26,112 +26,201 @@ class RegisterTestCase(APITransactionTestCase):
         print("------------- Starting test -------------")
 
         payload = [
-            # Test positivo 1, crea un artista con language en español
+            # Positive case 1: create a customer with spanish language
             ["David", "Romero Esparraga", "artist1", "elArtistaEspañol", "elArtistaEspañol", "utri2099@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_201_CREATED],
 
-            # Test positivo 2, crea un artista con language en inglés
+            # Positive case 2: create a customer with english language
             ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_201_CREATED],
 
-            # Test positivo 3, crea un artista con un correo ya existente
+            # Negative case 3: create a customer with existing mail
             ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test positivo 4, crea un artista con el nombre None
+            # Negative case 4: create a customer with name set to None
             [None, "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 5, crea un artista con el nombre vacío
+            # Negative case 5: create a customer with empty name
             ["", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 6, crea un artista con el nombre con números y caracteres especiales
+            # Negative case 6: create a customer with name with numbers
             ["Poli111$car", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 7, crea un artista con el apellido None
+            # Negative case 7, create a customer with last_name set to None
             ["Policarco", None, "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 8, crea un artista con el apellido vacío
+            # Negative case 8, create a customer with empty last_name
             ["Policarco", "", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 9, crea un artista con el apellido con números y caracteres
+            # Negative case 9, create a customer with last_name set to string with special characters
             ["Policarco", "Mi123$", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 10, crea un artista con username None
+            # Negative test 10, create a customer with username set to None
             ["Policarco", "Mi123$", None, "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 11, crea un artista con username vacío
+            # Negative test 11, create a customer with empty username
             ["Policarco", "Hernandez", "", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 12, crea un artista con username ya existente
+            # Negative test 12, create a customer with existing username
             ["Policarco", "Hernandez", "artist1", "elArtistaIngles", "elArtistaIngles", "utri28100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 13, crea un artista con password None
+            # Negative test 13, create a customer with password None
             ["Policarco", "Mi123$", "artist2", None, "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 14, crea un artista con password vacía
+            # Negative test 14, create a customer with empty password
             ["Policarco", "Miguelin", "artist2", "", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 15, crea un artista con tamaño menor a 7 caracteres
+            # Negative test 15, create a customer with password lower that 7 characters
             ["Policarco", "Miguelin", "artist2", "123456", "123456", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 16, crea un artista con tamaño menor a 7 caracteres
+            # Negative test 16, create a customer with confirm_password set to None
             ["Policarco", "Miguelin", "artist2", "1234g6gt", None, "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 17, crea un artista con tamaño menor a 7 caracteres
+            # Negative test 17, create a customer with empty confirm_password
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 18, crea un artista con contraseñas que no coinciden
+            # Negative test 18, create a customer with distinct passwords
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "fsdgsdfgsdfgs", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 19, crea un artista con contraseñas poco seguras
+            # Negative test 19, create a customer with insecure passwords
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 20, crea un artista con contraseñas poco seguras
+            # Negative test 20, create a customer with insecure passwords
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 21, crea un artista con email no valido
+            # Negative test 21, create a customer with not valid mail
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "holdasda",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 22, crea un artista con imagen no válida
+            # Negative test 22, create a customer with not valid image
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
              "http:/ /www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 23, crea un artista con imagen vacío
+            # Negative test 23, create a customer with empty image
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
-             "h", "El chungo de Torreblanca", "en", status.HTTP_400_BAD_REQUEST],
+             "h", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 24, crea un artista con language None
+            # Negative test 24, create a customer with language set to None
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", None, status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 25, crea un artista con language no soportado
+            # Negative test 25, create a customer with language with not supported language
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
              "http:/ /www.google.com/image.png", "pt", status.HTTP_400_BAD_REQUEST],
+
+
+
+
+            # Negative case 26: create a customer with existing mail
+            ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative case 27: create a customer with name set to None
+            [None, "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative case 28: create a customer with empty name
+            ["", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative case 29: create a customer with name with numbers
+            ["Poli111$car", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative case 30, create a customer with last_name set to None
+            ["Policarco", None, "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative case 31, create a customer with empty last_name
+            ["Policarco", "", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative case 32, create a customer with last_name set to string with special characters
+            ["Policarco", "Mi123$", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 33, create a customer with username set to None
+            ["Policarco", "Mi123$", None, "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 34, create a customer with empty username
+            ["Policarco", "Hernandez", "", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 35, create a customer with existing username
+            ["Policarco", "Hernandez", "artist1", "elArtistaIngles", "elArtistaIngles", "utri28100@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 36, create a customer with password None
+            ["Policarco", "Mi123$", "artist2", None, "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 37, create a customer with empty password
+            ["Policarco", "Miguelin", "artist2", "", "elArtistaIngles", "utri2100@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 38, create a customer with password lower that 7 characters
+            ["Policarco", "Miguelin", "artist2", "123456", "123456", "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 39, create a customer with confirm_password set to None
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", None, "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 40, create a customer with empty confirm_password
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", "", "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 41, create a customer with distinct passwords
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", "fsdgsdfgsdfgs", "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 42, create a customer with insecure passwords
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 43, create a customer with insecure passwords
+            ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "utri210dada0@gmail.com",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 44, create a customer with not valid mail
+            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "holdasda",
+             "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 45, create a customer with not valid image
+            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
+             "http:/ /www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 46, create a customer with empty image
+            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
+             "h", "es", status.HTTP_400_BAD_REQUEST],
 
         ]
 
         print("-------- Creating artist testing --------")
         for data in payload:
+            # setup
             print("---> Test " + str(payload.index(data) + 1))
             self.template_register_user(data)
+            # teardown
 
     def template_register_user(self, args):
         status_expected = args[-1]

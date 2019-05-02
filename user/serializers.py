@@ -50,7 +50,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     def anonymize_and_hide_artist(artist: Artist):
         portfolio = Portfolio.objects.filter(artist=artist).first()
         portfolio.isHidden = True
-        portfolio.artistictName = None
+        portfolio.artisticName = None
         portfolio.banner = None
         portfolio.biography = None
         portfolio.save()

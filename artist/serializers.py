@@ -87,6 +87,7 @@ class ArtistSerializer(serializers.ModelSerializer):
         user = User.objects.create(username=json.get('username'), password=make_password(json.get('password')),
                                    first_name=json.get('first_name'), last_name=json.get('last_name'),
                                    email=json.get('email'))
+        photo_base64 = json.get('photo')
 
         artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'), user=user)
 
