@@ -228,7 +228,12 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
         if json['artisticGenders'] is not None:
 
             for genre in portfolio_in_db.artisticGender.all():
-                if genre.name in json['artisticGenders']:
+
+                if language == 'en':
+                    genre_aux = genre.name_en
+                elif language == 'es':
+                    genre_aux = genre.name_es
+                if genre_aux in json['artisticGenders']:
                     None
                 else:
                     portfolio_in_db.artisticGender.remove(genre.id)
