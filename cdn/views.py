@@ -179,3 +179,28 @@ def delete_orphan_carousels(user):
             miliseconds = seconds*1000
             if PortfolioModule.objects.filter(link=file.file.url).count() <= 0 and timePass >= miliseconds:
                 delete_completely(file)
+
+
+def register_profile_photo_upload(base64, extension, user):
+    if extension is not None:
+        extension = str(extension)
+        extension = extension.strip()
+
+    contains_newimage = extension is not None and extension
+    Assertions.assert_true_raise400(contains_newimage,
+                                    {"error": "ERROR_MUST_HAVE_DATA_AND_EXTENSION"})
+
+    fileInDB = Upload.objects.filter(userId=user.user_id, type="PROFILE").first()
+    delete_completely(fileInDB)
+
+    random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(30))
+    name = random_alphanumeric + "." + extension
+    img_decode_data = base64.b64decode(base64)
+    img_size = len(img_decode_data)
+    Assertions.assert_true_raise400(img_size <= 2097152, {"error": "ERROR_IMAGE_MORE_THAN_2MB"})
+    img_file = ContentFile(img_decode_data, name=name)
+
+    file = Upload(file=img_file, type="PROFILE", userId=user.user_id)
+    file.save()
+
+    return file.file.url
