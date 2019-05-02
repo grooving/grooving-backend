@@ -30,7 +30,7 @@ class ImageManager(generics.UpdateAPIView):
         elif artist is not None:
             user = artist
             #delete_orphan_files(user, "ARTIST")
-            delete_orphan_carousels(user)
+            #delete_orphan_carousels(user)
         Assertions.assert_true_raise403(user is not None, {"error": "ERROR_NOT_LOG_IN"})
 
 
@@ -87,6 +87,7 @@ class ImageManager(generics.UpdateAPIView):
                 Assertions.assert_true_raise400(img_size <= 2097152, {"error": "ERROR_IMAGE_MORE_THAN_2MB"})
                 img_file = ContentFile(img_decode_data, name=name)
                 fileInDB.file = img_file
+                fileInDB.timeStamp = int(round(time.time() * 1000))
                 fileInDB.save()
 
                 return Response({"imgUrl": fileInDB.file.url}, status=status.HTTP_200_OK)
@@ -110,9 +111,8 @@ class ImageManager(generics.UpdateAPIView):
 
                 return Response({"imgUrl": file.file.url}, status=status.HTTP_200_OK)
             if type == "CAROUSEL" and artist is not None:
-                filesInDB = Upload.objects.filter(userId=user.user_id, type=type)
-                nFiles = filesInDB.count()
-                Assertions.assert_true_raise400(nFiles <= 10, {"error": "ERROR_CAROUSEL_PHOTO_LIMIT_IS_TEN"})
+                nPorfolioModules = PortfolioModule.objects.filter(portfolio=artist.portfolio, type="PHOTO").count()
+                Assertions.assert_true_raise400(nPorfolioModules <= 10, {"error": "ERROR_CAROUSEL_PHOTO_LIMIT_IS_TEN"})
 
                 random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(30))
                 name = random_alphanumeric + "."+img_extension
@@ -120,8 +120,8 @@ class ImageManager(generics.UpdateAPIView):
                 img_size = len(img_decode_data)
                 Assertions.assert_true_raise400(img_size <= 2097152, {"error": "ERROR_IMAGE_MORE_THAN_2MB"})
                 img_file = ContentFile(img_decode_data, name=name)
-
-                file = Upload(file=img_file, type=type, userId=user.user_id)
+                user_id=user.user_id
+                file = Upload(file=img_file, type=type, userId=user_id)
                 file.save()
 
                 return Response({"imgUrl": file.file.url}, status=status.HTTP_200_OK)
@@ -175,5 +175,7 @@ def delete_orphan_carousels(user):
     for file in files:
         timePass = now - file.timeStamp
         if file.type == "CAROUSEL":
-            if PortfolioModule.objects.filter(link=file.file.url).count() <= 0 and timePass >= 10:
+            seconds = 300
+            miliseconds = seconds*1000
+            if PortfolioModule.objects.filter(link=file.file.url).count() <= 0 and timePass >= miliseconds:
                 delete_completely(file)

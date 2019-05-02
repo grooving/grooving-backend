@@ -13,11 +13,15 @@ fotoType = (
     ('CAROUSEL', 'CAROUSEL'),
     )
 
+def get_time_stamp():
+    return int(round(time.time() * 1000))
+
+
 class Upload(models.Model):
     file = models.FileField()
     type = models.CharField(choices=fotoType, max_length=50)
     userId = models.IntegerField()
-    timeStamp = models.IntegerField(default=int(round(time.time() * 1000)))
+    timeStamp = models.BigIntegerField(default=get_time_stamp)
 
 
 
@@ -208,6 +212,7 @@ class Offer(AbstractEntity):
 
     def __str__(self):
         return str(self.description)
+
 
 class SystemConfiguration(AbstractEntity):
     minimumPrice = models.DecimalField(default=0.0, max_digits=20, decimal_places=2,
