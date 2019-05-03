@@ -6,6 +6,8 @@ from Grooving.models import Portfolio, Customer, Artist, Portfolio, User, Zone, 
 from datetime import datetime
 from django.contrib.auth.hashers import make_password
 from rest_framework.test import APITestCase
+
+
 # Create your tests here.
 
 
@@ -126,9 +128,6 @@ class RegisterTestCase(APITransactionTestCase):
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
              "http:/ /www.google.com/image.png", "pt", status.HTTP_400_BAD_REQUEST],
 
-
-
-
             # Negative case 26: create a customer with existing mail
             ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
@@ -233,6 +232,116 @@ class RegisterTestCase(APITransactionTestCase):
 
         print("\nOk - Status expected: " + str(status_expected) + "\n")
 
+
+class EditCustomerPersonalInformation(APITransactionTestCase):
+    sharedData = {
+
+    }
+
+    def setUp(self):
+        user_customer = User.objects.create(username='customer1', password=make_password('cliente1'),
+                                            first_name='Rafael', last_name='Esquivias Ramírez',
+                                            email="customer1fortest@gmail.com")
+        Token.objects.create(user=user_customer)
+        user_customer.save()
+
+        customer = Customer.objects.create(user=user_customer, phone='639154189', holder='Rafael Esquivias Ramírez',
+                                           expirationDate='2020-10-01', number='4651001401188232',
+                                           language='en',
+                                           paypalAccount="customer1fortest@gmail.com")
+        customer.save()
+
+        self.sharedData['customer_id'] = customer.id
+        self.sharedData['user_customer_id'] = user_customer.id
+
+    def generate_data(self, args):
+        return {
+            "first_name": args[1],
+            "last_name": args[2],
+            "phone": args[3],
+            "photo": args[4]
+        }
+
+    def test_driver_edit_customer_personal_information(self):
+        print("------------- Starting test -------------")
+
+        admin = {"username": "customer1", "password": "cliente1"}
+        response = self.client.post("/api/login/", admin, format='json')
+
+        token_num = response.get("x-auth")
+
+        # Con esto evitamos problemas si el token no existe en bd
+
+        token = ''
+
+        try:
+            token = Token.objects.all().filter(pk=token_num).first().key
+        except:
+            pass
+
+        payload = [
+            # Positive test 1, edit customer personal information
+            [token, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+             status.HTTP_200_OK],
+
+            # Negative test 2, edit customer with token set None
+            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+             status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 3, edit customer with token as integer
+            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+             status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 4, edit customer with invalid token
+            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+             status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 5, edit customer with first_name as None
+            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 6, edit customer with first_name with special characters
+            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+             status.HTTP_400_BAD_REQUEST], # Cambiar id
+
+            # Negative test 7, edit customer with first_name as integer
+            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 8, edit customer with last_name as None
+            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "es",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 9, edit customer with last_name with special characters
+            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "es",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 10, edit customer with last_name as integer
+            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "es",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 11, edit customer with phone as integer
+            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "es",
+             status.HTTP_400_BAD_REQUEST],
+        ]
+
+        print("-------- Edit personal information testing --------")
+        for data in payload:
+            print("---> Test " + str(payload.index(data) + 1))
+            self.template_edit_customer_information(data)
+
+    def template_edit_customer_information(self, args):
+        status_expected = args[-1]
+        language = args[-2]
+
+        data = self.generate_data(args)
+
+        response = self.client.put("/customer/" + str(self.sharedData['customer_id']) + "/", data, format="json",
+                                   HTTP_AUTHORIZATION='Token ' + str(args[0]),
+                                   HTTP_ACCEPT_LANGUAGE=language)
+        self.assertEqual(status_expected, response.status_code)
+
+        print("\nOk - Status expected: " + str(status_expected) + "\n")
 
 
 '''
