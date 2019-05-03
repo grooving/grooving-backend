@@ -44,7 +44,8 @@ spanish = {
     "ERROR_CREDENTIAL": "Error de credenciales de Paypal",
     "ERROR_CREDENTIAL_BRAINTREE": "Error de credencial Braintree",
     "ERROR_DATE_PAYMENT" : "Paypal no puede procesar un pago realizado hace mas de 29 dias",
-    "ERROR_REASON_NOT_PROVIDED": "No se ha suministrado una razón"
+    "ERROR_REASON_NOT_PROVIDED": "No se ha suministrado una razón",
+    "ERROR_DATE_NOT_AVAILABLE": "El artista no puede actuar para la fecha indicada"
 }
 
 english = {
@@ -93,7 +94,8 @@ english = {
     "ERROR_CREDENTIAL": "Credential error with paypal",
     "ERROR_CREDENTIAL_BRAINTREE": "Credential error with paypal",
     "ERROR_DATE_PAYMENT" : "Paypal cannot process a payment more than 29 days old",
-    "ERROR_REASON_NOT_PROVIDED": "Reason isn't provided"
+    "ERROR_REASON_NOT_PROVIDED": "Reason isn't provided",
+    "ERROR_DATE_NOT_AVAILABLE": "Artist can't act for provided date"
 }
 
 
