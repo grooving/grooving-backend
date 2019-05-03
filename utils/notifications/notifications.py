@@ -139,7 +139,7 @@ class Notifications:
         body = ""
 
         if language_customer == 'en':
-            subject = "You has sent a offer!"
+            subject = "You have sent an offer!"
             body = "<h1>Your offer has been send to " + offer.paymentPackage.portfolio.artisticName + "</h1>" + \
                    "<p>You will receive more information soon. </p>" + Notifications.footer(language_customer)
         elif language_customer == 'es':
