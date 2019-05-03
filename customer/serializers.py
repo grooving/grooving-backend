@@ -81,8 +81,11 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(user.last_name, translate(language, "ERROR_EMPTY_LAST_NAME"))
 
         if customer.phone:
-            Assertions.assert_true_raise400(customer.phone.isnumeric(),
-                                            translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            try:
+                Assertions.assert_true_raise400(customer.phone.isnumeric(),
+                                                translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            except:
+                Assertions.assert_true_raise400(False, translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
             Assertions.assert_true_raise400(len(customer.phone) == 9, translate(language, "ERROR_PHONE_LENGTH_9"))
 
         Assertions.assert_true_raise400(len(user.first_name) > 1, translate(language, "ERROR_FIRST_NAME_LENGTH"))
@@ -169,7 +172,10 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(username not in user_names, translate(language, "ERROR_USERNAME_IN_USE"))
 
         if phone:
-            Assertions.assert_true_raise400(phone.isnumeric(), translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            try:
+                Assertions.assert_true_raise400(phone.isnumeric(), translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            except:
+                Assertions.assert_true_raise400(False, translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
             Assertions.assert_true_raise400(len(phone) == 9, translate(language, "ERROR_PHONE_LENGTH_9"))
 
         Assertions.assert_true_raise400(len(first_name) > 1, translate(language, "ERROR_FIRST_NAME_LENGTH"))
