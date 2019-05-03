@@ -163,7 +163,7 @@ class ChatTestCase(APITransactionTestCase):
             # Test negativo, get chat de una oferta que no es tuya
             [token2, offer1_id, 'en', 401],
             # Test negativo, get chat de una oferta que no existe
-            [token, 40, 'es', 403],
+            [token, 40, 'en', 403],
 
 
 

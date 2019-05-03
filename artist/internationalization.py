@@ -49,9 +49,18 @@ spanish = {
     "ERROR_STRING_TOO_LONG": "La cadena de caracteres es demasiado larga.",
     "ERROR_URL_TOO_LONG": "La URL es demasiado larga. El límite es 500 caracteres.",
     "ERROR_ARTISTICNAME_TOO_LONG": "El nombre artístico es demasiado largo.",
+    "ERROR_EMAIL_TOO_LONG": "El email es demasiado largo.",
+    "ERROR_USERNAME_TOO_LONG": "El usuario es demasiado largo.",
+    "ERROR_PASSWORD_TOO_LONG": "La contraseña es demasiado larga.",
+    "ERROR_PAYPAL_TOO_LONG": "La dirección de Paypal es demasiado larga.",
+
 }
 
 english = {
+    "ERROR_PAYPAL_TOO_LONG": "The paypal direction is too long.",
+    "ERROR_PASSWORD_TOO_LONG": "The password is too long.",
+    "ERROR_USERNAME_TOO_LONG": "The username is too long",
+    "ERROR_EMAIL_TOO_LONG": "Email is too long",
     "ERROR_ARTISTICNAME_TOO_LONG": "The artistic name is too long.",
     "ERROR_URL_TOO_LONG": "The URL is too long. Limit is 500 characters.",
     "ERROR_STRING_TOO_LONG": "The string is too long",

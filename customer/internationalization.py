@@ -49,10 +49,18 @@ spanish = {
     "ERROR_ACTOR_NOT_FOUND": "El actor que buscas no existe.",
     "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar.",
     "ERROR_STRING_TOO_LONG": "La cadena de caracteres es demasiado larga.",
-    "ERROR_URL_TOO_LONG": "La URL es demasiado larga. El límite es 500 caracteres."
+    "ERROR_URL_TOO_LONG": "La URL es demasiado larga. El límite es 500 caracteres.",
+    "ERROR_EMAIL_TOO_LONG": "El email es demasiado largo.",
+    "ERROR_USERNAME_TOO_LONG": "El usuario es demasiado largo.",
+    "ERROR_PASSWORD_TOO_LONG": "La contraseña es demasiado larga.",
+    "ERROR_PAYPAL_TOO_LONG": "La dirección de Paypal es demasiado larga.",
 }
 
 english = {
+    "ERROR_PAYPAL_TOO_LONG": "The paypal direction is too long.",
+    "ERROR_PASSWORD_TOO_LONG": "The password is too long.",
+    "ERROR_USERNAME_TOO_LONG": "The username is too long",
+    "ERROR_EMAIL_TOO_LONG": "Email is too long",
     "ERROR_URL_TOO_LONG": "The URL is too long. Limit is 500 characters.",
     "ERROR_STRING_TOO_LONG": "The string is too long",
     "ERROR_NOT_LOGGED_IN": "You must be logged in to do this action.",

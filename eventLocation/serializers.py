@@ -73,7 +73,7 @@ class EventLocationSerializer(serializers.ModelSerializer):
         json = request.data
 
         Assertions.assert_true_raise400(Strings.check_max_length(json.get("name"), 255), translate(language, 'ERROR_NAME_TOO_LONG'))
-
+        Assertions.assert_true_raise400(Strings.check_max_length(json.get("description"), 500), translate(language, 'ERROR_DESCRIPTION_TOO_LONG'))
         Assertions.assert_true_raise400(Strings.check_max_length(json.get("address"), 255),
                                         translate(language, 'ERROR_ADDRESS_TOO_LONG'))
 

@@ -62,7 +62,7 @@ class PortfolioTestCase(APITransactionTestCase):
 
         event_location1.save()
 
-        portfolio1 = Portfolio.objects.create(pk=1, artist=artist1, artisticName="Los rebujitos")
+        portfolio1 = Portfolio.objects.create(pk=1, artist=artist1, artisticName="Los rebujitos",biography="Biografia")
         portfolio1.zone.add(zone1)
         portfolio1.save()
 

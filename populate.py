@@ -31,7 +31,7 @@ def save_data():
                                                                slogan='Connecting artist with you',
                                                                logo='',
                                                                privacyText_en="<h2>Introduction</h2>" +
-                                                                              "<p>For Grooving, accessible from https://grooving-frontend-d3.herokuapp.com, one of our main " +
+                                                                              "<p>For Grooving, accessible from https://grooving-frontend-d4.herokuapp.com, one of our main " +
                                                                               "priorities is the privacy of our visitors. This Privacy Policy document contains the " +
                                                                               "information that is collected and recorded by Grooving and how we use it.</p>" +
                                                                               "<p>If you have additional questions or require more information about our Privacy Policy, " +
@@ -93,7 +93,7 @@ def save_data():
                                                                               "Conditions.</p>",
                                                                privacyText_es=
                                                                "<h2>Introducción</h2>" +
-                                                               "<p>En Grooving, accesible desde https://grooving-frontend-d3.herokuapp.com, una de nuestras " +
+                                                               "<p>En Grooving, accesible desde https://grooving-frontend-d4.herokuapp.com, una de nuestras " +
                                                                "principales prioridades es la privacidad de nuestros visitantes. Este documento de Política de " +
                                                                "privacidad contiene tipos de información que Grooving recopila y registra, y cómo la usamos.</p>" +
                                                                "<p>Si tiene preguntas adicionales o necesita más información sobre nuestra Política de " +
@@ -148,10 +148,6 @@ def save_data():
                                                                "<h4>GitHub</h4>" +
                                                                "<p>Para más información visita el siguiente link: " +
                                                                "<a href=\"https://github.com/github/site-policy\">Github cookies policy</a></p>" +
-
-                                                               "<h4>Amazon</h4>" +
-                                                               "<p>Para más información visita el siguiente link: " +
-                                                               "<a href=\"https://aws.amazon.com/es/compliance/data-privacy-faq/\">Amazon cookies privacy.</a></p>" +
 
                                                                "<h4>Paypal</h4>" +
                                                                "<p>Para más información visita el siguiente link: " +
@@ -351,7 +347,7 @@ def save_data():
                                                                
                                                                             "<h1>Privacidad</h1>" +
                                                                             "<h2>Introducción</h2>" +
-                                                                            "<p>En Grooving, accesible desde https://grooving-frontend-d3.herokuapp.com, una de nuestras " +
+                                                                            "<p>En Grooving, accesible desde https://grooving-frontend-d4.herokuapp.com, una de nuestras " +
                                                                             "principales prioridades es la privacidad de nuestros visitantes. Este documento de Política de " +
                                                                             "privacidad contiene tipos de información que Grooving recopila y registra, y cómo la usamos.</p>" +
                                                                             "<p>Si tiene preguntas adicionales o necesita más información sobre nuestra Política de " +
@@ -407,9 +403,6 @@ def save_data():
                                                                             "<p>Para más información visita el siguiente link: " +
                                                                             "<a href=\"https://github.com/github/site-policy\">Github cookies policy</a></p>" +
 
-                                                                            "<h4>Amazon</h4>" +
-                                                                            "<p>Para más información visita el siguiente link: " +
-                                                                            "<a href=\"https://aws.amazon.com/es/compliance/data-privacy-faq/\">Amazon cookies privacy.</a>" +
 
                                                                             "<h4>Paypal</h4>" +
                                                                             "<p>Para más información visita el siguiente link: " +
@@ -589,7 +582,7 @@ def save_data():
                                                                
                                                                             "<h1>Privacy</h1>" +
                                                                             "<h2>Introduction</h2>" +
-                                                                            "<p>For Grooving, accessible from https://grooving-frontend-d3.herokuapp.com, one of our main " +
+                                                                            "<p>For Grooving, accessible from https://grooving-frontend-d4.herokuapp.com, one of our main " +
                                                                             "priorities is the privacy of our visitors. This Privacy Policy document contains the " +
                                                                             "information that is collected and recorded by Grooving and how we use it.</p>" +
                                                                             "<p>If you have additional questions or require more information about our Privacy Policy, " +
@@ -1392,7 +1385,7 @@ def save_data():
 
     # Artists
 
-    artist1 = Artist.objects.create(user=user1_artist1, rating=0, phone='600304999',
+    artist1 = Artist.objects.create(user=user1_artist1, rating=4.5, phone='600304999',
                                     language='en',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist1/artist1_photo.jpg',
                                     iban='ES6621000418401234567891', paypalAccount='carlosdj.espectaculos@gmail.com')
@@ -1665,22 +1658,22 @@ def save_data():
                                                         link='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_porfoliomodule1.jpg')
     portfolio8_module1.save()
 
-    portfolio8_module2 = PortfolioModule.objects.create(type='MEMBER', portfolio=portfolio8,
+    portfolio8_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio8,
                                                         description='Antonio Medina',
                                                         link='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_porfoliomodule2.jpg')
     portfolio8_module2.save()
 
-    portfolio8_module3 = PortfolioModule.objects.create(type='MEMBER', portfolio=portfolio8,
+    portfolio8_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio8,
                                                         description='Manuel Medina',
                                                         link='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_porfoliomodule3.jpg')
     portfolio8_module3.save()
 
-    portfolio8_module4 = PortfolioModule.objects.create(type='MEMBER', portfolio=portfolio8,
+    portfolio8_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio8,
                                                         description='Rafael Córdoba',
                                                         link='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_porfoliomodule4.jpg')
     portfolio8_module4.save()
 
-    portfolio8_module5 = PortfolioModule.objects.create(type='MEMBER', portfolio=portfolio8, description='Pablo Pérez',
+    portfolio8_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio8, description='Pablo Pérez',
                                                         link='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_porfoliomodule5.jpg')
     portfolio8_module5.save()
 

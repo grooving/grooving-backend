@@ -93,14 +93,14 @@ class OfferSerializer(serializers.ModelSerializer):
         if self.initial_data.get('id') is None and pk is None:
             # creation
             offer = Offer()
-            offer = self._service_create(self.initial_data, offer, logged_user)
+            offer = self._service_create(self.initial_data, offer, logged_user, language=language)
             Notifications.send_email_create_an_offer(offer.id)
         else:
             # edit
             id = (self.initial_data, pk)[pk is not None]
 
             offer = Offer.objects.filter(pk=id).first()
-            offer = self._service_update(self.initial_data, offer, logged_user, language)
+            offer = self._service_update(self.initial_data, offer, logged_user, language=language)
 
         return offer
 
@@ -157,7 +157,7 @@ class OfferSerializer(serializers.ModelSerializer):
 
     # Se pondrá service delante de nuestros métodos para no sobrescribir por error métodos del serializer
     @staticmethod
-    def _service_create(json: dict, offer: Offer, logged_user: User):
+    def _service_create(json: dict, offer: Offer, logged_user: User, language='en'):
         offer.description = json.get('description')
         offer.date = datetime.datetime.strptime(json.get('date'), "%Y-%m-%dT%H:%M:%S")
         offer.status = 'PENDING'
@@ -176,7 +176,7 @@ class OfferSerializer(serializers.ModelSerializer):
             offer.hours = json.get('hours')
             offer.price = json.get('price')
             offer.currency = offer.paymentPackage.currency
-
+        Assertions.assert_true_raise400(offer.price < 10000000.00, translate(language, 'ERROR_PAYPAL_PRICE_REACH'))
         transaction = Transaction()
 
         transaction.save()
@@ -192,13 +192,16 @@ class OfferSerializer(serializers.ModelSerializer):
         now = timezone.now()
 
         assert_true(offer_in_db.date > now, translate(language, 'ERROR_OFFER_PAST_DATE'))
-        offer = self._service_update_status(json, offer_in_db, logged_user, language)
+        offer = self._service_update_status(json, offer_in_db, logged_user, language=language)
 
         return offer
 
     def _service_update_status(self, json: dict, offer_in_db: Offer, logged_user: User, language='en'):
         json_status = json.get('status')
         Assertions.assert_true_raise400(json_status, translate(language, 'ERROR_STATUS_NOT_PROVIDED'))
+
+
+
         if json_status:
             status_in_db = offer_in_db.status
             Assertions.assert_true_raise400(json_status != status_in_db, translate(language, 'ERROR_STATUS_NOT_CHANGED'))
@@ -258,6 +261,7 @@ class OfferSerializer(serializers.ModelSerializer):
                 if json_status == 'CANCELLED_CUSTOMER':
                     Assertions.assert_true_raise400(json.get('reason'),
                                                     translate(language, 'ERROR_REASON_NOT_PROVIDED'))
+
                     if settings.BRAINTREE_PRODUCTION:
                         braintree_env = braintree.Environment.Production
                     else:
@@ -474,7 +478,9 @@ class OfferSerializer(serializers.ModelSerializer):
                         break
                     except IntegrityError:
                         continue
-
+            if json.get('reason'):
+                Assertions.assert_true_raise400(Strings.check_max_length(json.get('reason'), 500),
+                                                translate(language, 'ERROR_REASON_TOO_LONG'))
             print("ESTADO DB ANTES:" + offer_in_db.status)
             offer_in_db.status = json_status
             offer_in_db.reason = json.get('reason')
