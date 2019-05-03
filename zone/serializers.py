@@ -68,6 +68,7 @@ class SearchZoneSerializer(serializers.ModelSerializer):
                 total = recursive_data[1]
                 child_dicts_list.append(recursive_data[0])
 
+        child_dicts_list.sort(key=lambda x: x.get("name"))
         dictionary = {"id": id, "name": name, "parent": parentZone, "children": child_dicts_list}
 
         return dictionary, total
