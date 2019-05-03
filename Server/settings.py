@@ -27,7 +27,7 @@ STATIC_URL = '/static/'
 SECRET_KEY = 'rw&&q!#o4d3pdrwaqp#(!7c7-9&y8p@nr9lduvslgc(oq$@75l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 #DEBUG_PROPAGATE_EXCEPTIONS = True
 
 ALLOWED_HOSTS = ['*']
@@ -60,9 +60,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
     ),
-    # 'DEFAULT_RENDERER_CLASSES': (                          # Descomentar en despliegue
-    #     'rest_framework.renderers.JSONRenderer',
-    # ),
+    'DEFAULT_RENDERER_CLASSES': (                          # Descomentar en despliegue
+        'rest_framework.renderers.JSONRenderer',
+    ),
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
 
@@ -187,7 +187,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'mail.grooving@gmail.com'   # groupgrooving@gmail.com
+EMAIL_HOST_USER = 'groupgrooving@gmail.com'   # groupgrooving@gmail.com
 EMAIL_HOST_PASSWORD = '94TDtF4zG2t4Cxy'       # 94TDtF4zG2t4Cxy
 
 django_heroku.settings(locals())
