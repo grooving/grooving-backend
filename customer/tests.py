@@ -322,13 +322,73 @@ class EditCustomerPersonalInformation(APITransactionTestCase):
 
             # Negative test 11, edit customer with phone as integer
             [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "es",
+            status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 12, edit customer with phone as characters
+            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "es",
+            status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 13, edit customer with invalid photo
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "es",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 14, edit customer with token set None
+            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "en",
+             status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 15, edit customer with token as integer
+            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "en",
+             status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 16, edit customer with invalid token
+            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "en",
+             status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 17, edit customer with first_name as None
+            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 18, edit customer with first_name with special characters
+            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "en",
+             status.HTTP_400_BAD_REQUEST],  # Cambiar id
+
+            # Negative test 19, edit customer with first_name as integer
+            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 20, edit customer with last_name as None
+            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 21, edit customer with last_name with special characters
+            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 22, edit customer with last_name as integer
+            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 23, edit customer with phone as integer
+            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "en",
+            status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 24, edit customer with phone as characters
+            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 25, edit customer with invalid photo
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "en",
              status.HTTP_400_BAD_REQUEST],
         ]
 
         print("-------- Edit personal information testing --------")
+
+        indice = 1
+
         for data in payload:
-            print("---> Test " + str(payload.index(data) + 1))
+            print("---> Test " + str(indice))
             self.template_edit_customer_information(data)
+            indice += 1
 
     def template_edit_customer_information(self, args):
         status_expected = args[-1]
