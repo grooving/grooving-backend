@@ -82,7 +82,7 @@ def save_data():
 
                                                                               "<h4>GitHub</h4>" +
                                                                               "<p>For more information visit the following link: " +
-                                                                              "<a href=\"https://github.com/github/site-policy\"></a>Github cookies policy</p>" +
+                                                                              "<a href=\"https://github.com/github/site-policy\">Github cookies policy</a></p>" +
 
                                                                               "<h4>Paypal</h4>" +
                                                                               "<p> For more information visit the following link: " +
@@ -147,11 +147,11 @@ def save_data():
 
                                                                "<h4>GitHub</h4>" +
                                                                "<p>Para más información visita el siguiente link: " +
-                                                               "<a href=\"https://github.com/github/site-policy\"></a>Github cookies policy</p>" +
+                                                               "<a href=\"https://github.com/github/site-policy\">Github cookies policy</a></p>" +
 
                                                                "<h4>Amazon</h4>" +
                                                                "<p>Para más información visita el siguiente link: " +
-                                                               "<a href=\"https://aws.amazon.com/es/compliance/data-privacy-faq/\">Amazon cookies privacy.</a>" +
+                                                               "<a href=\"https://aws.amazon.com/es/compliance/data-privacy-faq/\">Amazon cookies privacy.</a></p>" +
 
                                                                "<h4>Paypal</h4>" +
                                                                "<p>Para más información visita el siguiente link: " +
@@ -207,6 +207,11 @@ def save_data():
                                                                             "desactivar y/o cancelar cualquier información o servicio. Sin embargo, a veces, por razones " +
                                                                             "de mantenimiento, actualización, cambio de ubicación, etc., puede significar la interrupción " +
                                                                             "del acceso al portal.</p>" +
+
+                                                                            "<p>El pago se realizará por parte del contratante a Grooving. Una vez que el artista " +
+                                                                            "realiza la actuación el cliente completará el proceso de pago mandando un código de pago " +
+                                                                            "al artista con el que recibirá un ingreso por los servicios prestados. En este proceso, " +
+                                                                            "Grooving se llevará un 10% del pago realizado.</p>" +
 
                                                                             "<h2>Información del portal y disponibilidad de servicios</h2>" +
                                                                             "<p>El portal no garantiza la disponibilidad continua y permanente de los servicios, " +
@@ -337,7 +342,77 @@ def save_data():
 
                                                                             "<p>Al aplicar este derecho, los datos de la aplicación se anonimizarán en nuestros " +
                                                                             "servidores con motivo de mantener un histórico de datos para realizar opearaciones " +
-                                                                            "estadísticas.</p>",
+                                                                            "estadísticas.</p>" +
+                                                               
+                                                                            "<h1>Privacidad</h1>" +
+                                                                            "<h2>Introducción</h2>" +
+                                                                            "<p>En Grooving, accesible desde https://grooving-frontend-d3.herokuapp.com, una de nuestras " +
+                                                                            "principales prioridades es la privacidad de nuestros visitantes. Este documento de Política de " +
+                                                                            "privacidad contiene tipos de información que Grooving recopila y registra, y cómo la usamos.</p>" +
+                                                                            "<p>Si tiene preguntas adicionales o necesita más información sobre nuestra Política de " +
+                                                                            "privacidad, no dude en ponerse en contacto con nosotros a través del correo electrónico " +
+                                                                            "grupogrooving@gmail.com </p>" +
+
+                                                                            "<h2>Archivos de registro</h2>" +
+                                                                            "<p>Grooving sigue un procedimiento estándar de uso de archivos de registro. Estos archivos " +
+                                                                            "registran a los visitantes cuando visitan sitios web. Todas las empresas de hosting hacen esto " +
+                                                                            "y forman parte de la analítica de servicios de hosting. La información recopilada por los " +
+                                                                            "archivos de registro incluye direcciones de protocolo de Internet (IP), tipo de navegador, " +
+                                                                            "proveedor de servicios de Internet (ISP), marca de fecha y hora, páginas de referencia/salida " +
+                                                                            "y posiblemente el número de clics. Estos no están vinculados a ninguna información que sea " +
+                                                                            "personalmente identificable. El propósito de la información es analizar tendencias, administrar " +
+                                                                            "el sitio, rastrear el movimiento de los usuarios en el sitio web y recopilar información "
+                                                                            "demográfica.</p>" +
+
+                                                                            "<h2>Política de cookies</h2>" +
+                                                                            "<p>Para el correcto funcionamiento de nuestra aplicación utilizamos cookies para optimizar la " +
+                                                                            "experiencia de usuario. Una vez que acceda y navegue por primera vez en la aplicación se " +
+                                                                            "mostrará una ventana en la que usted acepta utilizar las cookies de acuerdo a nuestra Política " +
+                                                                            "de privacidad. Si usted continua navegando por la aplicación sin aceptarlas, Grooving " +
+                                                                            "considerará que usted ha aceptado nuestra Política de privacidad de forma automática.</p>" +
+
+                                                                            "<h3>Política de privacidad de terceros</h3>" +
+
+                                                                            "<p>Además se utilizan cookies de terceros para el desarrollo de su actividad. Para la seguridad " +
+                                                                            "de los pagos se utilizan las cookies de Paypal y Braintree, para mantener la sesión activa de " +
+                                                                            "los usuarios utilizamos cookies de Django y para la gestión de imágenes utilizamos las cookies " +
+                                                                            "de GitHub.</p>" +
+
+                                                                            "<p>Tenga en cuenta que Grooving no tiene acceso ni control sobre estas cookies.</p>" +
+
+                                                                            "<p>Esta Política de privacidad se aplica sólo a nuestras actividades en línea y es válida para " +
+                                                                            "los visitantes de nuestro sitio web en relación con la información que compartieron y/o " +
+                                                                            "recopilaron en Grooving. Esta política no se aplica a ninguna información recopilada fuera de " +
+                                                                            "línea o a través de canales que no sean este sitio web.</p>" +
+
+                                                                            "<p>La política de privacidad de Grooving no se aplica a otros sitios web. Por lo tanto, le " +
+                                                                            "recomendamos que consulte las políticas de privacidad. Puede encontrar una lista completa de " +
+                                                                            "estas Políticas de privacidad y sus enlaces a continuación:</p>" +
+
+                                                                            "<h4>Braintree</h4>" +
+                                                                            "<p>Para más información visita el siguiente link: " +
+                                                                            "<a href=\"https://www.braintreepayments.com/legal/acceptable-use-policy\">" +
+                                                                            "Braintree cookies policy</a></p>" +
+
+                                                                            "<h4>Heroku</h4>" +
+                                                                            "<p>Para más información visita el siguiente link: " +
+                                                                            "<a href=\"https://www.salesforce.com/company/privacy/full_privacy.jsp#nav_info\">Heroku cookies policy</a>" +
+
+                                                                            "<h4>GitHub</h4>" +
+                                                                            "<p>Para más información visita el siguiente link: " +
+                                                                            "<a href=\"https://github.com/github/site-policy\">Github cookies policy</a></p>" +
+
+                                                                            "<h4>Amazon</h4>" +
+                                                                            "<p>Para más información visita el siguiente link: " +
+                                                                            "<a href=\"https://aws.amazon.com/es/compliance/data-privacy-faq/\">Amazon cookies privacy.</a>" +
+
+                                                                            "<h4>Paypal</h4>" +
+                                                                            "<p>Para más información visita el siguiente link: " +
+                                                                            "<a href=\"https://www.paypal.com/uk/webapps/mpp/ua/cookie-full\">Paypal cookies policy</a></p>" +
+
+                                                                            "<h2>Consentimiento</h2>" +
+                                                                            "<p>Al utilizar nuestro sitio web, usted acepta nuestra Política de privacidad y acepta sus " +
+                                                                            "Términos y condiciones.</p>",
 
                                                                termsText_en="<p>The conditions of use of the web page, the rules of use and the use of " +
                                                                             "grooving-frontend-d4.herokuapp.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
@@ -369,6 +444,11 @@ def save_data():
                                                                             "deactivate and / or cancel any information or service. " +
                                                                             "However, sometimes, for reasons of maintenance, updating, change of location, etc., " +
                                                                             "may mean the interruption of access to the portal.</p>" +
+
+                                                                            "<p>Payment will be made by the contracting party to Grooving. Once the artist performs " +
+                                                                            "the performance, the client will complete the payment process by sending a payment " +
+                                                                            "code to the artist with whom he will receive an income for the services provided. In " +
+                                                                            "this process, Grooving will take 10% of the payment made. </p>" +
 
                                                                             "<h2>Portal information and services availability</h2>" +
                                                                             "<p>The portal does not guarantee the continuous and permanent availability of the " +
@@ -458,7 +538,7 @@ def save_data():
                                                                             "<li><b>Artistic information</b>: artistic name, artistic genre, performance areas, group score, " +
                                                                             "days not available, biography, available payment packages and additional content.</li> " +
 
-                                                                            "<li type><b>Offers</b>: name of the event, contractor, day of the event, address, area of " +
+                                                                            "<li><b>Offers</b>: name of the event, contractor, day of the event, address, area of " +
                                                                             "​​action, description of the offer, status of the offer, price, paypal account in the that the " +
                                                                             "payment and valuation by the client will be made.</li>" +
                                                                             "</ul>" +
@@ -466,7 +546,7 @@ def save_data():
                                                                             "<p>The data that will be sent to the clients that have requested it will be:</p>" +
                                                                             "<ul>" +
                                                                             "<li><b>Events</b>: name, address and area.</li>" +
-                                                                            "<li type><b>Offers made</b>: artist, day of the event, selected payment package, price and " +
+                                                                            "<li><b>Offers made</b>: artist, day of the event, selected payment package, price and " +
                                                                             "status of the offer.</li>" +
                                                                             "</ul>" +
 
@@ -480,14 +560,14 @@ def save_data():
                                                                             "<ul>" +
                                                                             "<li><b>Artists</b>: the portfolio is anonymized (banner, biography and artistic name).</li>" +
                                                                             "<li><b>Payment packages</b>: description, information about the performance.</li>" +
-                                                                            "<li><b>Offers</ b>: the artist's paypal credentials.</li>" +
+                                                                            "<li><b>Offers</b>: the artist's paypal credentials.</li>" +
                                                                             "</ul>" +
 
                                                                             "<p>All those interactions that the client has made in the application will be eliminated with " +
                                                                             "the exception of:</p>" +
 
                                                                             "<ul>" +
-                                                                            "<li><b>Event location</ b>: description, address and name.</li>" +
+                                                                            "<li><b>Event location</b>: description, address and name.</li>" +
                                                                             "<li><b>Ratings</b>: Comments made anonymized.</li>" +
                                                                             "</ul>" +
 
@@ -495,7 +575,72 @@ def save_data():
                                                                             "deleted.</p>" +
 
                                                                             "<p>By applying this right, the application data will be anonymized on our servers in order to " +
-                                                                            "maintain a data history to perform statistical operations.</p>")
+                                                                            "maintain a data history to perform statistical operations.</p>" +
+                                                               
+                                                                            "<h1>Privacy</h1>" +
+                                                                            "<h2>Introduction</h2>" +
+                                                                            "<p>For Grooving, accessible from https://grooving-frontend-d3.herokuapp.com, one of our main " +
+                                                                            "priorities is the privacy of our visitors. This Privacy Policy document contains the " +
+                                                                            "information that is collected and recorded by Grooving and how we use it.</p>" +
+                                                                            "<p>If you have additional questions or require more information about our Privacy Policy, " +
+                                                                            "do not hesitate to contact us through email at grupogrooving@gmail.com</p>" +
+
+                                                                            "<h2>Log Files</h2>" +
+                                                                            "<p>Grooving follows a standard procedure of using log files. These files log visitors when  " +
+                                                                            "they visit websites. All hosting companies use them since they are part of hosting services analytics. " +
+                                                                            "The information collected by log files include internet protocol (IP) addresses, browser type, " +
+                                                                            "Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the " +
+                                                                            "number of clicks. These are not linked to any information that is personally identifiable. " +
+                                                                            "The purpose of the information is for analyzing trends, administering the site, tracking users' " +
+                                                                            "movement on the website, and gathering demographic information.</p>" +
+
+                                                                            "<h2>Cookies policy</h2>" +
+
+                                                                            "<p>For the operation of our application we use cookies to optimize user experience. Once you " +
+                                                                            "access and browse the application for the first time, a window will appear in which you agree " +
+                                                                            "to use cookies in accordance with our Privacy Policy. If you continue to browse the application " +
+                                                                            "without accepting them, Grooving will consider that you have accepted our Privacy Policy " +
+                                                                            "automatically.</p>" +
+
+                                                                            "<h3>Third Party Privacy Policies</h3>" +
+
+                                                                            "<p>In addition, third-party cookies are used for the development of your activity. Paypal and " +
+                                                                            "Braintree cookies are used for payment security, to keep the users active session we use Django " +
+                                                                            "cookies and for the management of images we use GitHub.</p>" +
+
+                                                                            "<p>Note that Grooving has no access to or control over these cookies.</p>" +
+                                                                            "<p>This Privacy Policy applies only to our online activities and is valid for visitors to our " +
+                                                                            "website regarding the information that they shared and/or collect in Grooving. This " +
+                                                                            "policy is not applicable to any information collected offline or via channels other than this " +
+                                                                            "website.</p>" +
+
+                                                                            "<p>Grooving's Privacy Policy does not apply to other websites. Thus, we are advising you to " +
+                                                                            "consult the respective Privacy Policies of these third-party servers for more detailed " +
+                                                                            "information. You may find a complete list of these Privacy Policies bellow:</p>" +
+
+                                                                            "<h4>Braintree</h4>" +
+                                                                            "<p>For more information visit the following link:" +
+                                                                            "<a href=\"https://www.braintreepayments.com/legal/acceptable-use-policy\">" +
+                                                                            "Braintree cookies policy</a></p>" +
+
+                                                                            "<h4>Heroku</h4>" +
+                                                                            "<p>For more information visit the following link: " +
+                                                                            "<a href=\"https://www.salesforce.com/company/privacy/full_privacy.jsp#nav_info\">" +
+                                                                            "Heroku cookies policy</a>" +
+
+                                                                            "<h4>GitHub</h4>" +
+                                                                            "<p>For more information visit the following link: " +
+                                                                            "<a href=\"https://github.com/github/site-policy\">Github cookies policy</a></p>" +
+
+                                                                            "<h4>Paypal</h4>" +
+                                                                            "<p> For more information visit the following link: " +
+                                                                            "<a href=\"https://www.paypal.com/uk/webapps/mpp/ua/cookie-full\">Paypal cookies policy</a></p>" +
+
+                                                                            "<h2>Consent</h2>" +
+                                                                            "<p>By using our website, you hereby accept our Privacy Policy and agree to its Terms and " +
+                                                                            "Conditions.</p>"
+                                                               
+                                                                            )
 
     system_configuration1.save()
 
