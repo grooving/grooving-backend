@@ -93,14 +93,14 @@ class OfferSerializer(serializers.ModelSerializer):
         if self.initial_data.get('id') is None and pk is None:
             # creation
             offer = Offer()
-            offer = self._service_create(self.initial_data, offer, logged_user)
+            offer = self._service_create(self.initial_data, offer, logged_user, language=language)
             Notifications.send_email_create_an_offer(offer.id)
         else:
             # edit
             id = (self.initial_data, pk)[pk is not None]
 
             offer = Offer.objects.filter(pk=id).first()
-            offer = self._service_update(self.initial_data, offer, logged_user, language)
+            offer = self._service_update(self.initial_data, offer, logged_user, language=language)
 
         return offer
 
@@ -157,7 +157,7 @@ class OfferSerializer(serializers.ModelSerializer):
 
     # Se pondrá service delante de nuestros métodos para no sobrescribir por error métodos del serializer
     @staticmethod
-    def _service_create(json: dict, offer: Offer, logged_user: User):
+    def _service_create(json: dict, offer: Offer, logged_user: User, language='en'):
         offer.description = json.get('description')
         offer.date = datetime.datetime.strptime(json.get('date'), "%Y-%m-%dT%H:%M:%S")
         offer.status = 'PENDING'
@@ -176,7 +176,7 @@ class OfferSerializer(serializers.ModelSerializer):
             offer.hours = json.get('hours')
             offer.price = json.get('price')
             offer.currency = offer.paymentPackage.currency
-
+        Assertions.assert_true_raise400(offer.price < 10000000.00, translate(language, 'ERROR_PAYPAL_PRICE_REACH'))
         transaction = Transaction()
 
         transaction.save()
@@ -192,7 +192,7 @@ class OfferSerializer(serializers.ModelSerializer):
         now = timezone.now()
 
         assert_true(offer_in_db.date > now, translate(language, 'ERROR_OFFER_PAST_DATE'))
-        offer = self._service_update_status(json, offer_in_db, logged_user, language)
+        offer = self._service_update_status(json, offer_in_db, logged_user, language=language)
 
         return offer
 
