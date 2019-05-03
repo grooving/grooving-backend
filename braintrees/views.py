@@ -120,7 +120,7 @@ class BraintreeViews(generics.GenericAPIView):
         if offer.paymentPackage.performance is not None:
             amount = offer.paymentPackage.performance.price
         else:
-            amount = offer.price * offer.hours
+            amount = offer.price
 
         Assertions.assert_true_raise400(amount > 0, translate(language, 'ERROR_AMOUNT'))
 
@@ -164,6 +164,8 @@ class BraintreeViews(generics.GenericAPIView):
                     'Your payment could not be processed. Please check your'
                     ' input or use another payment method and try again.')
             }
+            if not result.is_success:
+                offer.delete()
             Assertions.assert_true_raise400(result.is_success, translate(language, 'ERROR_PAYMENT'))
 
 
