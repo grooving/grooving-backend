@@ -302,7 +302,7 @@ class EditCustomerPersonalInformation(APITransactionTestCase):
 
             # Negative test 6, edit customer with first_name with special characters
             [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
-             status.HTTP_400_BAD_REQUEST], # Cambiar id
+             status.HTTP_400_BAD_REQUEST],
 
             # Negative test 7, edit customer with first_name as integer
             [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",

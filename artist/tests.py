@@ -130,10 +130,6 @@ class RegisterTestCase(APITransactionTestCase):
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
              "http:/ /www.google.com/image.png", "Camela", "pt", status.HTTP_400_BAD_REQUEST],
 
-
-
-
-
             # Negative test 27, create an artist with existing artisticName
             ["Miguel", "Barahona Estevez", "sdadwa", "elArtistaIngles", "elArtistaIngles", "utri210das0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
@@ -240,7 +236,188 @@ class RegisterTestCase(APITransactionTestCase):
         print("\nOk - Status expected: " + str(status_expected) + "\n")
 
 
+class EditArtistPersonalInformation(APITransactionTestCase):
+    sharedData = {
 
+    }
+
+    def setUp(self):
+        # Creating an artist
+
+        user_artist = User.objects.create(username='artist1', password=make_password('artista1'),
+                                          first_name='Carlos', last_name='Campos Cuesta',
+                                          email="artist1fortest@gmail.com")
+        Token.objects.create(user=user_artist)
+
+        user_artist.save()
+
+        artist = Artist.objects.create(user=user_artist, rating=4.5, phone='600304999',
+                                       language='en',
+                                       photo='https://upload.wikimedia.org/wikipedia/commons/e/e7/Robin_Clark_%28DJ%29_Live_at_Techno4ever_net_Bday_Rave.jpg',
+                                       iban='ES6621000418401234567891',
+                                       paypalAccount='artist1fortest@gmail.com')
+        artist.save()
+
+        portfolio = Portfolio.objects.create(artisticName='Tamta',
+                                             artist=artist,
+                                             banner='http://www.ddi.com.au/wp-content/uploads/AdobeStock_115567415.jpeg',
+                                             biography='Tamta, is a Georgian-Greek singer. She first achieved popularity in Greece and Cyprus in 2004 for her participation in Super Idol Greece, in which she placed second. She went on to release several charting albums and singles in Greece and Cyprus. Goduadze became a mentor on X Factor Georgia in 2014, and The X Factor Greece in 2016.')
+        portfolio.save()
+
+        self.sharedData['artist_id'] = artist.id
+        self.sharedData['user_artist_id'] = user_artist.id
+
+    def generate_data(self, args):
+        return {
+            "first_name": args[1],
+            "last_name": args[2],
+            "phone": args[3],
+            "photo": args[4],
+            "paypalAccount": args[5],
+            "artisticName": args[6]
+        }
+
+    def test_driver_edit_customer_personal_information(self):
+        print("------------- Starting test -------------")
+
+        admin = {"username": "artist1", "password": "artista1"}
+        response = self.client.post("/api/login/", admin, format='json')
+
+        token_num = response.get("x-auth")
+
+        # Con esto evitamos problemas si el token no existe en bd
+
+        token = ''
+
+        try:
+            token = Token.objects.all().filter(pk=token_num).first().key
+        except:
+            pass
+
+        payload = [
+            # Positive test 1, edit artist personal information
+            [token, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal@gmail.com", "Los sobaos",
+             "es", status.HTTP_200_OK],
+
+            # Negative test 2, edit artist with token set None
+            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2",
+             "es", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 3, edit artist with token as integer
+            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2",
+             "es",
+             status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 4, edit artist with invalid token
+            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2",
+             "es", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 5, edit artist with first_name as None
+            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2",
+             "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 6, edit artist with first_name with special characters
+            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2",
+             "es", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 7, edit artist with first_name as integer
+            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 8, edit artist with last_name as None
+            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 9, edit artist with last_name with special characters
+            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 10, edit artist with last_name as integer
+            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 11, edit artist with phone as integer
+            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
+            status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 12, edit artist with phone as characters
+            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
+            status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 13, edit artist with invalid photo
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 14, edit artist with token set None
+            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
+             status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 15, edit artist with token as integer
+            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
+             status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 16, edit artist with invalid token
+            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
+             status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 17, edit artist with first_name as None
+            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 18, edit artist with first_name with special characters
+            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
+             status.HTTP_400_BAD_REQUEST],  # Cambiar id
+
+            # Negative test 19, edit artist with first_name as integer
+            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 20, edit artist with last_name as None
+            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 21, edit artist with last_name with special characters
+            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 22, edit artist with last_name as integer
+            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 23, edit artist with phone as integer
+            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
+            status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 24, edit artist with phone as characters
+            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 25, edit artist with invalid photo
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
+             status.HTTP_400_BAD_REQUEST],
+        ]
+
+        print("-------- Edit personal information testing --------")
+
+        indice = 1
+
+        for data in payload:
+            print("---> Test " + str(indice))
+            self.template_edit_customer_information(data)
+            indice += 1
+
+    def template_edit_customer_information(self, args):
+        status_expected = args[-1]
+        language = args[-2]
+
+        data = self.generate_data(args)
+
+        response = self.client.put("/artist/" + str(self.sharedData['artist_id']) + "/", data, format="json",
+                                   HTTP_AUTHORIZATION='Token ' + str(args[0]),
+                                   HTTP_ACCEPT_LANGUAGE=language)
+        self.assertEqual(status_expected, response.status_code)
+
+        print("\nOk - Status expected: " + str(status_expected) + "\n")
 
 '''
 class ShowArtistInformation(TestCase):
