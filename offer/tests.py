@@ -1,5 +1,5 @@
 from Grooving.models import Artist, Portfolio, User,  PaymentPackage, Customer, EventLocation, Zone, \
-    Performance, SystemConfiguration, Fare, Custom, Offer, Transaction
+    Performance, SystemConfiguration, Fare, Custom, Offer, Transaction,Calendar
 from .serializers import OfferSerializer
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
@@ -57,6 +57,9 @@ class OfferTestCase(APITransactionTestCase):
 
         portfolio1 = Portfolio.objects.create(artist=artist1, artisticName="Los rebujitos")
         portfolio1.zone.add(zone1)
+
+        calendar1 = Calendar.objects.create(days=[],portfolio=portfolio1)
+        calendar1.save()
         portfolio1.save()
 
         performance1 = Performance.objects.create(info="Informacion", hours=3, price=200)
@@ -136,10 +139,10 @@ class OfferTestCase(APITransactionTestCase):
             print('---- Token doesn\'t retreive ----')
 
         # References
-
+        artist1 = Artist.objects.get()
         eventLocation1 = EventLocation.objects.filter(customer__user__username='customer1').first()
         eventLocation2 = EventLocation.objects.filter(customer__user__username='customer2').first()
-        performancePackage = PaymentPackage.objects.filter(performance__isnull=False).first()
+        performancePackage = PaymentPackage.objects.filter(portfolio__artisticName="Los rebujitos").first()
         farePackage = PaymentPackage.objects.filter(fare__isnull=False).first()
         customPackage = PaymentPackage.objects.filter(custom__isnull=False).first()
 
