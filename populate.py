@@ -1385,7 +1385,7 @@ def save_data():
 
     # Artists
 
-    artist1 = Artist.objects.create(user=user1_artist1, rating=0, phone='600304999',
+    artist1 = Artist.objects.create(user=user1_artist1, rating=4.5, phone='600304999',
                                     language='en',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist1/artist1_photo.jpg',
                                     iban='ES6621000418401234567891', paypalAccount='carlosdj.espectaculos@gmail.com')
