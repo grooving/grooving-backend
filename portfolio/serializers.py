@@ -6,6 +6,7 @@ from artistGender.serializers import ArtisticGenderSerializerOut
 import re
 from utils.strings import Strings
 from .internationalization import translate
+from utils.utils import check_accept_language
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -87,6 +88,19 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id','language', 'artisticName', 'biography', 'banner', 'images', 'videos', 'main_photo', 'artisticGender',
                   'artist', 'zone')
 
+    def validate(self, attrs,language):
+
+        data = attrs.data
+
+        if data.get("banner"):
+            Assertions.assert_true_raise401(Strings.check_max_length(data.get('banner'), 500), translate(language,'ERROR_BANNER_BAD_PROVIDED'))
+        Assertions.assert_true_raise401(data.get("biography"), translate(language, 'ERROR_EMPTY_BIOGRAPHY'))
+        if data.get("artisticName"):
+            Assertions.assert_true_raise401(Strings.check_max_length(data.get('artisticName'), 140),
+                                            translate(language, 'ERROR_ARTISTICNAME_BAD_PROVIDED'))
+        return True
+
+
     def get_language(self,obj):
         return self.context.get('language')
 
@@ -159,16 +173,14 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
 
         Assertions.assert_true_raise400(portfolio_in_db is not None, translate(language, 'ERROR_PORTFOLIO_NOT_FOUND'))
 
-        if json['artisticName'] is not None:
+        if json.get('artisticName'):
             Assertions.assert_true_raise400(isinstance(json['artisticName'], str), translate(language, 'ERROR_ARTISTICNAME_BAD_PROVIDED'))
             Assertions.assert_true_raise400(Strings.check_max_length(json['artisticName'], 140),
                                             translate(language, "ERROR_ARTISTICNAME_TOO_LONG"))
 
-
-
             portfolio_in_db.artisticName = json.get('artisticName')
 
-        if json['banner'] is not None:
+        if json.get('banner'):
             Assertions.assert_true_raise400(isinstance(json['banner'], str), translate(language, 'ERROR_BANNER_BAD_PROVIDED'))
             Assertions.assert_true_raise400(json['banner'].startswith('http'), translate(language, 'ERROR_BANNER_NOT_VALID_URL'))
             Assertions.assert_true_raise400(Strings.url_is_an_image(json['banner']), translate(language, 'ERROR_BANNER_NOT_URL_IMAGE'))
@@ -181,9 +193,8 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(Strings.check_max_length(json['biography'], 1000),
                                             translate(language, "ERROR_BIOGRAPHY_TOO_LONG"))
         portfolio_in_db.biography = json.get('biography')
-            #portfolio_in_db.biography = json.get('biography')
 
-        if json['images'] is not None:
+        if json.get('images'):
             for image_db in PortfolioModule.objects.filter(type='PHOTO', portfolio=portfolio_in_db):
                 aux = True
                 for image in json['images']:
@@ -208,7 +219,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                     module.portfolio = portfolio_in_db
                     module.save()
 
-        if json['videos'] is not None:
+        if json.get('videos'):
 
             r = re.compile('^(http(s)?:\/\/)?(|((m).)|((w){3}.))?youtu(be|.be)?(\.)')
 
@@ -237,7 +248,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                     module.portfolio = portfolio_in_db
                     module.save()
 
-        if json['artisticGenders'] is not None:
+        if json.get('artisticGenders'):
 
             for genre in portfolio_in_db.artisticGender.all():
 
@@ -264,7 +275,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                 else:
                     portfolio_in_db.artisticGender.add(genre_db.id)
 
-        if json['zone'] is not None:
+        if json.get('zone'):
 
             for zone in portfolio_in_db.zone.all():
                 if zone.name in json['zone']:
@@ -282,7 +293,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                 else:
                     portfolio_in_db.zone.add(zone_db.id)
 
-        if json['main_photo'] is not None:
+        if json.get('main_photo'):
             Assertions.assert_true_raise400(isinstance(json['main_photo'], str), translate(language, 'ERROR_MAINPHOTO_BAD_PROVIDED'))
             Assertions.assert_true_raise400(json['main_photo'].startswith('http'), translate(language, 'ERROR_MAINPHOTO_NOT_VALID_URL'))
             Assertions.assert_true_raise400(Strings.url_is_an_image(json['main_photo']), translate(language, 'ERROR_MAINPHOTO_NOT_URL_IMAGE'))

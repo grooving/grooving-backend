@@ -49,13 +49,10 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
             artist = Artist.objects.filter(portfolio=portfolio).first()
             if loggedUser is not None and loggedUser.id == artist.id and user_type == "Artist":
                 serializer = PortfolioSerializer(portfolio, data=request.data, partial=True,context={'language':language})
-                Assertions.assert_true_raise400(request.data['biography'], translate(language, 'ERROR_EMPTY_BIOGRAPHY'))
-                if serializer.is_valid():
-                    serializer.save(loggedUser, language=language)
-                    portfolio = self.get_object(pk)
-                    serializer = PortfolioSerializer(portfolio, data=serializer.data, partial=True,context={'language':language})
-                    serializer.is_valid()
-                    return Response(serializer.data)
+                if serializer.validate(request,language):
+                    save = serializer.save(loggedUser, language=language)
+                    serialized = PortfolioSerializer(save, context={'language':language})
+                    return Response(serialized.data, status=status.HTTP_201_CREATED)
                 else:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
