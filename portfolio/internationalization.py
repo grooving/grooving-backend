@@ -21,11 +21,13 @@ spanish = {
     "ERROR_BIOGRAPHY_TOO_LONG": "La biografía es demasiado larga.",
     "ERROR_ARTISTICNAME_TOO_LONG": "El nombre artístico es demasiado largo.",
     "ERROR_VIDEO_URL_TOO_LONG": "La URL del vídeo es demasiado larga",
-    "ERROR_IMAGE_URL_TOO_LONG": "La URL de la imagen es demasiado larga"
+    "ERROR_IMAGE_URL_TOO_LONG": "La URL de la imagen es demasiado larga",
+    "ERROR_EMPTY_BIOGRAPHY": "La biografía no puede estar vacía."
 
 }
 
 english = {
+    "ERROR_EMPTY_BIOGRAPHY": "The biography can't be empty.",
     "ERROR_VIDEO_URL_TOO_LONG": "Video URL is too long.",
     "ERROR_IMAGE_URL_TOO_LONG": "Image URL is too long",
     "ERROR_BIOGRAPHY_TOO_LONG": "The biography is too long.",

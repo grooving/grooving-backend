@@ -176,11 +176,12 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                                             translate(language, "ERROR_URL_TOO_LONG"))
             portfolio_in_db.banner = json.get('banner')
 
-        if json['biography'] is not None:
-            #Assertions.assert_true_raise400(isinstance(json['biography'], str), translate(language, 'ERROR_BIOGRAPHY_BAD_PROVIDED'))
-            Assertions.assert_true_raise400(Strings.check_max_length(json['biography'], 500),
+        Assertions.assert_true_raise400(json['biography'], translate(language, 'ERROR_EMPTY_BIOGRAPHY'))
+        Assertions.assert_true_raise400(isinstance(json['biography'], str), translate(language, 'ERROR_BIOGRAPHY_BAD_PROVIDED'))
+        Assertions.assert_true_raise400(Strings.check_max_length(json['biography'], 1000),
                                             translate(language, "ERROR_BIOGRAPHY_TOO_LONG"))
-            portfolio_in_db.biography = json.get('biography')
+        portfolio_in_db.biography = json.get('biography')
+            #portfolio_in_db.biography = json.get('biography')
 
         if json['images'] is not None:
             for image_db in PortfolioModule.objects.filter(type='PHOTO', portfolio=portfolio_in_db):

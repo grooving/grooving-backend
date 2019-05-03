@@ -44,7 +44,11 @@ class ZoneSerializer(serializers.ModelSerializer):
                                                   keyToTranslate="ERROR_PARENT_ZONE_NOT_PROVIDED"))
 
         parentZone = Zone.objects.get(pk=zone.parentZone_id)
-
+        zone_in_db = Zone.objects.filter(name=zone.name).first()
+        if zone_in_db:
+            if zone.id != zone_in_db.id:
+                Assertions.assert_true_raise400(False, translate(keyLanguage=language,
+                                                    keyToTranslate="ERROR_ZONE_ALREADY_EXISTS"))
         if parentZone:
             grandfather_zone = parentZone.parentZone
             if grandfather_zone:

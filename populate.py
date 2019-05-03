@@ -208,10 +208,12 @@ def save_data():
                                                                             "de mantenimiento, actualización, cambio de ubicación, etc., puede significar la interrupción " +
                                                                             "del acceso al portal.</p>" +
 
-                                                                            "<p>El pago se realizará por parte del contratante a Grooving. Una vez que el artista " +
-                                                                            "realiza la actuación el cliente completará el proceso de pago mandando un código de pago " +
-                                                                            "al artista con el que recibirá un ingreso por los servicios prestados. En este proceso, " +
-                                                                            "Grooving se llevará un 10% del pago realizado.</p>" +
+                                                                            "<p>El pago será efectuado por la parte contratante a Grooving. Antes del comienzo de la " +
+                                                                            "actuación, el cliente completará el proceso de pago enviando un pago al artista con el que " +
+                                                                            "recibirá un ingreso por los servicios prestados. En este proceso, Grooving se llevará el 10% " +
+                                                                            "del pago realizado.</p>" +
+
+                                                                            "<p>Si no se acepta una petición en 29 días, se da por supuesto que la oferta no interesa.</p>" +
 
                                                                             "<h2>Información del portal y disponibilidad de servicios</h2>" +
                                                                             "<p>El portal no garantiza la disponibilidad continua y permanente de los servicios, " +
@@ -290,6 +292,9 @@ def save_data():
                                                                             "reciente Ley Orgánica 3/2018, del 5 de diciembre, de Protección de Datos Personales y " +
                                                                             "garantía de los derechos digitales cumpliendo con cada uno de sus artículos y sometiéndose " +
                                                                             "a auditorías regularmente.</p>" +
+
+                                                                            "<p>Si tiene dudas o en el caso de que no pueda ejercer alguno de sus derechos, puede enviar " +
+                                                                            "un correo a grupogrooving@gmail.com.</p>" +
 
                                                                             "<p>Todos los datos generados en Grooving son almacenados en nuestros servidores y utilizando " +
                                                                             "protocolos seguros de comunicación.</p>" +
@@ -445,10 +450,12 @@ def save_data():
                                                                             "However, sometimes, for reasons of maintenance, updating, change of location, etc., " +
                                                                             "may mean the interruption of access to the portal.</p>" +
 
-                                                                            "<p>Payment will be made by the contracting party to Grooving. Once the artist performs " +
-                                                                            "the performance, the client will complete the payment process by sending a payment " +
-                                                                            "code to the artist with whom he will receive an income for the services provided. In " +
-                                                                            "this process, Grooving will take 10% of the payment made. </p>" +
+                                                                            "<p>The payment will be made by the contracting party to Grooving. Before the beginning of " +
+                                                                            "the performance, the client will complete the payment process by sending a payment to the " +
+                                                                            "artist with whom he will receive an income for the services rendered. In this process, " +
+                                                                            "Grooving will take 10% of the payment made.</p>" +
+
+                                                                            "<p>If a request is not accepted in 29 days, it is assumed that the offer does not interest.</p>"
 
                                                                             "<h2>Portal information and services availability</h2>" +
                                                                             "<p>The portal does not guarantee the continuous and permanent availability of the " +
@@ -520,6 +527,9 @@ def save_data():
                                                                             "<p>This document is adapted to the European Data Protection Regulation (RGPD) and to the " +
                                                                             "recent Organic Law 3/2018, of December 5, on the Protection of Personal Data and guarantee of " +
                                                                             "digital rights complying with each of its articles and undergoing regular audits. </p>" +
+
+                                                                            "<p>If you have any doubts or if you can not exercise any of your rights, you can send an " +
+                                                                            "email to grupogrooving@gmail.com.</p>" +
 
                                                                             "<p>All the data generated in Grooving is stored on our servers and using secure communication " +
                                                                             "protocols.</p>" +
