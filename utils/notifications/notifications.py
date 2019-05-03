@@ -297,13 +297,13 @@ class Notifications:
             context_pdf['event_payment_package'] = 'Fare'  # Informaremos del precio multiplicado por la hora
             context_pdf['event_payment_package_price_per_hour'] = offer.paymentPackage.fare.priceHour
             context_body['event_payment_package'] = 'Fare'
-            context_pdf['event_price'] = offer.price * offer.hours
-            context_body['event_price'] = offer.price * offer.hours
+            context_pdf['event_price'] = offer.price
+            context_body['event_price'] = offer.price
         else:
             context_pdf['event_payment_package'] = 'Custom'  # Informaremos del precio total y la duración
             context_body['event_payment_package'] = 'Custom'
-            context_pdf['event_price'] = offer.price * offer.hours
-            context_body['event_price'] = offer.price * offer.hours
+            context_pdf['event_price'] = offer.price
+            context_body['event_price'] = offer.price
 
         # Email - PDF generator
 
