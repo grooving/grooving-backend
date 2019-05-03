@@ -314,7 +314,7 @@ def save_data():
 
                                                                             "<p>Los datos que se enviarán a los clientes que lo hayan solicitado serán los siguientes:</p>" +
                                                                             "<ul>" +
-                                                                            "<li type=”circle”><b>Eventos</b>: nombre, dirección, equipamiento necesario y zona.</li>" +
+                                                                            "<li type=”circle”><b>Eventos</b>: nombre, dirección y zona.</li>" +
                                                                             "<li type=”circle”><b>Ofertas realizadas</b>: artista, día del evento, paquete de pago " +
                                                                             "seleccionado, precio y estado de la oferta.</li>" +
                                                                             "</ul>" +
@@ -331,8 +331,7 @@ def save_data():
                                                                             "eliminadas a excepción de:</p>" +
 
                                                                             "<ul>" +
-                                                                            "<li><b>Localizaciones de los eventos</b>: equipamiento, descripción, dirección y nombre</li>" +
-                                                                            "<li><b>Valoraciones</b>: se anonimizan los comentarios realizados.</li>" +
+                                                                            "<li><b>Localizaciones de los eventos</b>: descripción, dirección y nombre</li>" +
                                                                             "</ul>" +
 
                                                                             "<p>Para mantener la privacidad de los usuarios se eliminarán todas aquellas conversaciones " +
@@ -467,7 +466,7 @@ def save_data():
 
                                                                             "<p>The data that will be sent to the clients that have requested it will be:</p>" +
                                                                             "<ul>" +
-                                                                            "<li><b>Events</b>: name, address, necessary equipment and area.</li>" +
+                                                                            "<li><b>Events</b>: name, address and area.</li>" +
                                                                             "<li type><b>Offers made</b>: artist, day of the event, selected payment package, price and " +
                                                                             "status of the offer.</li>" +
                                                                             "</ul>" +
@@ -489,7 +488,7 @@ def save_data():
                                                                             "the exception of:</p>" +
 
                                                                             "<ul>" +
-                                                                            "<li><b>Event location</ b>: equipment, description, address and name.</li>" +
+                                                                            "<li><b>Event location</ b>: description, address and name.</li>" +
                                                                             "<li><b>Ratings</b>: Comments made anonymized.</li>" +
                                                                             "</ul>" +
 
