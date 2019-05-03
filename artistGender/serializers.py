@@ -6,6 +6,7 @@ from utils.utils import check_accept_language
 from .internationalization import translate
 from utils.authentication_utils import get_artist_or_customer_by_user
 from .internationalization import translate
+from utils.strings import Strings
 
 
 class ArtisticGenderSerializer(serializers.ModelSerializer):
@@ -41,6 +42,8 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise401(json.get('name_es') is not None, translate(language, 'ERROR_GENRE_NULL_NAME'))
         Assertions.assert_true_raise401(json.get('name_en') != "", translate(language, 'ERROR_GENRE_NULL_NAME'))
         Assertions.assert_true_raise401(json.get('name_en') is not None, translate(language, 'ERROR_GENRE_NULL_NAME'))
+        Assertions.assert_true_raise400(Strings.check_max_length(json.get('name_es'), 140), translate(language, 'ERROR_STRING_TOO_LONG'))
+        Assertions.assert_true_raise400(Strings.check_max_length(json.get('name_en'), 140), translate(language, 'ERROR_STRING_TOO_LONG'))
 
         genre.name_en = json.get('name_en')
         genre.name_es = json.get('name_es')
@@ -99,6 +102,9 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
 
         Assertions.assert_true_raise404(ArtisticGender.objects.filter(id=json.get('parentGender')).first(),
                                         translate(language, 'ERROR_PARENT_GENRE_NOT_FOUND'))
+
+        Assertions.assert_true_raise400(Strings.check_max_length(json.get('name_es'), 140), translate(language, 'ERROR_STRING_TOO_LONG'))
+        Assertions.assert_true_raise400(Strings.check_max_length(json.get('name_en'), 140), translate(language, 'ERROR_STRING_TOO_LONG'))
 
         genre.name_en = json.get('name_en')
         genre.name_es = json.get('name_es')

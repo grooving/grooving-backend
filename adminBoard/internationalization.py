@@ -17,6 +17,7 @@ spanish = {
     "ERROR_ZONE_BELONGS_TO_EVENT": "La zona pertenece a la localización de un artista del sistema,no puede ser borrada",
     "ERROR_ZONE_MORE_THAN_3_LEVELS": "Una zona no puede tener más de 3 niveles",
     "ERROR_INVALID_PARENT_ZONE": "Zona padre inválida",
+    "ERROR_STRING_TOO_LONG": "La cadena de caracteres es demasiado larga."
 }
 
 english = {
@@ -38,6 +39,7 @@ english = {
     "ERROR_ZONE_BELONGS_TO_EVENT": "Zone belongs to an artist event location, it cannot be deleted",
     "ERROR_ZONE_MORE_THAN_3_LEVELS": "A zone cannot have more than 3 levels",
     "ERROR_INVALID_PARENT_ZONE": "Invalid parent zone",
+    "ERROR_STRING_TOO_LONG": "The string is too long"
 }
 
 

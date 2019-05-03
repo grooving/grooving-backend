@@ -3,6 +3,7 @@ from Grooving.models import Zone
 from utils.Assertions import Assertions
 from utils.utils import check_accept_language
 from adminBoard.internationalization import translate
+from utils.strings import Strings
 
 
 class ZoneSerializer(serializers.ModelSerializer):
@@ -90,6 +91,9 @@ class ZoneSerializer(serializers.ModelSerializer):
         parentzonesid = list(Zone.objects.values_list('id', flat=True))
         name = request.data.get("name").strip()
         parentzone = request.data.get("parentZone")
+
+        Assertions.assert_true_raise400(Strings.check_max_length(name, 140),
+                                        translate(language, 'ERROR_STRING_TOO_LONG'))
 
         Assertions.assert_true_raise400(parentzone, translate(keyLanguage=language,
                                                               keyToTranslate="ERROR_PARENT_ZONE_DOES_NOT_EXIST"))

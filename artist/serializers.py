@@ -88,6 +88,10 @@ class ArtistSerializer(serializers.ModelSerializer):
         user = User.objects.create(username=json.get('username'), password=make_password(json.get('password')),
                                    first_name=json.get('first_name'), last_name=json.get('last_name'),
                                    email=json.get('email'))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
+                                        translate(language, "ERROR_URL_TOO_LONG"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('artisticName'), 140),
+                                        translate(language, "ERROR_ARTISTICNAME_TOO_LONG"))
         photo_base64 = json.get('photo')
 
         artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'), user=user)
@@ -124,6 +128,8 @@ class ArtistSerializer(serializers.ModelSerializer):
         if artist.paypalAccount:
             Assertions.assert_true_raise400('@' in artist.paypalAccount and '.' in artist.paypalAccount,
                                             translate(language, "ERROR_INVALID_PAYPAL_ACCOUNT"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
+                                        translate(language, "ERROR_URL_TOO_LONG"))
         photo = json.get('photo')
         Assertions.assert_true_raise400(user.first_name, translate(language, "ERROR_EMPTY_FIRST_NAME"))
         Assertions.assert_true_raise400(user.last_name, translate(language, "ERROR_EMPTY_LAST_NAME"))
@@ -144,6 +150,8 @@ class ArtistSerializer(serializers.ModelSerializer):
                                             translate(language, "ERROR_INVALID_PHOTO_URL_HTTP"))
             Assertions.assert_true_raise400(Strings.url_is_an_image(photo),
                                             translate(language, "ERROR_INVALID_PHOTO_URL_ENDFORMAT"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('artisticName'), 140),
+                                        translate(language, "ERROR_ARTISTICNAME_TOO_LONG"))
 
         artistic_name = json.get('artisticName')
 
@@ -198,6 +206,11 @@ class ArtistSerializer(serializers.ModelSerializer):
                                         translate(language, "ERROR_MAX_LENGTH_FIRST_NAME"))
         Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('last_name'), 150),
                                         translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('last_name'), 150),
+                                        translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
+                                        translate(language, "ERROR_URL_TOO_LONG"))
+
         username = request.data.get("username").strip()
         password = request.data.get("password").strip()
         email = request.data.get("email").strip()

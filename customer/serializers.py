@@ -69,6 +69,10 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
         user.first_name = json.get('first_name').strip()
         user.last_name = json.get('last_name').strip()
+
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
+                                        translate(language, "ERROR_URL_TOO_LONG"))
+
         photo = json.get('photo')
 
         customer.paypalAccount = json.get('paypalAccount')
@@ -106,6 +110,7 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
     @staticmethod
     def _service_create_customer(json: dict):
+
         user1 = User.objects.create(username=json.get('username'),
                                     password=make_password(json.get('password')),
                                     first_name=json.get('first_name'),
@@ -147,6 +152,10 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         first_name = request.data.get("first_name").strip()
         last_name = request.data.get("last_name").strip()
         phone = request.data.get("phone")
+
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
+                                        translate(language, "ERROR_URL_TOO_LONG"))
+
         photo = request.data.get("photo")
 
         # Email in use validation

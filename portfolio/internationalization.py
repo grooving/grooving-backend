@@ -15,10 +15,19 @@ spanish = {
     "ERROR_ZONE_NOT_FOUND": "La zona no existe",
     "ERROR_MAINPHOTO_BAD_PROVIDED": "La foto principal introducida no es válida",
     "ERROR_MAINPHOTO_NOT_VALID_URL": "La URL de la foto principal no es válida",
-    "ERROR_MAINPHOTO_NOT_URL_IMAGE": "La URL de la foto principal no es una imagen"
+    "ERROR_MAINPHOTO_NOT_URL_IMAGE": "La URL de la foto principal no es una imagen",
+    "ERROR_STRING_TOO_LONG": "La cadena de caracteres es demasiado larga.",
+    "ERROR_URL_TOO_LONG": "La URL es demasiado larga. El límite es 500 caracteres.",
+    "ERROR_BIOGRAPHY_TOO_LONG": "La biografía es demasiado larga.",
+    "ERROR_ARTISTICNAME_TOO_LONG": "El nombre artístico es demasiado largo.",
+
 }
 
 english = {
+    "ERROR_BIOGRAPHY_TOO_LONG": "The biography is too long.",
+    "ERROR_ARTISTICNAME_TOO_LONG": "The artistic name is too long.",
+    "ERROR_URL_TOO_LONG": "The URL is too long. Limit is 500 characters.",
+    "ERROR_STRING_TOO_LONG": "The string is too long",
     "ERROR_PORTFOLIO_NOT_FOUND": "Portfolio doesn't exist",
     "ERROR_NOT_LOGGED_OR_NOT_OWNER": "User not logged or isn't portfolio owner",
     "ERROR_ARTISTICNAME_BAD_PROVIDED": "Artistic name isn't valid",

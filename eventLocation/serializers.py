@@ -3,7 +3,7 @@ from rest_framework import serializers
 from Grooving.models import EventLocation, Zone, Customer
 from utils.utils import check_accept_language
 from .internationalization import translate
-
+from utils.strings import Strings
 
 class ZoneSerializer(serializers.ModelSerializer):
 
@@ -71,6 +71,11 @@ class EventLocationSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise403(customer, translate(language, 'ERROR_CUSTOMER_NOT_FOUND'))
 
         json = request.data
+
+        Assertions.assert_true_raise400(Strings.check_max_length(json.get("name"), 255), translate(language, 'ERROR_NAME_TOO_LONG'))
+
+        Assertions.assert_true_raise400(Strings.check_max_length(json.get("address"), 255),
+                                        translate(language, 'ERROR_ADDRESS_TOO_LONG'))
 
         Assertions.assert_true_raise400(json.get("address"), translate(language, 'ERROR_ADDRESS_NOT_PROVIDED'))
 

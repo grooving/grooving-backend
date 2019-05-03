@@ -161,16 +161,25 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
 
         if json['artisticName'] is not None:
             Assertions.assert_true_raise400(isinstance(json['artisticName'], str), translate(language, 'ERROR_ARTISTICNAME_BAD_PROVIDED'))
+            Assertions.assert_true_raise400(Strings.check_max_length(json['artisticName'], 140),
+                                            translate(language, "ERROR_ARTISTICNAME_TOO_LONG"))
+
+
+
             portfolio_in_db.artisticName = json.get('artisticName')
 
         if json['banner'] is not None:
             Assertions.assert_true_raise400(isinstance(json['banner'], str), translate(language, 'ERROR_BANNER_BAD_PROVIDED'))
             Assertions.assert_true_raise400(json['banner'].startswith('http'), translate(language, 'ERROR_BANNER_NOT_VALID_URL'))
             Assertions.assert_true_raise400(Strings.url_is_an_image(json['banner']), translate(language, 'ERROR_BANNER_NOT_URL_IMAGE'))
+            Assertions.assert_true_raise400(Strings.check_max_length(json['banner'], 500),
+                                            translate(language, "ERROR_URL_TOO_LONG"))
             portfolio_in_db.banner = json.get('banner')
 
         if json['biography'] is not None:
             Assertions.assert_true_raise400(isinstance(json['biography'], str), translate(language, 'ERROR_BIOGRAPHY_BAD_PROVIDED'))
+            Assertions.assert_true_raise400(Strings.check_max_length(json['biography'], 500),
+                                            translate(language, "ERROR_BIOGRAPHY_TOO_LONG"))
             portfolio_in_db.biography = json.get('biography')
 
         if json['images'] is not None:
@@ -274,6 +283,8 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
             Assertions.assert_true_raise400(isinstance(json['main_photo'], str), translate(language, 'ERROR_MAINPHOTO_BAD_PROVIDED'))
             Assertions.assert_true_raise400(json['main_photo'].startswith('http'), translate(language, 'ERROR_MAINPHOTO_NOT_VALID_URL'))
             Assertions.assert_true_raise400(Strings.url_is_an_image(json['main_photo']), translate(language, 'ERROR_MAINPHOTO_NOT_URL_IMAGE'))
+            Assertions.assert_true_raise400(Strings.check_max_length(json['main_photo'], 500),
+                                            translate(language, "ERROR_URL_TOO_LONG"))
             artist = Artist.objects.get(portfolio=portfolio_in_db)
             artist.photo = json['main_photo']
             artist.save()

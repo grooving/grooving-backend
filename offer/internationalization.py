@@ -44,10 +44,12 @@ spanish = {
     "ERROR_CREDENTIAL": "Error de credenciales de Paypal",
     "ERROR_CREDENTIAL_BRAINTREE": "Error de credencial Braintree",
     "ERROR_DATE_PAYMENT" : "Paypal no puede procesar un pago realizado hace mas de 29 dias",
-    "ERROR_REASON_NOT_PROVIDED": "No se ha suministrado una razón"
+    "ERROR_REASON_NOT_PROVIDED": "No se ha suministrado una razón",
+    "ERROR_PAYMENTCODE_TOO_LONG": "El código de pago es demasiado largo"
 }
 
 english = {
+    "ERROR_PAYMENTCODE_TOO_LONG": "Payment code is too long.",
     "ERROR_DATE_FORMAT": "Date must follow this format: YYYY-MM-DDTHH:mm:ss",
     "ERROR_NULL_PAYMENT_CODE": "Payment code hasn't exist",
     "ERROR_OFFER_NOT_FOUND": "Offer don't exist",

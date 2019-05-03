@@ -45,10 +45,16 @@ spanish = {
     "ERROR_NO_DATA_GIVEN": "El formulario no tiene datos.",
     "ERROR_NO_MATCHING_LANGUAGE": "El idioma que has escogido no esta disponible.",
     "ERROR_ACTOR_NOT_FOUND": "El actor que buscas no existe.",
-    "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar."
+    "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar.",
+    "ERROR_STRING_TOO_LONG": "La cadena de caracteres es demasiado larga.",
+    "ERROR_URL_TOO_LONG": "La URL es demasiado larga. El límite es 500 caracteres.",
+    "ERROR_ARTISTICNAME_TOO_LONG": "El nombre artístico es demasiado largo.",
 }
 
 english = {
+    "ERROR_ARTISTICNAME_TOO_LONG": "The artistic name is too long.",
+    "ERROR_URL_TOO_LONG": "The URL is too long. Limit is 500 characters.",
+    "ERROR_STRING_TOO_LONG": "The string is too long",
     "ERROR_EMPTY_JSON": "Form is not valid.",
     "ERROR_INVALID_PAYPAL_ACCOUNT": "Invalid paypal account.",
     "ERROR_EMPTY_FIRST_NAME": "First name can't be empty.",

@@ -18,6 +18,7 @@ import decimal
 from requests.auth import HTTPBasicAuth
 from .internationalization import translate
 from utils.utils import check_accept_language
+from utils.strings import Strings
 
 
 class PaymentPackageSerializer(serializers.ModelSerializer):
@@ -107,6 +108,7 @@ class OfferSerializer(serializers.ModelSerializer):
     def service_made_payment_artist(paymentCode, user_logged, language='en'):
         Assertions.assert_true_raise403(user_logged is not None, translate(language, 'ERROR_NOT_AN_ARTIST'))
         Assertions.assert_true_raise400(paymentCode is not None, translate(language, 'ERROR_NULL_PAYMENT_CODE'))
+        Assertions.assert_true_raise400(Strings.check_max_length(paymentCode, 11), translate(language, 'ERROR_PAYMENTCODE_TOO_LONG'))
 
         offer = Offer.objects.filter(paymentCode=paymentCode).first()
         Assertions.assert_true_raise404(offer, translate(language, 'ERROR_OFFER_NOT_FOUND'))
