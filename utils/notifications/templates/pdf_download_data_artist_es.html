@@ -209,19 +209,6 @@
                     <td colspan="2"><b>Cuenta de paypal de ingreso</b>: {{ offer.transaction.paypalArtist }}</td>
                 </tr>
             {% endif %}
-
-            {% if offer.status == "PAYMENT_MADE" and offer.rating %}
-                {% if offer.rating.score %}
-                    <tr>
-                        <td><b>Puntuación recibida</b>: {{ offer.rating.score }}</td>
-                    </tr>
-                {% endif %}
-                {% if offer.rating.comment %}
-                    <tr>
-                        <td><b>Comentarios</b>: {{ offer.rating.comment }}</td>
-                    </tr>
-                {% endif %}
-            {% endif %}
             <tr>
                 {% if offer.reason and offer.status == "REJECTED" or offer.status == "WITHDRAWN" or offer.status == "CANCELLED_ARTIST" or offer.status == "CANCELLED_CUSTOMER" %}
                     <td><b>Razón</b>: {{ offer.reason }}</td>
