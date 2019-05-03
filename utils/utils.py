@@ -153,7 +153,8 @@ def check_special_characters_and_numbers(text):
 
     # Pass the string in search
     # method of regex object.
-    if regex.search(text) is None:
+
+    if regex.search(str(text)) is None:
         result = True
     else:
         result = False
