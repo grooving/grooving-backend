@@ -171,7 +171,7 @@ class PaymentCode(generics.RetrieveUpdateDestroyAPIView):
 
         language = check_accept_language(request)
 
-        offer = OfferSerializer.service_made_payment_artist(request.data.get("paymentCode"), get_artist(request), language)
+        offer = OfferSerializer.service_made_payment_artist(request.data.get("paymentCode"), get_artist(request), language=language)
         price = offer.price
         customer = offer.eventLocation.customer
         photo = customer.photo
