@@ -313,8 +313,6 @@ class ZoneTestCase(APITransactionTestCase):
             # Test positivo, eliminar una zona  lvl 1
             [token, spain_id, 'es', 200],
 
-
-
         ]
 
         for data in payload:

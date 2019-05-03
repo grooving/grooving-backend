@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist, Transaction, Rating, SystemConfiguration, \
-    SystemConfiguration
+from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist, Transaction, Rating, \
+    SystemConfiguration, Calendar
 from utils.Assertions import assert_true, Assertions
 from django.db import IntegrityError
 from decimal import Decimal
@@ -531,9 +531,10 @@ class OfferSerializer(serializers.ModelSerializer):
         except ValueError:
             Assertions.assert_true_raise400(False, translate(language, 'ERROR_DATE_FORMAT'))
 
-        Assertions.assert_true_raise400(datetime.datetime.strptime(json.get('date'),
-                                                                   '%Y-%m-%dT%H:%M:%S') > datetime.datetime.now(),
-                                        translate(language, 'ERROR_DATE_PAST'))
+        offer_datetime = datetime.datetime.strptime(json.get('date'), '%Y-%m-%dT%H:%M:%S')
+
+        Assertions.assert_true_raise400(offer_datetime > datetime.datetime.now(), translate(language, 'ERROR_DATE_PAST'))
+
         Assertions.assert_true_raise400(json.get("paymentPackage_id"),
                                         translate(language, 'ERROR_PAYMENTPACKAGE_NOT_PROVIDED'))
 
@@ -541,6 +542,11 @@ class OfferSerializer(serializers.ModelSerializer):
 
         Assertions.assert_true_raise400(paymentPackage,
                                         translate(language, 'ERROR_PAYMENTPACKAGE_NOT_FOUND'))
+
+        calendar = Calendar.objects.filter(portfolio=paymentPackage.portfolio).first()
+
+        Assertions.assert_true_raise400(offer_datetime.strftime('%Y-%m-%d') not in calendar.days,
+                                        translate(language, 'ERROR_DATE_NOT_AVAILABLE'))
 
         # Custom offer properties for each paymentPackage type
 
