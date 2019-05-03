@@ -40,7 +40,7 @@ class GenderTestCase(APITransactionTestCase):
             ["Hijo2", None, self.phater, self.phater, "Sondss", "Hdijso", 401, 401],
             [None, None, self.phater, self.phater, "Sosnss", "Hijso", 401, 401],
             [None, None, self.phater, self.phater, "Sonss", "Hijsso", 401, 401],
-            [112, 12, self.phater, self.phater, "Sonss", "Hijso", 201, 201],
+            [112, 12, self.phater, self.phater, "Sonss", "Hijso", 400, 400],
             ["Hijo4", "Son4", self.son, self.phater, "Soniss", "Hipjso", 201, 201],
             ["Hijo5", "Son5", self.son, self.phater, "Sonss", "", 201, 400],
             ["Hijo6", "Son6", self.son, self.phater, None, "Hijxso", 201, 400],
@@ -58,7 +58,6 @@ class GenderTestCase(APITransactionTestCase):
             indice += 1
 
     def template_gender(self, arg, lang):
-        http_code = arg[-1]
         user = {"username": "admin", "password": "admin"}
         response = self.client.post("/api/admin/login/", user, format='json')
         token_num = response.get("x-auth")

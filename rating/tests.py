@@ -99,7 +99,7 @@ class RatingTestCase(APITransactionTestCase):
             print("---> Test " + str(indice) + " es")
             self.template_rate_offer(data, "es")
             print("---> Test " + str(indice) + " en")
-            #self.template_rate_offer(data, "en")
+            self.template_rate_offer(data, "en")
             indice += 1
 
 
