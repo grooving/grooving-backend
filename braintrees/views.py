@@ -164,6 +164,8 @@ class BraintreeViews(generics.GenericAPIView):
                     'Your payment could not be processed. Please check your'
                     ' input or use another payment method and try again.')
             }
+            if not result.is_success:
+                offer.delete()
             Assertions.assert_true_raise400(result.is_success, translate(language, 'ERROR_PAYMENT'))
 
 
