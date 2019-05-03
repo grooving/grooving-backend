@@ -30,7 +30,6 @@ def cancel_offers_with_no_user(offers):
         for o in offers:
             if o.status == 'PENDING' and o.paymentPackage.portfolio.isHidden:
                 o.status = 'REJECTED'
-                #TODO: Give internationalized reason about why the offer is cancelled
                 o.save()
             elif o.status == 'CONTRACT_MADE' and o.paymentPackage.portfolio.isHidden:
                 o.status = 'CANCELLED_ARTIST'
