@@ -176,7 +176,7 @@ def save_data():
                                                                           "<p>Con <b>Grooving</b> conseguimos hacerlo realidad simplificando la búsqueda y contratación de " +
                                                                           "artistas.</p>",
 
-                                                               termsText_es="<p>Las condiciones de uso de la página web, las reglas de uso y el uso de grooving.com, la " +
+                                                               termsText_es="<p>Las condiciones de uso de la página web, las reglas de uso y el uso de grooving-frontend-d4.herokuapp.com, la " +
                                                                             "propiedad de Grooving SL y el correo electrónico grupogrooving@gmail.com, en adelante, " +
                                                                             "Grooving, que el usuario del portal debe aceptar para utilizar todos los servicios e " +
                                                                             "información que se proporcionan desde el portal.</p>" +
@@ -223,10 +223,8 @@ def save_data():
                                                                             "terceros. En el caso de que el usuario como resultado del uso del portal sufra o dañe la " +
                                                                             "comunicación y se tomen las medidas adecuadas para resolverlo.</p>" +
 
-                                                                            "<p>El portal no interviene en la creación de los contenidos y/o servicios proporcionados o " +
-                                                                            "proporcionados por terceros en y/o a través de la aplicación, de la misma manera que tampoco " +
-                                                                            "controla su legalidad. En cualquier caso, no ofrecemos ningún tipo de garantía sobre ellos. " +
-                                                                            "El usuario reconoce que el portal no es responsable de los contenidos y/o servicios " +
+                                                                            "<p>Haremos todo lo posible para evitar la subida de contenido ilegal pero no podemos asegurarlo " +
+                                                                            "al 100%. El usuario reconoce que el portal no es responsable de los contenidos y/o servicios " +
                                                                             "proporcionados o proporcionados por terceros en y/o a través del portal.</p>" +
 
                                                                             "<p>En cualquier caso, el portal excluye cualquier responsabilidad por daños y pérdidas que " +
@@ -250,7 +248,8 @@ def save_data():
 
                                                                             "<h2>Cookies</h2>" +
                                                                             "<p>Empleamos el uso de cookies. Al acceder a Grupo Grooving, usted ha aceptado usar cookies " +
-                                                                            "de acuerdo con la Política de privacidad de Grooving.</p>" +
+                                                                            "de acuerdo con la <a href=\"https://grooving-frontend-d4.herokuapp.com/privacy\">" +
+                                                                            "Política de privacidad de Grooving</a>.</p>" +
 
                                                                             "<p>La mayoría de los sitios web interactivos utilizan cookies para permitirnos recuperar " +
                                                                             "los detalles del usuario para cada visita. Las cookies son utilizadas por nuestro sitio web " +
@@ -342,7 +341,7 @@ def save_data():
                                                                             "estadísticas.</p>",
 
                                                                termsText_en="<p>The conditions of use of the web page, the rules of use and the use of " +
-                                                                            "grooving.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
+                                                                            "grooving-frontend-d4.herokuapp.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
                                                                             " hereinafter, Grooving, that the user of the portal must accept to use all the " +
                                                                             "services and information that are provided from the portal.</p>" +
                                                                             "<p>The user as well as Grooving, owner of the portal, have become the parties. " +
@@ -387,12 +386,12 @@ def save_data():
                                                                             "platform by third parties. In the event that the user as a result of the use of the " +
                                                                             "portal suffers or will harm the communication and the appropriate measures will be " +
                                                                             "taken to solve it.</p>" +
-                                                                            "<p>The portal does not intervene in the creation of the contents and / or services " +
-                                                                            "provided or provided by third parties in and / or through the application, in the " +
-                                                                            "same way that it does not control its legality either. In any case, we do not offer " +
-                                                                            "any kind of guarantee on them. The user acknowledges that the portal is not and is " +
-                                                                            "not responsible for the contents and / or services provided or provided by third " +
+
+                                                                            "<p>We will do everything possible to prevent the upload of illegal content but we can not "
+                                                                            "guarantee it to 100%. In any case, the user acknowledges that the portal is not " +
+                                                                            "and is not responsible for the contents and / or services provided or provided by third " +
                                                                             "parties in and / or through the portal.</p>" +
+
                                                                             "<p>In any case, the portal excludes any liability for damages and losses that may be " +
                                                                             "due to information and / or services provided or provided by third parties other " +
                                                                             "than the Company. All responsibility will be the third party, whether provider, " +
@@ -411,7 +410,9 @@ def save_data():
 
                                                                             "<h2>Cookies</h2>" +
                                                                             "<p>We employ the use of cookies. By accessing Grooving group, you agreed to use " +
-                                                                            "cookies in agreement with the Grooving's Privacy Policy.</p>" +
+                                                                            "cookies in agreement with the <a href=\"https://grooving-frontend-d4.herokuapp.com/privacy\">" +
+                                                                            "Grooving's Privacy Policy</a>.</p>" +
+
                                                                             "<p>Most interactive websites use cookies to let us retrieve the user's details for " +
                                                                             "each visit. Cookies are used by our website to enable the functionality of certain " +
                                                                             "areas to make it easier for people visiting our website.</p>" +
