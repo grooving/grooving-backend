@@ -199,6 +199,9 @@ class OfferSerializer(serializers.ModelSerializer):
     def _service_update_status(self, json: dict, offer_in_db: Offer, logged_user: User, language='en'):
         json_status = json.get('status')
         Assertions.assert_true_raise400(json_status, translate(language, 'ERROR_STATUS_NOT_PROVIDED'))
+
+
+
         if json_status:
             status_in_db = offer_in_db.status
             Assertions.assert_true_raise400(json_status != status_in_db, translate(language, 'ERROR_STATUS_NOT_CHANGED'))
@@ -258,6 +261,7 @@ class OfferSerializer(serializers.ModelSerializer):
                 if json_status == 'CANCELLED_CUSTOMER':
                     Assertions.assert_true_raise400(json.get('reason'),
                                                     translate(language, 'ERROR_REASON_NOT_PROVIDED'))
+
                     if settings.BRAINTREE_PRODUCTION:
                         braintree_env = braintree.Environment.Production
                     else:
@@ -474,7 +478,9 @@ class OfferSerializer(serializers.ModelSerializer):
                         break
                     except IntegrityError:
                         continue
-
+            if json.get('reason'):
+                Assertions.assert_true_raise400(Strings.check_max_length(json.get('reason'), 500),
+                                                translate(language, 'ERROR_REASON_TOO_LONG'))
             print("ESTADO DB ANTES:" + offer_in_db.status)
             offer_in_db.status = json_status
             offer_in_db.reason = json.get('reason')

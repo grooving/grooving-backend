@@ -123,13 +123,16 @@ class ArtistSerializer(serializers.ModelSerializer):
         user.first_name = json.get('first_name').strip()
         user.last_name = json.get('last_name').strip()
 
+        if json.get('paypalAccount'):
+            Assertions.assert_true_raise400(Strings.check_max_length(json.get('paypalAccount'), 100),
+                                        translate(language, "ERROR_PAYPAL_TOO_LONG"))
+
         artist.paypalAccount = json.get('paypalAccount')
 
         if artist.paypalAccount:
             Assertions.assert_true_raise400('@' in artist.paypalAccount and '.' in artist.paypalAccount,
                                             translate(language, "ERROR_INVALID_PAYPAL_ACCOUNT"))
-        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
-                                        translate(language, "ERROR_URL_TOO_LONG"))
+
         photo = json.get('photo')
         Assertions.assert_true_raise400(user.first_name, translate(language, "ERROR_EMPTY_FIRST_NAME"))
         Assertions.assert_true_raise400(user.last_name, translate(language, "ERROR_EMPTY_LAST_NAME"))
@@ -193,8 +196,10 @@ class ArtistSerializer(serializers.ModelSerializer):
             request.data.get("password").strip() == request.data.get("confirm_password").strip(),
             translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
 
-
-        Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMPTY_EMAIL"))
+        Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMAIL_TOO_LONG"))
+        Assertions.assert_true_raise400(request.data.get("password"), translate(language, "ERROR_PASSWORD_TOO_LONG"))
+        Assertions.assert_true_raise400(request.data.get("username"), translate(language, "ERROR_USERNAME_TOO_LONG"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("email"), 50), translate(language, "ERROR_EMPTY_EMAIL"))
         Assertions.assert_true_raise400(request.data.get("first_name"), translate(language, "ERROR_EMPTY_FIRST_NAME"))
         Assertions.assert_true_raise400(request.data.get("last_name"), translate(language, "ERROR_EMPTY_LAST_NAME"))
         Assertions.assert_true_raise400(check_special_characters_and_numbers(request.data.get("first_name")),
