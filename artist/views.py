@@ -59,7 +59,12 @@ class ArtistRegister(generics.CreateAPIView):
     def get_object(self, pk=None):
         language = check_accept_language(self.request)
         try:
-            return Artist.objects.get(pk=pk)
+            if pk is None:
+                pk = self.kwargs['pk']
+                if pk is not None:
+                    return Artist.objects.get(pk=pk)
+            else:
+                return Artist.objects.get(pk=pk)
         except Artist.DoesNotExist:
             Assertions.assert_true_raise404(False, translate(language, "ERROR_NO_ARTIST_FOUND"))
 

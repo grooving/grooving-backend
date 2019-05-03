@@ -1,11 +1,13 @@
 from rest_framework.test import APITransactionTestCase
 from rest_framework import status
-from Grooving.models import User, Admin, Artist, Customer
+from Grooving.models import User, Admin, Artist, Customer, Portfolio, Zone, EventLocation, Chat
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import make_password
 
 
 class BanAndUnbanTestCase(APITransactionTestCase):
+    sharedData = {
+    }
 
     def setUp(self):
 
@@ -19,6 +21,9 @@ class BanAndUnbanTestCase(APITransactionTestCase):
 
         admin = Admin.objects.create(user=user_admin, language='es')
         admin.save()
+
+        self.sharedData["admin_id"] = admin.id
+        self.sharedData["admin_user_id"] = admin.id
 
         # Creating an artist
 
@@ -35,18 +40,8 @@ class BanAndUnbanTestCase(APITransactionTestCase):
                                        paypalAccount='artist1fortest@gmail.com')
         artist.save()
 
-        user_artist2 = User.objects.create(username='artist2', password=make_password('artista2'),
-                                           first_name='Carlos', last_name='Campos Cuesta',
-                                           email="artist1fortest@gmail.com")
-        Token.objects.create(user=user_artist2)
-        user_artist2.save()
-
-        artist2 = Artist.objects.create(user=user_artist2, rating=4.5, phone='600304999',
-                                        language='en',
-                                        photo='https://upload.wikimedia.org/wikipedia/commons/e/e7/Robin_Clark_%28DJ%29_Live_at_Techno4ever_net_Bday_Rave.jpg',
-                                        iban='ES6621000418401234567891',
-                                        paypalAccount='artist1fortest@gmail.com')
-        artist2.save()
+        self.sharedData["artist_id"] = artist.id
+        self.sharedData["artist_user_id"] = user_artist.id
 
         # Creating a customer
 
@@ -61,6 +56,9 @@ class BanAndUnbanTestCase(APITransactionTestCase):
                                            language='en',
                                            paypalAccount="customer1fortest@gmail.com")
         customer.save()
+
+        self.sharedData["customer_id"] = customer.id
+        self.sharedData["customer_user_id"] = user_customer.id
 
     def generate_data(self, args):
         return {
@@ -86,65 +84,95 @@ class BanAndUnbanTestCase(APITransactionTestCase):
 
         payload = [
 
-            # Test positivo 1, banear un artista
-            [token, 2, "es", status.HTTP_200_OK],
+            # Positive test 1, ban artist
+            [token, self.sharedData["artist_user_id"], "es", status.HTTP_200_OK],
 
-            # Test positivo 2, desbanear un artista
-            [token, 2, "es", status.HTTP_200_OK],
+            # Positive test 2, unban artist
+            [token, self.sharedData["artist_user_id"], "es", status.HTTP_200_OK],
 
-            # Test negativo 3, banear un artista con Token None
-            [None, 2, "es", status.HTTP_401_UNAUTHORIZED],
+            # Negative test 3, ban artist with token None
+            [None, self.sharedData["artist_user_id"], "es", status.HTTP_401_UNAUTHORIZED],
 
-            # Test negativo 4: banear un artista con Token vacío
-            ["", 2, "es", status.HTTP_401_UNAUTHORIZED],
+            # Negative test 4: ban artist with empty Token
+            ["", self.sharedData["artist_user_id"], "es", status.HTTP_401_UNAUTHORIZED],
 
-            # Test negativo 5: banear un artista con Token inexistente
-            ["dada21231d11", 2, "es", status.HTTP_401_UNAUTHORIZED],
+            # Negative test 5: ban artist with token that not exists
+            ["dada21231d11", self.sharedData["artist_user_id"], "es", status.HTTP_401_UNAUTHORIZED],
 
-            # Test negativo 6: banear un artista con lenguage a None
-            [token, 2, None, status.HTTP_400_BAD_REQUEST],
+            # Positive test 6, ban customer
+            [token, self.sharedData["customer_user_id"], "es", status.HTTP_200_OK],
 
-            # Test negativo 7: banear un artista con lenguage vacío
-            [token, 2, "", status.HTTP_400_BAD_REQUEST],
+            # Positive test 7, unban customer
+            [token, self.sharedData["customer_user_id"], "es", status.HTTP_200_OK],
 
-            # Test negativo 8: banear un artista con lenguage no existente
-            [token, 2, "pt", status.HTTP_400_BAD_REQUEST],
+            # Negative test 8, ban customer with token None
+            [None, self.sharedData["customer_user_id"], "es", status.HTTP_401_UNAUTHORIZED],
 
-            # Test positivo 9, banear un customer
-            [token, 3, "es", status.HTTP_200_OK],
+            # Negative test 9: ban customer with empty Token
+            ["", self.sharedData["customer_user_id"], "es", status.HTTP_401_UNAUTHORIZED],
 
-            # Test positivo 10, desbanear un customer
-            [token, 3, "es", status.HTTP_200_OK],
+            # Negative test 10: ban customer with Token that not exist
+            ["dada21231d11", self.sharedData["customer_user_id"], "es", status.HTTP_401_UNAUTHORIZED],
 
-            # Test negativo 11, banear un customer con Token None
-            [None, 3, "es", status.HTTP_401_UNAUTHORIZED],
-
-            # Test negativo 12: banear un customer con Token vacío
-            ["", 3, "es", status.HTTP_401_UNAUTHORIZED],
-
-            # Test negativo 13: banear un customer con Token inexistente
-            ["dada21231d11", 3, "es", status.HTTP_401_UNAUTHORIZED],
-
-            # Test negativo 14: banear un customer con lenguage a None
-            [token, 3, None, status.HTTP_400_BAD_REQUEST],
-
-            # Test negativo 15: banear un customer con lenguage vacío
-            [token, 3, "", status.HTTP_400_BAD_REQUEST],
-
-            # Test negativo 16: banear un customer con lenguage no existente
-            [token, 3, "pt", status.HTTP_400_BAD_REQUEST],
-
-            # Test negativo 17: banear un customer con lenguage como integer
-            [token, 3, 1, status.HTTP_400_BAD_REQUEST],
-
-            # Test negativo 18: banear un customer con user_id a None
+            # Negative test 11: ban user with user_id None
             [token, None, "es", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 19: banear un customer con user_id como cadena
+            # Negative test 12: ban user with user_id like string
             [token, "", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Test negativo 20: banear un customer con user_id no existente
-            [token, "1dasdads", "es", status.HTTP_400_BAD_REQUEST],
+            # Negative test 13: ban user with user_id that not exists
+            [token, 564, "es", status.HTTP_400_BAD_REQUEST],
+
+            # Positive test 14, ban artist
+            [token, self.sharedData["artist_user_id"], "en", status.HTTP_200_OK],
+
+            # Positive test 15, unban artist
+            [token, self.sharedData["artist_user_id"], "en", status.HTTP_200_OK],
+
+            # Negative test 16, ban artist with token None
+            [None, self.sharedData["artist_user_id"], "en", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 17: ban artist with empty Token
+            ["", self.sharedData["artist_user_id"], "en", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 18: ban artist with token that not exists
+            ["dada21231d11", self.sharedData["artist_user_id"], "en", status.HTTP_401_UNAUTHORIZED],
+
+            # Positive test 19, ban customer
+            [token, self.sharedData["customer_user_id"], "en", status.HTTP_200_OK],
+
+            # Positive test 20, unban customer
+            [token, self.sharedData["customer_user_id"], "en", status.HTTP_200_OK],
+
+            # Negative test 21, ban customer with token None
+            [None, self.sharedData["customer_user_id"], "en", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 22: ban customer with empty Token
+            ["", self.sharedData["customer_user_id"], "en", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 23: ban customer with Token that not exist
+            ["dada21231d11", self.sharedData["customer_user_id"], "en", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 24: ban user with user_id None
+            [token, None, "en", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 25: ban user with user_id like string
+            [token, "", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 26: ban user with user_id that not exists
+            [token, 564, "en", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 27: ban user with language like integer
+            [token, self.sharedData["customer_user_id"], 1, status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 28: ban user with lenguage set to None
+            [token, self.sharedData["customer_user_id"], None, status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 29: ban user with empty language
+            [token, self.sharedData["customer_user_id"], "", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 30: ban user with language that not exists
+            [token, self.sharedData["customer_user_id"], "pt", status.HTTP_400_BAD_REQUEST],
         ]
 
         print("-------- Ban & unban testing --------")
@@ -171,24 +199,222 @@ class BanAndUnbanTestCase(APITransactionTestCase):
         print("\nOk - Status expected: " + str(status_expected) + "\n")
 
 
-'''
-class UserTestCase(APITestCase):
+class RightToBeForgottenUserTestCase(APITransactionTestCase):
 
-    def test_signup_artist(self):
+    def generate_data(self, args):
+        return {
+            "id": args[1]  # user_id
+        }
 
-        data1={"first_name": "deffefeeffefe", "last_name": "david1", "password": "perroperro",
-                "confirm_password": "perroperro", "username": "customer100", "email": "kiqo@gmail.com"}
+    def setUp(self):
+        # Creating an artist
 
-        response = self.client.post("/signupArtist/",data1,format='json')
-        self.assertEqual(response.status_code, 201)
+        user_artist = User.objects.create(username='artist1', password=make_password('artista1'),
+                                          first_name='Carlos', last_name='Campos Cuesta',
+                                          email="artist1fortest@gmail.com")
+        Token.objects.create(user=user_artist)
+
+        user_artist.save()
+
+        artist = Artist.objects.create(user=user_artist, rating=4.5, phone='600304999',
+                                       language='en',
+                                       photo='https://upload.wikimedia.org/wikipedia/commons/e/e7/Robin_Clark_%28DJ%29_Live_at_Techno4ever_net_Bday_Rave.jpg',
+                                       iban='ES6621000418401234567891',
+                                       paypalAccount='artist1fortest@gmail.com')
+        artist.save()
+
+        portfolio = Portfolio.objects.create(artisticName='Tamta',
+                                             artist=artist,
+                                             banner='http://www.ddi.com.au/wp-content/uploads/AdobeStock_115567415.jpeg',
+                                             biography='Tamta, is a Georgian-Greek singer. She first achieved popularity in Greece and Cyprus in 2004 for her participation in Super Idol Greece, in which she placed second. She went on to release several charting albums and singles in Greece and Cyprus. Goduadze became a mentor on X Factor Georgia in 2014, and The X Factor Greece in 2016.')
+        portfolio.save()
+
+        # Creating a customer
+
+        user_customer = User.objects.create(username='customer1', password=make_password('cliente1'),
+                                            first_name='Rafael', last_name='Esquivias Ramírez',
+                                            email="customer1fortest@gmail.com")
+        Token.objects.create(user=user_customer)
+        user_customer.save()
+
+        customer = Customer.objects.create(user=user_customer, phone='639154189', holder='Rafael Esquivias Ramírez',
+                                           expirationDate='2020-10-01', number='4651001401188232',
+                                           language='en',
+                                           paypalAccount="customer1fortest@gmail.com")
+        customer.save()
+
+        # Andalucía
+        zone = Zone.objects.create(name='Sevilla')
+        zone.save()
+
+        event_location1 = EventLocation.objects.create(name='Event 1 - Festival Rockupo',
+                                                       address='Universidad Pablo de Olavide', equipment='No',
+                                                       zone=zone,
+                                                       customer=customer)
+        event_location1.save()
+
+    def test_right_to_be_forgotten(self):
+        print("------------- Starting test -------------")
+
+        artist_data = {"username": "artist1", "password": "artista1"}
+        response_artist = self.client.post("/api/login/", artist_data, format='json')
+
+        customer_data = {"username": "customer1", "password": "cliente1"}
+        response_customer = self.client.post("/api/login/", customer_data, format='json')
+
+        token_num_artist = response_artist.get("x-auth")
+        token_artist = Token.objects.all().filter(pk=token_num_artist).first().key
+        token_num_customer = response_customer.get("x-auth")
+        token_customer = Token.objects.all().filter(pk=token_num_customer).first().key
+
+        payload = [
+            # Negative test 1, forgotten user that Token is None
+            [None, "es", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 2, forgotten user that Token doesn't exists
+            ["d123dqwd", "es", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 3, forgotten user that Token is integer
+            [1, "es", status.HTTP_401_UNAUTHORIZED],
+
+            # Negative test 4, forgotten user that language set None
+            [token_customer, None, status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 5, forgotten user that language doesn't exists
+            [token_artist, "ds", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 6, forgotten user that language set to integer
+            [token_artist, 1, status.HTTP_400_BAD_REQUEST],
+
+            # Positive test 7, forgotten artist
+            [token_artist, "es", status.HTTP_204_NO_CONTENT],
+
+            # Negative test 8, forgotten artist that has been deleted previously
+            [token_artist, "es", status.HTTP_401_UNAUTHORIZED],
+
+            # Positive test 9, forgotten customer
+            [token_customer, "es", status.HTTP_204_NO_CONTENT],
+
+            # Negative test 10, forgotten customer that has been deleted previously
+            [token_customer, "es", status.HTTP_401_UNAUTHORIZED],
+        ]
+
+        print("-------- Right to be forgotten testing --------")
+
+        indice = 1
+
+        for data in payload:
+            print("---> Test " + str(indice))
+            self.template_right_to_be_forgotten(data)
+            indice += 1
+
+    def template_right_to_be_forgotten(self, args):
+        status_expected = args[-1]
+        language = args[-2]
+
+        data = self.generate_data(args)
+
+        response = self.client.delete("/user/", data, format="json",
+                                      HTTP_AUTHORIZATION='Token ' + str(args[0]),
+                                      HTTP_ACCEPT_LANGUAGE=language)
+
+        self.assertEqual(status_expected, response.status_code)
+
+        print("\nOk - Status expected: " + str(status_expected) + "\n")
 
 
-    def test_signup_customer(self):
+class LogInUserTestCase(APITransactionTestCase):
 
-        data1={"first_name": "deffefeeffefe", "last_name": "david1", "password": "perroperro",
-              "confirm_password": "perroperro", "username": "customer101", "email": "kiqo@gmail.com"}
+    def generate_data(self, args):
+        return {
+            "username": args[0],
+            "password": args[1]
+        }
 
-        response = self.client.post("/signupCustomer/",data1,format='json')
-        self.assertEqual(response.status_code, 201)
-        
-'''
+    def setUp(self):
+        # Creating an artist
+
+        user_artist = User.objects.create(username='artist1', password=make_password('artista1'),
+                                          first_name='Carlos', last_name='Campos Cuesta',
+                                          email="artist1fortest@gmail.com")
+        Token.objects.create(user=user_artist)
+
+        user_artist.save()
+
+        artist = Artist.objects.create(user=user_artist, rating=4.5, phone='600304999',
+                                       language='en',
+                                       photo='https://upload.wikimedia.org/wikipedia/commons/e/e7/Robin_Clark_%28DJ%29_Live_at_Techno4ever_net_Bday_Rave.jpg',
+                                       iban='ES6621000418401234567891',
+                                       paypalAccount='artist1fortest@gmail.com')
+        artist.save()
+
+        portfolio = Portfolio.objects.create(artisticName='Tamta',
+                                             artist=artist,
+                                             banner='http://www.ddi.com.au/wp-content/uploads/AdobeStock_115567415.jpeg',
+                                             biography='Tamta, is a Georgian-Greek singer. She first achieved popularity in Greece and Cyprus in 2004 for her participation in Super Idol Greece, in which she placed second. She went on to release several charting albums and singles in Greece and Cyprus. Goduadze became a mentor on X Factor Georgia in 2014, and The X Factor Greece in 2016.')
+        portfolio.save()
+
+        # Creating a customer
+
+        user_customer = User.objects.create(username='customer1', password=make_password('cliente1'),
+                                            first_name='Rafael', last_name='Esquivias Ramírez',
+                                            email="customer1fortest@gmail.com")
+        Token.objects.create(user=user_customer)
+        user_customer.save()
+
+        customer = Customer.objects.create(user=user_customer, phone='639154189', holder='Rafael Esquivias Ramírez',
+                                           expirationDate='2020-10-01', number='4651001401188232',
+                                           language='en',
+                                           paypalAccount="customer1fortest@gmail.com")
+        customer.save()
+
+    def test_login_users(self):
+        print("------------- Starting test -------------")
+
+        payload = [
+            # Positive test 1, login as artist
+            ["artist1", "artista1", status.HTTP_200_OK],
+
+            # Positive test 2, login as customer
+            ["customer1", "cliente1", status.HTTP_200_OK],
+
+            # Negative test 3, login as user that not exists
+            ["Dont", "Exists", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 4, login as user that not exists
+            ["Dont", "Exists", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 5, login as user that username set to None
+            [None, "Exists", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 6, login as user that username is a Integer
+            [1, "artista1", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 7, login as user that password set to None
+            ["artist1", None, status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 8, login as user that password is a Integer
+            ["artist1", 1, status.HTTP_400_BAD_REQUEST],
+        ]
+
+        print("-------- Login users testing --------")
+
+        indice = 1
+
+        for data in payload:
+            print("---> Test " + str(indice))
+            self.template_login_users(data)
+            indice += 1
+
+    def template_login_users(self, args):
+        status_expected = args[-1]
+        language = args[-2]
+
+        data = self.generate_data(args)
+
+        response = self.client.post("/api/login/", data, format="json",
+                                    HTTP_ACCEPT_LANGUAGE=language)
+
+        self.assertEqual(status_expected, response.status_code)
+
+        print("\nOk - Status expected: " + str(status_expected) + "\n")

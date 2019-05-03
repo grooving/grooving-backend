@@ -10,6 +10,7 @@ from utils.strings import Strings
 from utils.notifications.notifications import Notifications
 from artist.internationalization import translate
 from utils.utils import check_accept_language, check_special_characters_and_numbers
+
 from rest_framework.response import Response
 
 
@@ -87,6 +88,7 @@ class ArtistSerializer(serializers.ModelSerializer):
         user = User.objects.create(username=json.get('username'), password=make_password(json.get('password')),
                                    first_name=json.get('first_name'), last_name=json.get('last_name'),
                                    email=json.get('email'))
+        photo_base64 = json.get('photo')
 
         artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'), user=user)
 
@@ -112,7 +114,8 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(json.get('last_name'), translate(language, "ERROR_EMPTY_LAST_NAME"))
         Assertions.assert_true_raise400(check_special_characters_and_numbers(json.get("last_name")),
                                         translate(language, "ERROR_LAST_NAME_SPECIAL_CHARACTERS"))
-
+        Assertions.assert_true_raise400(Strings.check_max_length(json.get('first_name'), 30), translate(language, "ERROR_MAX_LENGTH_FIRST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(json.get('last_name'), 150), translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
         user.first_name = json.get('first_name').strip()
         user.last_name = json.get('last_name').strip()
 
@@ -126,7 +129,10 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(user.last_name, translate(language, "ERROR_EMPTY_LAST_NAME"))
 
         if artist.phone:
-            Assertions.assert_true_raise400(artist.phone.isnumeric(), translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            try:
+                Assertions.assert_true_raise400(artist.phone.isnumeric(), translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            except:
+                Assertions.assert_true_raise400(False, translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
             Assertions.assert_true_raise400(len(artist.phone) == 9, translate(language, "ERROR_PHONE_LENGTH_9"))
 
         Assertions.assert_true_raise400(len(user.first_name) > 1,
@@ -178,6 +184,8 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(
             request.data.get("password").strip() == request.data.get("confirm_password").strip(),
             translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
+
+
         Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMPTY_EMAIL"))
         Assertions.assert_true_raise400(request.data.get("first_name"), translate(language, "ERROR_EMPTY_FIRST_NAME"))
         Assertions.assert_true_raise400(request.data.get("last_name"), translate(language, "ERROR_EMPTY_LAST_NAME"))
@@ -186,6 +194,10 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(check_special_characters_and_numbers(request.data.get("last_name")),
                                         translate(language, "ERROR_LAST_NAME_SPECIAL_CHARACTERS"))
 
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('first_name'), 30),
+                                        translate(language, "ERROR_MAX_LENGTH_FIRST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('last_name'), 150),
+                                        translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
         username = request.data.get("username").strip()
         password = request.data.get("password").strip()
         email = request.data.get("email").strip()
@@ -224,7 +236,10 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(username not in user_names, translate(language, "ERROR_USERNAME_IN_USE"))
 
         if phone:
-            Assertions.assert_true_raise400(phone.isnumeric(), translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            try:
+                Assertions.assert_true_raise400(phone.isnumeric(), translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            except:
+                Assertions.assert_true_raise400(False, translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
             Assertions.assert_true_raise400(len(phone) == 9, translate(language, "ERROR_PHONE_LENGTH_9"))
 
         Assertions.assert_true_raise400(len(first_name) > 1, translate(language, "ERROR_FIRST_NAME_LENGTH"))
