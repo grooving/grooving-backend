@@ -9,7 +9,7 @@ spanish = {
     "ERROR_PAYPAL_CREDENTIALS": "Las credenciales de PayPal no son correctas",
     "ERROR_BRAINTREE_CREDENTIALS": "Las credenciales de Braintree no son correctas",
     "ERROR_PAYMENT_NOT_RESPONSE": "No hay respuesta del pago",
-    "ERROR_OFFER_PAST_DATE": "La oferta es pasada",
+    "ERROR_OFFER_PAST_DATE": "La oferta ha caducado",
     "ERROR_STATUS_NOT_PROVIDED": "El estado de la oferta no ha sido aportado",
     "ERROR_STATUS_NOT_CHANGED": "El estado de la oferta no ha sido modificado",
     "ERROR_BRAINTREE_ENV_NOT_SET": "El entorno de Braintree no ha sido configurado",
@@ -48,7 +48,8 @@ spanish = {
     "ERROR_PAYMENTCODE_TOO_LONG": "El código de pago es demasiado largo",
     "ERROR_DATE_NOT_AVAILABLE": "El artista no puede actuar para la fecha indicada",
     "ERROR_PAYPAL_PRICE_REACH": "Límite de precio en Paypal alcanzado",
-    "ERROR_REASON_TOO_LONG": "La razón es demasiado larga."
+    "ERROR_REASON_TOO_LONG": "La razón es demasiado larga.",
+    "ERROR_INVALID_PAYMENTCODE": "El código de pago no es válido.",
 }
 
 english = {
@@ -64,7 +65,7 @@ english = {
     "ERROR_PAYPAL_CREDENTIALS": "Incorrect PayPal credentials",
     "ERROR_BRAINTREE_CREDENTIALS": "Incorrect Braintree credentials",
     "ERROR_PAYMENT_NOT_RESPONSE": "There isn't payment response",
-    "ERROR_OFFER_PAST_DATE": "It's a past offer",
+    "ERROR_OFFER_PAST_DATE": "The offer has expired.",
     "ERROR_STATUS_NOT_PROVIDED": "Offer status hasn't been provided",
     "ERROR_STATUS_NOT_CHANGED": "Offer status hasn't been changed",
     "ERROR_BRAINTREE_ENV_NOT_SET": "Braintree enviroment hasn't been set up",
@@ -101,7 +102,8 @@ english = {
     "ERROR_DATE_PAYMENT" : "Paypal cannot process a payment more than 29 days old",
     "ERROR_REASON_NOT_PROVIDED": "Reason isn't provided",
     "ERROR_DATE_NOT_AVAILABLE": "Artist can't act for provided date",
-    "ERROR_PAYPAL_PRICE_REACH": "Paypal price limit reached"
+    "ERROR_PAYPAL_PRICE_REACH": "Paypal price limit reached",
+    "ERROR_INVALID_PAYMENTCODE": "The payment code is invalid.",
 }
 
 

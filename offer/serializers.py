@@ -111,7 +111,7 @@ class OfferSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(Strings.check_max_length(paymentCode, 11), translate(language, 'ERROR_PAYMENTCODE_TOO_LONG'))
 
         offer = Offer.objects.filter(paymentCode=paymentCode).first()
-        Assertions.assert_true_raise404(offer, translate(language, 'ERROR_OFFER_NOT_FOUND'))
+        Assertions.assert_true_raise404(offer, translate(language, 'ERROR_INVALID_PAYMENTCODE'))
         Assertions.assert_true_raise403(offer.paymentPackage.portfolio.artist.id == user_logged.id,
                                             translate(language, 'ERROR_OFFER_NOT_OWNER'))
         Assertions.assert_true_raise400(offer.status == 'CONTRACT_MADE',
