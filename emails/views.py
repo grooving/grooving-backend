@@ -22,9 +22,6 @@ class SendMailDataBreach(generics.CreateAPIView):
         subject = request.data.get("subject")
         body = request.data.get("body")
 
-        if admin:
-            language = admin.language
-
         Assertions.assert_true_raise403(admin, translate(language, "ERROR_ADMIN_NOT_FOUND"))
         Assertions.assert_true_raise400(subject, translate(language, "ERROR_SUBJECT_NOT_PROVIDED"))
         Assertions.assert_true_raise400(body, translate(language, "ERROR_BODY_NOT_PROVIDED"))
