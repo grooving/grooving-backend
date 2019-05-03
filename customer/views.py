@@ -65,9 +65,12 @@ class CustomerRegister(generics.CreateAPIView):
         try:
             if pk is None:
                 pk = self.kwargs['pk']
-            return Customer.objects.get(pk=pk)
-        except Customer.DoesNotExist:
-            Assertions.assert_true_raise404(False, translate(language, "ERROR_NO_CUSTOMER_FOUND"))
+                if pk is not None:
+                    return Customer.objects.get(pk=pk)
+            else:
+                return Customer.objects.get(pk=pk)
+        except:
+            raise Assertions.assert_true_raise404(False, translate(language, "ERROR_NO_CUSTOMER_FOUND"))
 
     def post(self, request, *args, **kwargs):
         language = check_accept_language(request)

@@ -10,6 +10,7 @@ from utils.strings import Strings
 from utils.notifications.notifications import Notifications
 from artist.internationalization import translate
 from utils.utils import check_accept_language, check_special_characters_and_numbers
+
 from rest_framework.response import Response
 
 
@@ -113,7 +114,8 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(json.get('last_name'), translate(language, "ERROR_EMPTY_LAST_NAME"))
         Assertions.assert_true_raise400(check_special_characters_and_numbers(json.get("last_name")),
                                         translate(language, "ERROR_LAST_NAME_SPECIAL_CHARACTERS"))
-
+        Assertions.assert_true_raise400(Strings.check_max_length(json.get('first_name'), 30), translate(language, "ERROR_MAX_LENGTH_FIRST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(json.get('last_name'), 150), translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
         user.first_name = json.get('first_name').strip()
         user.last_name = json.get('last_name').strip()
 
@@ -182,6 +184,8 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(
             request.data.get("password").strip() == request.data.get("confirm_password").strip(),
             translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
+
+
         Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMPTY_EMAIL"))
         Assertions.assert_true_raise400(request.data.get("first_name"), translate(language, "ERROR_EMPTY_FIRST_NAME"))
         Assertions.assert_true_raise400(request.data.get("last_name"), translate(language, "ERROR_EMPTY_LAST_NAME"))
@@ -190,6 +194,10 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(check_special_characters_and_numbers(request.data.get("last_name")),
                                         translate(language, "ERROR_LAST_NAME_SPECIAL_CHARACTERS"))
 
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('first_name'), 30),
+                                        translate(language, "ERROR_MAX_LENGTH_FIRST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('last_name'), 150),
+                                        translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
         username = request.data.get("username").strip()
         password = request.data.get("password").strip()
         email = request.data.get("email").strip()

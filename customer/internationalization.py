@@ -28,6 +28,8 @@ spanish = {
     "ERROR_USERNAME_IN_USE": "El usuario ya existe.",
     "ERROR_EMAIL_INVALID": "Email invalido",
 
+    "ERROR_MAX_LENGTH_FIRST_NAME": "El tamaño del nombre no puede ser mayor que 30",
+    "ERROR_MAX_LENGTH_LAST_NAME": "El tamaño de los apellidos no puede ser mayor que 150",
     "ERROR_NO_ARTISTIC_NAME": "No has introducido un nombre artistico.",
     "ERROR_NOTFOUND_PORTFOLIO": "No se encuentra el portfolio",
 
@@ -80,12 +82,15 @@ english = {
     "ERROR_USERNAME_IN_USE": "Username already in use.",
     "ERROR_EMAIL_INVALID": "Invalid email",
 
+    "ERROR_MAX_LENGTH_FIRST_NAME": "First name size can't be longer than 30 characters",
+    "ERROR_MAX_LENGTH_LAST_NAME": "Las name size can't be longer than 150 characters",
+
     "ERROR_NO_ARTISTIC_NAME": "You did not submit an artistic name.",
     "ERROR_NOTFOUND_PORTFOLIO": "Portfolio not found.",
     "ERROR_EMPTY_CONFIRM_PASSWORD": "Confirm password field not provided.",
     "ERROR_PASSWORD_MUST_BE_COMPLEX": "Password must be complex.",
-    "ERROR_FIRST_NAME_SPECIAL_CHARACTERS": "First name can't special characters & numbers.",
-    "ERROR_LAST_NAME_SPECIAL_CHARACTERS": "Last name can't special characters & numbers.",
+    "ERROR_FIRST_NAME_SPECIAL_CHARACTERS": "First name can't contain special characters & numbers.",
+    "ERROR_LAST_NAME_SPECIAL_CHARACTERS": "Last name can't contain special characters & numbers.",
     "ERROR_EMPTY_ARTISTIC_NAME": "Artist name not provived.",
 
     "ERROR_OFFER_NOT_FOUND": "Offer not found",

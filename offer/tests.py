@@ -285,9 +285,9 @@ class OfferTestCase(APITransactionTestCase):
                 # Status non accepted
                 [tokenCustomer, 'HOLA', 'This is a reason', 400],
                 # Reason not provided
-                [tokenCustomer, 'WITHDRAWN', None, 400],
-                # Reason bad provided
-                [tokenCustomer, 'WITHDRAWN', '', 400]
+                [tokenCustomer, 'WITHDRAWN', None, 200],
+                # Reason empty
+                [tokenCustomer, 'WITHDRAWN', '', 200]
         ]
 
         for data in payload:

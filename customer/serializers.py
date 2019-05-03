@@ -79,7 +79,10 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
         Assertions.assert_true_raise400(user.first_name, translate(language, "ERROR_EMPTY_FIRST_NAME"))
         Assertions.assert_true_raise400(user.last_name, translate(language, "ERROR_EMPTY_LAST_NAME"))
-
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('first_name'), 30),
+                                        translate(language, "ERROR_MAX_LENGTH_FIRST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('last_name'), 150),
+                                        translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
         if customer.phone:
             try:
                 Assertions.assert_true_raise400(customer.phone.isnumeric(),
@@ -178,6 +181,10 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
                 Assertions.assert_true_raise400(False, translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
             Assertions.assert_true_raise400(len(phone) == 9, translate(language, "ERROR_PHONE_LENGTH_9"))
 
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('first_name'),30),
+                                        translate(language, "ERROR_MAX_LENGTH_FIRST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('last_name'),150),
+                                        translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
         Assertions.assert_true_raise400(len(first_name) > 1, translate(language, "ERROR_FIRST_NAME_LENGTH"))
         Assertions.assert_true_raise400(len(last_name) > 1, translate(language, "ERROR_LAST_NAME_LENGTH"))
         Assertions.assert_true_raise400('@' in email and '.' in email, translate(language, "ERROR_EMAIL_INVALID"))

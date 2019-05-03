@@ -169,3 +169,4 @@ def check_inserted_id(idobject, ObjectType, language):
     Assertions.assert_true_raise400(str(idobject).isdigit(), translate(language, 'ERROR_NOT_A_VALID_ID'))
 
     return True
+
