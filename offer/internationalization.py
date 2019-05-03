@@ -48,9 +48,11 @@ spanish = {
     "ERROR_PAYMENTCODE_TOO_LONG": "El código de pago es demasiado largo",
     "ERROR_DATE_NOT_AVAILABLE": "El artista no puede actuar para la fecha indicada",
     "ERROR_PAYPAL_PRICE_REACH": "Límite de precio en Paypal alcanzado"
+    "ERROR_REASON_TOO_LONG": "La razón es demasiado larga.",
 }
 
 english = {
+    "ERROR_REASON_TOO_LONG": "The reason is too long.",
     "ERROR_PAYMENTCODE_TOO_LONG": "Payment code is too long.",
     "ERROR_DATE_FORMAT": "Date must follow this format: YYYY-MM-DDTHH:mm:ss",
     "ERROR_NULL_PAYMENT_CODE": "Payment code hasn't exist",

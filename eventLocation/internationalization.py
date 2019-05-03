@@ -5,10 +5,14 @@ spanish = {
     "ERROR_ZONE_NOT_FOUND": "No existe la zona introducida",
     "ERROR_ZONE_CAN_NOT_ASSIGNED": "Esta zona no puede ser asignada",
     "ERROR_NAME_TOO_LONG": "El nombre de la ciudad es demasiado largo.",
-    "ERROR_ADDRESS_TOO_LONG": "La dirección es demasiado larga."
+    "ERROR_ADDRESS_TOO_LONG": "La dirección es demasiado larga.",
+    "ERROR_DESCRIPTION_TOO_LONG": "La dirección es demasiado larga.",
+    "ERROR_EQUIPMENT_TOO_LONG": "La descripción del equipo es demasiado larga."
 }
 
 english = {
+    "ERROR_DESCRIPTION_TOO_LONG": "The description is too long.",
+    "ERROR_EQUIPMENT_TOO_LONG": "The equipment description is too long.",
     "ERROR_NAME_TOO_LONG": "The town name is too long.",
     "ERROR_ADDRESS_TOO_LONG": "The address is too long.",
     "ERROR_CUSTOMER_NOT_FOUND": "You aren't an customer user",
