@@ -113,6 +113,7 @@
 <h3>Contenido adicional</h3>
 {% if artist_portfoliomodules %}
     {% for portfolio_modules in artist_portfoliomodules %}
+        {% if portfolio_modules.type == "PHOTO" or portfolio_modules.type == "VIDEO" %}
         <table>
             <tr>
                 <td><b>Tipo de contenido</b>:
@@ -132,6 +133,7 @@
                 {% endif %}
             </tr>
         </table>
+        {% endif %}
     {% endfor %}
 {% else %}
     <p>No hay ninguno creado.</p>

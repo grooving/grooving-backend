@@ -112,6 +112,7 @@
 <h3>Aditional contents</h3>
 {% if artist_portfoliomodules %}
     {% for portfolio_modules in artist_portfoliomodules %}
+        {% if portfolio_modules.type == "PHOTO" or portfolio_modules.type == "VIDEO" %}
         <table>
             <tr>
                 <td><b>Content type</b>:
@@ -131,6 +132,7 @@
                 {% endif %}
             </tr>
         </table>
+        {% endif %}
     {% endfor %}
 {% else %}
     <p>None created</p>
@@ -160,18 +162,6 @@
                     for {{ offer.hours }} hour/s
                 </td>
             </tr>
-            {% if offer.eventLocation.equipment %}
-                <tr>
-                    <td colspan="2">
-                        <b>Equipment</b>:
-                        {% if offer.eventLocation.equipment %}
-                            {{ offer.eventLocation.equipment }}
-                        {% else %}
-                            Not specified
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endif %}
             {% if offer.eventLocation.description %}
                 <tr>
                     <td colspan="2"><b>Place description</b>: {{ offer.eventLocation.description }}</td>

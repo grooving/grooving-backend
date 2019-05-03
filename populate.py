@@ -1658,22 +1658,22 @@ def save_data():
                                                         link='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_porfoliomodule1.jpg')
     portfolio8_module1.save()
 
-    portfolio8_module2 = PortfolioModule.objects.create(type='MEMBER', portfolio=portfolio8,
+    portfolio8_module2 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio8,
                                                         description='Antonio Medina',
                                                         link='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_porfoliomodule2.jpg')
     portfolio8_module2.save()
 
-    portfolio8_module3 = PortfolioModule.objects.create(type='MEMBER', portfolio=portfolio8,
+    portfolio8_module3 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio8,
                                                         description='Manuel Medina',
                                                         link='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_porfoliomodule3.jpg')
     portfolio8_module3.save()
 
-    portfolio8_module4 = PortfolioModule.objects.create(type='MEMBER', portfolio=portfolio8,
+    portfolio8_module4 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio8,
                                                         description='Rafael Córdoba',
                                                         link='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_porfoliomodule4.jpg')
     portfolio8_module4.save()
 
-    portfolio8_module5 = PortfolioModule.objects.create(type='MEMBER', portfolio=portfolio8, description='Pablo Pérez',
+    portfolio8_module5 = PortfolioModule.objects.create(type='PHOTO', portfolio=portfolio8, description='Pablo Pérez',
                                                         link='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_porfoliomodule5.jpg')
     portfolio8_module5.save()
 
