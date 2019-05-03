@@ -17,7 +17,8 @@ spanish = {
     "ERROR_ONLY_ONE_OPTION": "Se ha seleccionado mas de una opcion de edicion.",
     "ERROR_TREE_OPTION" : "Invalid tree value",
     "ERROR_NO_PORTFOLIO": "Porfolio no existe.",
-    "ERROR_STRING_TOO_LONG": "El nombre es demasiado largo."
+    "ERROR_STRING_TOO_LONG": "El nombre es demasiado largo.",
+    "ERROR_DEEPTH_3":"No puedes crear más de tres niveles."
 }
 
 english = {
@@ -39,7 +40,8 @@ english = {
     "ERROR_NO_GIVEN_LANGUAGE": "You must choose a language.",
     "ERROR_ONLY_ONE_OPTION": "More than one edition option given.",
     "ERROR_TREE_OPTION" : "Error en el valor de tree",
-    "ERROR_NO_PORTFOLIO": "Porfolio does not exist."
+    "ERROR_NO_PORTFOLIO": "Porfolio does not exist.",
+    "ERROR_DEEPTH_3": "More than 3 levels can not be create."
 
 }
 

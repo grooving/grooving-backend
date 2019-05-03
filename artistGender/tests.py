@@ -40,12 +40,11 @@ class GenderTestCase(APITransactionTestCase):
             ["Hijo2", None, self.phater, self.phater, "Sondss", "Hdijso", 401, 401],
             [None, None, self.phater, self.phater, "Sosnss", "Hijso", 401, 401],
             [None, None, self.phater, self.phater, "Sonss", "Hijsso", 401, 401],
-            [112, 12, self.phater, self.phater, "Sonss", "Hijso", 400, 400],
             ["Hijo4", "Son4", self.son, self.phater, "Soniss", "Hipjso", 201, 201],
-            ["Hijo5", "Son5", self.son, self.phater, "Sonss", "", 201, 400],
+            ["Hijo5", "Son5", self.son, self.phater, "Sonss", "", 201, 201],
             ["Hijo6", "Son6", self.son, self.phater, None, "Hijxso", 201, 400],
-            ["Hijo7", "Son7", self.son, self.grandson, "Sonnss", "Hijmso", 201, 201],
-            ["Hijo8", "Son8", self.grandson, self.phater, "Sodnss", "Hidjso", 201, 201],
+            ["Hijo7", "Son7", self.son, self.grandson, "Sonnss", "Hijmso", 201, 400],
+            ["Hijo8", "Son8", self.grandson, self.phater, "Sodnss", "Hidjso", 400, 201],
 
         ]
 
@@ -64,9 +63,14 @@ class GenderTestCase(APITransactionTestCase):
 
         response_list = self.client.get("/artisticGenders/?parentId=true", HTTP_AUTHORIZATION='Token ' + token_num,
                                         HTTP_ACCEPT_LANGUAGE=lang)
+
+        create_name_es =arg[0] if arg[0] is None else arg[0]+lang
+        create_name_en = arg[1] if arg[1] is None else arg[1] + lang
+        edit_name_es = arg[4] if arg[4] is None else arg[4] + lang
+        edit_name_en = arg[5] if arg[5] is None else arg[5] + lang
         print(response_list.status_code)
         self.assertEqual(200, response_list.status_code)
-        create_data = {"name_es": arg[0], "name_en": arg[1], "parentGender": arg[2]}
+        create_data = {"name_es": create_name_es, "name_en": create_name_en, "parentGender": arg[2]}
 
         response_create = self.client.post("/artisticGender/", create_data, format="json",
                                            HTTP_AUTHORIZATION='Token ' + token_num,
@@ -75,8 +79,8 @@ class GenderTestCase(APITransactionTestCase):
         print(response_create.status_code)
         self.assertEqual(arg[-2], response_create.status_code)
         if response_create.status_code == 201:
-            create_gender = ArtisticGender.objects.filter(name_es=arg[0]).first()
-            edit_data = {"id": create_gender.pk, "name_es": arg[4], "name_en": arg[5], "parentGender": arg[3]}
+            create_gender = ArtisticGender.objects.filter(name_es=arg[0]+lang).first()
+            edit_data = {"id": create_gender.pk, "name_es": edit_name_es, "name_en": edit_name_en, "parentGender": arg[3]}
             response_edit = self.client.put("/artisticGender/"+str(create_gender.pk)+"/", edit_data, format="json",
                                               HTTP_AUTHORIZATION='Token ' + token_num,
                                               HTTP_ACCEPT_LANGUAGE=lang)

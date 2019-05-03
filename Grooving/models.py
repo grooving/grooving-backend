@@ -56,7 +56,7 @@ class ArtisticGender(AbstractEntity):
     parentGender = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.name)
+        return str(self.name_en)
 
 
 class Zone(AbstractEntity):

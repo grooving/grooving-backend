@@ -120,7 +120,7 @@ class CreateArtisticGender(generics.CreateAPIView):
         if serializer.validate(request.data):
             serializer.is_valid()
             artisticGender = serializer.save(language)
-            serialized = ArtisticGenderSerializer(artisticGender,context={'language': language})
+            serialized = ArtisticGenderSerializer(artisticGender, context={'language': language})
             return Response(serialized.data, status=status.HTTP_201_CREATED)
 
 

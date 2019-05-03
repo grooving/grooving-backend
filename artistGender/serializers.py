@@ -8,7 +8,19 @@ from utils.authentication_utils import get_artist_or_customer_by_user
 from .internationalization import translate
 from utils.strings import Strings
 
-
+def check_deepth(gender):
+    boolean = True
+    try:
+        parent = gender.parentGender
+        if parent is not None:
+            parent = parent.parentGender
+            if parent is not None:
+                parent = parent.parentGender
+                if parent is not None:
+                    boolean = False
+    except:
+        pass
+    return boolean
 class ArtisticGenderSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -21,6 +33,7 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
         if self.initial_data.get('id') is None and pk is None:
             genre = ArtisticGender()
             genre = self._service_create(self.initial_data, genre, language)
+            Assertions.assert_true_raise400(check_deepth(genre), translate(language, "ERROR_DEEPTH_3"))
             genre.save()
             Assertions.assert_true_raise401(genre, translate(language, 'ERROR_IN_CREATION'))
             return genre
@@ -31,6 +44,7 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
 
             genre = ArtisticGender.objects.filter(pk=id_genre).first()
             genre = self._service_update(self.initial_data, genre, logged_user,language)
+            Assertions.assert_true_raise400(check_deepth(genre), translate(language, "ERROR_DEEPTH_3"))
             genre.save()
             return genre
 

@@ -11,6 +11,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from utils.Assertions import Assertions
 from utils.authentication_utils import get_artist, get_customer
+from chat.internationalization import translate
+from utils.utils import check_accept_language
 def index(request):
     return render(request, 'chat/index.html', {})
 
@@ -30,19 +32,20 @@ class ListChatMesages(generics.RetrieveAPIView):
         return Chat.objects.all()
 
     def get(self, request, *args, **kwargs):
+        language = check_accept_language(request)
         offer = Offer.objects.filter(pk=kwargs.get("pk")).first()
-        Assertions.assert_true_raise403(offer is not None, {"error": "DENIED_PEMISSION_CHAT"})
+        Assertions.assert_true_raise403(offer is not None, translate(language, "DENIED_PEMISSION_CHAT"))
 
         customer = offer.eventLocation.customer
         artist = offer.paymentPackage.portfolio.artist
-        Assertions.assert_true_raise403(artist is not None and customer is not None, {"error": "DENIED_PEMISSION_CHAT"})
+        Assertions.assert_true_raise403(artist is not None and customer is not None, translate(language, "DENIED_PEMISSION_CHAT"))
         logedCustomer = get_customer(request)
         logedArtist = get_artist(request)
-        Assertions.assert_true_raise403(logedArtist is not None or logedCustomer is not None, {"error": "DENIED_PEMISSION_CHAT"})
+        Assertions.assert_true_raise403(logedArtist is not None or logedCustomer is not None, translate(language, "DENIED_PEMISSION_CHAT"))
         if logedArtist is not None:
-            Assertions.assert_true_raise403(logedArtist.id == artist.id, {"error": "DENIED_PERMISSION_CHAT_ARTIST"})
+            Assertions.assert_true_raise403(logedArtist.id == artist.id, translate(language, "DENIED_PEMISSION_CHAT"))
         if logedCustomer is not None:
-            Assertions.assert_true_raise403(logedCustomer.id == customer.id, {"error": "DENIED_PERMISSION_CHAT_CUSTOMER"})
+            Assertions.assert_true_raise403(logedCustomer.id == customer.id, translate(language, "DENIED_PEMISSION_CHAT"))
 
         chat = offer.chat
         messages = []

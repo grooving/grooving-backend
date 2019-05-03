@@ -1,6 +1,6 @@
 from rest_framework.test import APITransactionTestCase
 from rest_framework import status
-from Grooving.models import User, Admin, Artist, Customer, Portfolio, Zone, EventLocation, Chat
+from Grooving.models import User, Admin, Artist, Customer, Portfolio, Zone, EventLocation, Chat,SystemConfiguration
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.hashers import make_password
 
@@ -44,6 +44,21 @@ class BanAndUnbanTestCase(APITransactionTestCase):
         self.sharedData["artist_user_id"] = user_artist.id
 
         # Creating a customer
+
+        SystemConfiguration.objects.create(minimumPrice=20.0, currency='EUR', paypalTax='3.4', creditCardTax='1.9',
+                                           vat='21',
+                                           profit='10',
+                                           corporateEmail='grupogrooving@gmail.com',
+                                           reportEmail='grupogrooving@gmail.com',
+                                           appName='Grooving',
+                                           slogan='Connecting artist with you',
+                                           logo='',
+                                           privacyText_en='Privacity',
+                                           privacyText_es='Privacidad',
+                                           aboutUs_en='About us',
+                                           aboutUs_es='Sobre nosotros',
+                                           termsText_es='Términos y condiciones',
+                                           termsText_en='Terms and conditions')
 
         user_customer = User.objects.create(username='customer1', password=make_password('customer1customer1'),
                                             first_name='Rafael', last_name='Esquivias Ramírez',
@@ -209,6 +224,20 @@ class RightToBeForgottenUserTestCase(APITransactionTestCase):
     def setUp(self):
         # Creating an artist
 
+        SystemConfiguration.objects.create(minimumPrice=20.0, currency='EUR', paypalTax='3.4', creditCardTax='1.9',
+                                           vat='21',
+                                           profit='10',
+                                           corporateEmail='grupogrooving@gmail.com',
+                                           reportEmail='grupogrooving@gmail.com',
+                                           appName='Grooving',
+                                           slogan='Connecting artist with you',
+                                           logo='',
+                                           privacyText_en='Privacity',
+                                           privacyText_es='Privacidad',
+                                           aboutUs_en='About us',
+                                           aboutUs_es='Sobre nosotros',
+                                           termsText_es='Términos y condiciones',
+                                           termsText_en='Terms and conditions')
         user_artist = User.objects.create(username='artist1', password=make_password('artista1'),
                                           first_name='Carlos', last_name='Campos Cuesta',
                                           email="artist1fortest@gmail.com")
@@ -333,6 +362,21 @@ class LogInUserTestCase(APITransactionTestCase):
 
     def setUp(self):
         # Creating an artist
+
+        SystemConfiguration.objects.create(minimumPrice=20.0, currency='EUR', paypalTax='3.4', creditCardTax='1.9',
+                                           vat='21',
+                                           profit='10',
+                                           corporateEmail='grupogrooving@gmail.com',
+                                           reportEmail='grupogrooving@gmail.com',
+                                           appName='Grooving',
+                                           slogan='Connecting artist with you',
+                                           logo='',
+                                           privacyText_en='Privacity',
+                                           privacyText_es='Privacidad',
+                                           aboutUs_en='About us',
+                                           aboutUs_es='Sobre nosotros',
+                                           termsText_es='Términos y condiciones',
+                                           termsText_en='Terms and conditions')
 
         user_artist = User.objects.create(username='artist1', password=make_password('artista1'),
                                           first_name='Carlos', last_name='Campos Cuesta',
