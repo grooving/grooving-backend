@@ -177,7 +177,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
             portfolio_in_db.banner = json.get('banner')
 
         if json['biography'] is not None:
-            Assertions.assert_true_raise400(isinstance(json['biography'], str), translate(language, 'ERROR_BIOGRAPHY_BAD_PROVIDED'))
+            #Assertions.assert_true_raise400(isinstance(json['biography'], str), translate(language, 'ERROR_BIOGRAPHY_BAD_PROVIDED'))
             Assertions.assert_true_raise400(Strings.check_max_length(json['biography'], 500),
                                             translate(language, "ERROR_BIOGRAPHY_TOO_LONG"))
             portfolio_in_db.biography = json.get('biography')
@@ -194,6 +194,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
             for image in json['images']:
                 Assertions.assert_true_raise400(isinstance(image, str), translate(language, 'ERROR_IMAGE_BAD_PROVIDED'))
                 Assertions.assert_true_raise400(image.startswith('http'), translate(language, 'ERROR_IMAGE_NOT_VALID_URL'))
+                Assertions.assert_true_raise400(Strings.check_max_length(image, 500), translate(language, 'ERROR_IMAGE_URL_TOO_LONG'))
                 aux = True
                 for image_db in PortfolioModule.objects.filter(type='PHOTO', portfolio=portfolio_in_db):
                     if image_db.link == image:
@@ -223,6 +224,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
 
             for video in json['videos']:
                 Assertions.assert_true_raise400(isinstance(video, str), translate(language, 'ERROR_VIDEO_BAD_PROVIDED'))
+                Assertions.assert_true_raise400(Strings.check_max_length(video, 500), translate(language, 'ERROR_VIDEO_URL_TOO_LONG'))
                 aux = True
                 for video_db in PortfolioModule.objects.filter(type='VIDEO', portfolio=portfolio_in_db):
                     if video_db.link == video:

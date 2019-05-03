@@ -20,10 +20,14 @@ spanish = {
     "ERROR_URL_TOO_LONG": "La URL es demasiado larga. El límite es 500 caracteres.",
     "ERROR_BIOGRAPHY_TOO_LONG": "La biografía es demasiado larga.",
     "ERROR_ARTISTICNAME_TOO_LONG": "El nombre artístico es demasiado largo.",
+    "ERROR_VIDEO_URL_TOO_LONG": "La URL del vídeo es demasiado larga",
+    "ERROR_IMAGE_URL_TOO_LONG": "La URL de la imagen es demasiado larga"
 
 }
 
 english = {
+    "ERROR_VIDEO_URL_TOO_LONG": "Video URL is too long.",
+    "ERROR_IMAGE_URL_TOO_LONG": "Image URL is too long",
     "ERROR_BIOGRAPHY_TOO_LONG": "The biography is too long.",
     "ERROR_ARTISTICNAME_TOO_LONG": "The artistic name is too long.",
     "ERROR_URL_TOO_LONG": "The URL is too long. Limit is 500 characters.",

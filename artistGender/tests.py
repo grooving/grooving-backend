@@ -1,3 +1,95 @@
+
+from django.test import TestCase
+from Grooving.models import Zone, User, Admin, ArtisticGender, Artist, Rating, EventLocation, Customer, Offer, Portfolio, PaymentPackage, Calendar, Custom
+from datetime import datetime
+from rest_framework.authtoken.models import Token
+from django.utils import timezone
+from django.contrib.auth.hashers import make_password
+from rest_framework.test import APITransactionTestCase
+
+class GenderTestCase(APITransactionTestCase):
+    phater= None
+    son = None
+    grandson = None
+    def setUp(self):
+        user_admin = User.objects.create(username='admin', password=make_password('admin'), is_staff=True,
+                                         is_superuser=True, first_name='Sauron', last_name='The Overlord',
+                                         email="admin@grooving.com")
+
+        user_admin.save()
+
+        admin = Admin.objects.create(user=user_admin, language='es')
+        admin.save()
+
+        parentOfAll = ArtisticGender.objects.create(name_es="Padre de todo", name_en="Father of all")
+        parentOfAll.save()
+        self.phater= parentOfAll.pk
+
+        son = ArtisticGender.objects.create(name_es="El hijo", name_en="The son", parentGender_id=parentOfAll.pk)
+        son.save()
+        self.son = son.pk
+        grandson = ArtisticGender.objects.create(name_es="EL nieto", name_en="The grandson", parentGender_id=son.pk)
+        grandson.save()
+        self.grandson = grandson.pk
+
+    def test_driver_gender_management(self):
+
+        payload = [
+            ["Hijo", "Son", self.phater, self.phater, "Sonss", "Hijso", 201, 201],
+            [None, "son2", self.phater, self.phater, "Sognss", "Hijhso", 401, 401],
+            ["Hijo2", None, self.phater, self.phater, "Sondss", "Hdijso", 401, 401],
+            [None, None, self.phater, self.phater, "Sosnss", "Hijso", 401, 401],
+            [None, None, self.phater, self.phater, "Sonss", "Hijsso", 401, 401],
+            [112, 12, self.phater, self.phater, "Sonss", "Hijso", 400, 400],
+            ["Hijo4", "Son4", self.son, self.phater, "Soniss", "Hipjso", 201, 201],
+            ["Hijo5", "Son5", self.son, self.phater, "Sonss", "", 201, 400],
+            ["Hijo6", "Son6", self.son, self.phater, None, "Hijxso", 201, 400],
+            ["Hijo7", "Son7", self.son, self.grandson, "Sonnss", "Hijmso", 201, 201],
+            ["Hijo8", "Son8", self.grandson, self.phater, "Sodnss", "Hidjso", 201, 201],
+
+        ]
+
+        indice = 1
+        for data in payload:
+            print("---> Test " + str(indice) + " es")
+            self.template_gender(data, "es")
+            print("---> Test " + str(indice) + " en")
+            self.template_gender(data, "en")
+            indice += 1
+
+    def template_gender(self, arg, lang):
+        user = {"username": "admin", "password": "admin"}
+        response = self.client.post("/api/admin/login/", user, format='json')
+        token_num = response.get("x-auth")
+
+        response_list = self.client.get("/artisticGenders/?parentId=true", HTTP_AUTHORIZATION='Token ' + token_num,
+                                        HTTP_ACCEPT_LANGUAGE=lang)
+        print(response_list.status_code)
+        self.assertEqual(200, response_list.status_code)
+        create_data = {"name_es": arg[0], "name_en": arg[1], "parentGender": arg[2]}
+
+        response_create = self.client.post("/artisticGender/", create_data, format="json",
+                                           HTTP_AUTHORIZATION='Token ' + token_num,
+                                           HTTP_ACCEPT_LANGUAGE=lang)
+
+        print(response_create.status_code)
+        self.assertEqual(arg[-2], response_create.status_code)
+        if response_create.status_code == 201:
+            create_gender = ArtisticGender.objects.filter(name_es=arg[0]).first()
+            edit_data = {"id": create_gender.pk, "name_es": arg[4], "name_en": arg[5], "parentGender": arg[3]}
+            response_edit = self.client.put("/artisticGender/"+str(create_gender.pk)+"/", edit_data, format="json",
+                                              HTTP_AUTHORIZATION='Token ' + token_num,
+                                              HTTP_ACCEPT_LANGUAGE=lang)
+            print(response_edit.status_code)
+            self.assertEqual(arg[-1], response_edit.status_code)
+            response_delete = self.client.delete("/artisticGender/"+str(create_gender.pk)+"/",
+                                                 HTTP_AUTHORIZATION='Token ' + token_num,
+                                                 HTTP_ACCEPT_LANGUAGE=lang)
+            print(response_delete.status_code)
+            self.assertEqual(204, response_delete.status_code)
+
+
+
 '''from Grooving.models import Offer, Artist, Portfolio, User, Calendar, PaymentPackage, Customer
 from Grooving.models import EventLocation, Zone, Performance, ArtisticGender
 from django.contrib.auth.hashers import make_password
@@ -5,6 +97,10 @@ from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 import datetime
 import pytz
+
+
+
+
 
 
 class ArtistGenderTestCase(APITestCase):

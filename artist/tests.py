@@ -419,6 +419,73 @@ class EditArtistPersonalInformation(APITransactionTestCase):
 
         print("\nOk - Status expected: " + str(status_expected) + "\n")
 
+
+class ListArtistByGenre(APITransactionTestCase):
+
+    def setUp(self):
+        user2_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
+                                            first_name='Manolo', last_name='Manolez',
+                                            email='artist1@isamail.com')
+        user2_artist1.save()
+
+        artist1 = Artist.objects.create(user=user2_artist1)
+        artist1.save()
+        self.artistId = artist1.pk
+        gender = ArtisticGender.objects.create(name_es="Roca", name_en="Rock")
+        gender.save()
+        portfolio1 = Portfolio.objects.create(artisticName="Manolo el Guitarras", artist=artist1)
+        portfolio1.artisticGender.add(gender)
+        portfolio1.save()
+
+        user2_artist2 = User.objects.create(username='artist2', password=make_password('artist2'),
+                                            first_name='Manolin', last_name='Manolinez',
+                                            email='artist2@isamail.com')
+        user2_artist2.save()
+
+        artist2 = Artist.objects.create(user=user2_artist2)
+        artist2.save()
+        self.artistId = artist1.pk
+        gender2 = ArtisticGender.objects.create(name_es="Popular", name_en="Pop")
+        gender2.save()
+        portfolio2 = Portfolio.objects.create(artisticName="Manolin el Guitarras", artist=artist2)
+        portfolio2.artisticGender.add(gender2)
+        portfolio2.save()
+
+    def test_driver_list_artist(self):
+        payload = [
+            [None, 2, 200],
+            ["Rock", 1, 200],
+            ["rock", 1, 200],
+            ["Roca", 1, 200],
+            ["Pop", 1, 200],
+
+        ]
+
+        indice = 1
+        for data in payload:
+            print("---> Test " + str(indice) + " es")
+            self.template_list_artist(data, "es")
+            print("---> Test " + str(indice) + " en")
+            self.template_list_artist(data, "en")
+            indice += 1
+
+    def template_list_artist(self, arg, lang):
+        http_code = arg[-1]
+        genre = arg[0]
+        length = arg[1]
+        if genre is None:
+            genre = ""
+        response = self.client.get("/artists/?artisticGender="+genre, HTTP_ACCEPT_LANGUAGE=lang)
+        print(response.status_code)
+        self.assertEqual(http_code, response.status_code)
+        print(response.data)
+        self.assertEqual(length, len(response.data))
+
+
+
+
+
+
 '''
 class ShowArtistInformation(TestCase):
     
