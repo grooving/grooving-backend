@@ -120,7 +120,7 @@ class BraintreeViews(generics.GenericAPIView):
         if offer.paymentPackage.performance is not None:
             amount = offer.paymentPackage.performance.price
         else:
-            amount = offer.price * offer.hours
+            amount = offer.price
 
         Assertions.assert_true_raise400(amount > 0, translate(language, 'ERROR_AMOUNT'))
 
