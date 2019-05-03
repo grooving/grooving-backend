@@ -690,17 +690,17 @@ class Notifications:
         else:
             subject = translate(language, "BAN_UNBAN_USERS_INACTIVE_SUBJECT")
             if language == "en":
-                body = "<p>Hola,</p>" + \
-                       "<p>Esta cuenta ha sido temporalmente desactivada por violación de los Terminos " + \
-                       "y condiciones de Grooving. Por favor, contacte con el equipo de grooving en " + \
-                       system_configuration.reportEmail + "</p>" + Notifications.footer(language)
-            elif language == "es":
                 body = "<p>Hello,</p>" + \
                        "<p>This account has been temporaly banned to a violation of ours Terms & " + \
                        "conditions. Please contact to Grooving support at " + \
                        system_configuration.reportEmail + "</p>"
+            elif language == "es":
+                body = "<p>Hola,</p>" + \
+                       "<p>Esta cuenta ha sido temporalmente desactivada por violación de los Terminos " + \
+                       "y condiciones de Grooving. Por favor, contacte con el equipo de grooving en " + \
+                       system_configuration.reportEmail + "</p>"
 
-            body = translate(language, "BAN_UNBAN_USERS_INACTIVE_BODY") + Notifications.footer(language)
+            body += Notifications.footer(language)
 
         EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
 

@@ -34,6 +34,7 @@ class UserManage(generics.DestroyAPIView):
             user.is_active = not user.is_active
             user.save()
             serialized = UserSerializer(user)
+            Notifications.send_email_ban_unban_users(user.id)
             return Response(serialized.data, status=status.HTTP_200_OK)
         else:
             Assertions.assert_true_raise400(False, translate(language, 'ERROR_VALIDATE'))
