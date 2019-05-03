@@ -93,7 +93,7 @@ class OfferSerializer(serializers.ModelSerializer):
             # creation
             offer = Offer()
             offer = self._service_create(self.initial_data, offer, logged_user)
-            Notifications.send_email_create_an_offer(offer.id) # TODO
+            Notifications.send_email_create_an_offer(offer.id)
         else:
             # edit
             id = (self.initial_data, pk)[pk is not None]
