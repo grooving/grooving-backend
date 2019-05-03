@@ -248,8 +248,7 @@ def save_data():
 
                                                                             "<h2>Cookies</h2>" +
                                                                             "<p>Empleamos el uso de cookies. Al acceder a Grupo Grooving, usted ha aceptado usar cookies " +
-                                                                            "de acuerdo con la <a href=\"https://grooving-frontend-d4.herokuapp.com/privacy\">" +
-                                                                            "Política de privacidad de Grooving</a>.</p>" +
+                                                                            "de acuerdo con la Política de privacidad de Grooving.</p>" +
 
                                                                             "<p>La mayoría de los sitios web interactivos utilizan cookies para permitirnos recuperar " +
                                                                             "los detalles del usuario para cada visita. Las cookies son utilizadas por nuestro sitio web " +
@@ -410,8 +409,7 @@ def save_data():
 
                                                                             "<h2>Cookies</h2>" +
                                                                             "<p>We employ the use of cookies. By accessing Grooving group, you agreed to use " +
-                                                                            "cookies in agreement with the <a href=\"https://grooving-frontend-d4.herokuapp.com/privacy\">" +
-                                                                            "Grooving's Privacy Policy</a>.</p>" +
+                                                                            "cookies in agreement with the Grooving's Privacy Policy.</p>" +
 
                                                                             "<p>Most interactive websites use cookies to let us retrieve the user's details for " +
                                                                             "each visit. Cookies are used by our website to enable the functionality of certain " +
