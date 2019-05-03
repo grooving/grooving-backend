@@ -210,8 +210,7 @@ class OfferSerializer(serializers.ModelSerializer):
                                                  'CONTRACT_MADE': 'CANCELLED_CUSTOMER'}
 
                 if json_status == 'WITHDRAWN':
-                    Assertions.assert_true_raise400(json.get('reason'),
-                                                    translate(language, 'ERROR_REASON_NOT_PROVIDED'))
+
 
                     if settings.BRAINTREE_PRODUCTION:
                         braintree_env = braintree.Environment.Production
@@ -368,9 +367,6 @@ class OfferSerializer(serializers.ModelSerializer):
                         braintree.Transaction.submit_for_settlement(offer_in_db.transaction.braintree_id)
 
                 elif json_status == 'REJECTED':
-
-                    Assertions.assert_true_raise400(json.get('reason'),
-                                                    translate(language, 'ERROR_REASON_NOT_PROVIDED'))
 
                     if settings.BRAINTREE_PRODUCTION:
                         braintree_env = braintree.Environment.Production
