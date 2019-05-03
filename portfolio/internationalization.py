@@ -22,7 +22,8 @@ spanish = {
     "ERROR_ARTISTICNAME_TOO_LONG": "El nombre artístico es demasiado largo.",
     "ERROR_VIDEO_URL_TOO_LONG": "La URL del vídeo es demasiado larga",
     "ERROR_IMAGE_URL_TOO_LONG": "La URL de la imagen es demasiado larga",
-    "ERROR_EMPTY_BIOGRAPHY": "La biografía no puede estar vacía."
+    "ERROR_EMPTY_BIOGRAPHY": "La biografía no puede estar vacía.",
+
 
 }
 
