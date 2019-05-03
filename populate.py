@@ -1239,47 +1239,47 @@ def save_data():
 
     # Artists
 
-    artist1 = Artist.objects.create(user=user1_artist1, rating=4.5, phone='600304999',
+    artist1 = Artist.objects.create(user=user1_artist1, rating=0, phone='600304999',
                                     language='en',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist1/artist1_photo.jpg',
                                     iban='ES6621000418401234567891', paypalAccount='carlosdj.espectaculos@gmail.com')
     artist1.save()
-    artist2 = Artist.objects.create(user=user2_artist2, rating=4.9, phone='695099812',
+    artist2 = Artist.objects.create(user=user2_artist2, rating=0, phone='695099812',
                                     language='es',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist2/artist2_photo.jpg',
                                     iban='ES1720852066623456789011', paypalAccount='fromthenois3@gmail.com')
     artist2.save()
-    artist3 = Artist.objects.create(user=user3_artist3, rating=4.0, phone='695990241',
+    artist3 = Artist.objects.create(user=user3_artist3, rating=0, phone='695990241',
                                     language='en',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist3/artist3_photo.jpg',
                                     iban='ES6000491500051234567892', paypalAccount='saraos.flamenco@gmail.com')
     artist3.save()
-    artist4 = Artist.objects.create(user=user4_artist4, rating=3.5, phone='610750391',
+    artist4 = Artist.objects.create(user=user4_artist4, rating=0, phone='610750391',
                                     language='es',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist4/artist4_photo.jpg',
                                     iban='ES9420805801101234567891', paypalAccount='anadj.session@outlook.com')
     artist4.save()
-    artist5 = Artist.objects.create(user=user5_artist5, rating=4.5, phone='675181175',
+    artist5 = Artist.objects.create(user=user5_artist5, rating=0, phone='675181175',
                                     language='en',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist5/artist5_photo.jpg',
                                     iban='ES9000246912501234567891', paypalAccount='chirigota_pasando@hotmail.com')
     artist5.save()
-    artist6 = Artist.objects.create(user=user6_artist6, rating=4.0, phone='673049277',
+    artist6 = Artist.objects.create(user=user6_artist6, rating=0, phone='673049277',
                                     language='es',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist6/artist6_photo.jpg',
                                     iban='ES7100302053091234567895', paypalAccount='chirigotasinclase@yahoo.com')
     artist6.save()
-    artist7 = Artist.objects.create(user=user7_artist7, rating=4.75, phone='664196105',
+    artist7 = Artist.objects.create(user=user7_artist7, rating=0, phone='664196105',
                                     language='es',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist7/artist7_photo.jpg',
                                     iban='ES1000492352082414205416', paypalAccount='batracio-info@hotmail.com')
     artist7.save()
-    artist8 = Artist.objects.create(user=user8_artist8, rating=4.66666666, phone='664596466',
+    artist8 = Artist.objects.create(user=user8_artist8, rating=0, phone='664596466',
                                     language='en',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_photo.jpg',
                                     iban='ES1720852066623456789011', paypalAccount='medictum.bussiness@gmail.com')
     artist8.save()
-    artist9 = Artist.objects.create(user=user9_artist9, rating=3.75, phone='679739257',
+    artist9 = Artist.objects.create(user=user9_artist9, rating=0, phone='679739257',
                                     language='es',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist9/artist9_photo.jpg',
                                     iban='ES9420805801101234567891', paypalAccount='infowaterdogs@outlook.com')
@@ -1730,12 +1730,8 @@ def save_data():
                                                    customer=customer2)
     event_location2.save()
     event_location3 = EventLocation.objects.create(name="Rosalia en vivo", address="C/Sol, 45, 41652",
-<<<<<<< HEAD
-                                                   description="We provided a full sound & video equipment for the event", zone=zone2, customer=customer3)
-=======
                                                    equipment="We provided a full sound & video equipment for the event",
                                                    zone=zone2, customer=customer3)
->>>>>>> 4735b39a9e54d1bf31b66eb959926cb3fd1ecdeb
     event_location3.save()
     event_location4 = EventLocation.objects.create(name="Charlie XCX", address='C/Amalgama, 2, 41609',
                                                    description="Yes, we have a stage of 30 square meters, a system of loudspeakers distributed by the local, with a total of 16 loudspeakers and a complete system of LED lights that can be adjusted to the intensity and color desired.",
