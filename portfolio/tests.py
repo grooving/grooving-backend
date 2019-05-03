@@ -161,11 +161,11 @@ class PortfolioTestCase(APITransactionTestCase):
                 # Test positivo, editar zones
                 [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner, [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [zone.name], artist1.id, 'es', 200],
 
-                #Test negativo 1, artistic name vacío
+                #Test positivo 1, artistic name vacío
 
                 [token, portfolio.id, '', portfolio.biography, portfolio.banner,
                 [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
-                artist1.id, 'es', 400],
+                artist1.id, 'es', 200],
 
                 #Test negativo 2, banner con url inavlida
 
@@ -238,11 +238,11 @@ class PortfolioTestCase(APITransactionTestCase):
                 [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [zone.name],
                 artist1.id, 'en', 200],
 
-                # Test negativo 1, artistic name vacío
+                # Test positivo, artistic name vacío
 
                 [token, portfolio.id, '', portfolio.biography, portfolio.banner,
                 [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
-                artist1.id, 'en', 400],
+                artist1.id, 'en', 200],
 
                 # Test negativo 2, banner con url inavlida
 

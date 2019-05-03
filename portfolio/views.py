@@ -52,7 +52,7 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
                 if serializer.validate(request,language):
                     save = serializer.save(loggedUser, language=language)
                     serialized = PortfolioSerializer(save, context={'language':language})
-                    return Response(serialized.data, status=status.HTTP_201_CREATED)
+                    return Response(serialized.data, status=status.HTTP_200_OK)
                 else:
                     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
