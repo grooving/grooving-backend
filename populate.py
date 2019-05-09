@@ -905,59 +905,59 @@ def save_data():
     # ...musician
 
     # username = carlosdj        password = make_password('0b10a1e2c186b89a0e15f4b1a84bac20')
-    user1_artist1 = User.objects.create(username='carlosdj', password=make_password('0b10a1e2c186b89a0e15f4b1a84bac20'),
+    user1_artist1 = User.objects.create(username='carlosdj', password=make_password('0b10a1e2c186b89a'),
                                         first_name='Carlos', last_name='Campos Cuesta',
                                         email=users_artists_email)  # 'infoaudiowar@gmail.com'
     user1_artist1.save()
 
     # username = fromthenoise    password = make_password('b0190558c7add4f8f8067907d372cbc0')
     user2_artist2 = User.objects.create(username='fromthenoise',
-                                        password=make_password('b0190558c7add4f8f8067907d372cbc0'),
+                                        password=make_password('b0190558c7add4f8'),
                                         first_name='José Antonio', last_name='Granero Guzmán',
                                         email=users_artists_email)  # josegraneroguzman@gmail.com
     user2_artist2.save()
 
     # username = lossaraos       password = make_password('e8b86eae8ad14c1520bfdc0a4781fb79')
     user3_artist3 = User.objects.create(username='lossaraos',
-                                        password=make_password('e8b86eae8ad14c1520bfdc0a4781fb79'),
+                                        password=make_password('e8b86eae8ad14c15'),
                                         first_name='Francisco', last_name='Martín',
                                         email=users_artists_email)  # saralcum@gmail.com
     user3_artist3.save()
 
     # username = anadj           password = make_password('fe6a8fd16a97020ca074b1fa00eda0d3')
-    user4_artist4 = User.objects.create(username='anadj', password=make_password('fe6a8fd16a97020ca074b1fa00eda0d3'),
+    user4_artist4 = User.objects.create(username='anadj', password=make_password('fe6a8fd16a97020c'),
                                         first_name='Ana',
                                         last_name='Mellado González',
                                         email=users_artists_email)  # mellizalez@hotmail.com
     user4_artist4.save()
 
     # username = pasando         password = make_password('33fab3ca79958b5d59c3ac5781fac357')
-    user5_artist5 = User.objects.create(username='pasando', password=make_password('33fab3ca79958b5d59c3ac5781fac357'),
+    user5_artist5 = User.objects.create(username='pasando', password=make_password('33fab3ca79958b5d'),
                                         first_name='Alejandro', last_name='Arteaga Ramírez',
                                         email=users_artists_email)  # alejandroarteagaramirez@gmail.com
     user5_artist5.save()
 
     # username = sinclase        password = make_password('dc58c65d968ce4aec9e5f20a41a349ed')
-    user6_artist6 = User.objects.create(username='sinclase', password=make_password('dc58c65d968ce4aec9e5f20a41a349ed'),
+    user6_artist6 = User.objects.create(username='sinclase', password=make_password('dc58c65d968ce4ae'),
                                         first_name='Pablo', last_name='Delgado Flores',
                                         email=users_artists_email)  # pabloj.df@gmail.com
     user6_artist6.save()
 
     # username = batracio        password = make_password('0bb2adacaa1cbdab1878f9dfafd509df')
-    user7_artist7 = User.objects.create(username='batracio', password=make_password('0bb2adacaa1cbdab1878f9dfafd509df'),
+    user7_artist7 = User.objects.create(username='batracio', password=make_password('0bb2adacaa1cbdab'),
                                         first_name='Domingo', last_name='Muñoz Daza',
                                         email=users_artists_email)  # dmunnoz96@gmail.com
     user7_artist7.save()
 
     # username = medictum        password = make_password('a2ff5e4313effd9f4326ff851835cc1c')
-    user8_artist8 = User.objects.create(username='medictum', password=make_password('a2ff5e4313effd9f4326ff851835cc1c'),
+    user8_artist8 = User.objects.create(username='medictum', password=make_password('a2ff5e4313effd9f'),
                                         first_name='Rafael', last_name='Córdoba',
                                         email=users_artists_email)  # contacto@medictum.es
     user8_artist8.save()
 
     # username = waterdogs       password = make_password('ef3e7a1268790f2adb70a89d4918310f')
     user9_artist9 = User.objects.create(username='waterdogs',
-                                        password=make_password('ef3e7a1268790f2adb70a89d4918310f'),
+                                        password=make_password('ef3e7a1268790f2a'),
                                         first_name='José Luis', last_name='Salvador Lauret',
                                         email=users_artists_email)  # joseluis.salvador@gmail.com
     user9_artist9.save()
@@ -966,7 +966,7 @@ def save_data():
     # TAMTA
 
     # username = tamta           password = make_password('1daf86d4c5b00ce4374e2c745371a842')
-    user1_artist10 = User.objects.create(username='tamta', password=make_password('1daf86d4c5b00ce4374e2c745371a842'),
+    user1_artist10 = User.objects.create(username='tamta', password=make_password('1daf86d4c5b00ce4'),
                                          first_name='Tamta',
                                          last_name='Goduadze', email=users_artists_email)
     user1_artist10.save()
@@ -1071,7 +1071,7 @@ def save_data():
 
     # Rosalia
     # username = rosalia           password = make_password('05a1e379e057d61c93884b389d23563b')
-    user1_artist11 = User.objects.create(username='rosalia', password=make_password('05a1e379e057d61c93884b389d23563b'),
+    user1_artist11 = User.objects.create(username='rosalia', password=make_password('05a1e379e057d61c'),
                                          first_name='Rosalía',
                                          last_name='Vila Tobella', email=users_artists_email)
     user1_artist11.save()
@@ -1186,7 +1186,7 @@ def save_data():
 
     # Taylor Swift
     # username = username='taylor'              password = make_password('c8c7afe225a5f142f33f38da472081c5')
-    user1_artist12 = User.objects.create(username='taylor', password=make_password('c8c7afe225a5f142f33f38da472081c5'),
+    user1_artist12 = User.objects.create(username='taylor', password=make_password('c8c7afe225a5f142'),
                                          first_name='Taylor Alison',
                                          last_name='Swift', email=users_artists_email)
     user1_artist12.save()
@@ -1306,7 +1306,7 @@ def save_data():
 
     # Charli XCX
     # username = charli             password = make_password('76734a16cd99ce80128ab37468d353d2')
-    user1_artist13 = User.objects.create(username='charli', password=make_password('76734a16cd99ce80128ab37468d353d2'),
+    user1_artist13 = User.objects.create(username='charli', password=make_password('76734a16cd99ce80'),
                                          first_name='Charlotte Emma',
                                          last_name='Aitchison', email=users_artists_email)
     user1_artist13.save()
@@ -1384,7 +1384,7 @@ def save_data():
 
     # ...admins
 
-    user14_admin = User.objects.create(username='admin', password=make_password('c8fe937c00274ff314ad36912e8444bc'),
+    user14_admin = User.objects.create(username='admin', password=make_password('c8fe937c00274ff3'),
                                        is_staff=True,
                                        is_superuser=True, first_name='Chema', last_name='Alonso',
                                        email="grupogrooving@gmail.com")
@@ -1398,42 +1398,42 @@ def save_data():
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist1/artist1_photo.jpg',
                                     iban='ES6621000418401234567891', paypalAccount='carlosdj.espectaculos@gmail.com')
     artist1.save()
-    artist2 = Artist.objects.create(user=user2_artist2, rating=0, phone='695099812',
+    artist2 = Artist.objects.create(user=user2_artist2, rating=0.0, phone='695099812',
                                     language='es',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist2/artist2_photo.jpg',
                                     iban='ES1720852066623456789011', paypalAccount='fromthenois3@gmail.com')
     artist2.save()
-    artist3 = Artist.objects.create(user=user3_artist3, rating=0, phone='695990241',
+    artist3 = Artist.objects.create(user=user3_artist3, rating=0.0, phone='695990241',
                                     language='en',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist3/artist3_photo.jpg',
                                     iban='ES6000491500051234567892', paypalAccount='saraos.flamenco@gmail.com')
     artist3.save()
-    artist4 = Artist.objects.create(user=user4_artist4, rating=0, phone='610750391',
+    artist4 = Artist.objects.create(user=user4_artist4, rating=0.0, phone='610750391',
                                     language='es',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist4/artist4_photo.jpg',
                                     iban='ES9420805801101234567891', paypalAccount='anadj.session@outlook.com')
     artist4.save()
-    artist5 = Artist.objects.create(user=user5_artist5, rating=0, phone='675181175',
+    artist5 = Artist.objects.create(user=user5_artist5, rating=0.0, phone='675181175',
                                     language='en',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist5/artist5_photo.jpg',
                                     iban='ES9000246912501234567891', paypalAccount='chirigota_pasando@hotmail.com')
     artist5.save()
-    artist6 = Artist.objects.create(user=user6_artist6, rating=0, phone='673049277',
+    artist6 = Artist.objects.create(user=user6_artist6, rating=0.0, phone='673049277',
                                     language='es',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist6/artist6_photo.jpg',
                                     iban='ES7100302053091234567895', paypalAccount='chirigotasinclase@yahoo.com')
     artist6.save()
-    artist7 = Artist.objects.create(user=user7_artist7, rating=0, phone='664196105',
+    artist7 = Artist.objects.create(user=user7_artist7, rating=0.0, phone='664196105',
                                     language='es',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist7/artist7_photo.jpg',
                                     iban='ES1000492352082414205416', paypalAccount='batracio-info@hotmail.com')
     artist7.save()
-    artist8 = Artist.objects.create(user=user8_artist8, rating=0, phone='664596466',
+    artist8 = Artist.objects.create(user=user8_artist8, rating=0.0, phone='664596466',
                                     language='en',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist8/artist8_photo.jpg',
                                     iban='ES1720852066623456789011', paypalAccount='medictum.bussiness@gmail.com')
     artist8.save()
-    artist9 = Artist.objects.create(user=user9_artist9, rating=0, phone='679739257',
+    artist9 = Artist.objects.create(user=user9_artist9, rating=0.0, phone='679739257',
                                     language='es',
                                     photo='https://raw.githubusercontent.com/grooving/static-content/master/artist9/artist9_photo.jpg',
                                     iban='ES9420805801101234567891', paypalAccount='infowaterdogs@outlook.com')
@@ -1821,28 +1821,28 @@ def save_data():
 
     # username = rafesqram         password = make_password('ef3e7a1268790f2adb70a89d4918310f')
     user10_customer1 = User.objects.create(username='rafesqram',
-                                           password=make_password('ef3e7a1268790f2adb70a89d4918310f'),
+                                           password=make_password('ef3e7a1268790f2a'),
                                            first_name='Rafael', last_name='Esquivias Ramírez',
                                            email=users_customers_email)  # resquiviasramirez@gmail.com
     user10_customer1.save()
 
     # username = jorjimcor         password = make_password('d54d4c790733f33dba91a68b099f401e')
     user11_customer2 = User.objects.create(username='jorjimcor',
-                                           password=make_password('d54d4c790733f33dba91a68b099f401e'),
+                                           password=make_password('d54d4c790733f33d'),
                                            first_name='Jorge', last_name='Jimenez',
                                            email=users_customers_email)  # jorjicorral@gmail.com
     user11_customer2.save()
 
     # username = juamanfer         password = make_password('108832878f600d74fcc5053dc8ff8ffc')
     user12_customer3 = User.objects.create(username='juamanfer',
-                                           password=make_password('108832878f600d74fcc5053dc8ff8ffc'),
+                                           password=make_password('108832878f600d74'),
                                            first_name='Juan Manuel', last_name='Fernández',
                                            email=users_customers_email)  # surlive@imgempresas.com
     user12_customer3.save()
 
     # username = migromgut         password = make_password('933c6c464ab272bf6241be38f6801826')
     user13_customer4 = User.objects.create(username='migromgut',
-                                           password=make_password('933c6c464ab272bf6241be38f6801826'),
+                                           password=make_password('933c6c464ab272bf'),
                                            first_name='Miguel', last_name='Romero Gutierrez',
                                            email=users_customers_email)  # La posada Sevilla
     user13_customer4.save()
@@ -3085,30 +3085,18 @@ def save_data():
 
     # Data for teachers
 
-    # Portfolio from teachers
 
-    portfolio14_prof = Portfolio.objects.create(artisticName='The great magician')
-    portfolio14_prof.save()
-
-    calendar14 = Calendar.objects.create(days=[], portfolio=portfolio14_prof)
-    calendar14.save()
-
-    portfolio15_prof = Portfolio.objects.create(artisticName='The pianist')
-    portfolio15_prof.save()
-
-    calendar15 = Calendar.objects.create(days=[], portfolio=portfolio15_prof)
-    calendar15.save()
 
     # ...user artist from teachers
 
     user15_artist10_prof = User.objects.create(username='PabloArtist',
-                                               password=make_password('6b6a2d865234cb0842cca59871ff3e46'),
+                                               password=make_password('6b6a2d865234cb08'),
                                                first_name='Pablo', last_name='Trinidad Fernandez',
                                                email=email_to_send_mail_teachers)
     user15_artist10_prof.save()
 
     user16_artist11_prof = User.objects.create(username='CarlosArtist',
-                                               password=make_password('c6e3122a5020a4cec3a82c921763925a'),
+                                               password=make_password('CarlosArtist'),
                                                first_name='Carlos', last_name='Müller',
                                                email=email_to_send_mail_teachers)
     user16_artist11_prof.save()
@@ -3116,33 +3104,47 @@ def save_data():
     # ...user customer from teachers
 
     user17_customer5_prof = User.objects.create(username='PabloCustomer',
-                                                password=make_password('3ecf3c908f9a8fc6355646c02f98d477'),
+                                                password=make_password('3ecf3c908f9a8fc6'),
                                                 first_name='Pablo', last_name='Trinidad Fernandez',
                                                 email=email_to_send_mail_teachers)
     user17_customer5_prof.save()
 
     user18_customer6_prof = User.objects.create(username='CarlosCustomer',
-                                                password=make_password('882f5de131863d23436309cbc362db34'),
+                                                password=make_password('882f5de131863d23'),
                                                 first_name='Carlos', last_name='Müller',
                                                 email=email_to_send_mail_teachers)
     user18_customer6_prof.save()
 
     # ...artists from teachers
 
-    artist10_prof = Artist.objects.create(user=user15_artist10_prof, rating=0, portfolio=portfolio14_prof,
+    artist10_prof = Artist.objects.create(user=user15_artist10_prof, rating=0.0,
                                           photo='https://raw.githubusercontent.com/Iriabow/pepe/master/magician-circus-ladies-b75b24-1024.jpg')
     artist10_prof.save()
 
-    artist11_prof = Artist.objects.create(user=user16_artist11_prof, rating=0, portfolio=portfolio15_prof,
+    artist11_prof = Artist.objects.create(user=user16_artist11_prof, rating=0.0,
                                           photo='https://raw.githubusercontent.com/Iriabow/pepe/master/pianista.jpg')
     artist11_prof.save()
 
+    # Portfolio from teachers
+
+    portfolio14_prof = Portfolio.objects.create(artisticName='The great magician', artist=artist10_prof)
+    portfolio14_prof.save()
+
+    calendar14 = Calendar.objects.create(days=[], portfolio=portfolio14_prof)
+    calendar14.save()
+
+    portfolio15_prof = Portfolio.objects.create(artisticName='The pianist', artist=artist11_prof)
+    portfolio15_prof.save()
+
+    calendar15 = Calendar.objects.create(days=[], portfolio=portfolio15_prof)
+    calendar15.save()
+
     # ...customer from teachers
 
-    artist15_prof = Customer.objects.create(user=user17_customer5_prof)
+    artist15_prof = Customer.objects.create(user=user17_customer5_prof,language='en')
     artist15_prof.save()
 
-    artist16_prof = Customer.objects.create(user=user18_customer6_prof)
+    artist16_prof = Customer.objects.create(user=user18_customer6_prof,language='en',)
     artist16_prof.save()
 
 
