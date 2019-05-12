@@ -1384,7 +1384,7 @@ def save_data():
 
     # ...admins
 
-    user14_admin = User.objects.create(username='admin', password=make_password('c8fe937c00274ff3'),
+    user14_admin = User.objects.create(username='admin', password=make_password('admin'),
                                        is_staff=True,
                                        is_superuser=True, first_name='Chema', last_name='Alonso',
                                        email="grupogrooving@gmail.com")
