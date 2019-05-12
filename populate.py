@@ -1389,7 +1389,7 @@ def save_data():
                                        is_superuser=True, first_name='Chema', last_name='Alonso',
                                        email="grupogrooving@gmail.com")
     user14_admin.save()
-    Admin.objects.create(user=user14_admin, language='es')
+    Admin.objects.create(user=user14_admin, language='en')
 
     # Artists
 
