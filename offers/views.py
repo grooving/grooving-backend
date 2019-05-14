@@ -24,7 +24,7 @@ class ListArtistOffers(generics.ListAPIView):
         try:
             artist = Artist.objects.get(user_id=user.user_id)
 
-            queryset = Offer.objects.filter(paymentPackage__portfolio__artist=artist)
+            queryset = Offer.objects.filter(paymentPackage__portfolio__artist=artist).order_by('date')
             auto_update_old_offers(queryset)
             cancel_offers_with_no_user(queryset)
             return queryset
@@ -48,7 +48,7 @@ class ListCustomerOffers(generics.ListAPIView):
                                                       keyToTranslate="ERROR_NOT_A_CUSTOMER"))
         try:
             customer = Customer.objects.get(user_id=user.user_id)
-            queryset = Offer.objects.filter(eventLocation__customer=customer)
+            queryset = Offer.objects.filter(eventLocation__customer=customer).order_by('date')
             auto_update_old_offers(queryset)
             cancel_offers_with_no_user(queryset)
             return queryset

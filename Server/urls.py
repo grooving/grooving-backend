@@ -104,7 +104,6 @@ urlpatterns = [
     url(r'^about$', AboutUs.as_view()),
     url(r'^braintree_token/$', BraintreeViews.as_view()),
 
-    # TODO:delete chat urls later
     url(r'^chat/$', index),
     url(r'^chating/(?P<room_name>[^/]+)/$', room, name='room'),
 

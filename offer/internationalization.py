@@ -9,11 +9,11 @@ spanish = {
     "ERROR_PAYPAL_CREDENTIALS": "Las credenciales de PayPal no son correctas",
     "ERROR_BRAINTREE_CREDENTIALS": "Las credenciales de Braintree no son correctas",
     "ERROR_PAYMENT_NOT_RESPONSE": "No hay respuesta del pago",
-    "ERROR_OFFER_PAST_DATE": "La oferta es pasada",
+    "ERROR_OFFER_PAST_DATE": "La oferta ha caducado",
     "ERROR_STATUS_NOT_PROVIDED": "El estado de la oferta no ha sido aportado",
     "ERROR_STATUS_NOT_CHANGED": "El estado de la oferta no ha sido modificado",
     "ERROR_BRAINTREE_ENV_NOT_SET": "El entorno de Braintree no ha sido configurado",
-    "ERROR_TRANSACTION_STATUS_NOT_ALLOWED": "El estado de la transaccón no esta permitida",
+    "ERROR_TRANSACTION_STATUS_NOT_ALLOWED": "Este cambio de estado no está permitido.",
     "ERROR_USER_NOT_AUTHORIZED": "Usuario no autorizado",
     "ERROR_DESCRIPTION_NOT_PROVIDED": "No se ha suministrado la descripción",
     "ERROR_DATE_NOT_PROVIDED": "No se ha suministrado la fecha",
@@ -44,10 +44,17 @@ spanish = {
     "ERROR_CREDENTIAL": "Error de credenciales de Paypal",
     "ERROR_CREDENTIAL_BRAINTREE": "Error de credencial Braintree",
     "ERROR_DATE_PAYMENT" : "Paypal no puede procesar un pago realizado hace mas de 29 dias",
-    "ERROR_REASON_NOT_PROVIDED": "No se ha suministrado una razón"
+    "ERROR_REASON_NOT_PROVIDED": "No se ha suministrado una razón",
+    "ERROR_PAYMENTCODE_TOO_LONG": "El código de pago es demasiado largo",
+    "ERROR_DATE_NOT_AVAILABLE": "El artista no puede actuar para la fecha indicada",
+    "ERROR_PAYPAL_PRICE_REACH": "Límite de precio en Paypal alcanzado",
+    "ERROR_REASON_TOO_LONG": "La razón es demasiado larga.",
+    "ERROR_INVALID_PAYMENTCODE": "El código de pago no es válido.",
 }
 
 english = {
+    "ERROR_REASON_TOO_LONG": "The reason is too long.",
+    "ERROR_PAYMENTCODE_TOO_LONG": "Payment code is too long.",
     "ERROR_DATE_FORMAT": "Date must follow this format: YYYY-MM-DDTHH:mm:ss",
     "ERROR_NULL_PAYMENT_CODE": "Payment code hasn't exist",
     "ERROR_OFFER_NOT_FOUND": "Offer don't exist",
@@ -58,11 +65,11 @@ english = {
     "ERROR_PAYPAL_CREDENTIALS": "Incorrect PayPal credentials",
     "ERROR_BRAINTREE_CREDENTIALS": "Incorrect Braintree credentials",
     "ERROR_PAYMENT_NOT_RESPONSE": "There isn't payment response",
-    "ERROR_OFFER_PAST_DATE": "It's a past offer",
+    "ERROR_OFFER_PAST_DATE": "The offer has expired.",
     "ERROR_STATUS_NOT_PROVIDED": "Offer status hasn't been provided",
     "ERROR_STATUS_NOT_CHANGED": "Offer status hasn't been changed",
     "ERROR_BRAINTREE_ENV_NOT_SET": "Braintree enviroment hasn't been set up",
-    "ERROR_TRANSACTION_STATUS_NOT_ALLOWED": "Status transaction hasn't been allowed",
+    "ERROR_TRANSACTION_STATUS_NOT_ALLOWED": "This status transaction is not allowed.",
     "ERROR_USER_NOT_AUTHORIZED": "User isn't authorized",
     "ERROR_DESCRIPTION_NOT_PROVIDED": "Description hasn't provided",
     "ERROR_DATE_NOT_PROVIDED": "Date hasn't provided",
@@ -93,7 +100,10 @@ english = {
     "ERROR_CREDENTIAL": "Credential error with paypal",
     "ERROR_CREDENTIAL_BRAINTREE": "Credential error with paypal",
     "ERROR_DATE_PAYMENT" : "Paypal cannot process a payment more than 29 days old",
-    "ERROR_REASON_NOT_PROVIDED": "Reason isn't provided"
+    "ERROR_REASON_NOT_PROVIDED": "Reason isn't provided",
+    "ERROR_DATE_NOT_AVAILABLE": "Artist can't act for provided date",
+    "ERROR_PAYPAL_PRICE_REACH": "Paypal price limit reached",
+    "ERROR_INVALID_PAYMENTCODE": "The payment code is invalid.",
 }
 
 

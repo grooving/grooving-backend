@@ -33,18 +33,14 @@
         <td><b>Precio</b>:</td>
         <td>{{ event_price }} {{ event_currency }}</td>
     </tr>
-    <tr>
-        <td><b>Equipamiento</b>:</td>
-        <td>{{ event_equipment }}</td>
-    </tr>
 </table>
 {% if event_payment_code %}
     <h1>Código de pago</h1>
     <table>
         <tr>
             <td rowspan="8"><p>
-                <a href="http://localhost:8080/receivePayment?paymentCode={{ event_payment_code }}"><img
-                        src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:8080/receivePayment?paymentCode={{ event_payment_code }}">
+                <a href="https://grooving-frontend-d4.herokuapp.com/#/receivePayment?paymentCode={{ event_payment_code }}"><img
+                        src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://grooving-frontend-d4.herokuapp.com/#/receivePayment?paymentCode={{ event_payment_code }}">
                 </a>
             </p>
                 <p style="font-size: 22px">{{ event_payment_code }}</p>

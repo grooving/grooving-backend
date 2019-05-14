@@ -39,4 +39,3 @@ def assert_true(boolean_value, message):
         # or ValueError(message) ? RestFramework views handle validationError exceptions
 
 
-

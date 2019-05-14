@@ -61,11 +61,22 @@ class CustomerRegister(generics.CreateAPIView):
 
     def get_object(self, pk=None):
         language = check_accept_language(self.request)
-
-        try:
-            return Customer.objects.get(pk=pk)
-        except Customer.DoesNotExist:
-            Assertions.assert_true_raise404(False, translate(language, "ERROR_NO_CUSTOMER_FOUND"))
+        check = self.request._request
+        path = check.path_info
+        if path == '/signupCustomer/':
+            return {'Description': 'Method POST'}
+        else:
+            try:
+                if pk is None:
+                    pk = self.kwargs['pk']
+                    if pk is not None:
+                        return Customer.objects.get(pk=pk)
+                    else:
+                        Assertions.assert_true_raise404(False, translate(language, "ERROR_NO_CUSTOMER_FOUND"))
+                else:
+                    return Customer.objects.get(pk=pk)
+            except:
+                Assertions.assert_true_raise404(False, translate(language, "ERROR_NO_CUSTOMER_FOUND"))
 
     def post(self, request, *args, **kwargs):
         language = check_accept_language(request)

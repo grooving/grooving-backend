@@ -10,6 +10,7 @@ from utils.strings import Strings
 from utils.notifications.notifications import Notifications
 from artist.internationalization import translate
 from utils.utils import check_accept_language, check_special_characters_and_numbers
+
 from rest_framework.response import Response
 
 
@@ -87,6 +88,11 @@ class ArtistSerializer(serializers.ModelSerializer):
         user = User.objects.create(username=json.get('username'), password=make_password(json.get('password')),
                                    first_name=json.get('first_name'), last_name=json.get('last_name'),
                                    email=json.get('email'))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
+                                        translate(language, "ERROR_URL_TOO_LONG"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('artisticName'), 140),
+                                        translate(language, "ERROR_ARTISTICNAME_TOO_LONG"))
+        photo_base64 = json.get('photo')
 
         artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'), user=user)
 
@@ -112,21 +118,30 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(json.get('last_name'), translate(language, "ERROR_EMPTY_LAST_NAME"))
         Assertions.assert_true_raise400(check_special_characters_and_numbers(json.get("last_name")),
                                         translate(language, "ERROR_LAST_NAME_SPECIAL_CHARACTERS"))
-
+        Assertions.assert_true_raise400(Strings.check_max_length(json.get('first_name'), 30), translate(language, "ERROR_MAX_LENGTH_FIRST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(json.get('last_name'), 150), translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
         user.first_name = json.get('first_name').strip()
         user.last_name = json.get('last_name').strip()
+
+        if json.get('paypalAccount'):
+            Assertions.assert_true_raise400(Strings.check_max_length(json.get('paypalAccount'), 100),
+                                        translate(language, "ERROR_PAYPAL_TOO_LONG"))
 
         artist.paypalAccount = json.get('paypalAccount')
 
         if artist.paypalAccount:
             Assertions.assert_true_raise400('@' in artist.paypalAccount and '.' in artist.paypalAccount,
                                             translate(language, "ERROR_INVALID_PAYPAL_ACCOUNT"))
+
         photo = json.get('photo')
         Assertions.assert_true_raise400(user.first_name, translate(language, "ERROR_EMPTY_FIRST_NAME"))
         Assertions.assert_true_raise400(user.last_name, translate(language, "ERROR_EMPTY_LAST_NAME"))
 
         if artist.phone:
-            Assertions.assert_true_raise400(artist.phone.isnumeric(), translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            try:
+                Assertions.assert_true_raise400(artist.phone.isnumeric(), translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            except:
+                Assertions.assert_true_raise400(False, translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
             Assertions.assert_true_raise400(len(artist.phone) == 9, translate(language, "ERROR_PHONE_LENGTH_9"))
 
         Assertions.assert_true_raise400(len(user.first_name) > 1,
@@ -138,6 +153,8 @@ class ArtistSerializer(serializers.ModelSerializer):
                                             translate(language, "ERROR_INVALID_PHOTO_URL_HTTP"))
             Assertions.assert_true_raise400(Strings.url_is_an_image(photo),
                                             translate(language, "ERROR_INVALID_PHOTO_URL_ENDFORMAT"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('artisticName'), 140),
+                                        translate(language, "ERROR_ARTISTICNAME_TOO_LONG"))
 
         artistic_name = json.get('artisticName')
 
@@ -178,13 +195,26 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(
             request.data.get("password").strip() == request.data.get("confirm_password").strip(),
             translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
-        Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMPTY_EMAIL"))
+
+        Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMAIL_TOO_LONG"))
+        Assertions.assert_true_raise400(request.data.get("password"), translate(language, "ERROR_PASSWORD_TOO_LONG"))
+        Assertions.assert_true_raise400(request.data.get("username"), translate(language, "ERROR_USERNAME_TOO_LONG"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("email"), 50), translate(language, "ERROR_EMPTY_EMAIL"))
         Assertions.assert_true_raise400(request.data.get("first_name"), translate(language, "ERROR_EMPTY_FIRST_NAME"))
         Assertions.assert_true_raise400(request.data.get("last_name"), translate(language, "ERROR_EMPTY_LAST_NAME"))
         Assertions.assert_true_raise400(check_special_characters_and_numbers(request.data.get("first_name")),
                                         translate(language, "ERROR_FIRST_NAME_SPECIAL_CHARACTERS"))
         Assertions.assert_true_raise400(check_special_characters_and_numbers(request.data.get("last_name")),
                                         translate(language, "ERROR_LAST_NAME_SPECIAL_CHARACTERS"))
+
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('first_name'), 30),
+                                        translate(language, "ERROR_MAX_LENGTH_FIRST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('last_name'), 150),
+                                        translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('last_name'), 150),
+                                        translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
+                                        translate(language, "ERROR_URL_TOO_LONG"))
 
         username = request.data.get("username").strip()
         password = request.data.get("password").strip()
@@ -224,7 +254,10 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(username not in user_names, translate(language, "ERROR_USERNAME_IN_USE"))
 
         if phone:
-            Assertions.assert_true_raise400(phone.isnumeric(), translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            try:
+                Assertions.assert_true_raise400(phone.isnumeric(), translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            except:
+                Assertions.assert_true_raise400(False, translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
             Assertions.assert_true_raise400(len(phone) == 9, translate(language, "ERROR_PHONE_LENGTH_9"))
 
         Assertions.assert_true_raise400(len(first_name) > 1, translate(language, "ERROR_FIRST_NAME_LENGTH"))

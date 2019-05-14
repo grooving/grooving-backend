@@ -313,8 +313,6 @@ class ZoneTestCase(APITransactionTestCase):
             # Test positivo, eliminar una zona  lvl 1
             [token, spain_id, 'es', 200],
 
-
-
         ]
 
         for data in payload:
@@ -329,5 +327,62 @@ class ZoneTestCase(APITransactionTestCase):
         response_delete = self.client.delete('/admin/zone/{}/'.format(str(args[1])), data, format='json',
                                         HTTP_AUTHORIZATION='Token ' + args[0],
                                         HTTP_ACCEPT_LANGUAGE=args[2])
+
+        self.assertEqual(args[-1], response_delete.status_code)
+
+
+    def test_driver_get_statistics(self):
+
+        print('Start test')
+        data1 = {"username": "admin", "password": "admin"}
+        response = self.client.post("/api/admin/login/", data1, format='json')
+
+        token_num = response.get('x-auth')
+
+        # Para evitar problemas con el token si no existiera
+        token = ''
+        try:
+            token = Token.objects.all().filter(pk=token_num).first().key
+        except:
+            pass
+
+
+        data2 = {"username": "artist1", "password": "artist1artist1"}
+        response = self.client.post("/api/login/", data2, format='json')
+
+        token_num2 = response.get('x-auth')
+
+        # Para evitar problemas con el token si no existiera
+        token2 = ''
+        try:
+            token2 = Token.objects.all().filter(pk=token_num2).first().key
+        except:
+            pass
+        # Data payload
+
+        payload = [
+
+            # Token, language, mensaje HTTP
+            # Test positivo get statistics español
+            [token, 'es',200],
+            # Test positivo get statistics español
+            [token2, 'es', 403],
+            # Test positivo get statistics inglés
+            [token, 'en', 200],
+            # Test positivo get statistics español
+            [token2, 'en', 403],
+
+        ]
+
+        for data in payload:
+            print("---> Test " + str(payload.index(data) + 1))
+            self.template_get_statistics(data)
+
+        # Template function
+
+    def template_get_statistics(self, args):
+
+        response_delete = self.client.get('/admin/statistics/',HTTP_AUTHORIZATION='Token ' + args[0],
+                                             HTTP_ACCEPT_LANGUAGE=args[1])
 
         self.assertEqual(args[-1], response_delete.status_code)

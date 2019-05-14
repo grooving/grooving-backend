@@ -113,6 +113,7 @@
 <h3>Contenido adicional</h3>
 {% if artist_portfoliomodules %}
     {% for portfolio_modules in artist_portfoliomodules %}
+        {% if portfolio_modules.type == "PHOTO" or portfolio_modules.type == "VIDEO" %}
         <table>
             <tr>
                 <td><b>Tipo de contenido</b>:
@@ -120,16 +121,6 @@
                         Imagen
                     {% elif portfolio_modules.type == "VIDEO" %}
                         Video
-                    {% elif portfolio_modules.type == "AUDIO" %}
-                        Audio
-                    {% elif portfolio_modules.type == "FACEBOOK" %}
-                        Red social Facebook
-                    {% elif portfolio_modules.type == "TWITTER" %}
-                        Red social Twitter
-                    {% elif portfolio_modules.type == "INSTAGRAM" %}
-                        Red social Instagram
-                    {% elif portfolio_modules.type == "MEMBER" %}
-                        Miembro del equipo
                     {% endif %}
                 </td>
                 {% if portfolio_modules.description %}
@@ -142,6 +133,7 @@
                 {% endif %}
             </tr>
         </table>
+        {% endif %}
     {% endfor %}
 {% else %}
     <p>No hay ninguno creado.</p>
@@ -167,22 +159,10 @@
                 <td><b>Zona</b>: {{ offer.eventLocation.zone }}</td>
             </tr>
             <tr>
-                <td colspan="2"><b>Día del evento</b>: {{ offer.date|date:'Y-m-d' }} at {{ offer.date|date:'H:i' }}
-                    for {{ offer.hours }} hour/s
+                <td colspan="2"><b>Día del evento</b>: {{ offer.date|date:'Y-m-d' }} a las {{ offer.date|date:'H:i' }}
+                    por {{ offer.hours }} horas/s
                 </td>
             </tr>
-            {% if offer.eventLocation.equipment %}
-                <tr>
-                    <td colspan="2">
-                        <b>Equipamiento</b>:
-                        {% if offer.eventLocation.equipment %}
-                            {{ offer.eventLocation.equipment }}
-                        {% else %}
-                            Ninguno
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endif %}
             {% if offer.eventLocation.description %}
                 <tr>
                     <td colspan="2"><b>Descripción del lugar</b>: {{ offer.eventLocation.description }}</td>
@@ -230,19 +210,6 @@
                 <tr>
                     <td colspan="2"><b>Cuenta de paypal de ingreso</b>: {{ offer.transaction.paypalArtist }}</td>
                 </tr>
-            {% endif %}
-
-            {% if offer.status == "PAYMENT_MADE" and offer.rating %}
-                {% if offer.rating.score %}
-                    <tr>
-                        <td><b>Puntuación recibida</b>: {{ offer.rating.score }}</td>
-                    </tr>
-                {% endif %}
-                {% if offer.rating.comment %}
-                    <tr>
-                        <td><b>Comentarios</b>: {{ offer.rating.comment }}</td>
-                    </tr>
-                {% endif %}
             {% endif %}
             <tr>
                 {% if offer.reason and offer.status == "REJECTED" or offer.status == "WITHDRAWN" or offer.status == "CANCELLED_ARTIST" or offer.status == "CANCELLED_CUSTOMER" %}

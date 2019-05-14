@@ -30,7 +30,6 @@ def cancel_offers_with_no_user(offers):
         for o in offers:
             if o.status == 'PENDING' and o.paymentPackage.portfolio.isHidden:
                 o.status = 'REJECTED'
-                #TODO: Give internationalized reason about why the offer is cancelled
                 o.save()
             elif o.status == 'CONTRACT_MADE' and o.paymentPackage.portfolio.isHidden:
                 o.status = 'CANCELLED_ARTIST'
@@ -154,7 +153,8 @@ def check_special_characters_and_numbers(text):
 
     # Pass the string in search
     # method of regex object.
-    if regex.search(text) is None:
+
+    if regex.search(str(text)) is None:
         result = True
     else:
         result = False
@@ -168,7 +168,5 @@ def check_inserted_id(idobject, ObjectType, language):
     Assertions.assert_true_raise400(idobject is not None, translate(language, 'ERROR_VALUE_NULL'))
     Assertions.assert_true_raise400(str(idobject).isdigit(), translate(language, 'ERROR_NOT_A_VALID_ID'))
 
-    objectToFind = ObjectType.objects.filter(id=idobject).first
-
-    Assertions.assert_true_raise400(objectToFind, translate(language, 'ERROR_OBJECT_NOT_FOUND'))
     return True
+

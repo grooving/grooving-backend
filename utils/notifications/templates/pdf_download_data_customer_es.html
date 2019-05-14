@@ -26,7 +26,7 @@
 <table>
     <tr>
         <td><b>Nombre completo</b>: {{ customer.user.get_full_name }}</td>
-        <td><b>Teléfono</b>: {% if customer.phone %}{{ customer.phone }}{% else %}Not specified{% endif %}</td>
+        <td><b>Teléfono</b>: {% if customer.phone %}{{ customer.phone }}{% else %}No especificado{% endif %}</td>
     </tr>
 </table>
 
@@ -41,11 +41,6 @@
             <tr>
                 <td colspan="2"><b>Dirección</b>: {{ location.address }}</td>
             </tr>
-            {% if location.equipment %}
-                <tr>
-                    <td colspan="2"><b>Equipamiento</b>: {{ location.equipment }}</td>
-                </tr>
-            {% endif %}
             {% if location.description %}
                 <tr>
                     <td colspan="2"><b>Descripción</b>: {{ location.description }}</td>

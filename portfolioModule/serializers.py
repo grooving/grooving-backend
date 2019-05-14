@@ -88,7 +88,7 @@ class PortfolioModuleSerializer(serializers.ModelSerializer):
             link = urlparse(json.get('link'))
 
             if json.get("type") == 'VIDEO':
-                Assertions.assert_true_raise400(link.netloc == 'www.youtube.com' or link.netloc == 'm.youtube.com',
+                Assertions.assert_true_raise400(link.netloc == 'www.youtube.com' or link.netloc == 'm.youtube.com' or link.netloc == 'youtu.be',
                                                 translate(language, 'ERROR_NOTVALID_LINK'))
             elif json.get("type") == 'TWITTER':
                 Assertions.assert_true_raise400(link.netloc == 'twitter.com' or link.netloc == 'mobile.twitter.com',

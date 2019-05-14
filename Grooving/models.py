@@ -73,7 +73,7 @@ class ArtisticGender(AbstractEntity):
     parentGender = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.name)
+        return str(self.name_en)
 
 
 class Zone(AbstractEntity):
@@ -97,7 +97,7 @@ class Portfolio(AbstractEntity):
 
 
 class Calendar(AbstractEntity):
-    days = ArrayField(models.CharField(max_length=10),null=True)
+    days = ArrayField(models.CharField(max_length=10), null=True)
     portfolio = models.OneToOneField(Portfolio, on_delete=models.CASCADE)
 
 

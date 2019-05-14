@@ -1,5 +1,6 @@
 from Grooving.models import Artist, Portfolio, User,  PaymentPackage, Customer, EventLocation, Zone, \
-    Performance, SystemConfiguration, Fare, Custom
+    Performance, SystemConfiguration, Fare, Custom, Offer, Transaction,Calendar
+from .serializers import OfferSerializer
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITransactionTestCase
@@ -13,11 +14,11 @@ class OfferTestCase(APITransactionTestCase):
 
         print('---- Creating user test ----')
 
-        user1_artist10 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
+        user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1artist1'),
                                              first_name='Carlos', last_name='Campos Cuesta',
                                              email=your_email)
 
-        artist1 = Artist.objects.create(user=user1_artist10, rating=5.0, phone='600304999',
+        artist1 = Artist.objects.create(user=user1_artist1, rating=5.0, phone='600304999',
                                         language='en',
                                         photo='https://img.discogs.com/jgyNBtPsY4DiLegwMrOC9N_yOc4=/600x600/smart/filters:strip_icc():format(jpeg):mode_rgb():quality(90)/discogs-images/A-1452461-1423476836-6354.jpeg.jpg',
                                         iban='ES6621000418401234567891', paypalAccount='tamta.info@gmail.com')
@@ -33,7 +34,7 @@ class OfferTestCase(APITransactionTestCase):
 
         zone1 = Zone.objects.create(name='Andalucía')
 
-        EventLocation.objects.create(name="Sala Custom", address="C/Madrid",
+        event_location1 = EventLocation.objects.create(name="Sala Custom", address="C/Madrid",
                                                        equipment="Speakers and microphone",
                                                        description="The best event location",
                                                        zone=zone1, customer_id=customer1.id)
@@ -49,28 +50,58 @@ class OfferTestCase(APITransactionTestCase):
 
         zone2 = Zone.objects.create(name='Madrid')
 
-        EventLocation.objects.create(name="Sala Custom", address="C/Madrid",
+        event_location2 = EventLocation.objects.create(name="Sala Custom", address="C/Madrid",
                                        equipment="Speakers and microphone",
                                        description="The best event location",
                                        zone=zone2, customer_id=customer2.id)
 
         portfolio1 = Portfolio.objects.create(artist=artist1, artisticName="Los rebujitos")
         portfolio1.zone.add(zone1)
+
+        calendar1 = Calendar.objects.create(days=[],portfolio=portfolio1)
+        calendar1.save()
         portfolio1.save()
 
         performance1 = Performance.objects.create(info="Informacion", hours=3, price=200)
-        PaymentPackage.objects.create(description="Descripcion", currency="€", portfolio=portfolio1,
+        performancePackage = PaymentPackage.objects.create(description="Descripcion", currency="€", portfolio=portfolio1,
                                         performance=performance1)
 
         fare1 = Fare.objects.create(priceHour=25.0)
-        PaymentPackage.objects.create(description='Fare Payment Package Type from Taylor Swift', portfolio=portfolio1,
+        farePackage = PaymentPackage.objects.create(description='Fare Payment Package Type from Taylor Swift', portfolio=portfolio1,
                                         fare=fare1)
 
         custom1 = Custom.objects.create(minimumPrice=100.0)
-        PaymentPackage.objects.create(description='Custom Payment Package Type from Rosalía', portfolio=portfolio1,
+        customPackage = PaymentPackage.objects.create(description='Custom Payment Package Type from Rosalía', portfolio=portfolio1,
                                         custom=custom1)
 
-        SystemConfiguration.objects.create(minimumPrice=20.0, currency='EUR', paypalTax='3.4', creditCardTax='1.9',
+        transaction1 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com',
+                                                        braintree_id='4578eph3', amount="120")
+
+        transaction2 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com',
+                                                        braintree_id='ew0ayqav', amount='120')
+        transaction3 = Transaction.objects.create(paypalArtist='carlosdj.espectaculos@gmail.com',
+                                                        braintree_id='50vckfr9', amount='120')
+
+        Offer.objects.create(description='Oferta 1 to Carlos DJ by performance',
+                             status='CONTRACT_MADE',
+                             date='2019-04-29 12:00:00', hours=2.5, price='120', currency='EUR',
+                             appliedVAT=7, paymentPackage=performancePackage,
+                             eventLocation=event_location1, transaction=transaction1,
+                             paymentCode='qwertyasdf')
+
+        Offer.objects.create(description='Oferta 2 to Carlos DJ by performance',
+                             status='PAYMENT_MADE',
+                             date='2019-07-25 12:00:00', hours=1.5, price='120', currency='EUR',
+                             paymentCode='0123456789',
+                             appliedVAT=7, paymentPackage=performancePackage,
+                             eventLocation=event_location2, transaction=transaction2)
+
+        Offer.objects.create(description='Oferta 5 to Carlos DJ by fare', status='PENDING',
+                             date='2019-10-25 12:00:00', hours=1.5, price='120', currency='EUR',
+                             appliedVAT=7, paymentPackage=farePackage,
+                             eventLocation=event_location1, transaction=transaction3)
+
+        SystemConfiguration.objects.create(pk = 1,minimumPrice=20.0, currency='EUR', paypalTax='3.4', creditCardTax='1.9',
                                            vat='21',
                                            profit='10',
                                            corporateEmail='grupogrooving@gmail.com',
@@ -84,7 +115,8 @@ class OfferTestCase(APITransactionTestCase):
                                            aboutUs_es='Sobre nosotros',
                                            termsText_es='Términos y condiciones',
                                            termsText_en='Terms and conditions')
-    # Driver function
+
+    #### 2.9 HIRE AN ARTIST ####
 
     def test_driver_create_offer(self):
 
@@ -107,15 +139,15 @@ class OfferTestCase(APITransactionTestCase):
             print('---- Token doesn\'t retreive ----')
 
         # References
-
+        artist1 = Artist.objects.get()
         eventLocation1 = EventLocation.objects.filter(customer__user__username='customer1').first()
         eventLocation2 = EventLocation.objects.filter(customer__user__username='customer2').first()
-        performancePackage = PaymentPackage.objects.filter(performance__isnull=False).first()
+        performancePackage = PaymentPackage.objects.filter(portfolio__artisticName="Los rebujitos").first()
         farePackage = PaymentPackage.objects.filter(fare__isnull=False).first()
         customPackage = PaymentPackage.objects.filter(custom__isnull=False).first()
 
         # Data payload
-        # ['Token', 'description', 'date', 'hours', 'price', paymentPackage_id', 'eventLocation_id']
+        # ['Token', 'description', 'date', 'hours', 'price', paymentPackage_id', 'eventLocation_id', 'http_code']
 
         payload = [
                 # POSITIVE TESTS
@@ -166,7 +198,7 @@ class OfferTestCase(APITransactionTestCase):
 
         print('---- Create Offer tests finished ----')
 
-    def generateData(self, args):
+    def generateDataCreateOffer(self, args):
         return {'description': args[1],
                 'date': args[2],
                 'hours': args[3],
@@ -174,18 +206,216 @@ class OfferTestCase(APITransactionTestCase):
                 'paymentPackage_id': args[5],
                 'eventLocation_id': args[6]}
 
-    # Template function
+    def generateDataBraintree(self, id_offer, nonce='fake-valid-nonce'):
+        return {'payment_method_nonce': nonce,
+                'id_offer': id_offer}
 
     def template_create_offer(self, args):
 
-        data = self.generateData(args)
+        dataCreateOffer = self.generateDataCreateOffer(args)
 
-        response_es = self.client.post('/offer/', data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+        response_create_offer_es = self.client.post('/offer/', dataCreateOffer, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
                                     HTTP_ACCEPT_LANGUAGE='es')
 
-        self.assertEqual(args[-1], response_es.status_code)
+        self.assertEqual(args[-1], response_create_offer_es.status_code)
 
-        response_en = self.client.post('/offer/', data, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+        serialized_es = OfferSerializer(data=response_create_offer_es.data, partial=True)
+
+        dataBraintree_es = self.generateDataBraintree(serialized_es.initial_data.get('id'), 'fake-valid-nonce')
+
+        response_braintree_es = self.client.post('/braintree_token/', dataBraintree_es, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+                                    HTTP_ACCEPT_LANGUAGE='es')
+
+        response_create_offer_en = self.client.post('/offer/', dataCreateOffer, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
                                     HTTP_ACCEPT_LANGUAGE='en')
 
-        self.assertEqual(args[-1], response_en.status_code)
+        self.assertEqual(args[-1], response_create_offer_en.status_code)
+
+        serialized_en = OfferSerializer(data=response_create_offer_en.data, partial=True)
+
+        dataBraintree_en = self.generateDataBraintree(serialized_en.initial_data.get('id'), 'fake-valid-nonce')
+
+        response_braintree_en = self.client.post('/braintree_token/', dataBraintree_en, format='json',
+                                                 HTTP_AUTHORIZATION='Token ' + args[0],
+                                                 HTTP_ACCEPT_LANGUAGE='en')
+
+    #### END ####
+
+    #### 2.10 & 2.11 WITHDRAW/REJECTED OFFER ####
+
+    def test_driver_withdraw_rejected_offer(self):
+
+        print('---- Starting Withdraw/Rejected Offer tests ----')
+
+        # Generate tokens
+
+        bodyCustomer = {"username": "customer1", "password": "customer1customer1"}
+        bodyArtist = {"username": "artist1", "password": "artist1artist1"}
+
+        requestCustomer = self.client.post("/api/login/", bodyCustomer, format='json')
+        requestArtist = self.client.post("/api/login/", bodyArtist, format='json')
+
+        tokenCustomer = ''
+        tokenArtist = ''
+        try:
+            tokenCustomer = Token.objects.all().filter(pk=requestCustomer.get('x-auth')).first().key
+            tokenArtist = Token.objects.all().filter(pk=requestArtist.get('x-auth')).first().key
+        except:
+            print('---- Token doesn\'t retreive ----')
+
+        # References
+
+
+        # Data payload
+        # ['Token', 'status', 'reason', 'http_code']
+
+        payload = [
+                # POSITIVE TESTS
+                # Withdrawn offer as customer
+                [tokenCustomer, 'WITHDRAWN', 'This is a reason', 200],
+                # Rejected offer as artist
+                [tokenArtist, 'REJECTED', 'This is a reason', 200],
+
+                #NEGATIVE TESTS
+                # Unauthenticated user
+                ['', 'WITHDRAWN', 'This is a reason', 401],
+                # User unauthorized
+                [tokenArtist, 'WITHDRAWN', 'This is a reason', 400],
+                # Status not provided
+                [tokenCustomer, None, 'This is a reason', 400],
+                # Status bad provided
+                [tokenCustomer, '', 'This is a reason', 400],
+                # Status non accepted
+                [tokenCustomer, 'HOLA', 'This is a reason', 400],
+                # Reason not provided
+                [tokenCustomer, 'WITHDRAWN', None, 200],
+                # Reason empty
+                [tokenCustomer, 'WITHDRAWN', '', 200]
+        ]
+
+        for data in payload:
+            print('Payload index ' + str(payload.index(data)) + ': ' + str(data))
+            self.template_withdraw_customer(data)
+            print('\n')
+
+        print('---- Withdraw/Rejected Offer tests finished ----')
+
+    def generateDataWithdrawCustomer(self, args):
+        return {'status': args[1],
+                'reason': args[2]}
+
+    def template_withdraw_customer(self, args):
+
+        dataWithdrawOffer = self.generateDataWithdrawCustomer(args)
+
+        offer = Offer.objects.filter(status='PENDING').first()
+
+        response_withdraw_customer_es = self.client.put('/offer/'+str(offer.id)+'/', dataWithdrawOffer, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+                                    HTTP_ACCEPT_LANGUAGE='es')
+
+        self.assertEqual(args[-1], response_withdraw_customer_es.status_code)
+
+        offer.status = 'PENDING'
+        offer.reason = None
+        offer.save()
+
+        response_withdraw_customer_en = self.client.put('/offer/'+str(offer.id)+'/', dataWithdrawOffer, format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+                                    HTTP_ACCEPT_LANGUAGE='en')
+
+        self.assertEqual(args[-1], response_withdraw_customer_en.status_code)
+
+        offer.status = 'PENDING'
+        offer.reason = None
+        offer.save()
+
+
+    #### END ####
+
+    #### 2.12 ACCEPT AN OFFER AS A ARTIST ####
+
+    def test_driver_accept_offer(self):
+
+        print('---- Starting Accept Offer tests ----')
+
+        # Generate tokens
+
+        bodyCustomer = {"username": "customer1", "password": "customer1customer1"}
+        bodyArtist = {"username": "artist1", "password": "artist1artist1"}
+
+        requestCustomer = self.client.post("/api/login/", bodyCustomer, format='json')
+        requestArtist = self.client.post("/api/login/", bodyArtist, format='json')
+
+        tokenCustomer = ''
+        tokenArtist = ''
+        try:
+            tokenCustomer = Token.objects.all().filter(pk=requestCustomer.get('x-auth')).first().key
+            tokenArtist = Token.objects.all().filter(pk=requestArtist.get('x-auth')).first().key
+        except:
+            print('---- Token doesn\'t retreive ----')
+
+        # References
+
+        # Data payload
+        # ['Token', 'status', 'reason', 'http_code']
+
+        payload = [
+            # POSITIVE TESTS
+            # Accept offer as artist
+            [tokenArtist, 'CONTRACT_MADE', 200],
+
+            # NEGATIVE TESTS
+            # Unauthenticated user
+            ['', 'CONTRACT_MADE', 401],
+            # User unauthorized
+            [tokenArtist, 'CONTRACT_MADE', 400],
+            # Status not provided
+            [tokenArtist, None, 400],
+            # Status bad provided
+            [tokenArtist, '', 400],
+            # Status non accepted
+            [tokenArtist, 'HOLA', 400]
+        ]
+
+        for data in payload:
+            print('Payload index ' + str(payload.index(data)) + ': ' + str(data))
+            self.template_accept_offer(data)
+            print('\n')
+
+        print('---- Withdraw/Rejected Offer tests finished ----')
+
+    def generateDataAcceptOffer(self, args):
+        return {'status': args[1]}
+
+    def template_accept_offer(self, args):
+
+        dataAcceptOffer = self.generateDataAcceptOffer(args)
+
+        offer = Offer.objects.filter(status='PENDING').first()
+
+        response_accept_offer_es = self.client.put('/offer/' + str(offer.id) + '/', dataAcceptOffer,
+                                                        format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+                                                        HTTP_ACCEPT_LANGUAGE='es')
+
+        self.assertEqual(args[-1], response_accept_offer_es.status_code)
+
+        offer.status = 'PENDING'
+        offer.save()
+        #offer.transaction.paypalArtist = None
+        #offer.transaction.braintree_id = None
+        offer.transaction.save()
+
+        response_accept_offer_en = self.client.put('/offer/' + str(offer.id) + '/', dataAcceptOffer,
+                                                        format='json', HTTP_AUTHORIZATION='Token ' + args[0],
+                                                        HTTP_ACCEPT_LANGUAGE='en')
+
+        self.assertEqual(args[-1], response_accept_offer_en.status_code)
+
+        offer.status = 'PENDING'
+        offer.save()
+        offer.transaction.paypalArtist = None
+        offer.transaction.braintree_id = None
+        offer.transaction.save()
+
+    #### END ####
+
+

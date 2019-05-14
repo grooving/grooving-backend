@@ -69,6 +69,10 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
         user.first_name = json.get('first_name').strip()
         user.last_name = json.get('last_name').strip()
+
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
+                                        translate(language, "ERROR_URL_TOO_LONG"))
+
         photo = json.get('photo')
 
         customer.paypalAccount = json.get('paypalAccount')
@@ -79,10 +83,16 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
         Assertions.assert_true_raise400(user.first_name, translate(language, "ERROR_EMPTY_FIRST_NAME"))
         Assertions.assert_true_raise400(user.last_name, translate(language, "ERROR_EMPTY_LAST_NAME"))
-
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('first_name'), 30),
+                                        translate(language, "ERROR_MAX_LENGTH_FIRST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('last_name'), 150),
+                                        translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
         if customer.phone:
-            Assertions.assert_true_raise400(customer.phone.isnumeric(),
-                                            translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            try:
+                Assertions.assert_true_raise400(customer.phone.isnumeric(),
+                                                translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            except:
+                Assertions.assert_true_raise400(False, translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
             Assertions.assert_true_raise400(len(customer.phone) == 9, translate(language, "ERROR_PHONE_LENGTH_9"))
 
         Assertions.assert_true_raise400(len(user.first_name) > 1, translate(language, "ERROR_FIRST_NAME_LENGTH"))
@@ -100,6 +110,7 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
     @staticmethod
     def _service_create_customer(json: dict):
+
         user1 = User.objects.create(username=json.get('username'),
                                     password=make_password(json.get('password')),
                                     first_name=json.get('first_name'),
@@ -125,6 +136,9 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(
             request.data.get("password").strip() == request.data.get("confirm_password").strip(),
             translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
+        Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMAIL_TOO_LONG"))
+        Assertions.assert_true_raise400(request.data.get("password"), translate(language, "ERROR_PASSWORD_TOO_LONG"))
+        Assertions.assert_true_raise400(request.data.get("username"), translate(language, "ERROR_USERNAME_TOO_LONG"))
         Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMPTY_EMAIL"))
         Assertions.assert_true_raise400(request.data.get("first_name"), translate(language, "ERROR_EMPTY_FIRST_NAME"))
         Assertions.assert_true_raise400(request.data.get("last_name"), translate(language, "ERROR_EMPTY_LAST_NAME"))
@@ -141,6 +155,10 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         first_name = request.data.get("first_name").strip()
         last_name = request.data.get("last_name").strip()
         phone = request.data.get("phone")
+
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
+                                        translate(language, "ERROR_URL_TOO_LONG"))
+
         photo = request.data.get("photo")
 
         # Email in use validation
@@ -169,9 +187,16 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(username not in user_names, translate(language, "ERROR_USERNAME_IN_USE"))
 
         if phone:
-            Assertions.assert_true_raise400(phone.isnumeric(), translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            try:
+                Assertions.assert_true_raise400(phone.isnumeric(), translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
+            except:
+                Assertions.assert_true_raise400(False, translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
             Assertions.assert_true_raise400(len(phone) == 9, translate(language, "ERROR_PHONE_LENGTH_9"))
 
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('first_name'),30),
+                                        translate(language, "ERROR_MAX_LENGTH_FIRST_NAME"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('last_name'),150),
+                                        translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
         Assertions.assert_true_raise400(len(first_name) > 1, translate(language, "ERROR_FIRST_NAME_LENGTH"))
         Assertions.assert_true_raise400(len(last_name) > 1, translate(language, "ERROR_LAST_NAME_LENGTH"))
         Assertions.assert_true_raise400('@' in email and '.' in email, translate(language, "ERROR_EMAIL_INVALID"))

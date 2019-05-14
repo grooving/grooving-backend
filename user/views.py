@@ -34,9 +34,11 @@ class UserManage(generics.DestroyAPIView):
             user.is_active = not user.is_active
             user.save()
             serialized = UserSerializer(user)
+            Notifications.send_email_ban_unban_users(user.id)
             return Response(serialized.data, status=status.HTTP_200_OK)
         else:
-            return Response(translate(language, 'ERROR_VALIDATE'), status=status.HTTP_400_BAD_REQUEST)
+            Assertions.assert_true_raise400(False, translate(language, 'ERROR_VALIDATE'))
+            # return Response(translate(language, 'ERROR_VALIDATE'), status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):
 

@@ -28,6 +28,8 @@ spanish = {
     "ERROR_USERNAME_IN_USE": "El usuario ya existe.",
     "ERROR_EMAIL_INVALID": "Email invalido",
 
+    "ERROR_MAX_LENGTH_FIRST_NAME": "El tamaño del nombre no puede ser mayor que 30",
+    "ERROR_MAX_LENGTH_LAST_NAME": "El tamaño de los apellidos no puede ser mayor que 150",
     "ERROR_NO_ARTISTIC_NAME": "No has introducido un nombre artistico.",
     "ERROR_NOTFOUND_PORTFOLIO": "No se encuentra el portfolio",
 
@@ -45,10 +47,22 @@ spanish = {
     "ERROR_NO_DATA_GIVEN": "El formulario no tiene datos.",
     "ERROR_NO_MATCHING_LANGUAGE": "El idioma que has escogido no esta disponible.",
     "ERROR_ACTOR_NOT_FOUND": "El actor que buscas no existe.",
-    "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar."
+    "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar.",
+    "ERROR_STRING_TOO_LONG": "La cadena de caracteres es demasiado larga.",
+    "ERROR_URL_TOO_LONG": "La URL es demasiado larga. El límite es 500 caracteres.",
+    "ERROR_EMAIL_TOO_LONG": "El email es demasiado largo.",
+    "ERROR_USERNAME_TOO_LONG": "El usuario es demasiado largo.",
+    "ERROR_PASSWORD_TOO_LONG": "La contraseña es demasiado larga.",
+    "ERROR_PAYPAL_TOO_LONG": "La dirección de Paypal es demasiado larga.",
 }
 
 english = {
+    "ERROR_PAYPAL_TOO_LONG": "The paypal direction is too long.",
+    "ERROR_PASSWORD_TOO_LONG": "The password is too long.",
+    "ERROR_USERNAME_TOO_LONG": "The username is too long",
+    "ERROR_EMAIL_TOO_LONG": "Email is too long",
+    "ERROR_URL_TOO_LONG": "The URL is too long. Limit is 500 characters.",
+    "ERROR_STRING_TOO_LONG": "The string is too long",
     "ERROR_NOT_LOGGED_IN": "You must be logged in to do this action.",
     "ERROR_NOT_A_CUSTOMER": "You are not a customer, and therefore you cannot be here.",
     "ERROR_NO_CUSTOMER_FOUND": "The customer you are searching for does not exist.",
@@ -80,12 +94,15 @@ english = {
     "ERROR_USERNAME_IN_USE": "Username already in use.",
     "ERROR_EMAIL_INVALID": "Invalid email",
 
+    "ERROR_MAX_LENGTH_FIRST_NAME": "First name size can't be longer than 30 characters",
+    "ERROR_MAX_LENGTH_LAST_NAME": "Las name size can't be longer than 150 characters",
+
     "ERROR_NO_ARTISTIC_NAME": "You did not submit an artistic name.",
     "ERROR_NOTFOUND_PORTFOLIO": "Portfolio not found.",
     "ERROR_EMPTY_CONFIRM_PASSWORD": "Confirm password field not provided.",
     "ERROR_PASSWORD_MUST_BE_COMPLEX": "Password must be complex.",
-    "ERROR_FIRST_NAME_SPECIAL_CHARACTERS": "First name can't special characters & numbers.",
-    "ERROR_LAST_NAME_SPECIAL_CHARACTERS": "Last name can't special characters & numbers.",
+    "ERROR_FIRST_NAME_SPECIAL_CHARACTERS": "First name can't contain special characters & numbers.",
+    "ERROR_LAST_NAME_SPECIAL_CHARACTERS": "Last name can't contain special characters & numbers.",
     "ERROR_EMPTY_ARTISTIC_NAME": "Artist name not provived.",
 
     "ERROR_OFFER_NOT_FOUND": "Offer not found",

@@ -35,6 +35,8 @@ spanish = {
     "ERROR_EMPTY_ARTISTIC_NAME": "El nombre artistico debe ser obligatorio.",
     "ERROR_ARTISTIC_NAME_ALREADY_EXISTS": "El nombre artistico ya existe.",
 
+    "ERROR_MAX_LENGTH_FIRST_NAME": "El tamaño del nombre no puede ser mayor que 30",
+    "ERROR_MAX_LENGTH_LAST_NAME": "El tamaño de los apellidos no puede ser mayor que 150",
     "ERROR_NOT_LOGGED_IN": "Debes estar autenticado para entrar en este sitio.",
     "ERROR_NOT_AN_ARTIST": "No eres un artista, y por tanto no puedes estar en este sitio.",
     "ERROR_NO_ARTIST_FOUND": "El artista que buscas no existe.",
@@ -43,10 +45,25 @@ spanish = {
     "ERROR_NO_DATA_GIVEN": "El formulario no tiene datos.",
     "ERROR_NO_MATCHING_LANGUAGE": "El idioma que has escogido no esta disponible.",
     "ERROR_ACTOR_NOT_FOUND": "El actor que buscas no existe.",
-    "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar."
+    "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar.",
+    "ERROR_STRING_TOO_LONG": "La cadena de caracteres es demasiado larga.",
+    "ERROR_URL_TOO_LONG": "La URL es demasiado larga. El límite es 500 caracteres.",
+    "ERROR_ARTISTICNAME_TOO_LONG": "El nombre artístico es demasiado largo.",
+    "ERROR_EMAIL_TOO_LONG": "El email es demasiado largo.",
+    "ERROR_USERNAME_TOO_LONG": "El usuario es demasiado largo.",
+    "ERROR_PASSWORD_TOO_LONG": "La contraseña es demasiado larga.",
+    "ERROR_PAYPAL_TOO_LONG": "La dirección de Paypal es demasiado larga.",
+
 }
 
 english = {
+    "ERROR_PAYPAL_TOO_LONG": "The paypal direction is too long.",
+    "ERROR_PASSWORD_TOO_LONG": "The password is too long.",
+    "ERROR_USERNAME_TOO_LONG": "The username is too long",
+    "ERROR_EMAIL_TOO_LONG": "Email is too long",
+    "ERROR_ARTISTICNAME_TOO_LONG": "The artistic name is too long.",
+    "ERROR_URL_TOO_LONG": "The URL is too long. Limit is 500 characters.",
+    "ERROR_STRING_TOO_LONG": "The string is too long",
     "ERROR_EMPTY_JSON": "Form is not valid.",
     "ERROR_INVALID_PAYPAL_ACCOUNT": "Invalid paypal account.",
     "ERROR_EMPTY_FIRST_NAME": "First name can't be empty.",
@@ -78,11 +95,13 @@ english = {
     "ERROR_MUST_LOGGED_OUT": "You must be unlogged to do this action.",
     "ERROR_IT_ISNT_YOUR_PERSONAL_INFO": "You can only change your personal info.",
     "ERROR_ARTIST_NOT_LOGGED": "Permission denied.",
-    "ERROR_FIRST_NAME_SPECIAL_CHARACTERS": "First name can't special characters & numbers.",
-    "ERROR_LAST_NAME_SPECIAL_CHARACTERS": "Last name can't special characters & numbers.",
+    "ERROR_FIRST_NAME_SPECIAL_CHARACTERS": "First name can't contain special characters & numbers.",
+    "ERROR_LAST_NAME_SPECIAL_CHARACTERS": "Last name can't contain special characters & numbers.",
     "ERROR_EMPTY_ARTISTIC_NAME": "Artist name not provived.",
     "ERROR_ARTISTIC_NAME_ALREADY_EXISTS": "Artistic name already exists.",
 
+    "ERROR_MAX_LENGTH_FIRST_NAME": "First name size can't be longer than 30 characters",
+    "ERROR_MAX_LENGTH_LAST_NAME": "Las name size can't be longer than 150 characters",
     "ERROR_NOT_LOGGED_IN": "You must be logged in to do this action.",
     "ERROR_NOT_AN_ARTIST": "You are not an artist, and therefore you cannot be here.",
     "ERROR_NO_ARTIST_FOUND": "The artist you are searching for does not exist.",

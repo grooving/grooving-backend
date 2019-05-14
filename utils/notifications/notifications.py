@@ -251,7 +251,7 @@ class Notifications:
         # Entity database objects (necessary from template & email)
 
         offer = Offer.objects.filter(pk=offer_id).first()
-        system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        system_configuration = SystemConfiguration.objects.all().first()
         language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
         language_customer = get_language(offer.eventLocation.customer.user)
 
@@ -297,13 +297,13 @@ class Notifications:
             context_pdf['event_payment_package'] = 'Fare'  # Informaremos del precio multiplicado por la hora
             context_pdf['event_payment_package_price_per_hour'] = offer.paymentPackage.fare.priceHour
             context_body['event_payment_package'] = 'Fare'
-            context_pdf['event_price'] = offer.price * offer.hours
-            context_body['event_price'] = offer.price * offer.hours
+            context_pdf['event_price'] = offer.price
+            context_body['event_price'] = offer.price
         else:
             context_pdf['event_payment_package'] = 'Custom'  # Informaremos del precio total y la duración
             context_body['event_payment_package'] = 'Custom'
-            context_pdf['event_price'] = offer.price * offer.hours
-            context_body['event_price'] = offer.price * offer.hours
+            context_pdf['event_price'] = offer.price
+            context_body['event_price'] = offer.price
 
         # Email - PDF generator
 
@@ -393,7 +393,7 @@ class Notifications:
         # Entity database objects (necessary from template & email)
 
         offer = Offer.objects.filter(pk=offer_id).first()
-        system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        system_configuration = SystemConfiguration.objects.all().first()
         language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
         language_customer = get_language(offer.eventLocation.customer.user)
 
@@ -476,7 +476,7 @@ class Notifications:
         # Entity database objects (necessary from template & email)
 
         offer = Offer.objects.filter(pk=offer_id).first()
-        system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        system_configuration = SystemConfiguration.objects.all().first()
         language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
         language_customer = get_language(offer.eventLocation.customer.user)
 
@@ -554,7 +554,7 @@ class Notifications:
         # Entity database objects (necessary from template & email)
 
         offer = Offer.objects.filter(pk=offer_id).first()
-        system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        system_configuration = SystemConfiguration.objects.all().first()
         language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
         language_customer = get_language(offer.eventLocation.customer.user)
 
@@ -665,7 +665,7 @@ class Notifications:
         # Entity database objects (necessary from template & email)
 
         user = User.objects.filter(pk=user_id).first()
-        system_configuration = SystemConfiguration.objects.filter(pk=1).first()
+        system_configuration = SystemConfiguration.objects.all().first()
         language = get_language(user)
 
         # Email
@@ -690,17 +690,17 @@ class Notifications:
         else:
             subject = translate(language, "BAN_UNBAN_USERS_INACTIVE_SUBJECT")
             if language == "en":
-                body = "<p>Hola,</p>" + \
-                       "<p>Esta cuenta ha sido temporalmente desactivada por violación de los Terminos " + \
-                       "y condiciones de Grooving. Por favor, contacte con el equipo de grooving en " + \
-                       system_configuration.reportEmail + "</p>" + Notifications.footer(language)
-            elif language == "es":
                 body = "<p>Hello,</p>" + \
                        "<p>This account has been temporaly banned to a violation of ours Terms & " + \
                        "conditions. Please contact to Grooving support at " + \
                        system_configuration.reportEmail + "</p>"
+            elif language == "es":
+                body = "<p>Hola,</p>" + \
+                       "<p>Esta cuenta ha sido temporalmente desactivada por violación de los Terminos " + \
+                       "y condiciones de Grooving. Por favor, contacte con el equipo de grooving en " + \
+                       system_configuration.reportEmail + "</p>"
 
-            body = translate(language, "BAN_UNBAN_USERS_INACTIVE_BODY") + Notifications.footer(language)
+            body += Notifications.footer(language)
 
         EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
 

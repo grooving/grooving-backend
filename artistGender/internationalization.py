@@ -16,11 +16,13 @@ spanish = {
     "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar.",
     "ERROR_ONLY_ONE_OPTION": "Se ha seleccionado mas de una opcion de edicion.",
     "ERROR_TREE_OPTION" : "Invalid tree value",
-    "ERROR_NO_PORTFOLIO": "Porfolio no existe."
+    "ERROR_NO_PORTFOLIO": "Porfolio no existe.",
+    "ERROR_STRING_TOO_LONG": "El nombre es demasiado largo.",
+    "ERROR_DEEPTH_3":"No puedes crear más de tres niveles."
 }
 
 english = {
-
+    "ERROR_STRING_TOO_LONG": "The name is too long",
     "ERROR_INCORRECT_ID": "The given ID is not valid.",
     "ERROR_NO_PARENT_GENRE_ID": "The given parent gender is not valid.",
     "ERROR_GENRE_NULL_NAME": "You must provide a name for the genre.",
@@ -38,7 +40,8 @@ english = {
     "ERROR_NO_GIVEN_LANGUAGE": "You must choose a language.",
     "ERROR_ONLY_ONE_OPTION": "More than one edition option given.",
     "ERROR_TREE_OPTION" : "Error en el valor de tree",
-    "ERROR_NO_PORTFOLIO": "Porfolio does not exist."
+    "ERROR_NO_PORTFOLIO": "Porfolio does not exist.",
+    "ERROR_DEEPTH_3": "More than 3 levels can not be create."
 
 }
 
