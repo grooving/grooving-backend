@@ -38,6 +38,8 @@ class LanguageChooserArtistSerializer(serializers.ModelSerializer):
 
         actor.language = lang
 
+        actor.save()
+
         return actor
 
 
@@ -76,6 +78,8 @@ class LanguageChooserCustomerSerializer(serializers.ModelSerializer):
 
         actor.language = lang
 
+        actor.save()
+
         return actor
 
 
@@ -102,16 +106,18 @@ class LanguageChooserAdminSerializer(serializers.ModelSerializer):
 
         id = (self.initial_data, pk)[pk is not None]
 
-        actor = Actor.objects.filter(pk=id).first()
+        actor = Admin.objects.filter(pk=id).first()
         actor = self._service_update(self.initial_data, actor, logged_user)
 
         return actor
 
-    def _service_update(self, json: dict, actor: Actor):
+    def _service_update(self, json: dict, actor: Admin):
         Assertions.assert_true_raise400(actor, {'error': 'ERROR_ACTOR_NOT_FOUND'})
 
         lang = json.get('lang')
 
         actor.language = lang
+
+        actor.save()
 
         return actor
