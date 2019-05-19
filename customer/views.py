@@ -112,7 +112,7 @@ class CustomerRegister(generics.CreateAPIView):
                                         translate(language, "ERROR_IT_ISNT_YOUR_PERSONAL_INFO"))
 
         serializer = CustomerSerializer(customer, data=request.data, partial=True)
-        serializer.is_valid(True)
+        serializer.validate_customer(request)
         customer = serializer.update(request, pk)
 
         customer.save()

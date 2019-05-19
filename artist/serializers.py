@@ -130,9 +130,6 @@ class ArtistSerializer(serializers.ModelSerializer):
         photo = json.get('photo')
         user.photo = photo
 
-        Assertions.assert_true_raise400(
-            request.data.get("password").strip() == request.data.get("confirm_password").strip(),
-            translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
         #
         if json.get('paypalAccount'):
             Assertions.assert_true_raise400(Strings.check_max_length(json.get('paypalAccount'), 100),
@@ -161,9 +158,6 @@ class ArtistSerializer(serializers.ModelSerializer):
             if user_in_db != user:
                 if json.get('email') == user_in_db.email:
                     Assertions.assert_true_raise400(False, translate(language, "ERROR_EMAIL_IN_USE"))
-
-        if User.objects.exclude(email=user.email).filter(email=json.get('email')):
-            Assertions.assert_true_raise400(False, translate(language, "ERROR_EMAIL_IN_USE"))
 
         try:
             portfolio = Portfolio.objects.get(artist=artist)
