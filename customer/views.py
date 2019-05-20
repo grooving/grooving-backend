@@ -92,7 +92,7 @@ class CustomerRegister(generics.CreateAPIView):
         if not user_type:
             serializer = CustomerSerializer(data=request.data, partial=True)
             if serializer.validate_customer(request):
-                serializer.save()
+                serializer.save(request)
                 return Response(status=status.HTTP_201_CREATED)
         else:
             Assertions.assert_true_raise403(False, translate(language, "ERROR_MUST_LOGGED_OUT"))

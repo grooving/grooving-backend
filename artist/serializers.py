@@ -87,6 +87,36 @@ class ArtistSerializer(serializers.ModelSerializer):
         emails = User.objects.values_list('email', flat=True)
         Assertions.assert_true_raise400(not (email in emails), translate(language, "ERROR_EMAIL_IN_USE"))
 
+        Assertions.assert_true_raise400(request.data.get("password"), translate(language, "ERROR_EMPTY_PASSWORD"))
+        Assertions.assert_true_raise400(request.data.get("confirm_password"),
+                                        translate(language, "ERROR_EMPTY_CONFIRM_PASSWORD"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("password"), 30),
+                                        translate(language, "ERROR_PASSWORD_TOO_LONG"))
+
+        Assertions.assert_true_raise400(
+            request.data.get("password").strip() == request.data.get("confirm_password").strip(),
+            translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
+
+        password = request.data.get('password')
+        username = request.data.get('username')
+        first_name = request.data.get("first_name").strip()
+        last_name = request.data.get("last_name").strip()
+        Assertions.assert_true_raise400(not (username in password or password in username),
+                                        translate(language, "ERROR_PASSWORD_SIMILAR_USERNAME"))
+
+        Assertions.assert_true_raise400(not (email in password or password in email),
+                                        translate(language, "ERROR_PASSWORD_SIMILAR_EMAIL"))
+
+        Assertions.assert_true_raise400(not (first_name in password or password in first_name),
+                                        translate(language, "ERROR_PASSWORD_SIMILAR_FIRST_NAME"))
+
+        Assertions.assert_true_raise400(not (last_name in password or password in last_name),
+                                        translate(language, "ERROR_PASSWORD_SIMILAR_LAST_NAME"))
+
+        Assertions.assert_true_raise400('123' not in password and 'qwerty' not in password and
+                                        not password.isnumeric(), translate(language, "ERROR_PASSWORD_MUST_BE_COMPLEX"))
+
+        Assertions.assert_true_raise400(len(password) > 7, translate(language, "ERROR_PASSWORD_IS_TOO_SHORT"))
         if Portfolio.objects.filter(artisticName__iexact=json.get('artisticName')):
             Assertions.assert_true_raise400(False, translate(language, "ERROR_ARTISTIC_NAME_ALREADY_EXISTS"))
         username = json.get('username')
@@ -126,9 +156,41 @@ class ArtistSerializer(serializers.ModelSerializer):
         # New 19/05
 
         user.email = json.get('email')
-        user.password = make_password(json.get('password'))
+
+        first_name = request.data.get("first_name").strip()
+        last_name = request.data.get("last_name").strip()
+        email = request.data.get("email")
+        username = request.data.get("username")
+        password = json.get('password')
+        if password:
+            Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("password"), 30),
+                                            translate(language, "ERROR_PASSWORD_TOO_LONG"))
+
+            Assertions.assert_true_raise400(
+                request.data.get("password").strip() == request.data.get("confirm_password").strip(),
+                translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
+            Assertions.assert_true_raise400(not (username in password or password in username),
+                                            translate(language, "ERROR_PASSWORD_SIMILAR_USERNAME"))
+
+            Assertions.assert_true_raise400(not (email in password or password in email),
+                                            translate(language, "ERROR_PASSWORD_SIMILAR_EMAIL"))
+
+            Assertions.assert_true_raise400(not (first_name in password or password in first_name),
+                                            translate(language, "ERROR_PASSWORD_SIMILAR_FIRST_NAME"))
+
+            Assertions.assert_true_raise400(not (last_name in password or password in last_name),
+                                            translate(language, "ERROR_PASSWORD_SIMILAR_LAST_NAME"))
+
+            Assertions.assert_true_raise400('123' not in password and 'qwerty' not in password and
+                                            not password.isnumeric(),
+                                            translate(language, "ERROR_PASSWORD_MUST_BE_COMPLEX"))
+
+            Assertions.assert_true_raise400(len(password) > 7, translate(language, "ERROR_PASSWORD_IS_TOO_SHORT"))
+
+            user.password = make_password(password)
+
         photo = json.get('photo')
-        user.photo = photo
+        artist.photo = photo
 
         #
         if json.get('paypalAccount'):
@@ -181,15 +243,9 @@ class ArtistSerializer(serializers.ModelSerializer):
 
         Assertions.assert_true_raise400(request.data, translate(language, "ERROR_EMPTY_FORM"))
         Assertions.assert_true_raise400(request.data.get("username"), translate(language, "ERROR_EMPTY_USERNAME"))
-        Assertions.assert_true_raise400(request.data.get("password"), translate(language, "ERROR_EMPTY_PASSWORD"))
-        Assertions.assert_true_raise400(request.data.get("confirm_password"),
-                                        translate(language, "ERROR_EMPTY_CONFIRM_PASSWORD"))
-        Assertions.assert_true_raise400(
-            request.data.get("password").strip() == request.data.get("confirm_password").strip(),
-            translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
+
 
         Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMAIL_TOO_LONG"))
-        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("password"), 30), translate(language, "ERROR_PASSWORD_TOO_LONG"))
         Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("username"), 30), translate(language, "ERROR_USERNAME_TOO_LONG"))
         Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("email"), 50), translate(language, "ERROR_EMPTY_EMAIL"))
         Assertions.assert_true_raise400(request.data.get("first_name"), translate(language, "ERROR_EMPTY_FIRST_NAME"))
@@ -209,7 +265,6 @@ class ArtistSerializer(serializers.ModelSerializer):
                                         translate(language, "ERROR_URL_TOO_LONG"))
 
         username = request.data.get("username").strip()
-        password = request.data.get("password").strip()
         email = request.data.get("email").strip()
         first_name = request.data.get("first_name").strip()
         last_name = request.data.get("last_name").strip()
@@ -217,27 +272,6 @@ class ArtistSerializer(serializers.ModelSerializer):
 
         phone = request.data.get("phone")
         photo = request.data.get("photo")
-
-        # Password validations
-
-        Assertions.assert_true_raise400(not (username in password or password in username),
-                                        translate(language, "ERROR_PASSWORD_SIMILAR_USERNAME"))
-
-        Assertions.assert_true_raise400(not (email in password or password in email),
-                                        translate(language, "ERROR_PASSWORD_SIMILAR_EMAIL"))
-
-        Assertions.assert_true_raise400(not (first_name in password or password in first_name),
-                                        translate(language, "ERROR_PASSWORD_SIMILAR_FIRST_NAME"))
-
-        Assertions.assert_true_raise400(not (last_name in password or password in last_name),
-                                        translate(language, "ERROR_PASSWORD_SIMILAR_LAST_NAME"))
-
-        Assertions.assert_true_raise400('123' not in password and 'qwerty' not in password and
-                                        not password.isnumeric(), translate(language, "ERROR_PASSWORD_MUST_BE_COMPLEX"))
-
-        Assertions.assert_true_raise400(len(password) > 7, translate(language, "ERROR_PASSWORD_IS_TOO_SHORT"))
-
-
 
         if phone:
             try:
@@ -255,6 +289,6 @@ class ArtistSerializer(serializers.ModelSerializer):
         if photo:
             Assertions.assert_true_raise400(photo.startswith(('http://', "https://")),
                                             translate(language, "ERROR_INVALID_PHOTO_URL_HTTP"))
-            Assertions.assert_true_raise400(Strings.url_is_an_image(photo),
-                                            translate(language, "ERROR_INVALID_PHOTO_URL_ENDFORMAT"))
+            #Assertions.assert_true_raise400(Strings.url_is_an_image(photo),
+            #                                translate(language, "ERROR_INVALID_PHOTO_URL_ENDFORMAT"))
         return True
