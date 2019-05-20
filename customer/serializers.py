@@ -119,8 +119,9 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
             request.data.get("password").strip() == request.data.get("confirm_password").strip(),
             translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
         Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMAIL_TOO_LONG"))
-        Assertions.assert_true_raise400(request.data.get("password"), translate(language, "ERROR_PASSWORD_TOO_LONG"))
-        Assertions.assert_true_raise400(request.data.get("username"), translate(language, "ERROR_USERNAME_TOO_LONG"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("password"), 30), translate(language, "ERROR_PASSWORD_TOO_LONG"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("username"), 30), translate(language, "ERROR_USERNAME_TOO_LONG"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("email"), 50), translate(language, "ERROR_EMPTY_EMAIL"))
         Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMPTY_EMAIL"))
         Assertions.assert_true_raise400(request.data.get("first_name"), translate(language, "ERROR_EMPTY_FIRST_NAME"))
         Assertions.assert_true_raise400(request.data.get("last_name"), translate(language, "ERROR_EMPTY_LAST_NAME"))
