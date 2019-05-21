@@ -18,6 +18,9 @@ def auto_update_old_offers(offers):
             if o.status == 'PENDING' and o.date < now:
                 o.status = 'REJECTED'
                 o.save()
+            elif o.status == 'CONTRACT_MADE' and o.date < now:
+                o.status = 'CANCELLED_CUSTOMER'
+                o.save()
 
 
 def cancel_offers_with_no_user(offers):
