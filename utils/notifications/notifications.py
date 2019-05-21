@@ -120,7 +120,7 @@ class Notifications:
         body = ""
 
         if language_artist == 'en':
-            subject = "You received a new offer to " + offer.eventLocation.customer.user.get_full_name()
+            subject = "You received a new offer from " + offer.eventLocation.customer.user.get_full_name()
             body = "<h1>" + offer.eventLocation.customer.user.get_full_name() + \
                    " has contacted you. </h1><p>Come on! See the details on the webpage.<p>" + \
                    Notifications.footer(language_artist)
@@ -435,7 +435,7 @@ class Notifications:
 
         if language_customer == "en":
             subject = offer.paymentPackage.portfolio.artisticName + " performance is over"
-            body = "<p>We hope you enjoyed to " + offer.paymentPackage.portfolio.artisticName + " performance.<p>" \
+            body = "<p>We hope you enjoyed the performance of " + offer.paymentPackage.portfolio.artisticName + ".<p>" \
                    + Notifications.footer(language_customer)
         elif language_customer == "es":
             subject = "¡" + offer.paymentPackage.portfolio.artisticName + " ha finalizado su actuación!"
@@ -452,9 +452,9 @@ class Notifications:
         body = ""
 
         if language_artist == "en":
-            subject = "The payment has been realized"
+            subject = "The payment has been made"
             body = "<h1>You have received the payment in your account </h1>" \
-                   "<p>You can see the details on pdf attachment.<p>" + Notifications.footer(language_artist)
+                   "<p>You can see the details on the pdf attachment.<p>" + Notifications.footer(language_artist)
         elif language_artist == "es":
             subject = "El pago ha sido realizado"
             body = "<h1>Has recibido el pago en tu cuenta</h1>" \

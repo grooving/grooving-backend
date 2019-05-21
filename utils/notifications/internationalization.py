@@ -22,7 +22,7 @@ spanish = {
 }
 
 english = {
-    "WELCOME_SUBJECT": "Welcome to Grooving family",
+    "WELCOME_SUBJECT": "Welcome to the Grooving family",
     "BAN_UNBAN_USERS_ACTIVE_SUBJECT": "Your Grooving account has been actived again",
     "BAN_UNBAN_USERS_INACTIVE_SUBJECT": "Your Grooving account has been banned",
     "BREACH_NOTIFICATION_BODY": "<p>We inform you that we have detected a security breach in our system that we " +
