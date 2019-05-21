@@ -23,21 +23,21 @@ spanish = {
 
 english = {
     "WELCOME_SUBJECT": "Welcome to the Grooving family",
-    "BAN_UNBAN_USERS_ACTIVE_SUBJECT": "Your Grooving account has been actived again",
+    "BAN_UNBAN_USERS_ACTIVE_SUBJECT": "Your Grooving account has been activated again",
     "BAN_UNBAN_USERS_INACTIVE_SUBJECT": "Your Grooving account has been banned",
     "BREACH_NOTIFICATION_BODY": "<p>We inform you that we have detected a security breach in our system that we " +
                                 "inform you about the Grooving accounts. We have taken steps to secure your account " +
                                 "and are working closely with law enforcement authorities.</p>",
     "RIGHT_TO_BE_FORGOTTEN_BODY": "<p>Hello,</p>" +
                                   "<p>We appreciate you having contacting us.</p>" +
-                                  "<p>We have carried out the procedure to apply your right to oblivion and has " +
+                                  "<p>We have carried out the procedure to apply your right to be forgotten and has " +
                                   "performed correctly.</p>" +
                                   "<p>Best regards.</p>",
     "SUBJECT_DOWNLOAD_DATA_USER": "Personal information request",
     "BODY_DOWNLOAD_DATA_USER": "<p>Hello, </p>" +
-                               "<p>In compliance with <a href=\"https://gdpr-info.eu/art-20-gdpr/\">artículo 20</a> " +
+                               "<p>In compliance with <a href=\"https://gdpr-info.eu/art-20-gdpr/\">article 20</a> " +
                                "of the GPDR (General Data Protection Regulation), we have sent you all the relative " +
-                               "information about you in a pdf attached to this email.</p>" +
+                               "information about you in a pdf attatched to this email.</p>" +
                                "<p>Best regards.</p>"
 }
 

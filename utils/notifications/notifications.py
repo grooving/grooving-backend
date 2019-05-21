@@ -79,9 +79,9 @@ class Notifications:
 
         if languages == "en":
             body = "<p>Hi there,</p>" \
-                   "<p>Congratulations! You've signing with Grooving and are now part of a community that connects " \
-                   "artists and improve their visibility in an easy, simple, simple and reliable way. " \
-                   "From now, you'll get regular updates on the offers status made and all the information related" \
+                   "<p>Congratulations! You've signed in Grooving and have become part of a community that connects " \
+                   "artists and improves their visibility in an easy, fast, simple and reliable way. " \
+                   "From now, you'll get regular updates on the offers you receive and all the information related" \
                    " to them. </p>" \
                    "<p>Your username is: <b>" + user.username + "</b></p>" \
                                                                 "<p>Cheers,</p>" \
@@ -92,9 +92,9 @@ class Notifications:
                    "artistas y mejorar su visibilidad de una forma facíl, simple y confiable." \
                    "Desde este momento, recibirás actualizaciones regulares sobre las ofertas que recibas con " \
                    "información detallada.</p>" \
-                   "<p>Your username is: <b>" + user.username + "</b></p>" \
-                                                                "<p>Cheers,</p>" \
-                                                                "<p>Grooving team</p>"
+                   "<p>Tu nombre de usuario es: <b>" + user.username + "</b></p>" \
+                                                                "<p>Saludos,</p>" \
+                                                                "<p>El equipo de Grooving</p>"
         body += Notifications.footer(languages)
 
         EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
@@ -139,8 +139,8 @@ class Notifications:
         body = ""
 
         if language_customer == 'en':
-            subject = "You has sent a offer!"
-            body = "<h1>Your offer has been send to " + offer.paymentPackage.portfolio.artisticName + "</h1>" + \
+            subject = "You have sent an offer!"
+            body = "<h1>Your offer has been sent to " + offer.paymentPackage.portfolio.artisticName + "</h1>" + \
                    "<p>You will receive more information soon. </p>" + Notifications.footer(language_customer)
         elif language_customer == 'es':
             subject = "¡Has enviado una oferta!"
@@ -192,7 +192,7 @@ class Notifications:
                    " has been rejected." + Notifications.footer(language_customer)
         elif language_customer == "es":
             subject = "Tu oferta ha sido rechazada"
-            body = "Lo sentimos. La oferta enviada por " + offer.paymentPackage.portfolio.artisticName + \
+            body = "Lo sentimos. La oferta enviada para " + offer.paymentPackage.portfolio.artisticName + \
                    " ha sido rechazada." + Notifications.footer(language_customer)
 
         EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
@@ -519,8 +519,8 @@ class Notifications:
         body = ""
 
         if language_artist == "en":
-            subject = "The performance has been cancelled by you"
-            body = "<p>We are sorry that this decision.</p><p>See you soon!<p>" + Notifications.footer(language_artist)
+            subject = "You have cancelled the performance"
+            body = "<p>We are sorry that you took this decision.</p><p>See you soon!<p>" + Notifications.footer(language_artist)
         elif language_artist == "es":
             subject = "Has cancelado la actuación"
             body = "<p>Sentimos que hayas tomado esta decisión.</p><p>¡Nos vemos pronto!<p>" + \
@@ -613,7 +613,7 @@ class Notifications:
 
         if language_customer == "en":
             subject = 'You cancelled the performance'
-            body = '<p>We are sorry that this decision. We proceed to return the money to your account.</p>' + \
+            body = '<p>We are sorry that you took this decision. We proceed to return the money to your account.</p>' + \
                    Notifications.footer(language_customer)
         elif language_customer == "es":
             subject = 'Has cancelado la actuación'
@@ -715,7 +715,7 @@ class Notifications:
         subject = ""
 
         if language == "en":
-            subject = "The request to the right to be forgotten has been applied correctly"
+            subject = "Your right to be forgotten has been applied successfully"
         elif language == "es":
             subject = "Su solicitud de derecho al olvido ha sido realizado correctamente"
 
