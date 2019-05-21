@@ -3096,7 +3096,7 @@ def save_data():
     user15_artist10_prof.save()
 
     user16_artist11_prof = User.objects.create(username='CarlosArtist',
-                                               password=make_password('CarlosArtist'),
+                                               password=make_password('3ecf3c96de131863'),
                                                first_name='Carlos', last_name='Müller',
                                                email=email_to_send_mail_teachers)
     user16_artist11_prof.save()
