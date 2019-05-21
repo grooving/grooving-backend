@@ -25,7 +25,7 @@ spanish = {
 }
 
 english = {
-    "ERROR_USER_FORBIDDEN": "User has forbidden this action",
+    "ERROR_USER_FORBIDDEN": "This user can't perform  this action",
     "ERROR_NO_ARTISTIC_NAME": "You did not submit an artistic name.",
     "ERROR_NOT_LOGGED_IN": "You must be logged in to do this action.",
     "ERROR_NOT_AN_ARTIST": "You are not an artist, and therefore you cannot be here.",
