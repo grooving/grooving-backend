@@ -277,7 +277,7 @@ class OfferSerializer(serializers.ModelSerializer):
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
                     system_configuration = SystemConfiguration.objects.filter(pk=1).first()
-                    amount = offer_in_db.transaction.amount * ((100.0 - (10 -system_configuration.creditCardTax))/100)
+                    amount = float(offer_in_db.transaction.amount) * ((100.0 - (10 - float(system_configuration.creditCardTax)))/100)
 
                     Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id, translate(language,
                                                                                                'ERROR_CREDENTIAL_BRAINTREE'))
