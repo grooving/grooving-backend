@@ -279,7 +279,7 @@ class EditArtistPersonalInformation(APITransactionTestCase):
             "email": args[8]
         }
 
-    def test_driver_edit_customer_personal_information(self):
+    def test_driver_edit_artist_personal_information(self):
         print("------------- Starting test -------------")
 
         artist = {"username": "artist1", "password": "artista1"}
