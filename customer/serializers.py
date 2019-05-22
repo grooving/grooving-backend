@@ -10,7 +10,7 @@ from utils.notifications.notifications import Notifications
 from utils.strings import Strings
 from customer.internationalization import translate
 from utils.utils import check_accept_language, check_special_characters_and_numbers
-
+from cdn.views import register_profile_photo_upload
 
 class CustomerInfoSerializer(serializers.HyperlinkedModelSerializer):
     user = UserSerializer(read_only=True)
@@ -97,7 +97,10 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         user.first_name = json.get('first_name').strip()
         user.last_name = json.get('last_name').strip()
 
-        customer.photo = json.get('photo')
+        image64 = json.get('image64')
+        ext = json.get('ext')
+        photo = register_profile_photo_upload(image64, ext, user)
+        customer.photo = photo
 
         customer.paypalAccount = json.get('paypalAccount')
 
@@ -163,7 +166,13 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
                                     last_name=json.get('last_name'),
                                     email=json.get('email'))
 
-        customer = Customer.objects.create(photo=json.get('photo'), phone=json.get('phone'), user=user1)
+        image64 = json.get('image64')
+        ext = json.get('ext')
+        photo = register_profile_photo_upload(image64, ext, user1)
+
+        customer = Customer.objects.create(phone=json.get('phone'), user=user1)
+
+        customer.photo = photo
         customer.save()
 
         return customer
@@ -197,13 +206,6 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         first_name = request.data.get("first_name").strip()
         last_name = request.data.get("last_name").strip()
         phone = request.data.get("phone")
-
-        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
-                                        translate(language, "ERROR_URL_TOO_LONG"))
-
-        photo = request.data.get("photo")
-
-
         if phone:
             try:
                 Assertions.assert_true_raise400(phone.isnumeric(), translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
@@ -219,11 +221,5 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(len(last_name) > 1, translate(language, "ERROR_LAST_NAME_LENGTH"))
         Assertions.assert_true_raise400('@' in email and '.' in email, translate(language, "ERROR_EMAIL_INVALID"))
         Assertions.assert_true_raise400(len(email) > 5, translate(language, "ERROR_EMAIL_IS_TOO_SHORT"))
-
-        if photo:
-            Assertions.assert_true_raise400(photo.startswith(('http://', "https://")),
-                                            translate(language, "ERROR_INVALID_PHOTO_URL_HTTP"))
-            #Assertions.assert_true_raise400(Strings.url_is_an_image(photo),
-                                           # translate(language, "ERROR_INVALID_PHOTO_URL_ENDFORMAT"))
 
         return True
