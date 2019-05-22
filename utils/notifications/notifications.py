@@ -105,6 +105,7 @@ class Notifications:
         # Entity database objects
 
         offer = Offer.objects.filter(pk=offer_id).first()
+        system_configuration = SystemConfiguration.objects.all().first()
         language_artist = get_language(offer.paymentPackage.portfolio.artist.user)
         language_customer = get_language(offer.eventLocation.customer.user)
 
@@ -123,11 +124,19 @@ class Notifications:
             subject = "You received a new offer from " + offer.eventLocation.customer.user.get_full_name()
             body = "<h1>" + offer.eventLocation.customer.user.get_full_name() + \
                    " has contacted you. </h1><p>Come on! See the details on the webpage.<p>" + \
+                   "<p>The user who requested their services is <b>" + offer.eventLocation.customer.user.username + \
+                   "</b>. " + \
+                   "In case there is any problem or offense through the application, send an email attaching the " \
+                   "user to " + system_configuration.corporateEmail + ".</p>" + \
                    Notifications.footer(language_artist)
         elif language_artist == 'es':
             subject = "Has recibido una nueva oferta de " + offer.eventLocation.customer.user.get_full_name()
             body = "<h1>" + offer.eventLocation.customer.user.get_full_name() + \
                    " ha contactado contigo. </h1><p>Puedes mirar los detalles en la página web.<p>" + \
+                   "<p>El usuario del que ha solicitado sus servicios " \
+                   "es <b>" + offer.eventLocation.customer.user.username + "</b>. En caso de que haya algún problema " \
+                   "u ofensa a través de la aplicación, envíe un correo electrónico adjuntando el usuario a " \
+                   + system_configuration.corporateEmail + ".</p>" + \
                    Notifications.footer(language_artist)
 
         EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
@@ -141,11 +150,21 @@ class Notifications:
         if language_customer == 'en':
             subject = "You have sent an offer!"
             body = "<h1>Your offer has been sent to " + offer.paymentPackage.portfolio.artisticName + "</h1>" + \
-                   "<p>You will receive more information soon. </p>" + Notifications.footer(language_customer)
+                   "<p>You will receive more information soon. </p>" + \
+                   "<p>The user who has requested the services " + \
+                   "is <b>" + offer.paymentPackage.portfolio.artist.user.username + "</b>. " \
+                   "In case there is any problem or offense through the application, send an email attaching the " \
+                   "user to " + system_configuration.corporateEmail + ".</p>" + \
+                   Notifications.footer(language_customer)
         elif language_customer == 'es':
             subject = "¡Has enviado una oferta!"
             body = "<h1>Tu oferta ha sido enviada a " + offer.paymentPackage.portfolio.artisticName + "</h1>" + \
-                   "<p>Pronto recibiras más información.</p>" + Notifications.footer(language_customer)
+                   "<p>Pronto recibiras más información.</p>" + \
+                   "<p>El usuario al que ha solicitado los servicios es <b>" + \
+                   + offer.paymentPackage.portfolio.artist.user.username + "</b>. En caso de que haya algún problema u " + \
+                   "ofensa a través de la aplicación, envíe un correo electrónico adjuntando el usuario a " + \
+                   + system_configuration.corporateEmail + ".</p>" + \
+                   Notifications.footer(language_customer)
 
         EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)
 
