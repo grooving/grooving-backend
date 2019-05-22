@@ -39,9 +39,9 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         model = Customer
         fields = ('user', 'phone', 'photo',)
 
-    def save(self):
+    def save(self,request):
 
-        customer = self._service_create_customer(self.initial_data)
+        customer = self._service_create_customer(self.initial_data,request)
         Notifications.send_email_welcome(customer.user.id)
         return customer
 
@@ -57,23 +57,47 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
         customer = Customer.objects.get(pk=pk)
         customer.phone = json.get('phone')
-        customer.photo = json.get('photo')
+
         user = customer.user
 
-        Assertions.assert_true_raise400(json.get('first_name'), translate(language, "ERROR_EMPTY_FIRST_NAME"))
-        Assertions.assert_true_raise400(check_special_characters_and_numbers(json.get('first_name')),
-                                        translate(language, "ERROR_FIRST_NAME_SPECIAL_CHARACTERS"))
-        Assertions.assert_true_raise400(json.get('last_name'), translate(language, "ERROR_EMPTY_LAST_NAME"))
-        Assertions.assert_true_raise400(check_special_characters_and_numbers(json.get("last_name")),
-                                        translate(language, "ERROR_LAST_NAME_SPECIAL_CHARACTERS"))
+        user.email = json.get('email')
+        password = json.get('password')
+
+        first_name = request.data.get("first_name").strip()
+        last_name = request.data.get("last_name").strip()
+        email = request.data.get("email")
+        username = request.data.get("username")
+        if password:
+            Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("password"), 30),
+                                            translate(language, "ERROR_PASSWORD_TOO_LONG"))
+
+            Assertions.assert_true_raise400(
+                request.data.get("password").strip() == request.data.get("confirm_password").strip(),
+                translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
+            Assertions.assert_true_raise400(not (username in password or password in username),
+                                            translate(language, "ERROR_PASSWORD_SIMILAR_USERNAME"))
+
+            Assertions.assert_true_raise400(not (email in password or password in email),
+                                            translate(language, "ERROR_PASSWORD_SIMILAR_EMAIL"))
+
+            Assertions.assert_true_raise400(not (first_name in password or password in first_name),
+                                            translate(language, "ERROR_PASSWORD_SIMILAR_FIRST_NAME"))
+
+            Assertions.assert_true_raise400(not (last_name in password or password in last_name),
+                                            translate(language, "ERROR_PASSWORD_SIMILAR_LAST_NAME"))
+
+            Assertions.assert_true_raise400('123' not in password and 'qwerty' not in password and
+                                            not password.isnumeric(),
+                                            translate(language, "ERROR_PASSWORD_MUST_BE_COMPLEX"))
+
+            Assertions.assert_true_raise400(len(password) > 7, translate(language, "ERROR_PASSWORD_IS_TOO_SHORT"))
+
+            user.password = make_password(password)
 
         user.first_name = json.get('first_name').strip()
         user.last_name = json.get('last_name').strip()
 
-        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
-                                        translate(language, "ERROR_URL_TOO_LONG"))
-
-        photo = json.get('photo')
+        customer.photo = json.get('photo')
 
         customer.paypalAccount = json.get('paypalAccount')
 
@@ -81,35 +105,57 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
             Assertions.assert_true_raise400('@' in customer.paypalAccount and '.' in customer.paypalAccount,
                                             translate(language, "ERROR_INVALID_PAYPAL_ACCOUNT"))
 
-        Assertions.assert_true_raise400(user.first_name, translate(language, "ERROR_EMPTY_FIRST_NAME"))
-        Assertions.assert_true_raise400(user.last_name, translate(language, "ERROR_EMPTY_LAST_NAME"))
-        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('first_name'), 30),
-                                        translate(language, "ERROR_MAX_LENGTH_FIRST_NAME"))
-        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('last_name'), 150),
-                                        translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
-        if customer.phone:
-            try:
-                Assertions.assert_true_raise400(customer.phone.isnumeric(),
-                                                translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
-            except:
-                Assertions.assert_true_raise400(False, translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
-            Assertions.assert_true_raise400(len(customer.phone) == 9, translate(language, "ERROR_PHONE_LENGTH_9"))
-
-        Assertions.assert_true_raise400(len(user.first_name) > 1, translate(language, "ERROR_FIRST_NAME_LENGTH"))
-        Assertions.assert_true_raise400(len(user.last_name) > 1, translate(language, "ERROR_LAST_NAME_LENGTH"))
-
-        if photo:
-            Assertions.assert_true_raise400(photo.startswith(('http://', "https://")),
-                                            translate(language, "ERROR_INVALID_PHOTO_URL_HTTP"))
-            Assertions.assert_true_raise400(Strings.url_is_an_image(photo),
-                                            translate(language, "ERROR_INVALID_PHOTO_URL_ENDFORMAT"))
-
+        user_in_db = User.objects.filter(email=user.email).first()
+        if user_in_db:
+            if user_in_db != user:
+                if json.get('email') == user_in_db.email:
+                    Assertions.assert_true_raise400(False, translate(language, "ERROR_EMAIL_IN_USE"))
         user.save()
         customer.user = user
         return customer
 
     @staticmethod
-    def _service_create_customer(json: dict):
+    def _service_create_customer(json: dict, request):
+
+        language = check_accept_language(request)
+        username = json.get('username')
+        user_names = User.objects.values_list('username', flat=True)
+        Assertions.assert_true_raise400(username not in user_names, translate(language, "ERROR_USERNAME_IN_USE"))
+        email = json.get('email')
+        emails = User.objects.values_list('email', flat=True)
+
+        Assertions.assert_true_raise400(not (email in emails), translate(language, "ERROR_EMAIL_IN_USE"))
+
+        Assertions.assert_true_raise400(request.data.get("password"), translate(language, "ERROR_EMPTY_PASSWORD"))
+        Assertions.assert_true_raise400(request.data.get("confirm_password"),
+                                        translate(language, "ERROR_EMPTY_CONFIRM_PASSWORD"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("password"), 30),
+                                        translate(language, "ERROR_PASSWORD_TOO_LONG"))
+
+        Assertions.assert_true_raise400(
+            request.data.get("password").strip() == request.data.get("confirm_password").strip(),
+            translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
+
+        password = request.data.get('password')
+
+        first_name = request.data.get("first_name").strip()
+        last_name = request.data.get("last_name").strip()
+        Assertions.assert_true_raise400(not (username in password or password in username),
+                                        translate(language, "ERROR_PASSWORD_SIMILAR_USERNAME"))
+
+        Assertions.assert_true_raise400(not (email in password or password in email),
+                                        translate(language, "ERROR_PASSWORD_SIMILAR_EMAIL"))
+
+        Assertions.assert_true_raise400(not (first_name in password or password in first_name),
+                                        translate(language, "ERROR_PASSWORD_SIMILAR_FIRST_NAME"))
+
+        Assertions.assert_true_raise400(not (last_name in password or password in last_name),
+                                        translate(language, "ERROR_PASSWORD_SIMILAR_LAST_NAME"))
+
+        Assertions.assert_true_raise400('123' not in password and 'qwerty' not in password and
+                                        not password.isnumeric(), translate(language, "ERROR_PASSWORD_MUST_BE_COMPLEX"))
+
+        Assertions.assert_true_raise400(len(password) > 7, translate(language, "ERROR_PASSWORD_IS_TOO_SHORT"))
 
         user1 = User.objects.create(username=json.get('username'),
                                     password=make_password(json.get('password')),
@@ -130,15 +176,12 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
         Assertions.assert_true_raise400(request.data, translate(language, "ERROR_EMPTY_FORM"))
         Assertions.assert_true_raise400(request.data.get("username"), translate(language, "ERROR_EMPTY_USERNAME"))
-        Assertions.assert_true_raise400(request.data.get("password"), translate(language, "ERROR_EMPTY_PASSWORD"))
-        Assertions.assert_true_raise400(request.data.get("confirm_password"),
-                                        translate(language, "ERROR_EMPTY_CONFIRM_PASSWORD"))
-        Assertions.assert_true_raise400(
-            request.data.get("password").strip() == request.data.get("confirm_password").strip(),
-            translate(language, "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS"))
+
+
         Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMAIL_TOO_LONG"))
-        Assertions.assert_true_raise400(request.data.get("password"), translate(language, "ERROR_PASSWORD_TOO_LONG"))
-        Assertions.assert_true_raise400(request.data.get("username"), translate(language, "ERROR_USERNAME_TOO_LONG"))
+
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("username"), 30), translate(language, "ERROR_USERNAME_TOO_LONG"))
+        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("email"), 50), translate(language, "ERROR_EMPTY_EMAIL"))
         Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMPTY_EMAIL"))
         Assertions.assert_true_raise400(request.data.get("first_name"), translate(language, "ERROR_EMPTY_FIRST_NAME"))
         Assertions.assert_true_raise400(request.data.get("last_name"), translate(language, "ERROR_EMPTY_LAST_NAME"))
@@ -147,9 +190,8 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         Assertions.assert_true_raise400(check_special_characters_and_numbers(request.data.get("last_name")),
                                         translate(language, "ERROR_LAST_NAME_SPECIAL_CHARACTERS"))
 
-        user_names = User.objects.values_list('username', flat=True)
-        emails = User.objects.values_list('email', flat=True)
-        password = request.data.get("password").strip()
+
+
         username = request.data.get("username").strip()
         email = request.data.get("email")
         first_name = request.data.get("first_name").strip()
@@ -161,30 +203,6 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
         photo = request.data.get("photo")
 
-        # Email in use validation
-
-        Assertions.assert_true_raise400(not (email in emails), translate(language, "ERROR_EMAIL_IN_USE"))
-
-        # Password validations
-
-        Assertions.assert_true_raise400(not (username in password or password in username),
-                                        translate(language, "ERROR_PASSWORD_SIMILAR_USERNAME"))
-
-        Assertions.assert_true_raise400(not (email in password or password in email),
-                                        translate(language, "ERROR_PASSWORD_SIMILAR_EMAIL"))
-
-        Assertions.assert_true_raise400(not (first_name in password or password in first_name),
-                                        translate(language, "ERROR_PASSWORD_SIMILAR_FIRST_NAME"))
-
-        Assertions.assert_true_raise400(not (last_name in password or password in last_name),
-                                        translate(language, "ERROR_PASSWORD_SIMILAR_LAST_NAME"))
-
-        Assertions.assert_true_raise400('123' not in password and 'qwerty' not in password and
-                                        not password.isnumeric(), translate(language, "ERROR_PASSWORD_MUST_BE_COMPLEX"))
-
-        Assertions.assert_true_raise400(len(password) > 7, translate(language, "ERROR_PASSWORD_IS_TOO_SHORT"))
-
-        Assertions.assert_true_raise400(username not in user_names, translate(language, "ERROR_USERNAME_IN_USE"))
 
         if phone:
             try:
@@ -205,7 +223,7 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
         if photo:
             Assertions.assert_true_raise400(photo.startswith(('http://', "https://")),
                                             translate(language, "ERROR_INVALID_PHOTO_URL_HTTP"))
-            Assertions.assert_true_raise400(Strings.url_is_an_image(photo),
-                                            translate(language, "ERROR_INVALID_PHOTO_URL_ENDFORMAT"))
+            #Assertions.assert_true_raise400(Strings.url_is_an_image(photo),
+                                           # translate(language, "ERROR_INVALID_PHOTO_URL_ENDFORMAT"))
 
         return True

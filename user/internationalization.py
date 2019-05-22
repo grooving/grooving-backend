@@ -9,11 +9,11 @@ spanish = {
 
 english = {
     "ERROR_VALIDATE": "Data validation hasn't been successful",
-    "ERROR_DELETE_USER_UNKNOWN": "User to delete unknown",
-    "ERROR_DELETE_USER": "User deletion hasn't been successful",
-    "ERROR_USER_FORBIDDEN": "User has forbidden this action",
-    "ERROR_FIELD_ID": "Id value hasn't been provided",
-    "ERROR_BAN_USER_UNKNOWN": "Ban to user hasn't been successful"
+    "ERROR_DELETE_USER_UNKNOWN": "The user you try to delete does not exist",
+    "ERROR_DELETE_USER": "The user data could not be deleted",
+    "ERROR_USER_FORBIDDEN": "You can't perform this action",
+    "ERROR_FIELD_ID": "Id value not provided provided",
+    "ERROR_BAN_USER_UNKNOWN": "There was a problem banning this user"
 }
 
 

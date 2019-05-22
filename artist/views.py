@@ -117,7 +117,7 @@ class ArtistRegister(generics.CreateAPIView):
                                         translate(language, "ERROR_IT_ISNT_YOUR_PERSONAL_INFO"))
 
         serializer = ArtistSerializer(artist, data=request.data, partial=True)
-        serializer.is_valid(True)
+        serializer.validate_artist(request)
         artist = serializer.update(request, pk)
 
         artist.save()

@@ -10,7 +10,7 @@ spanish = {
 english = {
     "ERROR_ZONE_NOT_FOUND": "Zone not found.",
     "ERROR_ZONE_NOT_OWNER": "You don't have permissions to edit this zone",
-    "ERROR_ZONE_NOT_3_OPTION": "Portfolio's zones don't have tree option",
+    "ERROR_ZONE_NOT_3_OPTION": "Portfolio's zones can't be listed as tree nested options",
     "ERROR_INCORRECT_ID": "Incorrect id",
     "ERROR_PARENT_ZONE_NOT_FOUND": "Parent zone not found",
     "ERROR_PORTFOLIO_NOT_FOUND": "Porfolio not found",

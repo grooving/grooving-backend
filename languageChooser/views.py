@@ -5,7 +5,9 @@ from rest_framework import generics
 from rest_framework import status
 from .serializers import LanguageChooserArtistSerializer, LanguageChooserCustomerSerializer, LanguageChooserAdminSerializer
 from user.serializers import UserSerializer
-from utils.authentication_utils import get_logged_user, get_user_type
+from utils.authentication_utils import get_logged_user, get_user_type, get_admin_2
+from languageChooser.internationalization import translate
+from utils.utils import check_accept_language
 
 
 class LanguageChooser(generics.ListAPIView):
@@ -13,8 +15,10 @@ class LanguageChooser(generics.ListAPIView):
     serializer_class = LanguageChooserArtistSerializer
 
     def get(self, request, *args, **kwargs):
+        querysetAdmin = get_admin_2(request)
         queryset = get_logged_user(request)
-        Assertions.assert_true_raise403(queryset, {'error': 'ERROR_NOT_LOGGED_IN'})
+        language = check_accept_language(request)
+        Assertions.assert_true_raise403(queryset or querysetAdmin, translate(language, 'ERROR_NOT_LOGGED_IN'))
         user_type = get_user_type(queryset)
         if user_type == 'Artist':
             serializer = LanguageChooserArtistSerializer(data=request.data, partial=True)
@@ -26,16 +30,21 @@ class LanguageChooser(generics.ListAPIView):
         if serializer.validate(request):
 
             language = request.query_params.get('lang').lower()
-            queryset.language = language
-            queryset.save()
+
+            if queryset:
+                queryset.language = language
+                queryset.save()
+            elif querysetAdmin:
+                querysetAdmin.language = language
+                querysetAdmin.save()
 
             if user_type == 'Artist':
                 serialized = LanguageChooserArtistSerializer(queryset)
             elif user_type == 'Customer':
                 serialized = LanguageChooserCustomerSerializer(queryset)
             else:
-                serialized = LanguageChooserAdminSerializer(queryset)
+                serialized = LanguageChooserAdminSerializer(querysetAdmin)
 
             return Response(serialized.data, status=status.HTTP_200_OK)
         else:
-            return Response({'error': 'ERROR_VALIDATE'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(translate(language,'ERROR_VALIDATE'), status=status.HTTP_400_BAD_REQUEST)
