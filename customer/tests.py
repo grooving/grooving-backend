@@ -21,7 +21,7 @@ class RegisterTestCase(APITransactionTestCase):
             "password": args[3],
             "confirm_password": args[4],
             "email": args[5],
-            "photo": args[6]
+            "photo": args[6],
         }
 
     def test_driver_register_customer(self):
@@ -259,14 +259,16 @@ class EditCustomerPersonalInformation(APITransactionTestCase):
             "first_name": args[1],
             "last_name": args[2],
             "phone": args[3],
-            "photo": args[4]
+            "photo": args[4],
+            "username": args[5],
+            "email": args[6]
         }
 
     def test_driver_edit_customer_personal_information(self):
         print("------------- Starting test -------------")
 
-        admin = {"username": "customer1", "password": "cliente1"}
-        response = self.client.post("/api/login/", admin, format='json')
+        customer = {"username": "customer1", "password": "cliente1"}
+        response = self.client.post("/api/login/", customer, format='json')
 
         token_num = response.get("x-auth")
 
@@ -281,103 +283,123 @@ class EditCustomerPersonalInformation(APITransactionTestCase):
 
         payload = [
             # Positive test 1, edit customer personal information
-            [token, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+            [token, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "es",
              status.HTTP_200_OK],
 
             # Negative test 2, edit customer with token set None
-            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "es",
              status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 3, edit customer with token as integer
-            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "es",
              status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 4, edit customer with invalid token
-            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "es",
              status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 5, edit customer with first_name as None
-            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "es",
              status.HTTP_400_BAD_REQUEST],
 
             # Negative test 6, edit customer with first_name with special characters
-            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "es",
              status.HTTP_400_BAD_REQUEST],
 
             # Negative test 7, edit customer with first_name as integer
-            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "es",
+            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "es",
              status.HTTP_400_BAD_REQUEST],
 
             # Negative test 8, edit customer with last_name as None
-            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "es",
+            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "es",
              status.HTTP_400_BAD_REQUEST],
 
             # Negative test 9, edit customer with last_name with special characters
-            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "es",
+            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "es",
              status.HTTP_400_BAD_REQUEST],
 
             # Negative test 10, edit customer with last_name as integer
-            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "es",
+            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "es",
              status.HTTP_400_BAD_REQUEST],
 
             # Negative test 11, edit customer with phone as integer
-            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "es",
+            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "es",
             status.HTTP_400_BAD_REQUEST],
 
             # Negative test 12, edit customer with phone as characters
-            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "es",
+            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "es",
             status.HTTP_400_BAD_REQUEST],
 
             # Negative test 13, edit customer with invalid photo
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "es",
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "es",
              status.HTTP_400_BAD_REQUEST],
 
             # Negative test 14, edit customer with token set None
-            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "en",
+            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "en",
              status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 15, edit customer with token as integer
-            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "en",
+            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "en",
              status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 16, edit customer with invalid token
-            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "en",
+            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "en",
              status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 17, edit customer with first_name as None
-            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "en",
+            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "en",
              status.HTTP_400_BAD_REQUEST],
 
             # Negative test 18, edit customer with first_name with special characters
-            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "en",
+            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "en",
              status.HTTP_400_BAD_REQUEST],  # Cambiar id
 
             # Negative test 19, edit customer with first_name as integer
-            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "en",
+            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "en",
              status.HTTP_400_BAD_REQUEST],
 
             # Negative test 20, edit customer with last_name as None
-            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "en",
+            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "en",
              status.HTTP_400_BAD_REQUEST],
 
             # Negative test 21, edit customer with last_name with special characters
-            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "en",
+            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "en",
              status.HTTP_400_BAD_REQUEST],
 
             # Negative test 22, edit customer with last_name as integer
-            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "en",
+            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "en",
              status.HTTP_400_BAD_REQUEST],
 
             # Negative test 23, edit customer with phone as integer
-            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "en",
+            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "en",
             status.HTTP_400_BAD_REQUEST],
 
             # Negative test 24, edit customer with phone as characters
-            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "en",
+            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "en",
              status.HTTP_400_BAD_REQUEST],
 
             # Negative test 25, edit customer with invalid photo
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "en",
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 26, edit customer with username set as None
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+             None, "fakemailfortesting@gmail.com", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 27, edit customer with username set as integer
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+             1, "fakemailfortesting@gmail.com", "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 28, edit customer with email set as None
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+             customer["username"], None, "en",
+             status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 29, edit customer with email set as integer
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+             customer["username"], 1, "en",
              status.HTTP_400_BAD_REQUEST],
         ]
 
