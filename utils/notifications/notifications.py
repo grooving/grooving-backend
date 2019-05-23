@@ -161,9 +161,9 @@ class Notifications:
             body = "<h1>Tu oferta ha sido enviada a " + offer.paymentPackage.portfolio.artisticName + "</h1>" + \
                    "<p>Pronto recibiras más información.</p>" + \
                    "<p>El usuario al que ha solicitado los servicios es <b>" + \
-                   + offer.paymentPackage.portfolio.artist.user.username + "</b>. En caso de que haya algún problema u " + \
+                   offer.paymentPackage.portfolio.artist.user.username + "</b>. En caso de que haya algún problema u " + \
                    "ofensa a través de la aplicación, envíe un correo electrónico adjuntando el usuario a " + \
-                   + system_configuration.corporateEmail + ".</p>" + \
+                   system_configuration.corporateEmail + ".</p>" + \
                    Notifications.footer(language_customer)
 
         EmailMessageThread.send_mail(from_email, to, body, subject, body_content_type, True)

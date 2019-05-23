@@ -276,7 +276,9 @@ class EditArtistPersonalInformation(APITransactionTestCase):
             "paypalAccount": args[5],
             "artisticName": args[6],
             "username": args[7],
-            "email": args[8]
+            "email": args[8],
+            "password": args[9],
+            "confirm_password": args[10]
         }
 
     def test_driver_edit_artist_personal_information(self):
@@ -299,124 +301,123 @@ class EditArtistPersonalInformation(APITransactionTestCase):
         payload = [
             # Positive test 1, edit artist personal information
             [token, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal@gmail.com", "Los sobaos", artist["username"], "fakemailfortesting@gmail.com",
-             "es", status.HTTP_200_OK],
+             "statuQuo", "statuQuo", "es", status.HTTP_200_OK],
 
             # Negative test 2, edit artist with token set None
             [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
-             "es", status.HTTP_401_UNAUTHORIZED],
+             "statuQuo", "statuQuo", "es", status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 3, edit artist with token as integer
             [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
-             "es",
-             status.HTTP_401_UNAUTHORIZED],
+             "statuQuo", "statuQuo", "es", status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 4, edit artist with invalid token
             ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
-             "es", status.HTTP_401_UNAUTHORIZED],
+             "statuQuo", "statuQuo", "es", status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 5, edit artist with first_name as None
             [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
-             "es", status.HTTP_400_BAD_REQUEST],
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 6, edit artist with first_name with special characters
             [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
-             "es", status.HTTP_400_BAD_REQUEST],
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 7, edit artist with first_name as integer
-            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "es",
-             status.HTTP_400_BAD_REQUEST],
+            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 8, edit artist with last_name as None
-            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "es",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 9, edit artist with last_name with special characters
-            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "es",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 10, edit artist with last_name as integer
-            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "es",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 11, edit artist with phone as integer
-            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "es",
-            status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 12, edit artist with phone as characters
-            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "es",
-            status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 13, edit artist with invalid photo
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "es",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 14, edit artist with token set None
-            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "en",
-             status.HTTP_401_UNAUTHORIZED],
+            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 15, edit artist with token as integer
-            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "en",
-             status.HTTP_401_UNAUTHORIZED],
+            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 16, edit artist with invalid token
-            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "en",
-             status.HTTP_401_UNAUTHORIZED],
+            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 17, edit artist with first_name as None
-            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 18, edit artist with first_name with special characters
-            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "en",
-             status.HTTP_400_BAD_REQUEST],  # Cambiar id
+            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 19, edit artist with first_name as integer
-            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 20, edit artist with last_name as None
-            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 21, edit artist with last_name with special characters
-            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 22, edit artist with last_name as integer
-            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 23, edit artist with phone as integer
-            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "en",
-            status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 24, edit artist with phone as characters
-            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 25, edit artist with invalid photo
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 26, edit artist with username as None
             [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
-             "paypal2@gmail.com", "Los sobaos 2", None, "fakemailfortesting@gmail.com", "en",
-             status.HTTP_400_BAD_REQUEST],
+             "paypal2@gmail.com", "Los sobaos 2", None, "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 27, edit artist with username as integer
             [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
-             "paypal2@gmail.com", "Los sobaos 2", 1, "fakemailfortesting@gmail.com", "en",
-             status.HTTP_400_BAD_REQUEST],
+             "paypal2@gmail.com", "Los sobaos 2", 1, "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 28, edit artist with email as None
             [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
-             "paypal2@gmail.com", "Los sobaos 2", artist["username"], None, "en",
-             status.HTTP_400_BAD_REQUEST],
+             "paypal2@gmail.com", "Los sobaos 2", artist["username"], None,
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 29, edit artist with email as integer
             [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
-             "paypal2@gmail.com", "Los sobaos 2", artist["username"], 1, "en",
-             status.HTTP_400_BAD_REQUEST],
+             "paypal2@gmail.com", "Los sobaos 2", artist["username"], 1,
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
         ]
 
         print("-------- Edit personal information testing --------")
