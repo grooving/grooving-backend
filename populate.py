@@ -50,16 +50,16 @@ def save_data():
                                                                               "<h2>Cookies policy</h2>" +
 
                                                                               "<p>For the operation of our application we use cookies to optimize user experience. Once you " +
-                                                                              "access and browse the application for the first time, a window will appear in which you agree " +
-                                                                              "to use cookies in accordance with our Privacy Policy. If you continue to browse the application " +
-                                                                              "without accepting them, Grooving will consider that you have accepted our Privacy Policy " +
-                                                                              "automatically.</p>" +
+                                                                              "access and browse the application for the first time, a window will appear in which you will be " +
+                                                                              "asked to agree to use cookies in accordance with our Privacy Policy. If you continue to browse " +
+                                                                              "the application without accepting them, Grooving will consider that you have accepted our Privacy " +
+                                                                              "Policy automatically.</p>" +
 
                                                                               "<h3>Third Party Privacy Policies</h3>" +
 
                                                                               "<p>In addition, third-party cookies are used for the development of your activity. Paypal and " +
                                                                               "Braintree cookies are used for payment security, to keep the users active session we use Django " +
-                                                                              "cookies and for the management of images we use GitHub.</p>" +
+                                                                              "cookies and for the management of images we use GitHub and Amazon cookies.</p>" +
 
                                                                               "<p>Note that Grooving has no access to or control over these cookies.</p>" +
                                                                               "<p>This Privacy Policy applies only to our online activities and is valid for visitors to our " +
@@ -124,7 +124,7 @@ def save_data():
                                                                "<p>Además se utilizan cookies de terceros para el desarrollo de su actividad. Para la seguridad " +
                                                                "de los pagos se utilizan las cookies de Paypal y Braintree, para mantener la sesión activa de " +
                                                                "los usuarios utilizamos cookies de Django y para la gestión de imágenes utilizamos las cookies " +
-                                                               "de GitHub.</p>" +
+                                                               "de GitHub y Amazon.</p>" +
 
                                                                "<p>Tenga en cuenta que Grooving no tiene acceso ni control sobre estas cookies.</p>" +
 
@@ -153,6 +153,10 @@ def save_data():
                                                                "<h4>Paypal</h4>" +
                                                                "<p>Para más información visita el siguiente link: " +
                                                                "<a href=\"https://www.paypal.com/uk/webapps/mpp/ua/cookie-full\">Paypal cookies policy</a></p>" +
+
+                                                               "<h4>Amazon</h4>" +
+                                                               "<p>Para más información visita el siguiente link: " +
+                                                               "<a href=\"https://aws.amazon.com/es/compliance/data-privacy-faq/\">Amazon cookies policy</a></p>" +
 
                                                                "<h2>Consentimiento</h2>" +
                                                                "<p>Al utilizar nuestro sitio web, usted acepta nuestra Política de privacidad y acepta sus " +
@@ -417,7 +421,7 @@ def save_data():
                                                                             " hereinafter, Grooving, that the user of the portal must accept to use all the " +
                                                                             "services and information that are provided from the portal.</p>" +
                                                                             "<p>The user as well as Grooving, owner of the portal, have become the parties. " +
-                                                                            "Access to the use of the portal, the part of its contents and services means full " +
+                                                                            "Access to the use of the portal, part of its contents and services means full " +
                                                                             "acceptance of these conditions of use. The implementation of the provision and use " +
                                                                             "of the portal refers to the strict application of the terms recognized in these " +
                                                                             "terms of use of the portal.</p>" +
@@ -432,7 +436,7 @@ def save_data():
                                                                             "<h2>Modifications</h2>" +
                                                                             "<p>The company reserves the right to modify at any time the general conditions of " +
                                                                             "use of the portal. In any case, we recommend that you periodically consult the " +
-                                                                            "general conditions of use of the portal, and that they can be modified.</p>" +
+                                                                            "general conditions of use of the portal, since they can be modified.</p>" +
 
                                                                             "<h2>Information and services</h2>" +
                                                                             "<p>Users can access a different type of information and services through the portal. " +
@@ -452,7 +456,7 @@ def save_data():
 
                                                                             "<h2>Portal information and services availability</h2>" +
                                                                             "<p>The portal does not guarantee the continuous and permanent availability of the " +
-                                                                            "services being in this way exempt from any responsibility for possible damages such " +
+                                                                            "services being in this way exempted from any responsibility for possible damages such " +
                                                                             "as the lack of availability of the service due to force majeure or errors in the " +
                                                                             "telematic data transfer networks, works at will, or disconnections made for " +
                                                                             "improvement or maintenance of computer equipment and systems. In these cases, the " +
@@ -468,18 +472,19 @@ def save_data():
 
                                                                             "<p>We will do everything possible to prevent the upload of illegal content but we can not "
                                                                             "guarantee it to 100%. In any case, the user acknowledges that the portal is not " +
-                                                                            "and is not responsible for the contents and / or services provided or provided by third " +
+                                                                            "responsible for the contents and / or services provided or provided by third " +
                                                                             "parties in and / or through the portal.</p>" +
 
                                                                             "<p>In any case, the portal excludes any liability for damages and losses that may be " +
                                                                             "due to information and / or services provided or provided by third parties other " +
-                                                                            "than the Company. All responsibility will be the third party, whether provider, " +
+                                                                            "than the Company. All responsibility will rely on be the third party, whether it is a provider, " +
                                                                             "collaborator or other.</p>" +
 
                                                                             "<h2>User’s obligations</h2>" +
                                                                             "<p>The user must respect at all times the terms and conditions established in this " +
-                                                                            "legal notice. The user expresses expressly that he will use the portal diligently " +
+                                                                            "legal notice. The user expressly accepts that he will use the portal diligently " +
                                                                             "and assuming any responsibility that may arise from the breach of the rules.</p>" +
+
                                                                             "<p>Likewise, the user may not use the portal to transmit, store, disclose, promote " +
                                                                             "or distribute data or contents that are carriers of viruses or any other computer " +
                                                                             "code, files or programs designed to interrupt, destroy or impair the operation of " +
@@ -512,8 +517,8 @@ def save_data():
                                                                             "website remains available or that the material on the website is kept up to date.</p>" +
 
                                                                             "<h2>Bad users behavior</h2>" +
-                                                                            "<p>If you detect inappropriate behavior of another Grooving user, you can report it to " +
-                                                                            "Grooving by sending an email to grupogrooving@gmail.com attached the username you want to " +
+                                                                            "<p>If you detect inappropriate behavior of another Grooving user, you can report it to Grooving " +
+                                                                            "by sending an email to grupogrooving@gmail.com. You must give the username you want to " +
                                                                             "report, the reason, and some proof (video, images, links, ...).</p>"
 
                                                                             "<h2>GPDR - General Data Protection Regulation</h2>" +
@@ -527,13 +532,12 @@ def save_data():
                                                                             "<p>All the data generated in Grooving is stored on our servers and using secure communication " +
                                                                             "protocols.</p>" +
 
-                                                                            "<h3>Right to be informed with breaches</h3>" +
+                                                                            "<h3>Right to be informed about breaches</h3>" +
                                                                             "<p>In the event that the Grooving team detects a security breach, all those affected will be " +
                                                                             "notified within a maximum of 72 hours after detection.</p>" +
 
                                                                             "<h3>Right to export personal information</h3>" +
-                                                                            "<p>All users who use Grooving can request the data that our company has about them from their " +
-                                                                            "user profile and they will be sent in PDF format attached to the mail linked with the user in " +
+                                                                            "<p>All users who use Grooving can request the data that our company has stored them from their " +
                                                                             "Grooving.</p>" +
 
                                                                             "<p>The data that will be sent to the artists that have requested it will be: </p>" +
@@ -636,8 +640,12 @@ def save_data():
                                                                             "<a href=\"https://github.com/github/site-policy\">Github cookies policy</a></p>" +
 
                                                                             "<h4>Paypal</h4>" +
-                                                                            "<p> For more information visit the following link: " +
+                                                                            "<p>For more information visit the following link: " +
                                                                             "<a href=\"https://www.paypal.com/uk/webapps/mpp/ua/cookie-full\">Paypal cookies policy</a></p>" +
+
+                                                                            "<h4>Amazon</h4>" +
+                                                                            "<p>For more information visit the following link: " +
+                                                                            "<a href=\"https://aws.amazon.com/es/compliance/data-privacy-faq/\">Amazon cookies policy</a></p>"
 
                                                                             "<h2>Consent</h2>" +
                                                                             "<p>By using our website, you hereby accept our Privacy Policy and agree to its Terms and " +
@@ -3096,7 +3104,7 @@ def save_data():
     user15_artist10_prof.save()
 
     user16_artist11_prof = User.objects.create(username='CarlosArtist',
-                                               password=make_password('CarlosArtist'),
+                                               password=make_password('3ecf3c96de131863'),
                                                first_name='Carlos', last_name='Müller',
                                                email=email_to_send_mail_teachers)
     user16_artist11_prof.save()

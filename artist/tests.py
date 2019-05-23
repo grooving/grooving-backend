@@ -274,14 +274,18 @@ class EditArtistPersonalInformation(APITransactionTestCase):
             "phone": args[3],
             "photo": args[4],
             "paypalAccount": args[5],
-            "artisticName": args[6]
+            "artisticName": args[6],
+            "username": args[7],
+            "email": args[8],
+            "password": args[9],
+            "confirm_password": args[10]
         }
 
-    def test_driver_edit_customer_personal_information(self):
+    def test_driver_edit_artist_personal_information(self):
         print("------------- Starting test -------------")
 
-        admin = {"username": "artist1", "password": "artista1"}
-        response = self.client.post("/api/login/", admin, format='json')
+        artist = {"username": "artist1", "password": "artista1"}
+        response = self.client.post("/api/login/", artist, format='json')
 
         token_num = response.get("x-auth")
 
@@ -296,105 +300,124 @@ class EditArtistPersonalInformation(APITransactionTestCase):
 
         payload = [
             # Positive test 1, edit artist personal information
-            [token, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal@gmail.com", "Los sobaos",
-             "es", status.HTTP_200_OK],
+            [token, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal@gmail.com", "Los sobaos", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_200_OK],
 
             # Negative test 2, edit artist with token set None
-            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2",
-             "es", status.HTTP_401_UNAUTHORIZED],
+            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 3, edit artist with token as integer
-            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2",
-             "es",
-             status.HTTP_401_UNAUTHORIZED],
+            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 4, edit artist with invalid token
-            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2",
-             "es", status.HTTP_401_UNAUTHORIZED],
+            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 5, edit artist with first_name as None
-            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2",
-             "es", status.HTTP_400_BAD_REQUEST],
+            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 6, edit artist with first_name with special characters
-            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2",
-             "es", status.HTTP_400_BAD_REQUEST],
+            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 7, edit artist with first_name as integer
-            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
-             status.HTTP_400_BAD_REQUEST],
+            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 8, edit artist with last_name as None
-            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 9, edit artist with last_name with special characters
-            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 10, edit artist with last_name as integer
-            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 11, edit artist with phone as integer
-            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
-            status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 12, edit artist with phone as characters
-            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
-            status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 13, edit artist with invalid photo
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "es",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 14, edit artist with token set None
-            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
-             status.HTTP_401_UNAUTHORIZED],
+            [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 15, edit artist with token as integer
-            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
-             status.HTTP_401_UNAUTHORIZED],
+            [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 16, edit artist with invalid token
-            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
-             status.HTTP_401_UNAUTHORIZED],
+            ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_401_UNAUTHORIZED],
 
             # Negative test 17, edit artist with first_name as None
-            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 18, edit artist with first_name with special characters
-            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
-             status.HTTP_400_BAD_REQUEST],  # Cambiar id
+            [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 19, edit artist with first_name as integer
-            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 20, edit artist with last_name as None
-            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 21, edit artist with last_name with special characters
-            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 22, edit artist with last_name as integer
-            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 23, edit artist with phone as integer
-            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
-            status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 24, edit artist with phone as characters
-            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 25, edit artist with invalid photo
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", "en",
-             status.HTTP_400_BAD_REQUEST],
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 26, edit artist with username as None
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+             "paypal2@gmail.com", "Los sobaos 2", None, "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 27, edit artist with username as integer
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+             "paypal2@gmail.com", "Los sobaos 2", 1, "fakemailfortesting@gmail.com",
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 28, edit artist with email as None
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+             "paypal2@gmail.com", "Los sobaos 2", artist["username"], None,
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
+
+            # Negative test 29, edit artist with email as integer
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+             "paypal2@gmail.com", "Los sobaos 2", artist["username"], 1,
+             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
         ]
 
         print("-------- Edit personal information testing --------")
@@ -480,442 +503,3 @@ class ListArtistByGenre(APITransactionTestCase):
         self.assertEqual(http_code, response.status_code)
         print(response.data)
         self.assertEqual(length, len(response.data))
-
-
-
-
-
-
-'''
-class ShowArtistInformation(TestCase):
-    
-    def test_show_personal_information_artist(self):
-
-        user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
-                                            first_name='Bunny', last_name='Fufuu',
-                                            email='artist1@gmail.com')
-        user1_artist1.save()
-
-        zone1 = Zone.objects.create(name="Sevilla Sur")
-        zone1.save()
-
-        portfolio1 = Portfolio.objects.create(artisticName="Juanartist")
-        portfolio1.zone.add(zone1)
-        portfolio1.save()
-
-        artist1 = Artist.objects.create(user=user1_artist1, portfolio=portfolio1, phone='600304999')
-        artist1.save()
-
-        data1 = {"username": "artist1", "password": "artist1"}
-        response = self.client.post("/api/login/", data1, format='json')
-
-        token_num = response.get('x-auth')
-        token = Token.objects.all().filter(pk=token_num).first()
-
-        self.assertEqual(response.status_code, 200)
-
-        response2 = self.client.get('/artist/personalInformation/', format='json', HTTP_AUTHORIZATION='Token ' + token.key)
-        self.assertEqual(response2.status_code, 200)
-        result = response2.json()
-        item_dict = response2.json()
-        self.assertTrue(len(item_dict) == 7)
-
-        self.client.logout()
-
-    def test_show_personal_information_customer_forbidden(self):
-
-        user1_customer = User.objects.create(username='customer1', password=make_password('customer1'),
-                                             first_name='Bunny', last_name='Fufuu',
-                                             email='customer1@gmail.com')
-        user1_customer.save()
-
-        zone1 = Zone.objects.create(name="Sevilla Sur")
-        zone1.save()
-
-        customer1 = Customer.objects.create(user=user1_customer, holder="Juan", number='600304999',
-                                            expirationDate=datetime.now())
-        customer1.save()
-
-        event_location1 = EventLocation.objects.create(name="Sala Rajoy", address="C/Madrid",
-                                                       equipment="Speakers and microphone",
-                                                       description="The best event location", zone=zone1,
-                                                       customer=customer1)
-        event_location1.save()
-
-        data1 = {"username": "customer1", "password": "customer1"}
-        response = self.client.post("/api/login/", data1, format='json')
-
-        token_num = response.get('x-auth')
-        token = Token.objects.all().filter(pk=token_num).first()
-
-        self.assertEqual(response.status_code, 200)
-
-        response2 = self.client.get('/artist/personalInformation/', format='json',
-                                    HTTP_AUTHORIZATION='Token ' + token.key)
-        self.assertEqual(response2.status_code, 403)
-        self.client.logout()
-
-    def test_show_personal_information_admin_forbidden(self):
-
-        user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
-                                            first_name='Bunny', last_name='Fufuu',
-                                            email='artist1@gmail.com', is_staff=True)
-        user1_artist1.save()
-
-        self.client.force_login(user1_artist1)
-
-        response2 = self.client.get('/artist/personalInformation/', format='json')
-        self.assertEqual(response2.status_code, 403)
-        self.client.logout()
-
-    def test_show_personal_information_anonymous_forbidden(self):
-
-        response = self.client.get('/artist/personalInformation/', format='json')
-        self.assertEqual(response.status_code, 403)
-
-
-class ListArtistTestCase(TestCase):
-
-    def test_list_artists(self):
-
-        user1_artist1 = User.objects.create(username='artist1', password=make_password('artist1'),
-                                            first_name='Bunny', last_name='Fufuu',
-                                            email='artist1@gmail.com')
-        user1_artist1.save()
-
-        zone1 = Zone.objects.create(name="Sevilla Sur")
-        zone1.save()
-
-        portfolio1 = Portfolio.objects.create(artisticName="BunnyFuFuu")
-        portfolio1.zone.add(zone1)
-        portfolio1.save()
-
-        performance1 = Performance.objects.create(info='Information', hours='2.5', price=300)
-
-        paymentPackage = PaymentPackage.objects.create(description='description of a payment', currency='EUR',
-                                                       portfolio=portfolio1, performance=performance1)
-
-        artist1 = Artist.objects.create(user=user1_artist1, portfolio=portfolio1, phone='600304999')
-        artist1.save()
-
-        response = self.client.get('/artists/', format='json')
-        self.assertEqual(response.status_code, 200)
-        item_dict = response.json()
-        self.assertTrue(len(item_dict['results']) != 0)
-
-    def test_list_artists_filter_artistic_name(self):
-
-        user = User()
-        user.email = "juan@juan.com"
-        user.username = "artist"
-        user.password = "artist"
-        user.id = "43"
-        user.save()
-
-        portfolio1 = Portfolio()
-        portfolio1.id = "2"
-        portfolio1.artisticName = "Jose"
-        portfolio1.save()
-
-        paymentPackage = PaymentPackage()
-        paymentPackage.id = "87"
-        paymentPackage.description = "paymentPackage description"
-        paymentPackage.appliedVAT = "0.07"
-        paymentPackage.portfolio = portfolio1
-        paymentPackage.save()
-
-        artista = Artist()
-        artista.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artista.id = "56"
-        artista.iban = "AD1400080001001234567890"
-        artista.phone = "999999999"
-        artista.paypalAccount = "user=artist,password=artist"
-        artista.user_id = "43"
-        artista.portfolio = portfolio1
-        artista.save()
-
-        user2 = User()
-        user2.email = "juanjo@juanjo.com"
-        user2.username = "artist2"
-        user2.password = "artist2"
-        user2.id = "44"
-        user2.save()
-
-        portfolio2 = Portfolio()
-        portfolio2.id = "3"
-        portfolio2.artisticName = "María se fue a la cama a las diez"
-        portfolio2.save()
-
-        paymentPackage2 = PaymentPackage()
-        paymentPackage2.id = "88"
-        paymentPackage2.description = "paymentPackage description 2222222222"
-        paymentPackage2.appliedVAT = "0.07"
-        paymentPackage2.portfolio = portfolio2
-        paymentPackage2.save()
-
-        artista2 = Artist()
-        artista2.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artista2.id = "57"
-        artista2.iban = "AD1400080001001234567890"
-        artista2.phone = "999999999"
-        artista2.paypalAccount = "user=artist,password=artist"
-        artista2.user_id = "44"
-        artista2.portfolio = portfolio2
-        artista2.save()
-
-        response = self.client.get('/artists/?artisticName=Jose', format='json')
-        item_dict = response.json()
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(len(item_dict['results']) != 0)
-
-
-    def test_list_artists_filter_artistic_gender(self):
-        user = User()
-        user.email = "juan@juan.com"
-        user.username = "artist"
-        user.password = "artist"
-        user.id = "43"
-        user.save()
-
-        artisticGender2 = ArtisticGender()
-        artisticGender2.id = "1"
-        artisticGender2.name = "Pop"
-        artisticGender2.parentGender = None
-        artisticGender2.save()
-
-        portfolio1 = Portfolio()
-        portfolio1.id = "2"
-        portfolio1.artisticName = "Jose"
-        portfolio1.save()
-        portfolio1.artisticGender.add(artisticGender2)
-        portfolio1.save()
-
-        paymentPackage = PaymentPackage()
-        paymentPackage.id = "87"
-        paymentPackage.description = "paymentPackage description"
-        paymentPackage.appliedVAT = "0.07"
-        paymentPackage.portfolio = portfolio1
-        paymentPackage.save()
-
-        artista = Artist()
-        artista.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artista.id = "56"
-        artista.iban = "AD1400080001001234567890"
-        artista.phone = "999999999"
-        artista.paypalAccount = "user=artist,password=artist"
-        artista.user_id = "43"
-        artista.portfolio = portfolio1
-        artista.save()
-
-        user2 = User()
-        user2.email = "juanjo@juanjo.com"
-        user2.username = "artist2"
-        user2.password = "artist2"
-        user2.id = "44"
-        user2.save()
-
-        artisticGender = ArtisticGender()
-        artisticGender.id = "2"
-        artisticGender.name = "Rock"
-        artisticGender.parentGender = None
-        artisticGender.save()
-
-        portfolio2 = Portfolio()
-        portfolio2.id = "3"
-        portfolio2.artisticName = "María se fue a la cama a las diez"
-        portfolio2.save()
-        portfolio2.artisticGender.add(artisticGender)
-        portfolio2.save()
-
-        paymentPackage2 = PaymentPackage()
-        paymentPackage2.id = "88"
-        paymentPackage2.description = "paymentPackage description 2222222222"
-        paymentPackage2.appliedVAT = "0.07"
-        paymentPackage2.portfolio = portfolio2
-        paymentPackage2.save()
-
-        artista2 = Artist()
-        artista2.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artista2.id = "57"
-        artista2.iban = "AD1400080001001234567890"
-        artista2.phone = "999999999"
-        artista2.paypalAccount = "user=artist,password=artist"
-        artista2.user_id = "44"
-        artista2.portfolio = portfolio2
-        artista2.save()
-
-        response = self.client.get('/artists/?artisticGender=Rock', format='json')
-        item_dict = response.json()
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(len(item_dict['results']) != 0)
-
-
-    def test_list_artists_filter_artistic_gender_no_matches(self):
-        user = User()
-        user.email = "juan@juan.com"
-        user.username = "artist"
-        user.password = "artist"
-        user.id = "43"
-        user.save()
-
-        artisticGender2 = ArtisticGender()
-        artisticGender2.id = "1"
-        artisticGender2.name = "Pop"
-        artisticGender2.parentGender = None
-        artisticGender2.save()
-
-        portfolio1 = Portfolio()
-        portfolio1.id = "2"
-        portfolio1.artisticName = "Jose"
-        portfolio1.save()
-
-        portfolio1.artisticGender.add(artisticGender2)
-        portfolio1.save()
-
-        paymentPackage = PaymentPackage()
-        paymentPackage.id = "87"
-        paymentPackage.description = "paymentPackage description"
-        paymentPackage.appliedVAT = "0.07"
-        paymentPackage.portfolio = portfolio1
-        paymentPackage.save()
-
-        artista = Artist()
-        artista.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artista.id = "56"
-        artista.iban = "AD1400080001001234567890"
-        artista.phone = "999999999"
-        artista.paypalAccount = "user=artist,password=artist"
-        artista.user_id = "43"
-        artista.portfolio = portfolio1
-        artista.save()
-
-        user2 = User()
-        user2.email = "juanjo@juanjo.com"
-        user2.username = "artist2"
-        user2.password = "artist2"
-        user2.id = "44"
-        user2.save()
-
-        artisticGender = ArtisticGender()
-        artisticGender.id = "2"
-        artisticGender.name = "Rock"
-        artisticGender.parentGender = None
-        artisticGender.save()
-
-        portfolio2 = Portfolio()
-        portfolio2.id = "3"
-        portfolio2.artisticName = "María se fue a la cama a las diez"
-        portfolio2.save()
-        portfolio2.artisticGender.add(artisticGender)
-        portfolio2.save()
-
-        paymentPackage2 = PaymentPackage()
-        paymentPackage2.id = "88"
-        paymentPackage2.description = "paymentPackage description 2222222222"
-        paymentPackage2.appliedVAT = "0.07"
-        paymentPackage2.portfolio = portfolio2
-        paymentPackage2.save()
-
-        artista2 = Artist()
-        artista2.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artista2.id = "57"
-        artista2.iban = "AD1400080001001234567890"
-        artista2.phone = "999999999"
-        artista2.paypalAccount = "user=artist,password=artist"
-        artista2.user_id = "44"
-        artista2.portfolio = portfolio2
-        artista2.save()
-
-        response = self.client.get('/artists/?artisticGender=Country', format='json')
-        item_dict = response.json()
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(len(item_dict['results']) == 0)
-
-
-    def test_list_artists_filter_artistic_gender_parent_match(self):
-        user = User()
-        user.email = "juan@juan.com"
-        user.username = "artist"
-        user.password = "artist"
-        user.id = "43"
-        user.save()
-
-        artisticGender2 = ArtisticGender()
-        artisticGender2.id = "1"
-        artisticGender2.name = "Musica"
-        artisticGender2.parentGender = None
-        artisticGender2.save()
-
-        portfolio1 = Portfolio()
-        portfolio1.id = "2"
-        portfolio1.artisticName = "Jose"
-        portfolio1.save()
-        portfolio1.artisticGender.add(artisticGender2)
-        portfolio1.save()
-
-        paymentPackage = PaymentPackage()
-        paymentPackage.id = "87"
-        paymentPackage.description = "paymentPackage description"
-        paymentPackage.appliedVAT = "0.07"
-        paymentPackage.portfolio = portfolio1
-        paymentPackage.save()
-
-        artista = Artist()
-        artista.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artista.id = "56"
-        artista.iban = "AD1400080001001234567890"
-        artista.phone = "999999999"
-        artista.paypalAccount = "user=artist,password=artist"
-        artista.user_id = "43"
-        artista.portfolio = portfolio1
-        artista.save()
-
-        user2 = User()
-        user2.email = "juanjo@juanjo.com"
-        user2.username = "artist2"
-        user2.password = "artist2"
-        user2.id = "44"
-        user2.save()
-
-        artisticGender = ArtisticGender()
-        artisticGender.id = "2"
-        artisticGender.name = "Rock"
-        artisticGender.parentGender = artisticGender2
-        artisticGender.save()
-
-        artisticGender3 = ArtisticGender()
-        artisticGender3.id = "3"
-        artisticGender3.name = "Punk"
-        artisticGender3.parentGender = artisticGender
-        artisticGender3.save()
-
-        portfolio2 = Portfolio()
-        portfolio2.id = "3"
-        portfolio2.artisticName = "María se fue a la cama a las diez"
-        portfolio2.save()
-        portfolio2.artisticGender.add(artisticGender3)
-        portfolio2.save()
-
-        paymentPackage2 = PaymentPackage()
-        paymentPackage2.id = "88"
-        paymentPackage2.description = "paymentPackage description 2222222222"
-        paymentPackage2.appliedVAT = "0.07"
-        paymentPackage2.portfolio = portfolio2
-        paymentPackage2.save()
-
-        artista2 = Artist()
-        artista2.photo = "https://conectandomeconlau.com.co/wp-content/uploads/2018/03/%C2%BFTienes-las-caracteri%CC%81sticas-para-ser-un-Artista.png"
-        artista2.id = "57"
-        artista2.iban = "AD1400080001001234567890"
-        artista2.phone = "999999999"
-        artista2.paypalAccount = "user=artist,password=artist"
-        artista2.user_id = "44"
-        artista2.portfolio = portfolio2
-        artista2.save()
-
-        response = self.client.get('/artists/?artisticGender=Musica', format='json')
-        item_dict = response.json()
-        self.assertEqual(response.status_code, 200)
-
-        self.assertTrue(len(item_dict['results']) != 0)
-    '''
