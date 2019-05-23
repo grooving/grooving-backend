@@ -195,8 +195,9 @@ class ArtistSerializer(serializers.ModelSerializer):
 
         image64 = json.get('image64')
         ext = json.get('ext')
-        photo = register_profile_photo_upload(image64, ext, user)
-        artist.photo = photo
+        if image64 and ext:
+            photo = register_profile_photo_upload(image64, ext, user)
+            artist.photo = photo
 
         #
         if json.get('paypalAccount'):

@@ -99,8 +99,9 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
         image64 = json.get('image64')
         ext = json.get('ext')
-        photo = register_profile_photo_upload(image64, ext, user)
-        customer.photo = photo
+        if image64 and ext:
+            photo = register_profile_photo_upload(image64, ext, user)
+            customer.photo = photo
 
         customer.paypalAccount = json.get('paypalAccount')
 
@@ -165,6 +166,7 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
                                     first_name=json.get('first_name'),
                                     last_name=json.get('last_name'),
                                     email=json.get('email'))
+
 
         image64 = json.get('image64')
         ext = json.get('ext')
