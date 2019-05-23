@@ -3093,8 +3093,6 @@ def save_data():
 
     # Data for teachers
 
-
-
     # ...user artist from teachers
 
     user15_artist10_prof = User.objects.create(username='PabloArtist',
@@ -3149,10 +3147,10 @@ def save_data():
 
     # ...customer from teachers
 
-    artist15_prof = Customer.objects.create(user=user17_customer5_prof,language='en')
+    artist15_prof = Customer.objects.create(user=user17_customer5_prof, language='en')
     artist15_prof.save()
 
-    artist16_prof = Customer.objects.create(user=user18_customer6_prof,language='en',)
+    artist16_prof = Customer.objects.create(user=user18_customer6_prof, language='en', )
     artist16_prof.save()
 
 
