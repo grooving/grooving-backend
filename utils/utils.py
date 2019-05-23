@@ -162,6 +162,14 @@ def check_special_characters_and_numbers(text):
     return result
 
 
+def check_is_number(input):
+    try:
+        if isinstance(input, int) or isinstance(input, float):
+            return True
+    except:
+        return False
+
+
 def check_inserted_id(idobject, ObjectType, language):
 
     Assertions.assert_true_raise400(idobject != '' or idobject != 0, translate(language, 'ERROR_VALUE_NULL')),

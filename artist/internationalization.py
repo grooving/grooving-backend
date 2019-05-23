@@ -57,7 +57,7 @@ spanish = {
 }
 
 english = {
-    "ERROR_PAYPAL_TOO_LONG": "The paypal direction is too long.",
+    "ERROR_PAYPAL_TOO_LONG": "The paypal account is too long.",
     "ERROR_PASSWORD_TOO_LONG": "The password is too long.",
     "ERROR_USERNAME_TOO_LONG": "The username is too long",
     "ERROR_EMAIL_TOO_LONG": "Email is too long",
@@ -79,11 +79,11 @@ english = {
     "ERROR_EMPTY_USERNAME": "Username field not provided.",
     "ERROR_EMPTY_PASSWORD": "Password field not provided.",
     "ERROR_EMPTY_CONFIRM_PASSWORD": "Confirm password field not provided.",
-    "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS": "Password & confirmation must be match.",
-    "ERROR_PASSWORD_SIMILAR_USERNAME": "Password can't be similar to username",
-    "ERROR_PASSWORD_SIMILAR_EMAIL": "Password can't be similar to email.",
-    "ERROR_PASSWORD_SIMILAR_FIRST_NAME": "Password can't be similar to first name.",
-    "ERROR_PASSWORD_SIMILAR_LAST_NAME": "Password can't be similar to last name.",
+    "ERROR_PASSWORD_&_CONFIRM_MUST_BE_EQUALS": "Password & confirmation must match.",
+    "ERROR_PASSWORD_SIMILAR_USERNAME": "Password can't be similar to your username",
+    "ERROR_PASSWORD_SIMILAR_EMAIL": "Password can't be similar to your email.",
+    "ERROR_PASSWORD_SIMILAR_FIRST_NAME": "Password can't be similar to the first name.",
+    "ERROR_PASSWORD_SIMILAR_LAST_NAME": "Password can't be similar to the last name.",
     "ERROR_PASSWORD_MUST_BE_COMPLEX": "Password must be complex.",
     "ERROR_PASSWORD_IS_TOO_SHORT": "Password is too short.",
     "ERROR_USERNAME_IN_USE": "Username already in use.",
@@ -100,8 +100,8 @@ english = {
     "ERROR_EMPTY_ARTISTIC_NAME": "Artist name not provived.",
     "ERROR_ARTISTIC_NAME_ALREADY_EXISTS": "Artistic name already exists.",
 
-    "ERROR_MAX_LENGTH_FIRST_NAME": "First name size can't be longer than 30 characters",
-    "ERROR_MAX_LENGTH_LAST_NAME": "Las name size can't be longer than 150 characters",
+    "ERROR_MAX_LENGTH_FIRST_NAME": "First name's size can't be longer than 30 characters",
+    "ERROR_MAX_LENGTH_LAST_NAME": "Las name's size can't be longer than 150 characters",
     "ERROR_NOT_LOGGED_IN": "You must be logged in to do this action.",
     "ERROR_NOT_AN_ARTIST": "You are not an artist, and therefore you cannot be here.",
     "ERROR_NO_ARTIST_FOUND": "The artist you are searching for does not exist.",

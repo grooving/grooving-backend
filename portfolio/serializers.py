@@ -173,14 +173,14 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
 
         Assertions.assert_true_raise400(portfolio_in_db is not None, translate(language, 'ERROR_PORTFOLIO_NOT_FOUND'))
 
-        if json.get('artisticName'):
+        if 'artisticName' in json:
             Assertions.assert_true_raise400(isinstance(json['artisticName'], str), translate(language, 'ERROR_ARTISTICNAME_BAD_PROVIDED'))
             Assertions.assert_true_raise400(Strings.check_max_length(json['artisticName'], 140),
                                             translate(language, "ERROR_ARTISTICNAME_TOO_LONG"))
 
             portfolio_in_db.artisticName = json.get('artisticName')
 
-        if json.get('banner'):
+        if 'banner' in json:
             Assertions.assert_true_raise400(isinstance(json['banner'], str), translate(language, 'ERROR_BANNER_BAD_PROVIDED'))
             Assertions.assert_true_raise400(json['banner'].startswith('http'), translate(language, 'ERROR_BANNER_NOT_VALID_URL'))
             Assertions.assert_true_raise400(Strings.url_is_an_image(json['banner']), translate(language, 'ERROR_BANNER_NOT_URL_IMAGE'))
@@ -194,7 +194,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                                             translate(language, "ERROR_BIOGRAPHY_TOO_LONG"))
         portfolio_in_db.biography = json.get('biography')
 
-        if json.get('images'):
+        if 'images' in json:
             for image_db in PortfolioModule.objects.filter(type='PHOTO', portfolio=portfolio_in_db):
                 aux = True
                 for image in json['images']:
@@ -219,7 +219,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                     module.portfolio = portfolio_in_db
                     module.save()
 
-        if json.get('videos'):
+        if 'videos' in json:
 
             r = re.compile('^(http(s)?:\/\/)?(|((m).)|((w){3}.))?youtu(be|.be)?(\.)')
 
@@ -248,7 +248,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                     module.portfolio = portfolio_in_db
                     module.save()
 
-        if json.get('artisticGenders'):
+        if 'artisticGenders' in json:
 
             for genre in portfolio_in_db.artisticGender.all():
 
@@ -275,7 +275,7 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
                 else:
                     portfolio_in_db.artisticGender.add(genre_db.id)
 
-        if json.get('zone'):
+        if 'zone' in json:
 
             for zone in portfolio_in_db.zone.all():
                 if zone.name in json['zone']:

@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from eventLocation.serializers import ZoneSerializer
 from Grooving.models import Offer, PaymentPackage, EventLocation, Customer, Artist, Transaction, Rating, \
-    SystemConfiguration, Calendar
+    SystemConfiguration, Calendar, Zone
 from utils.Assertions import assert_true, Assertions
 from django.db import IntegrityError
 from decimal import Decimal
@@ -27,10 +28,32 @@ class PaymentPackageSerializer(serializers.ModelSerializer):
         fields = ('id', 'description', 'portfolio_id', 'performance_id', 'fare_id', 'custom_id')
 
 
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        depth = 1
+        model = User
+        fields = ('first_name', 'last_name')
+
+
+class CustomerSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        depth = 1
+        model = Customer
+        fields = ('id', 'user', 'photo')
+
+
 class EventLocationSerializer(serializers.ModelSerializer):
+    zone = ZoneSerializer(read_only=True)
+    zone_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Zone.objects.all(),
+                                                 source='zone')
+
+    customer = CustomerSerializer(read_only=True)
+
     class Meta:
         model = EventLocation
-        fields = ('id', 'address', 'equipment', 'description')
+        fields = ('id', 'address', 'equipment', 'description', 'customer', 'zone', 'zone_id')
 
 
 class CodeSerializer(serializers.ModelSerializer):
@@ -277,7 +300,7 @@ class OfferSerializer(serializers.ModelSerializer):
                         private_key=settings.BRAINTREE_PRIVATE_KEY,
                     )
                     system_configuration = SystemConfiguration.objects.filter(pk=1).first()
-                    amount = offer_in_db.transaction.amount * ((100.0 - (10 -system_configuration.creditCardTax))/100)
+                    amount = float(offer_in_db.transaction.amount) * ((100.0 - (10 - float(system_configuration.creditCardTax)))/100)
 
                     Assertions.assert_true_raise400(offer_in_db.transaction.braintree_id, translate(language,
                                                                                                'ERROR_CREDENTIAL_BRAINTREE'))

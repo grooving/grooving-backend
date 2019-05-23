@@ -105,7 +105,7 @@ class CustomerRegister(generics.CreateAPIView):
 
         Assertions.assert_true_raise400(len(request.data) != 0, translate(language, "ERROR_EMPTY_FORM"))
 
-        customer = Customer.objects.get(pk=pk)
+        customer = self.get_object(pk)
         artist_or_customer = get_logged_user(request)
         Assertions.assert_true_raise403(artist_or_customer, translate(language, "ERROR_ARTIST_NOT_LOGGED"))
         Assertions.assert_true_raise403(artist_or_customer.id == customer.id,

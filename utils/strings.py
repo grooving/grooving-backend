@@ -14,9 +14,12 @@ class Strings:
     @staticmethod
     def check_max_length(cadena, max_length):
         try:
-            if len(cadena) < max_length:
-                return True
+            if cadena is not None:
+                if len(cadena) <= max_length:
+                    return True
+                else:
+                    return False
             else:
-                return False
+                return True
         except:
             return False

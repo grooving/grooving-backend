@@ -6,7 +6,7 @@ spanish = {
     "ERROR_NOT_LOGGED_IN": "Debes estar autenticado para entrar en este sitio.",
   "ERROR_RATING_OUT_OF_RANGE": "La puntuacion debe estar entre 1 y 5.",
   "ERROR_OFFER_NOT_OWNED": "Esta oferta no te pertenece.",
-  "ERROR_OFFER_NOT_READY": "Esta oferta no puede recibir una puntuacion, pues aun no se ha hecho el pago.",
+  "ERROR_OFFER_NOT_READY": "Esta oferta no puede recibir una puntuacion, pues aún no se ha hecho el pago.",
   "ERROR_OFFER_ALREADY_RATED": "Esta oferta ya tiene una puntuacion. No puedes puntuarla dos veces.",
   "ERROR_NO_DATA_GIVEN": "El formulario no tiene datos.",
     "ERROR_NO_USER": "El usuario relacionado con esta oferta ha borrado sus datos, por lo que esta oferta no puede ser puntuada.",

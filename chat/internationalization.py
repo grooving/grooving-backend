@@ -4,7 +4,7 @@ spanish = {
 }
 
 english = {
-    "DENIED_PEMISSION_CHAT": "You do not have permission to see messages."
+    "DENIED_PEMISSION_CHAT": "You do not have permission to see these messages."
 }
 
 

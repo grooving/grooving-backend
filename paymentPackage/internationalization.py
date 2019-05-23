@@ -10,7 +10,7 @@ spanish = {
     "ERROR_CUSTOM_PACKAGE_NOT_FOUND": "Paquete personalizado no encontrado",
     "ERROR_PERFORMANCE_PACKAGE_NOT_FOUND": "Paquete de actuaciones no encontrado",
     "ERROR_MINIMUM_PRICE_NOT_PROVIDED": "Precio mínimo no indicado",
-    "ERROR_HOURS_NOT_PROVIDED": "Número de horas no indicada",
+    "ERROR_HOURS_NOT_PROVIDED": "Número de horas no indicado",
     "ERROR_INVALID_HOURS": "El número de horas indicado es inválido.",
     "ERROR_INFO_NOT_PROVIDED": "Información no indicada.",
     "ERROR_MUST_BE_LOGGED": "No estás logueado.",

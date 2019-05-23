@@ -4,9 +4,9 @@ spanish = {
     "ERROR_NO_PARENT_GENRE_ID": "No se ha proporcionado un id de un género artístico padre válido.",
     "ERROR_GENRE_NULL_NAME": "Debes dar un nombre para el género artístico",
     "ERROR_PARENT_GENRE_NOT_FOUND": "Este género artístico padre no existe",
-    "ERROR_IN_CREATION": "Error durante la creacion, intentelos de nuevo",
+    "ERROR_IN_CREATION": "Error durante la creación, inténtelo de nuevo",
     "ERROR_GENRE_DOESNT_EXIST": "No existe un genero con esa id",
-    "ERROR_GENRE_EXISTS": "Existe un genro con ese nombre",
+    "ERROR_GENRE_EXISTS": "Existe un genero con ese nombre",
     "ERROR_NO_USER": "No hay usuarios de este tipo",
     "ERROR_NOT_LOGGED_IN": "Debes estar autenticado para entrar en este sitio.",
     "ERROR_NOT_AN_ADMIN": "No eres un administrador, y por tanto no puedes estar en este sitio.",
@@ -15,8 +15,8 @@ spanish = {
     "ERROR_NO_MATCHING_LANGUAGE": "El idioma que has escogido no esta disponible.",
     "ERROR_NO_GIVEN_LANGUAGE": "Debes indicar un idioma al que cambiar.",
     "ERROR_ONLY_ONE_OPTION": "Se ha seleccionado mas de una opcion de edicion.",
-    "ERROR_TREE_OPTION" : "Invalid tree value",
-    "ERROR_NO_PORTFOLIO": "Porfolio no existe.",
+    "ERROR_TREE_OPTION" : "El valor del árbol no es válido",
+    "ERROR_NO_PORTFOLIO": "Este porfolio no existe.",
     "ERROR_STRING_TOO_LONG": "El nombre es demasiado largo.",
     "ERROR_DEEPTH_3":"No puedes crear más de tres niveles."
 }
@@ -26,9 +26,9 @@ english = {
     "ERROR_INCORRECT_ID": "The given ID is not valid.",
     "ERROR_NO_PARENT_GENRE_ID": "The given parent gender is not valid.",
     "ERROR_GENRE_NULL_NAME": "You must provide a name for the genre.",
-    "ERROR_ARTISTIC_GENRE_NOT_FOUND": "Este género artístico no existe",
+    "ERROR_ARTISTIC_GENRE_NOT_FOUND": "This artistic genre does not exist",
     "ERROR_IN_CREATION": "Error during the creation, try again",
-    "ERROR_GENRE_DOESNT_EXIST": "A parent Genre doesnt exist with that id",
+    "ERROR_GENRE_DOESNT_EXIST": "There are no parent genres matching this ID",
     "ERROR_PARENT_GENRE_NOT_FOUND": "This parent genre does not exist.",
     "ERROR_GENRE_EXISTS": "A Genre with that name already exists",
     "ERROR_NO_USER": "There are no users of this type",
@@ -39,9 +39,9 @@ english = {
     "ERROR_NO_MATCHING_LANGUAGE": "This language is not available.",
     "ERROR_NO_GIVEN_LANGUAGE": "You must choose a language.",
     "ERROR_ONLY_ONE_OPTION": "More than one edition option given.",
-    "ERROR_TREE_OPTION" : "Error en el valor de tree",
+    "ERROR_TREE_OPTION" : "Invalid tree value",
     "ERROR_NO_PORTFOLIO": "Porfolio does not exist.",
-    "ERROR_DEEPTH_3": "More than 3 levels can not be create."
+    "ERROR_DEEPTH_3": "You cannot create elements deeper than 3 levels."
 
 }
 
