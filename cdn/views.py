@@ -45,12 +45,15 @@ class ImageManager(generics.UpdateAPIView):
         if img_extension is not None:
             img_extension = str(img_extension)
             img_extension = img_extension.strip()
+        if img_data is not None:
+            img_data = str(img_data)
+            img_data = img_data.strip()
 
-        contains_newimage = img_data is not None and img_extension
+        contains_newimage = img_data and img_extension
 
         if not contains_newimage:
 
-            Assertions.assert_true_raise400(img_data is not None and img_extension,
+            Assertions.assert_true_raise400(img_data and img_extension,
                                             {"error": "ERROR_MUST_HAVE_DATA_AND_EXTENSION"})
         else:
             img_data = str(img_data)
@@ -58,7 +61,7 @@ class ImageManager(generics.UpdateAPIView):
                 Assertions.assert_true_raise400(type == 'PROFILE' or type == 'BANNER' or type == 'CAROUSEL',
                                                 {'error': 'ERROR_NOT_TYPE_NEW_IMAGE_ARTIST'})
             elif customer is not None:
-                Assertions.assert_true_raise400(type == 'PROFILE',
+                Assertions.assert_true_raise400(type == 'PROFILE' or type == 'BANNER',
                                                 {'error': 'ERROR_NOT_TYPE_NEW_IMAGE_CUSTOMER'})
 
 
@@ -210,6 +213,6 @@ def register_profile_photo_upload(image64, extension, user):
 
 
 def delete_all_photos_on_amazon_by_user(user):
-    files = Upload.objects.filter(userId=user.user_id)
+    files = Upload.objects.filter(userId=user.id)
     for file in files:
         delete_completely(file)
