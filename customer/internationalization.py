@@ -35,6 +35,10 @@ spanish = {
     "ERROR_CONFIRM_PASSWORD_CANT_BE_INTEGER": "La confirmación de contraseña debe ser una cadena.",
     "ERROR_USERNAME_CANT_BE_INTEGER": "El usuario debe ser un string.",
     "ERROR_EMAIL_MANDATORY": "Debe especificar un email.",
+    "ERROR_PASSWORD_MANDATORY": "Debe introducir una contraseña.",
+    "ERROR_CONFIRM_PASSWORD_MANDATORY": "Debe introducir una confirmación de contraseña.",
+    "ERROR_ARTISTICNAME_CANT_BE_INTEGER": "El nombre artistico no puede ser un número.",
+    "ERROR_ARTISTICNAME_MANDATORY": "El nombre artistico es obligatorio.",
 
     "ERROR_MAX_LENGTH_FIRST_NAME": "El tamaño del nombre no puede ser mayor que 30",
     "ERROR_MAX_LENGTH_LAST_NAME": "El tamaño de los apellidos no puede ser mayor que 150",
@@ -109,6 +113,10 @@ english = {
     "ERROR_USERNAME_CANT_BE_INTEGER": "Username must be a string.",
     "ERROR_CONFIRM_PASSWORD_CANT_BE_INTEGER": "Confirm password must be a string.",
     "ERROR_EMAIL_MANDATORY": "You must specified a email.",
+    "ERROR_PASSWORD_MANDATORY": "You must specified a password.",
+    "ERROR_CONFIRM_PASSWORD_MANDATORY": "You must specified a confirm password.",
+    "ERROR_ARTISTICNAME_CANT_BE_INTEGER": "Artistic name must be a string.",
+    "ERROR_ARTISTICNAME_MANDATORY": "You must specified a artistic name.",
 
     "ERROR_MAX_LENGTH_FIRST_NAME": "First name's size can't be longer than 30 characters",
     "ERROR_MAX_LENGTH_LAST_NAME": "Las name's size can't be longer than 150 characters",
