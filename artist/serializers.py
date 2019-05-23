@@ -11,7 +11,7 @@ from utils.Assertions import Assertions
 from utils.strings import Strings
 from utils.notifications.notifications import Notifications
 from artist.internationalization import translate
-from utils.utils import check_accept_language, check_special_characters_and_numbers
+from utils.utils import check_accept_language, check_special_characters_and_numbers, check_is_number
 
 from rest_framework.response import Response
 
@@ -242,9 +242,11 @@ class ArtistSerializer(serializers.ModelSerializer):
         # Empty validations
 
         Assertions.assert_true_raise400(request.data, translate(language, "ERROR_EMPTY_FORM"))
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('username')),
+                                        translate(language, "ERROR_USERNAME_CANT_BE_INTEGER"))
         Assertions.assert_true_raise400(request.data.get("username"), translate(language, "ERROR_EMPTY_USERNAME"))
-
-
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('email')),
+                                        translate(language, "ERROR_EMAIL_CANT_BE_INTEGER"))
         Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMAIL_TOO_LONG"))
         Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("username"), 30), translate(language, "ERROR_USERNAME_TOO_LONG"))
         Assertions.assert_true_raise400(Strings.check_max_length(request.data.get("email"), 50), translate(language, "ERROR_EMPTY_EMAIL"))
@@ -268,8 +270,13 @@ class ArtistSerializer(serializers.ModelSerializer):
         email = request.data.get("email").strip()
         first_name = request.data.get("first_name").strip()
         last_name = request.data.get("last_name").strip()
+        paypalAccount = request.data.get("paypalAccount")
 
-
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('paypalAccount')),
+                                        translate(language, "ERROR_PAYPAL_CANT_BE_INTEGER"))
+        if paypalAccount is not None:
+            Assertions.assert_true_raise400('@' in paypalAccount and '.' in paypalAccount,
+                                            translate(language, "ERROR_PAYPAL_EMAIL_INVALID"))
         phone = request.data.get("phone")
         photo = request.data.get("photo")
 
@@ -279,6 +286,16 @@ class ArtistSerializer(serializers.ModelSerializer):
             except:
                 Assertions.assert_true_raise400(False, translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
             Assertions.assert_true_raise400(len(phone) == 9, translate(language, "ERROR_PHONE_LENGTH_9"))
+
+
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('password')),
+                                        translate(language, "ERROR_PASSWORD_CANT_BE_INTEGER"))
+        Assertions.assert_true_raise400(request.data.get('password'),
+                                        translate(language, "ERROR_PASSWORD_MANDATORY"))
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('confirm_password')),
+                                        translate(language, "ERROR_CONFIRM_PASSWORD_CANT_BE_INTEGER"))
+        Assertions.assert_true_raise400(request.data.get('confirm_password'),
+                                        translate(language, "ERROR_CONFIRM_PASSWORD_MANDATORY"))
 
         Assertions.assert_true_raise400(len(first_name) > 1, translate(language, "ERROR_FIRST_NAME_LENGTH"))
         Assertions.assert_true_raise400(len(last_name) > 1, translate(language, "ERROR_LAST_NAME_LENGTH"))
