@@ -220,12 +220,8 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
         Assertions.assert_true_raise400(not check_is_number(request.data.get('password')),
                                         translate(language, "ERROR_PASSWORD_CANT_BE_INTEGER"))
-        Assertions.assert_true_raise400(request.data.get('password'),
-                                        translate(language, "ERROR_PASSWORD_MANDATORY"))
         Assertions.assert_true_raise400(not check_is_number(request.data.get('confirm_password')),
                                         translate(language, "ERROR_CONFIRM_PASSWORD_CANT_BE_INTEGER"))
-        Assertions.assert_true_raise400(request.data.get('confirm_password'),
-                                        translate(language, "ERROR_CONFIRM_PASSWORD_MANDATORY"))
         Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('first_name'), 30),
                                         translate(language, "ERROR_MAX_LENGTH_FIRST_NAME"))
         Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('last_name'), 150),
