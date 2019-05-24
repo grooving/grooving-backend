@@ -13,7 +13,4 @@ class Erro500Middleware:
             response.status_code = 401
             response.content= "{ \"error\":\"error!\""+"}"
 
-            response.status_code = 401
-            response['result'] = 'error'
-            response['message'] = 'Some error message'
         return response
