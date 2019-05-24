@@ -33,7 +33,6 @@ class GetPersonalInformationOfArtist(generics.ListAPIView):
 
 
 class ListArtist(generics.RetrieveAPIView):
-
     serializer_class = ListArtistSerializer
 
     def get_queryset(self):
