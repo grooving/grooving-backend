@@ -162,20 +162,21 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
 
         Assertions.assert_true_raise400(len(password) > 7, translate(language, "ERROR_PASSWORD_IS_TOO_SHORT"))
 
-        user1 = User.objects.create(username=json.get('username'),
+        user = User.objects.create(username=json.get('username'),
                                     password=make_password(json.get('password')),
                                     first_name=json.get('first_name'),
                                     last_name=json.get('last_name'),
                                     email=json.get('email'))
 
-
         image64 = json.get('image64')
         ext = json.get('ext')
-        photo = register_profile_photo_upload(image64, ext, user1)
 
-        customer = Customer.objects.create(phone=json.get('phone'), user=user1)
+        customer = Customer.objects.create(phone=json.get('phone'), user=user)
 
-        customer.photo = photo
+        if image64 and ext:
+            photo = register_profile_photo_upload(image64, ext, user)
+            customer.photo = photo
+
         customer.save()
 
         return customer

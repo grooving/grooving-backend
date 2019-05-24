@@ -133,11 +133,13 @@ class ArtistSerializer(serializers.ModelSerializer):
 
         image64 = json.get('image64')
         ext = json.get('ext')
-        photo = register_profile_photo_upload(image64, ext, user)
-
 
         artist = Artist.objects.create(phone=json.get('phone'), user=user)
-        artist.photo = photo
+
+        if image64 and ext:
+            photo = register_profile_photo_upload(image64, ext, user)
+            artist.photo = photo
+
         artist.save()
         portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'), artist=artist)
 
