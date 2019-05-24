@@ -152,11 +152,11 @@ class OfferTestCase(APITransactionTestCase):
         payload = [
                 # POSITIVE TESTS
                 # Offer with Performanace package
-                [tokenCustomer, 'Descripcion1', '2019-05-11T10:00:00', None, None, performancePackage.id, eventLocation1.id, 201],
+                [tokenCustomer, 'Descripcion1', '2019-06-06T10:00:00', None, None, performancePackage.id, eventLocation1.id, 201],
                 # Offer with Fare package
-                [tokenCustomer, 'Descripcion2', '2019-05-12T10:00:00', 3.5, None, farePackage.id, eventLocation1.id, 201],
+                [tokenCustomer, 'Descripcion2', '2019-06-06T10:00:00', 3.5, None, farePackage.id, eventLocation1.id, 201],
                 # Offer with Custom package
-                [tokenCustomer, 'Descripcion3', '2019-05-13T10:00:00', 3.5, 1000.0, customPackage.id, eventLocation1.id, 201],
+                [tokenCustomer, 'Descripcion3', '2019-06-06T10:00:00', 3.5, 1000.0, customPackage.id, eventLocation1.id, 201],
 
                 #NEGATIVE TESTS
                 # Unauthenticated user
