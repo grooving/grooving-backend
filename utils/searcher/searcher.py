@@ -91,9 +91,7 @@ def get_parents_gender(genders):
         parent = gender.parentGender
         while parent is not None:
             if parent not in parent_gender:
-                if parent.name_en != "All genres":
-                    genders.append(parent)
-
+                genders.append(parent)
                 parent = parent.parentGender
     return genders
 
