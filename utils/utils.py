@@ -169,6 +169,13 @@ def check_is_number(input):
     except:
         return False
 
+def check_is_imagen(input):
+    try:
+        extend = str(input).lower()
+        if extend == "jpg" or extend == "png" or extend == "gif" or extend == "jpeg":
+            return True
+    except:
+        return False
 
 def check_inserted_id(idobject, ObjectType, language):
 
