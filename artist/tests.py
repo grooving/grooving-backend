@@ -114,109 +114,93 @@ class RegisterTestCase(APITransactionTestCase):
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "holdasda",
              "http://www.google.com/image.png", "El malaguita", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 23, create an artist with not valid image
-            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
-             "http:/ /www.google.com/image.png", "Camela", "en", status.HTTP_400_BAD_REQUEST],
-
-            # Negative test 24, create an artist with empty image
-            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
-             "h", "Camela", "en", status.HTTP_400_BAD_REQUEST],
-
-            # Negative test 25, create an artist with language set to None
+            # Negative test 23, create an artist with language set to None
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "Camela", None, status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 26, create an artist with language not supported
+            # Negative test 24, create an artist with language not supported
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
              "http:/ /www.google.com/image.png", "Camela", "pt", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 27, create an artist with existing artisticName
+            # Negative test 25, create an artist with existing artisticName
             ["Miguel", "Barahona Estevez", "sdadwa", "elArtistaIngles", "elArtistaIngles", "utri210das0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 28, create an artist with existing username
+            # Negative test 26, create an artist with existing username
             ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 29, create an artist with first_name set to None
+            # Negative test 27, create an artist with first_name set to None
             [None, "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 30, create an artist with empty first_name
+            # Negative test 28, create an artist with empty first_name
             ["", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 31, create an artist with first_name with number & special characters
+            # Negative test 29, create an artist with first_name with number & special characters
             ["Poli111$car", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 32, create an artist with last_name set to None
+            # Negative test 30, create an artist with last_name set to None
             ["Policarco", None, "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 33, create an artist with empty last_name
+            # Negative test 31, create an artist with empty last_name
             ["Policarco", "", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 34, create an artist with last_name with special characters
+            # Negative test 32, create an artist with last_name with special characters
             ["Policarco", "Mi123$", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 35, create an artist with username set to None
+            # Negative test 33, create an artist with username set to None
             ["Policarco", "Mi123$", None, "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 36, create an artist with empty username
+            # Negative test 34, create an artist with empty username
             ["Policarco", "Hernandez", "", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 37, create an artist with existing username
+            # Negative test 35, create an artist with existing username
             ["Policarco", "Hernandez", "artist1", "elArtistaIngles", "elArtistaIngles", "utri28100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 38, create an artist with password None
+            # Negative test 36, create an artist with password None
             ["Policarco", "Mi123$", "artist2", None, "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 39, create an artist with empty password
+            # Negative test 37, create an artist with empty password
             ["Policarco", "Miguelin", "artist2", "", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 40, create an artist with passwords that size lower than 7
+            # Negative test 38, create an artist with passwords that size lower than 7
             ["Policarco", "Miguelin", "artist2", "123456", "123456", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 41, create an artist with confirm_password set to None
+            # Negative test 39, create an artist with confirm_password set to None
             ["Policarco", "Miguelin", "artist2", "1234g6gt", None, "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 42, create an artist with passwords that size lower than 7
+            # Negative test 40, create an artist with passwords that size lower than 7
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 43, create an artist with passwords that not match
+            # Negative test 41, create an artist with passwords that not match
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "fsdgsdfgsdfgs", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 44, create an artist with insecure password
+            # Negative test 42, create an artist with insecure password
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 45, create an artist with insecure password
+            # Negative test 43, create an artist with insecure password
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 46, create an artist with not valid email
+            # Negative test 44, create an artist with not valid email
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "holdasda",
              "http://www.google.com/image.png", "El malaguita", "es", status.HTTP_400_BAD_REQUEST],
-
-            # Negative test 47, create an artist with not valid image
-            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
-             "http:/ /www.google.com/image.png", "Camela", "es", status.HTTP_400_BAD_REQUEST],
-
-            # Negative test 48 create an artist with empty image
-            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
-             "h", "Camela", "es", status.HTTP_400_BAD_REQUEST]
 
         ]
         print("-------- Creating artist testing --------")
@@ -347,75 +331,67 @@ class EditArtistPersonalInformation(APITransactionTestCase):
             [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 13, edit artist with invalid photo
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
-             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
-
-            # Negative test 14, edit artist with token set None
+            # Negative test 13, edit artist with token set None
             [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_401_UNAUTHORIZED],
 
-            # Negative test 15, edit artist with token as integer
+            # Negative test 14, edit artist with token as integer
             [1, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_401_UNAUTHORIZED],
 
-            # Negative test 16, edit artist with invalid token
+            # Negative test 15, edit artist with invalid token
             ["dasdaadas", "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_401_UNAUTHORIZED],
 
-            # Negative test 17, edit artist with first_name as None
+            # Negative test 16, edit artist with first_name as None
             [token, None, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 18, edit artist with first_name with special characters
+            # Negative test 17, edit artist with first_name with special characters
             [token, "sdasd2123daadsad", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 19, edit artist with first_name as integer
+            # Negative test 18, edit artist with first_name as integer
             [token, 1, "Utrilla Martín", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 20, edit artist with last_name as None
+            # Negative test 19, edit artist with last_name as None
             [token, "Juan Carlos", None, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 21, edit artist with last_name with special characters
+            # Negative test 20, edit artist with last_name with special characters
             [token, "Juan Carlos", "hfdsfsdfs23123sdas", "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 22, edit artist with last_name as integer
+            # Negative test 21, edit artist with last_name as integer
             [token, "Juan Carlos", 1, "666778899", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 23, edit artist with phone as integer
+            # Negative test 22, edit artist with phone as integer
             [token, "Juan Carlos", "Utrilla Martín", 1, "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 24, edit artist with phone as characters
+            # Negative test 23, edit artist with phone as characters
             [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 25, edit artist with invalid photo
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", "paypal2@gmail.com", "Los sobaos 2", artist["username"], "fakemailfortesting@gmail.com",
-             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
-
-            # Negative test 26, edit artist with username as None
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+            # Negative test 25, edit artist with username as None
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http://www.google.es/photo.png",
              "paypal2@gmail.com", "Los sobaos 2", None, "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 27, edit artist with username as integer
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+            # Negative test 26, edit artist with username as integer
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http://www.google.es/photo.png",
              "paypal2@gmail.com", "Los sobaos 2", 1, "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 28, edit artist with email as None
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+            # Negative test 27, edit artist with email as None
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http://www.google.es/photo.png",
              "paypal2@gmail.com", "Los sobaos 2", artist["username"], None,
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 29, edit artist with email as integer
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+            # Negative test 28, edit artist with email as integer
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http://www.google.es/photo.png",
              "paypal2@gmail.com", "Los sobaos 2", artist["username"], 1,
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
         ]

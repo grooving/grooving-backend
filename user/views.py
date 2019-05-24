@@ -12,6 +12,7 @@ from utils.authentication_utils import get_admin
 from utils.notifications.notifications import Notifications
 from utils.utils import check_accept_language
 from .internationalization import translate
+from cdn.views import delete_all_photos_on_amazon_by_user
 
 
 class UserManage(generics.DestroyAPIView):
@@ -59,6 +60,7 @@ class UserManage(generics.DestroyAPIView):
                 language = customer.language
             else:
                 Assertions.assert_true_raise400(False, translate(language, 'ERROR_DELETE_USER_UNKNOWN'))
+            delete_all_photos_on_amazon_by_user(request.user)
             request.user.delete()
 
             Notifications.send_email_right_to_be_forgotten(email=email, language=language)

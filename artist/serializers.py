@@ -11,6 +11,7 @@ from utils.Assertions import Assertions
 from utils.strings import Strings
 from utils.notifications.notifications import Notifications
 from artist.internationalization import translate
+from cdn.views import register_profile_photo_upload
 from utils.utils import check_accept_language, check_special_characters_and_numbers, check_is_number
 
 from rest_framework.response import Response
@@ -126,14 +127,20 @@ class ArtistSerializer(serializers.ModelSerializer):
         user = User.objects.create(username=json.get('username'), password=make_password(json.get('password')),
                                    first_name=json.get('first_name'), last_name=json.get('last_name'),
                                    email=json.get('email'))
-        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
-                                        translate(language, "ERROR_URL_TOO_LONG"))
+
         Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('artisticName'), 140),
                                         translate(language, "ERROR_ARTISTICNAME_TOO_LONG"))
-        photo_base64 = json.get('photo')
 
-        artist = Artist.objects.create(photo=json.get('photo'), phone=json.get('phone'), user=user)
+        image64 = json.get('image64')
+        ext = json.get('ext')
 
+        artist = Artist.objects.create(phone=json.get('phone'), user=user)
+
+        if image64 and ext:
+            photo = register_profile_photo_upload(image64, ext, user,language)
+            artist.photo = photo
+
+        artist.save()
         portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'), artist=artist)
 
         Calendar.objects.create(days=[], portfolio=portfolio1)
@@ -189,8 +196,11 @@ class ArtistSerializer(serializers.ModelSerializer):
 
             user.password = make_password(password)
 
-        photo = json.get('photo')
-        artist.photo = photo
+        image64 = json.get('image64')
+        ext = json.get('ext')
+        if image64 and ext:
+            photo = register_profile_photo_upload(image64, ext, user,language)
+            artist.photo = photo
 
         #
         if json.get('paypalAccount'):
@@ -267,8 +277,7 @@ class ArtistSerializer(serializers.ModelSerializer):
                                         translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
         Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('last_name'), 150),
                                         translate(language, "ERROR_MAX_LENGTH_LAST_NAME"))
-        Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('photo'), 500),
-                                        translate(language, "ERROR_URL_TOO_LONG"))
+
 
         username = request.data.get("username").strip()
         email = request.data.get("email").strip()
@@ -306,9 +315,4 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(len(email) > 5, translate(language, "ERROR_EMAIL_IS_TOO_SHORT"))
         Assertions.assert_true_raise400('@' in email and '.' in email, translate(language, "ERROR_EMAIL_INVALID"))
 
-        if photo:
-            Assertions.assert_true_raise400(photo.startswith(('http://', "https://")),
-                                            translate(language, "ERROR_INVALID_PHOTO_URL_HTTP"))
-            #Assertions.assert_true_raise400(Strings.url_is_an_image(photo),
-            #                                translate(language, "ERROR_INVALID_PHOTO_URL_ENDFORMAT"))
         return True

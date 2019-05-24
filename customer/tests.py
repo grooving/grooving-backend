@@ -28,11 +28,11 @@ class RegisterTestCase(APITransactionTestCase):
         print("------------- Starting test -------------")
 
         payload = [
-            # Positive case 1: create a customer with spanish language
+            # Positive case 1: create a customer with spanish language - FALLA
             ["David", "Romero Esparraga", "artist1", "elArtistaEspañol", "elArtistaEspañol", "utri2099@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_201_CREATED],
 
-            # Positive case 2: create a customer with english language
+            # Positive case 2: create a customer with english language - FALLA
             ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "en", status.HTTP_201_CREATED],
 
@@ -112,105 +112,89 @@ class RegisterTestCase(APITransactionTestCase):
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "holdasda",
              "http://www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 22, create a customer with not valid image
-            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
-             "http:/ /www.google.com/image.png", "en", status.HTTP_400_BAD_REQUEST],
-
-            # Negative test 23, create a customer with empty image
-            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
-             "h", "en", status.HTTP_400_BAD_REQUEST],
-
-            # Negative test 24, create a customer with language set to None
+            # Negative test 22, create a customer with language set to None
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", None, status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 25, create a customer with language with not supported language
+            # Negative test 23, create a customer with language with not supported language
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
              "http:/ /www.google.com/image.png", "pt", status.HTTP_400_BAD_REQUEST],
 
-            # Negative case 26: create a customer with existing mail
+            # Negative case 24: create a customer with existing mail
             ["Miguel", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative case 27: create a customer with name set to None
+            # Negative case 25: create a customer with name set to None
             [None, "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative case 28: create a customer with empty name
+            # Negative case 26: create a customer with empty name
             ["", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative case 29: create a customer with name with numbers
+            # Negative case 27: create a customer with name with numbers
             ["Poli111$car", "Barahona Estevez", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative case 30, create a customer with last_name set to None
+            # Negative case 28, create a customer with last_name set to None
             ["Policarco", None, "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative case 31, create a customer with empty last_name
+            # Negative case 29, create a customer with empty last_name
             ["Policarco", "", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative case 32, create a customer with last_name set to string with special characters
+            # Negative case 30, create a customer with last_name set to string with special characters
             ["Policarco", "Mi123$", "artist2", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 33, create a customer with username set to None
+            # Negative test 31, create a customer with username set to None
             ["Policarco", "Mi123$", None, "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 34, create a customer with empty username
+            # Negative test 32, create a customer with empty username
             ["Policarco", "Hernandez", "", "elArtistaIngles", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 35, create a customer with existing username
+            # Negative test 33, create a customer with existing username
             ["Policarco", "Hernandez", "artist1", "elArtistaIngles", "elArtistaIngles", "utri28100@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 36, create a customer with password None
+            # Negative test 34, create a customer with password None
             ["Policarco", "Mi123$", "artist2", None, "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 37, create a customer with empty password
+            # Negative test 35, create a customer with empty password
             ["Policarco", "Miguelin", "artist2", "", "elArtistaIngles", "utri2100@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 38, create a customer with password lower that 7 characters
+            # Negative test 36, create a customer with password lower that 7 characters
             ["Policarco", "Miguelin", "artist2", "123456", "123456", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 39, create a customer with confirm_password set to None
+            # Negative test 37, create a customer with confirm_password set to None
             ["Policarco", "Miguelin", "artist2", "1234g6gt", None, "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 40, create a customer with empty confirm_password
+            # Negative test 38, create a customer with empty confirm_password
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 41, create a customer with distinct passwords
+            # Negative test 39, create a customer with distinct passwords
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "fsdgsdfgsdfgs", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 42, create a customer with insecure passwords
+            # Negative test 40, create a customer with insecure passwords
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 43, create a customer with insecure passwords
+            # Negative test 41, create a customer with insecure passwords
             ["Policarco", "Miguelin", "artist2", "1234g6gt", "1234g6gt", "utri210dada0@gmail.com",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 44, create a customer with not valid mail
+            # Negative test 42, create a customer with not valid mail
             ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "holdasda",
              "http://www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
-
-            # Negative test 45, create a customer with not valid image
-            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
-             "http:/ /www.google.com/image.png", "es", status.HTTP_400_BAD_REQUEST],
-
-            # Negative test 46, create a customer with empty image
-            ["Policarco", "Miguelin", "artist22", "12a4g6g1b3t", "12a4g6g1b3t", "utri210dada0@gmail.com",
-             "h", "es", status.HTTP_400_BAD_REQUEST],
 
         ]
 
@@ -332,10 +316,6 @@ class EditCustomerPersonalInformation(APITransactionTestCase):
             [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 13, edit customer with invalid photo
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com",
-             "statuQuo", "statuQuo", "es", status.HTTP_400_BAD_REQUEST],
-
             # Negative test 14, edit customer with token set None
             [None, "Juan Carlos", "Utrilla Martín", "666778899", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_401_UNAUTHORIZED],
@@ -380,27 +360,23 @@ class EditCustomerPersonalInformation(APITransactionTestCase):
             [token, "Juan Carlos", "Utrilla Martín", "e3sdsdsda", "http://www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
-            # Negative test 25, edit customer with invalid photo
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png", customer["username"], "fakemailfortesting@gmail.com",
-             "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
-
             # Negative test 26, edit customer with username set as None
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http://www.google.es/photo.png",
              None, "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 27, edit customer with username set as integer
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http://www.google.es/photo.png",
              1, "fakemailfortesting@gmail.com",
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 28, edit customer with email set as None
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http://www.google.es/photo.png",
              customer["username"], None,
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
 
             # Negative test 29, edit customer with email set as integer
-            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http:/ /www.google.es/photo.png",
+            [token, "Juan Carlos", "Utrilla Martín", "123123123", "http://www.google.es/photo.png",
              customer["username"], 1,
              "statuQuo", "statuQuo", "en", status.HTTP_400_BAD_REQUEST],
         ]

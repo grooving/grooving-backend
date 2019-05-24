@@ -185,11 +185,12 @@ class PortfolioSerializer(serializers.HyperlinkedModelSerializer):
             portfolio_in_db.artisticName = json.get('artisticName')
 
         if 'banner' in json:
-            Assertions.assert_true_raise400(isinstance(json['banner'], str), translate(language, 'ERROR_BANNER_BAD_PROVIDED'))
-            Assertions.assert_true_raise400(json['banner'].startswith('http'), translate(language, 'ERROR_BANNER_NOT_VALID_URL'))
-            Assertions.assert_true_raise400(Strings.check_max_length(json['banner'], 500),
+            if json['banner'] is not None:
+                Assertions.assert_true_raise400(isinstance(json['banner'], str), translate(language, 'ERROR_BANNER_BAD_PROVIDED'))
+                Assertions.assert_true_raise400(json['banner'].startswith('http'), translate(language, 'ERROR_BANNER_NOT_VALID_URL'))
+                Assertions.assert_true_raise400(Strings.check_max_length(json['banner'], 500),
                                             translate(language, "ERROR_URL_TOO_LONG"))
-            portfolio_in_db.banner = json.get('banner')
+                portfolio_in_db.banner = json.get('banner')
 
         Assertions.assert_true_raise400(json['biography'], translate(language, 'ERROR_EMPTY_BIOGRAPHY'))
         Assertions.assert_true_raise400(isinstance(json['biography'], str), translate(language, 'ERROR_BIOGRAPHY_BAD_PROVIDED'))
