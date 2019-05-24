@@ -656,7 +656,7 @@ def save_data():
     system_configuration1.save()
 
     # ArtisticGenders
-    artistic_gender0 = ArtisticGender.objects.create(name_en='All genres', name_es="Todos los generos")
+    artistic_gender0 = ArtisticGender.objects.create(name_en='---', name_es="---")
     artistic_gender0.save()
 
     artistic_gender1 = ArtisticGender.objects.create(name_en='Music', parentGender=artistic_gender0, name_es="Música")
