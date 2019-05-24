@@ -99,6 +99,7 @@ class ArtistRegister(generics.CreateAPIView):
     def put(self, request, pk=None):
         language = check_accept_language(request)
         Assertions.assert_true_raise400(len(request.data) != 0, translate(language, "ERROR_EMPTY_FORM"))
+
         Assertions.assert_true_raise400(request.data.get("artisticName"),
                                         translate(language, "ERROR_EMPTY_ARTISTIC_NAME"))
         Assertions.assert_true_raise400(check_special_characters_and_numbers(request.data.get("first_name")),
