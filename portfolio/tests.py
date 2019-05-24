@@ -62,7 +62,8 @@ class PortfolioTestCase(APITransactionTestCase):
 
         event_location1.save()
 
-        portfolio1 = Portfolio.objects.create(pk=1, artist=artist1, artisticName="Los rebujitos",biography="Biografia")
+        portfolio1 = Portfolio.objects.create(pk=1, artist=artist1, artisticName="Los rebujitos",biography="Biografia",
+                                              banner="http://hola.png")
         portfolio1.zone.add(zone1)
         portfolio1.save()
 
@@ -161,11 +162,12 @@ class PortfolioTestCase(APITransactionTestCase):
                 # Test positivo, editar zones
                 [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner, [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [zone.name], artist1.id, 'es', 200],
 
+                # --> TODO: hasta aqui todo oks
                 #Test positivo 1, artistic name vacío
 
                 [token, portfolio.id, '', portfolio.biography, portfolio.banner,
                 [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
-                artist1.id, 'es', 200],
+                artist1.id, 'es', 400],
 
                 #Test negativo 2, banner con url inavlida
 
@@ -229,11 +231,12 @@ class PortfolioTestCase(APITransactionTestCase):
                 [token, portfolio.id, portfolio.artisticName, portfolio.biography, portfolio.banner,
                 [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
                 artist1.id, 'en', 200],
-                # Test positivo, cambiar artist genres
+                # Test positivo, cambiar artist genres --> FALLA
                 [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
                 [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida,
                 [artisticGenreValido.name_es], [], artist1.id, 'en', 200],
-                # Test positivo, editar zones
+
+                # Test positivo, editar zones --> FALLA
                 [token, portfolio.id, artisticNameNuevo, portfolio.biography, portfolio.banner,
                 [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [zone.name],
                 artist1.id, 'en', 200],
@@ -242,7 +245,7 @@ class PortfolioTestCase(APITransactionTestCase):
 
                 [token, portfolio.id, '', portfolio.biography, portfolio.banner,
                 [portfoliomoduleImagenValida], [portfoliomoduleVideoValido], portfoliomoduleImagenValida, [], [],
-                artist1.id, 'en', 200],
+                artist1.id, 'en', 400],
 
                 # Test negativo 2, banner con url inavlida
 
