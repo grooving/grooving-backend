@@ -255,6 +255,10 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(not check_is_number(request.data.get('username')),
                                         translate(language, "ERROR_USERNAME_CANT_BE_INTEGER"))
         Assertions.assert_true_raise400(request.data.get("username"), translate(language, "ERROR_EMPTY_USERNAME"))
+        Assertions.assert_true_raise400(request.data.get("artisticName"),
+                                        translate(language, "ERROR_ARTISTICNAME_MANDATORY"))
+        Assertions.assert_true_raise400(not check_is_number(request.data.get("artisticName")),
+                                        translate(language, "ERROR_ARTISTICNAME_CANT_BE_INTEGER"))
         Assertions.assert_true_raise400(not check_is_number(request.data.get('email')),
                                         translate(language, "ERROR_EMAIL_CANT_BE_INTEGER"))
         Assertions.assert_true_raise400(request.data.get("email"), translate(language, "ERROR_EMAIL_TOO_LONG"))
@@ -295,7 +299,6 @@ class ArtistSerializer(serializers.ModelSerializer):
             except:
                 Assertions.assert_true_raise400(False, translate(language, "ERROR_PHONE_MUST_BE_NUMBER"))
             Assertions.assert_true_raise400(len(phone) == 9, translate(language, "ERROR_PHONE_LENGTH_9"))
-
 
         Assertions.assert_true_raise400(not check_is_number(request.data.get('password')),
                                         translate(language, "ERROR_PASSWORD_CANT_BE_INTEGER"))
