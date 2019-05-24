@@ -77,7 +77,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
-    # 'utils.Error500Middelware.Erro500Middleware',
+    'utils.Error500Middelware.Erro500Middleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
