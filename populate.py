@@ -3098,13 +3098,13 @@ def save_data():
     user15_artist10_prof = User.objects.create(username='PabloArtist',
                                                password=make_password('6b6a2d865234cb08'),
                                                first_name='Pablo', last_name='Trinidad Fernandez',
-                                               email=email_to_send_mail_teachers)
+                                               email="ispp.profesores@gmail.com")
     user15_artist10_prof.save()
 
     user16_artist11_prof = User.objects.create(username='CarlosArtist',
                                                password=make_password('3ecf3c96de131863'),
                                                first_name='Carlos', last_name='Müller',
-                                               email=email_to_send_mail_teachers)
+                                               email="ispp1.profesores@gmail.com")
     user16_artist11_prof.save()
 
     # ...user customer from teachers
@@ -3112,13 +3112,13 @@ def save_data():
     user17_customer5_prof = User.objects.create(username='PabloCustomer',
                                                 password=make_password('3ecf3c908f9a8'),
                                                 first_name='Pablo', last_name='Trinidad Fernandez',
-                                                email=email_to_send_mail_teachers)
+                                                email="ispp2.profesores@gmail.com")
     user17_customer5_prof.save()
 
     user18_customer6_prof = User.objects.create(username='CarlosCustomer',
                                                 password=make_password('882f5de131863'),
                                                 first_name='Carlos', last_name='Müller',
-                                                email=email_to_send_mail_teachers)
+                                                email="ispp3.profesores@gmail.com")
     user18_customer6_prof.save()
 
     # ...artists from teachers
