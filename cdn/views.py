@@ -91,7 +91,10 @@ class ImageManager(generics.UpdateAPIView):
             if not isBlock:
                 random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(30))
                 name = random_alphanumeric + '.'+img_extension
-                img_decode_data = base64.b64decode(img_data)
+                try:
+                    img_decode_data = base64.b64decode(img_data)
+                except:
+                    Assertions.assert_true_raise400(False, translate(language, 'ERROR_MUST_HAVE_DATA_AND_EXTENSION'))
                 img_size = len(img_decode_data)
                 Assertions.assert_true_raise400(img_size <= 2097152,
                                                 translate(language, 'ERROR_IMAGE_MORE_THAN_2MB'))
@@ -111,7 +114,10 @@ class ImageManager(generics.UpdateAPIView):
 
                 random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(30))
                 name = random_alphanumeric + "."+img_extension
-                img_decode_data = base64.b64decode(img_data)
+                try:
+                    img_decode_data = base64.b64decode(img_data)
+                except:
+                    Assertions.assert_true_raise400(False, translate(language, 'ERROR_MUST_HAVE_DATA_AND_EXTENSION'))
                 img_size = len(img_decode_data)
                 Assertions.assert_true_raise400(img_size <= 2097152,
                                                 translate(language, 'ERROR_IMAGE_MORE_THAN_2MB'))
@@ -128,7 +134,10 @@ class ImageManager(generics.UpdateAPIView):
 
                 random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(30))
                 name = random_alphanumeric + "."+img_extension
-                img_decode_data = base64.b64decode(img_data)
+                try:
+                    img_decode_data = base64.b64decode(img_data)
+                except:
+                    Assertions.assert_true_raise400(False, translate(language, 'ERROR_MUST_HAVE_DATA_AND_EXTENSION'))
                 img_size = len(img_decode_data)
                 Assertions.assert_true_raise400(img_size <= 2097152,
                                                 translate(language, 'ERROR_IMAGE_MORE_THAN_2MB'))
@@ -138,24 +147,6 @@ class ImageManager(generics.UpdateAPIView):
                 file.save()
 
                 return Response({"imgUrl": file.file.url}, status=status.HTTP_200_OK)
-
-
-
-
-"""
-        formatg = request.data.get("format")
-        random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(30))
-        route = random_alphanumeric + "." + formatg
-        img_data = base64.b64decode(img_string)
-        img_size = len(img_data)
-        Assertions.assert_true_raise400(img_size <= 2000000, {"error": "image of more than 2MB"})
-        img_file = ContentFile(img_data, name=random_alphanumeric+"."+formatg)
-        upload = Upload(file=img_file)
-        upload.save()
-        image_url = upload.file.url
-
-        return Response({"route": image_url}, status=status.HTTP_200_OK)
-        """
 
 
 def delete_completely(filemodel):
@@ -203,6 +194,8 @@ def register_profile_photo_upload(image64, extension, user, language):
         extension = extension.strip()
 
     contains_newimage = extension is not None and extension
+    Assertions.assert_true_raise400(check_is_imagen(str(extension)),
+                                    translate(language, 'ERROR_MUST_HAVE_DATA_AND_EXTENSION'))
     Assertions.assert_true_raise400(contains_newimage,
                                     translate(language, 'ERROR_MUST_HAVE_DATA_AND_EXTENSION'))
 
@@ -211,7 +204,10 @@ def register_profile_photo_upload(image64, extension, user, language):
 
     random_alphanumeric = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(30))
     name = random_alphanumeric + "." + extension
-    img_decode_data = base64.b64decode(image64)
+    try:
+        img_decode_data = base64.b64decode(image64)
+    except:
+        Assertions.assert_true_raise400(False, translate(language, 'ERROR_MUST_HAVE_DATA_AND_EXTENSION'))
     img_size = len(img_decode_data)
     Assertions.assert_true_raise400(img_size <= 2097152,
                                     translate(language, 'ERROR_IMAGE_MORE_THAN_2MB'))
