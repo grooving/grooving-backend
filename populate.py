@@ -32,7 +32,7 @@ def save_data():
                                                                slogan='Connecting artist with you',
                                                                logo='',
                                                                privacyText_en="<h2>Introduction</h2>" +
-                                                                              "<p>For Grooving, accessible from https://grooving-frontend-d4.herokuapp.com, one of our main " +
+                                                                              "<p>For Grooving, accessible from https://grooving-frontend-d6.herokuapp.com, one of our main " +
                                                                               "priorities is the privacy of our visitors. This Privacy Policy document contains the " +
                                                                               "information that is collected and recorded by Grooving and how we use it.</p>" +
                                                                               "<p>If you have additional questions or require more information about our Privacy Policy, " +
@@ -94,7 +94,7 @@ def save_data():
                                                                               "Conditions.</p>",
                                                                privacyText_es=
                                                                "<h2>Introducción</h2>" +
-                                                               "<p>En Grooving, accesible desde https://grooving-frontend-d4.herokuapp.com, una de nuestras " +
+                                                               "<p>En Grooving, accesible desde https://grooving-frontend-d6.herokuapp.com, una de nuestras " +
                                                                "principales prioridades es la privacidad de nuestros visitantes. Este documento de Política de " +
                                                                "privacidad contiene tipos de información que Grooving recopila y registra, y cómo la usamos.</p>" +
                                                                "<p>Si tiene preguntas adicionales o necesita más información sobre nuestra Política de " +
@@ -177,7 +177,7 @@ def save_data():
                                                                           "<p>Con <b>Grooving</b> conseguimos hacerlo realidad simplificando la búsqueda y contratación de " +
                                                                           "artistas.</p>",
 
-                                                               termsText_es="<p>Las condiciones de uso de la página web, las reglas de uso y el uso de grooving-frontend-d4.herokuapp.com, la " +
+                                                               termsText_es="<p>Las condiciones de uso de la página web, las reglas de uso y el uso de grooving-frontend-d6.herokuapp.com, la " +
                                                                             "propiedad de Grooving SL y el correo electrónico grupogrooving@gmail.com, en adelante, " +
                                                                             "Grooving, que el usuario del portal debe aceptar para utilizar todos los servicios e " +
                                                                             "información que se proporcionan desde el portal.</p>" +
@@ -352,7 +352,7 @@ def save_data():
 
                                                                             "<h1>Privacidad</h1>" +
                                                                             "<h2>Introducción</h2>" +
-                                                                            "<p>En Grooving, accesible desde https://grooving-frontend-d4.herokuapp.com, una de nuestras " +
+                                                                            "<p>En Grooving, accesible desde https://grooving-frontend-d6.herokuapp.com, una de nuestras " +
                                                                             "principales prioridades es la privacidad de nuestros visitantes. Este documento de Política de " +
                                                                             "privacidad contiene tipos de información que Grooving recopila y registra, y cómo la usamos.</p>" +
                                                                             "<p>Si tiene preguntas adicionales o necesita más información sobre nuestra Política de " +
@@ -417,7 +417,7 @@ def save_data():
                                                                             "Términos y condiciones.</p>",
 
                                                                termsText_en="<p>The conditions of use of the web page, the rules of use and the use of " +
-                                                                            "grooving-frontend-d4.herokuapp.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
+                                                                            "grooving-frontend-d6.herokuapp.com, the property of Grooving SL and the email grupogrooving@gmail.com, " +
                                                                             " hereinafter, Grooving, that the user of the portal must accept to use all the " +
                                                                             "services and information that are provided from the portal.</p>" +
                                                                             "<p>The user as well as Grooving, owner of the portal, have become the parties. " +
@@ -586,7 +586,7 @@ def save_data():
 
                                                                             "<h1>Privacy</h1>" +
                                                                             "<h2>Introduction</h2>" +
-                                                                            "<p>For Grooving, accessible from https://grooving-frontend-d4.herokuapp.com, one of our main " +
+                                                                            "<p>For Grooving, accessible from https://grooving-frontend-d6.herokuapp.com, one of our main " +
                                                                             "priorities is the privacy of our visitors. This Privacy Policy document contains the " +
                                                                             "information that is collected and recorded by Grooving and how we use it.</p>" +
                                                                             "<p>If you have additional questions or require more information about our Privacy Policy, " +
