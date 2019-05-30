@@ -302,12 +302,8 @@ class ArtistSerializer(serializers.ModelSerializer):
 
         Assertions.assert_true_raise400(not check_is_number(request.data.get('password')),
                                         translate(language, "ERROR_PASSWORD_CANT_BE_INTEGER"))
-        Assertions.assert_true_raise400(request.data.get('password'),
-                                        translate(language, "ERROR_PASSWORD_MANDATORY"))
         Assertions.assert_true_raise400(not check_is_number(request.data.get('confirm_password')),
                                         translate(language, "ERROR_CONFIRM_PASSWORD_CANT_BE_INTEGER"))
-        Assertions.assert_true_raise400(request.data.get('confirm_password'),
-                                        translate(language, "ERROR_CONFIRM_PASSWORD_MANDATORY"))
 
         Assertions.assert_true_raise400(len(first_name) > 1, translate(language, "ERROR_FIRST_NAME_LENGTH"))
         Assertions.assert_true_raise400(len(last_name) > 1, translate(language, "ERROR_LAST_NAME_LENGTH"))
