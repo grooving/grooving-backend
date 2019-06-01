@@ -1,6 +1,6 @@
 spanish = {
     "ERROR_PORTFOLIO_NOT_FOUND": "El portfolio no existe",
-    "ERROR_NOT_LOGGED_OR_NOT_OWNER": "El usuario no esta logeado o el portfolio no le pertenece",
+    "ERROR_NOT_LOGGED_OR_NOT_OWNER": "No tienes permiso para modificar este portfolio",
     "ERROR_ARTISTICNAME_BAD_PROVIDED": "El nombre artístico introducido no es válido",
     "ERROR_BIOGRAPHY_BAD_PROVIDED": "La biografía introducida no es válida",
     "ERROR_BANNER_BAD_PROVIDED": "El banner introducido no es válido",
@@ -36,7 +36,7 @@ english = {
     "ERROR_URL_TOO_LONG": "The URL is too long. Limit is 500 characters.",
     "ERROR_STRING_TOO_LONG": "The string is too long",
     "ERROR_PORTFOLIO_NOT_FOUND": "This portfolio doesn't exist",
-    "ERROR_NOT_LOGGED_OR_NOT_OWNER": "This user is not logged or isn't the portfolio owner",
+    "ERROR_NOT_LOGGED_OR_NOT_OWNER": "You have no permission to modify this portfolio",
     "ERROR_ARTISTICNAME_BAD_PROVIDED": "The artistic name isn't valid",
     "ERROR_BIOGRAPHY_BAD_PROVIDED": "The biography isn't valid",
     "ERROR_BANNER_BAD_PROVIDED": "The banner isn't valid",
