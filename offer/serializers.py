@@ -554,7 +554,7 @@ class OfferSerializer(serializers.ModelSerializer):
                                         translate(language, 'ERROR_DATE_NOT_PROVIDED'))
 
         # Past date value validation
-
+        Assertions.assert_true_raise400(isinstance(json.get("date"), str), translate(language, 'ERROR_DATE_FORMAT'))
         try:    
             datetime.datetime.strptime(json.get('date'), '%Y-%m-%dT%H:%M:%S')
         except ValueError:
@@ -578,6 +578,9 @@ class OfferSerializer(serializers.ModelSerializer):
                                         translate(language, 'ERROR_DATE_NOT_AVAILABLE'))
 
         # Custom offer properties for each paymentPackage type
+
+        decimalHour = float(json.get("hours"))
+        Assertions.assert_true_raise400(decimalHour > 0, translate(language, "ERROR_NEGATIVE_HOUR"))
 
         if paymentPackage.fare is not None:
             Assertions.assert_true_raise400(json.get("hours"),

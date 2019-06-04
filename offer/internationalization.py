@@ -50,6 +50,7 @@ spanish = {
     "ERROR_PAYPAL_PRICE_REACH": "Límite de precio en Paypal alcanzado",
     "ERROR_REASON_TOO_LONG": "La razón es demasiado larga.",
     "ERROR_INVALID_PAYMENTCODE": "El código de pago no es válido.",
+    "ERROR_NEGATIVE_HOUR": "Las horas deben tener un valor positivo.",
 }
 
 english = {
@@ -104,6 +105,7 @@ english = {
     "ERROR_DATE_NOT_AVAILABLE": "Artist can't act for provided date",
     "ERROR_PAYPAL_PRICE_REACH": "Paypal price limit reached",
     "ERROR_INVALID_PAYMENTCODE": "The payment code is invalid.",
+    "ERROR_NEGATIVE_HOUR": "Hours must be a positive value."
 }
 
 
