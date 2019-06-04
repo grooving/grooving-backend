@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from emails.serializer import NotificationSerializer
 from emails.internationalization import translate
-from utils.utils import check_accept_language
+from utils.utils import check_accept_language, check_is_number
 
 
 # Create your views here.
@@ -25,6 +25,8 @@ class SendMailDataBreach(generics.CreateAPIView):
         Assertions.assert_true_raise403(admin, translate(language, "ERROR_ADMIN_NOT_FOUND"))
         Assertions.assert_true_raise400(subject, translate(language, "ERROR_SUBJECT_NOT_PROVIDED"))
         Assertions.assert_true_raise400(body, translate(language, "ERROR_BODY_NOT_PROVIDED"))
+        Assertions.assert_true_raise400(not check_is_number(subject), translate(language, "ERROR_SUBJECT_CANT_BE_INTEGER"))
+        Assertions.assert_true_raise400(not check_is_number(body), translate(language, "ERROR_BODY_CANT_BE_INTEGER"))
 
         Notifications.send_notification_for_breach_security(subject, body)
 
