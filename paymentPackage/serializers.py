@@ -4,6 +4,7 @@ from utils.Assertions import Assertions
 from utils.utils import isPositivefloat
 from utils.utils import check_accept_language
 from paymentPackage.internationalization import translate
+from utils.utils import check_is_number
 
 
 class CurrencySerializer(serializers.HyperlinkedModelSerializer):
@@ -123,6 +124,10 @@ class FareSerializer(serializers.ModelSerializer):
         portfolio_id = logged_user.portfolio.id
         Assertions.assert_true_raise400(price_hour, translate(keyLanguage=language,
                                                               keyToTranslate="ERROR_PRICE_NOT_PROVIDED"))
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('priceHour')),
+                                        translate(language, "ERROR_PRICEHOUR_CANT_BE_INTEGER"))
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('description')),
+                                        translate(language, "ERROR_DESCRIPTION_CANT_BE_INTEGER"))
 
         Assertions.assert_true_raise400(isPositivefloat(price_hour) and float(price_hour) >= SystemConfiguration.objects.all().first().minimumPrice, translate(keyLanguage=language,
                                                                                keyToTranslate="ERROR_INVALID_PRICE"))

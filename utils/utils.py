@@ -166,6 +166,8 @@ def check_is_number(input):
     try:
         if isinstance(input, int) or isinstance(input, float):
             return True
+        else:
+            return False
     except:
         return False
 
