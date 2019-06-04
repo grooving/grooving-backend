@@ -188,6 +188,10 @@ class CustomSerializer(serializers.ModelSerializer):
                 Assertions.assert_true_raise400(not package.custom_id,
                                                 translate(keyLanguage=language,
                                                           keyToTranslate="ERROR_CUSTOM_PACKAGE_ALREADY_CREATED"))
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('description')),
+                                        translate(language, "ERROR_DESCRIPTION_CANT_BE_INTEGER"))
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('minimumPrice')),
+                                        translate(language, "ERROR_MINIMUMPRICE_CANT_BE_INTEGER"))
 
         minimum_price = json.get('minimumPrice')
         description = json.get('description')
@@ -214,7 +218,10 @@ class CustomSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(minimumPrice,
                                         translate(keyLanguage=language,
                                                   keyToTranslate="ERROR_MINIMUM_PRICE_NOT_PROVIDED"))
-
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('description')),
+                                        translate(language, "ERROR_DESCRIPTION_CANT_BE_INTEGER"))
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('minimumPrice')),
+                                        translate(language, "ERROR_MINIMUMPRICE_CANT_BE_INTEGER"))
         Assertions.assert_true_raise400(isPositivefloat(minimumPrice) and float(minimumPrice) >= SystemConfiguration.objects.all().first().minimumPrice,
                                         translate(keyLanguage=language,
                                                   keyToTranslate="ERROR_INVALID_PRICE"))
@@ -250,6 +257,10 @@ class PerformanceSerializer(serializers.ModelSerializer):
         info = json.get('info')
         price = json.get('price')
         portfolio_id = logged_user.portfolio.id
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('hours')),
+                                        translate(language, "ERROR_HOURS_CANT_BE_INTEGER"))
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('price')),
+                                        translate(language, "ERROR_PRICE_CANT_BE_INTEGER"))
         Assertions.assert_true_raise400(hours,
                                         translate(keyLanguage=language, keyToTranslate="ERROR_HOURS_NOT_PROVIDED"))
         Assertions.assert_true_raise400(info, translate(keyLanguage=language,
@@ -280,6 +291,10 @@ class PerformanceSerializer(serializers.ModelSerializer):
         description = json.get('description')
         info = json.get('info')
         price = json.get('price')
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('hours')),
+                                        translate(language, "ERROR_HOURS_CANT_BE_INTEGER"))
+        Assertions.assert_true_raise400(not check_is_number(request.data.get('price')),
+                                        translate(language, "ERROR_PRICE_CANT_BE_INTEGER"))
         Assertions.assert_true_raise400(hours, translate(keyLanguage=language,
                                                          keyToTranslate="ERROR_HOURS_NOT_PROVIDED"))
         Assertions.assert_true_raise400(info, translate(keyLanguage=language,

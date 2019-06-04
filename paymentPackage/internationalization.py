@@ -20,7 +20,10 @@ spanish = {
     "ERROR_FARE_PACKAGE_NOT_OWNER": "No eres el dueño de esta tarifa.",
     "ERROR_NO_ARTIST_FOUND": "El artista que buscas no existe.",
     "ERROR_PRICEHOUR_CANT_BE_INTEGER": "El campo precio hora no puede ser entero.",
-    "ERROR_DESCRIPTION_CANT_BE_INTEGER": "El campo descripcion no puede ser entero."
+    "ERROR_DESCRIPTION_CANT_BE_INTEGER": "El campo descripcion no puede ser entero.",
+    "ERROR_MINIMUMPRICE_CANT_BE_INTEGER": "El campo precio minimo no puede ser entero.",
+    "ERROR_HOURS_CANT_BE_INTEGER": "El campo horas no puede ser entero.",
+    "ERROR_PRICE_CANT_BE_INTEGER": "El campo precio no puede ser entero."
 }
 
 english = {
@@ -45,7 +48,10 @@ english = {
     "ERROR_FARE_PACKAGE_NOT_OWNER": "You are not the owner of this fare package.",
     "ERROR_NO_ARTIST_FOUND": "The artist you are searching for does not exist.",
     "ERROR_PRICEHOUR_CANT_BE_INTEGER": "Price hour can't be integer.",
-    "ERROR_DESCRIPTION_CANT_BE_INTEGER": "Description can't be integer."
+    "ERROR_MINIMUMPRICE_CANT_BE_INTEGER": "Minimum price can't be integer.",
+    "ERROR_DESCRIPTION_CANT_BE_INTEGER": "Description can't be integer.",
+    "ERROR_HOURS_CANT_BE_INTEGER": "Hours can't be integer.",
+    "ERROR_PRICE_CANT_BE_INTEGER": "Price can't be integer."
 
 }
 
