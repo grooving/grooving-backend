@@ -19,7 +19,7 @@ spanish = {
     "ERROR_PERFORMANCE_PACKAGE_NOT_OWNER": "No eres el dueño de este paquete de actuación.",
     "ERROR_FARE_PACKAGE_NOT_OWNER": "No eres el dueño de esta tarifa.",
     "ERROR_NO_ARTIST_FOUND": "El artista que buscas no existe.",
-    "ERROR_PRICEHOUR_CANT_BE_INTEGER": "El campo artista no puede ser entero.",
+    "ERROR_PRICEHOUR_CANT_BE_INTEGER": "El campo precio hora no puede ser entero.",
     "ERROR_DESCRIPTION_CANT_BE_INTEGER": "El campo descripcion no puede ser entero."
 }
 
