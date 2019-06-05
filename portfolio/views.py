@@ -47,6 +47,7 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
             loggedUser = get_logged_user(request)
             user_type = get_user_type(loggedUser)
             artist = Artist.objects.filter(portfolio=portfolio).first()
+            Assertions.assert_true_raise403(artist is not None, translate(language, 'ERROR_PORTFOLIO_NOT_FOUND'))
             if loggedUser is not None and loggedUser.id == artist.id and user_type == "Artist":
                 serializer = PortfolioSerializer(portfolio, data=request.data, partial=True,context={'language':language})
                 if serializer.validate(request,language):

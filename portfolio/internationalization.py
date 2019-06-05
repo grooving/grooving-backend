@@ -23,6 +23,7 @@ spanish = {
     "ERROR_VIDEO_URL_TOO_LONG": "La URL del vídeo es demasiado larga",
     "ERROR_IMAGE_URL_TOO_LONG": "La URL de la imagen es demasiado larga",
     "ERROR_EMPTY_BIOGRAPHY": "La biografía no puede estar vacía.",
+    "ERROR_PORTFOLIO_NOT_OWNER": "No tienes permiso para editar este portfolio"
 
 
 }
@@ -51,7 +52,8 @@ english = {
     "ERROR_ZONE_NOT_FOUND": "The zone doesn't exist",
     "ERROR_MAINPHOTO_BAD_PROVIDED": "The main photo isn't valid",
     "ERROR_MAINPHOTO_NOT_VALID_URL": "The main photo URL isn't valid",
-    "ERROR_MAINPHOTO_NOT_URL_IMAGE": "The main photo URL doesn't correspond to an image"
+    "ERROR_MAINPHOTO_NOT_URL_IMAGE": "The main photo URL doesn't correspond to an image",
+    "ERROR_PORTFOLIO_NOT_OWNER": "You can not edit this portfolio"
 }
 
 
