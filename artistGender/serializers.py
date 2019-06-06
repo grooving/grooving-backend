@@ -43,6 +43,8 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
             genre_id_control = str(self.initial_data.get('id'))
 
             genre = ArtisticGender.objects.filter(pk=id_genre).first()
+            Assertions.assert_true_raise401(genre.parentGender is not None,
+                                            translate(language, "ERROR_CANNOT_MODIFY_PARENT"))
             genre = self._service_update(self.initial_data, genre, logged_user,language)
             Assertions.assert_true_raise400(check_deepth(genre), translate(language, "ERROR_DEEPTH_3"))
             genre.save()
@@ -52,6 +54,7 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
     def _service_create(json: dict, genre: ArtisticGender, language):
 
         Assertions.assert_true_raise401(ArtisticGender.objects.filter(name_es=json.get('name_es')).first() is None, translate(language, 'ERROR_GENRE_EXISTS'))
+        Assertions.assert_true_raise401(ArtisticGender.objects.filter(name_es=json.get('name_en')).first() is None, translate(language, 'ERROR_GENRE_EXISTS'))
         Assertions.assert_true_raise401(json.get('name_es') != "",translate(language, 'ERROR_GENRE_NULL_NAME'))
         Assertions.assert_true_raise401(json.get('name_es') is not None, translate(language, 'ERROR_GENRE_NULL_NAME'))
         Assertions.assert_true_raise401(json.get('name_en') != "", translate(language, 'ERROR_GENRE_NULL_NAME'))
@@ -97,6 +100,18 @@ class ArtisticGenderSerializer(serializers.ModelSerializer):
             # Si tienen el mismo nombre y son distintos... ¡tenemos un problema! Levantamos excepción.
             Assertions.assert_true_raise400(ArtisticGender.objects.filter(name_es=json.get('name_es')).first() is None,
                                            translate(language, 'ERROR_GENRE_EXISTS'))
+
+
+        # Se busca si un artisticGenre con el nombre pedido ya existe
+
+        genre_name_control2 = ArtisticGender.objects.filter(name_en=json.get('name_en')).first()
+
+        # Es posible que sólo se quiera cambiar el parent, asi que es necesario ver si el genre con ese nombre y el que estamos editando son el mismo
+
+        if genre_name_control2 is not None and genre_name_control2.id != json.get('id'):
+            # Si tienen el mismo nombre y son distintos... ¡tenemos un problema! Levantamos excepción.
+            Assertions.assert_true_raise400(ArtisticGender.objects.filter(name_en=json.get('name_en')).first() is None,
+                                            translate(language, 'ERROR_GENRE_EXISTS'))
 
         Assertions.assert_true_raise400(json.get('name_es') != '',
                                         translate(language, 'ERROR_GENRE_NULL_NAME'))

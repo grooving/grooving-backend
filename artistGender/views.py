@@ -69,7 +69,7 @@ class ArtisticGenderManager(generics.RetrieveUpdateDestroyAPIView):
         Assertions.assert_true_raise403(admin, translate(language, "ERROR_NOT_AN_ADMIN"))
 
         artisticGender = self.get_object(pk)
-
+        Assertions.assert_true_raise401(artisticGender.parentGender is not None, translate(language, "ERROR_CANNOT_MODIFY_PARENT"))
         Assertions.assert_true_raise404(artisticGender, translate(language, "ERROR_GENRE_DOESNT_EXIST"))
 
         children = ArtisticGender.objects.filter(parentGender=artisticGender)

@@ -18,7 +18,8 @@ spanish = {
     "ERROR_TREE_OPTION" : "El valor del árbol no es válido",
     "ERROR_NO_PORTFOLIO": "Este porfolio no existe.",
     "ERROR_STRING_TOO_LONG": "El nombre es demasiado largo.",
-    "ERROR_DEEPTH_3":"No puedes crear más de tres niveles."
+    "ERROR_DEEPTH_3":"No puedes crear más de tres niveles.",
+    "ERROR_CANNOT_MODIFY_PARENT": "No puedes modificar el género padre."
 }
 
 english = {
@@ -41,7 +42,8 @@ english = {
     "ERROR_ONLY_ONE_OPTION": "More than one edition option given.",
     "ERROR_TREE_OPTION" : "Invalid tree value",
     "ERROR_NO_PORTFOLIO": "Porfolio does not exist.",
-    "ERROR_DEEPTH_3": "You cannot create elements deeper than 3 levels."
+    "ERROR_DEEPTH_3": "You cannot create elements deeper than 3 levels.",
+    "ERROR_CANNOT_MODIFY_PARENT": "You can not modify the parent genre."
 
 }
 
