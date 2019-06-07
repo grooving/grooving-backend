@@ -131,6 +131,8 @@ class FareSerializer(serializers.ModelSerializer):
 
         Assertions.assert_true_raise400(isPositivefloat(price_hour) and float(price_hour) >= SystemConfiguration.objects.all().first().minimumPrice, translate(keyLanguage=language,
                                                                                keyToTranslate="ERROR_INVALID_PRICE"))
+        Assertions.assert_true_raise400(float(price_hour) <= 999999.0,
+                                        translate(keyLanguage=language, keyToTranslate="ERROR_OVERFRICE"))
 
 
         fare = Fare.objects.create(priceHour=price_hour)
@@ -154,6 +156,9 @@ class FareSerializer(serializers.ModelSerializer):
                                         translate(language, "ERROR_DESCRIPTION_CANT_BE_INTEGER"))
         Assertions.assert_true_raise400(isPositivefloat(price_hour) and float(price_hour) >= SystemConfiguration.objects.all().first().minimumPrice, translate(keyLanguage=language,
                                                                                keyToTranslate="ERROR_INVALID_PRICE"))
+
+        Assertions.assert_true_raise400(float(price_hour) <= 999999.0,
+                                        translate(keyLanguage=language, keyToTranslate="ERROR_OVERFRICE"))
 
         fare.priceHour = json.get('priceHour')
         fare.paymentpackage.description = json.get('description')
@@ -201,6 +206,8 @@ class CustomSerializer(serializers.ModelSerializer):
 
         Assertions.assert_true_raise400(isPositivefloat(minimum_price) and float(minimum_price) >= SystemConfiguration.objects.all().first().minimumPrice, translate(keyLanguage=language,
                                                                                   keyToTranslate="ERROR_INVALID_PRICE"))
+        Assertions.assert_true_raise400(float(minimum_price) <= 999999.0,
+                                        translate(keyLanguage=language, keyToTranslate="ERROR_OVERFRICE"))
 
         custom = Custom.objects.create(minimumPrice=minimum_price)
         PaymentPackage.objects.create(description=description,
@@ -225,7 +232,8 @@ class CustomSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(isPositivefloat(minimumPrice) and float(minimumPrice) >= SystemConfiguration.objects.all().first().minimumPrice,
                                         translate(keyLanguage=language,
                                                   keyToTranslate="ERROR_INVALID_PRICE"))
-
+        Assertions.assert_true_raise400(float(minimumPrice) <= 999999.0,
+                                        translate(keyLanguage=language, keyToTranslate="ERROR_OVERFRICE"))
         custom.minimumPrice = json.get('minimumPrice')
         custom.paymentpackage.description = json.get('description')
         custom.save()
@@ -273,7 +281,9 @@ class PerformanceSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(isPositivefloat(price) and float(price) >= SystemConfiguration.objects.all().first().minimumPrice, translate(keyLanguage=language,
                                                                           keyToTranslate="ERROR_INVALID_PRICE"))
 
-
+        Assertions.assert_true_raise400(float(price) <= 999999.0, translate(keyLanguage=language, keyToTranslate="ERROR_OVERFRICE"))
+        Assertions.assert_true_raise400(float(hours) <= 90.0,
+                                        translate(keyLanguage=language, keyToTranslate="ERROR_OVERHOURS"))
         performance = Performance.objects.create(hours=hours, info=info, price=price)
         PaymentPackage.objects.create(description=description,
                                       portfolio_id=portfolio_id, performance=performance)
@@ -305,6 +315,10 @@ class PerformanceSerializer(serializers.ModelSerializer):
                                                         keyToTranslate="ERROR_INVALID_HOURS"))
         Assertions.assert_true_raise400(isPositivefloat(price) and float(price) >= SystemConfiguration.objects.all().first().minimumPrice, translate(keyLanguage=language,
                                                              keyToTranslate="ERROR_INVALID_PRICE"))
+        Assertions.assert_true_raise400(float(price) <= 999999.0,
+                                        translate(keyLanguage=language, keyToTranslate="ERROR_OVERFRICE"))
+        Assertions.assert_true_raise400(float(hours) <= 90.0,
+                                        translate(keyLanguage=language, keyToTranslate="ERROR_OVERHOURS"))
 
         performance.hours = json.get('hours')
         performance.info = json.get('info')

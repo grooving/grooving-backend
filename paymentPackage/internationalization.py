@@ -23,7 +23,9 @@ spanish = {
     "ERROR_DESCRIPTION_CANT_BE_INTEGER": "El campo descripcion no puede ser entero.",
     "ERROR_MINIMUMPRICE_CANT_BE_INTEGER": "El campo precio minimo no puede ser entero.",
     "ERROR_HOURS_CANT_BE_INTEGER": "El campo horas no puede ser entero.",
-    "ERROR_PRICE_CANT_BE_INTEGER": "El campo precio no puede ser entero."
+    "ERROR_PRICE_CANT_BE_INTEGER": "El campo precio no puede ser entero.",
+    "ERROR_OVERFRICE": "El precio no puede ser superior a 999999 €.",
+    "ERROR_OVERHOURS": "Las horas no pueden ser superiores a 90."
 }
 
 english = {
@@ -51,7 +53,9 @@ english = {
     "ERROR_MINIMUMPRICE_CANT_BE_INTEGER": "Minimum price can't be integer.",
     "ERROR_DESCRIPTION_CANT_BE_INTEGER": "Description can't be integer.",
     "ERROR_HOURS_CANT_BE_INTEGER": "Hours can't be integer.",
-    "ERROR_PRICE_CANT_BE_INTEGER": "Price can't be integer."
+    "ERROR_PRICE_CANT_BE_INTEGER": "Price can't be integer.",
+    "ERROR_OVERFRICE": "Price can not be over €999999.",
+    "ERROR_OVERHOURS": "Hours can not be over 90."
 
 }
 
