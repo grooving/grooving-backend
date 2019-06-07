@@ -972,7 +972,7 @@ def save_data():
 
     # ...admins
 
-    user14_admin = User.objects.create(username='admin', password=make_password('c8fe937c00274ff314ad36912e844'),
+    user14_admin = User.objects.create(username='admin', password=make_password('Bep5lTJYZp87OG3m'),
                                        is_staff=True,
                                        is_superuser=True, first_name='Chema', last_name='Alonso',
                                        email="grupogrooving@gmail.com")
