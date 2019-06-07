@@ -81,7 +81,7 @@ class Notifications:
             body = "<p>Hi there,</p>" \
                    "<p>Congratulations! You've signed in Grooving and have become part of a community that connects " \
                    "artists and improves their visibility in an easy, fast, simple and reliable way. " \
-                   "From now, you'll get regular updates on the offers you receive and all the information related" \
+                   "From now, you'll get regular updates about your offers and all the information related" \
                    " to them. </p>" \
                    "<p>Your username is: <b>" + user.username + "</b></p>" \
                                                                 "<p>Cheers,</p>" \
@@ -89,9 +89,9 @@ class Notifications:
         elif languages == "es":
             body = "<p>¡Felicidades!,</p>" \
                    "<p>Acabas de registrarte en Grooving y ahora eres parte de una comunidad que conecta " \
-                   "artistas y mejorar su visibilidad de una forma facíl, simple y confiable." \
-                   "Desde este momento, recibirás actualizaciones regulares sobre las ofertas que recibas con " \
-                   "información detallada.</p>" \
+                   "artistas mejorando su visibilidad de una forma facíl, simple y confiable." \
+                   "Desde este momento, recibirás actualizaciones regulares sobre tus ofertas de forma " \
+                   " detallada.</p>" \
                    "<p>Tu nombre de usuario es: <b>" + user.username + "</b></p>" \
                                                                 "<p>Saludos,</p>" \
                                                                 "<p>El equipo de Grooving</p>"
