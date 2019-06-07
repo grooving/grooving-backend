@@ -21,7 +21,7 @@
 </head>
 <body>
 <img alt="Image not found" src="https://raw.githubusercontent.com/Iriabow/pepe/master/photo_2019-04-07_00-59-27.jpg">
-<h1>Personal informatión</h1>
+<h1>Personal information</h1>
 <table>
     <tr>
         <td><b>Full name</b>: {{ artist.user.get_full_name }}</td>
@@ -191,7 +191,7 @@
                     {% elif offer.status == "REJECTED" %}
                         Rejected for you
                     {% elif offer.status == "WITHDRAWN" %}
-                        Rechazado for the contractor
+                        Rejected for the contractor
                     {% elif offer.status == "CONTRACT_MADE" %}
                         Accepted
                     {% elif offer.status == "CANCELLED_ARTIST" %}
