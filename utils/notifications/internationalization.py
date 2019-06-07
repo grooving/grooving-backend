@@ -29,7 +29,7 @@ english = {
                                 "inform you about the Grooving accounts. We have taken steps to secure your account " +
                                 "and are working closely with law enforcement authorities.</p>",
     "RIGHT_TO_BE_FORGOTTEN_BODY": "<p>Hello,</p>" +
-                                  "<p>We appreciate you having contacting us.</p>" +
+                                  "<p>We appreciate you have contacted us.</p>" +
                                   "<p>We have carried out the procedure to apply your right to be forgotten and has " +
                                   "performed correctly.</p>" +
                                   "<p>Best regards.</p>",

@@ -21,8 +21,12 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
         if pk is None:
             pk = self.kwargs['pk']
         try:
-            return Portfolio.objects.get(pk=pk)
-        except Portfolio.DoesNotExist:
+
+            artist1 = Artist.objects.get(pk=pk)
+            portfolio = artist1.portfolio
+
+            return portfolio
+        except Artist.DoesNotExist:
             Assertions.assert_true_raise404(False,
                                             translate(language, 'ERROR_PORTFOLIO_NOT_FOUND'))
 
@@ -42,8 +46,11 @@ class PortfolioManager(generics.RetrieveUpdateDestroyAPIView):
 
         if pk is None:
             pk = self.kwargs['pk']
-        if Portfolio.objects.filter(pk=pk).first():
-            portfolio = Portfolio.objects.filter(pk=pk).first()
+
+        portfolioAEditar = self.get_object(pk)
+
+        if portfolioAEditar:
+            portfolio = portfolioAEditar
             loggedUser = get_logged_user(request)
             user_type = get_user_type(loggedUser)
             artist = Artist.objects.filter(portfolio=portfolio).first()
