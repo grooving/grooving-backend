@@ -152,17 +152,17 @@ class OfferTestCase(APITransactionTestCase):
         payload = [
                 # POSITIVE TESTS
                 # Offer with Performanace package
-                [tokenCustomer, 'Descripcion1', '2019-06-06T10:00:00', None, None, performancePackage.id, eventLocation1.id, 201],
+                [tokenCustomer, 'Descripcion1', '2020-06-06T10:00:00', 2.5, 200.0, performancePackage.id, eventLocation1.id, 201],
                 # Offer with Fare package
-                [tokenCustomer, 'Descripcion2', '2019-06-06T10:00:00', 3.5, None, farePackage.id, eventLocation1.id, 201],
+                [tokenCustomer, 'Descripcion2', '2020-06-06T10:00:00', 3.5, 250.0, farePackage.id, eventLocation1.id, 201],
                 # Offer with Custom package
-                [tokenCustomer, 'Descripcion3', '2019-06-06T10:00:00', 3.5, 1000.0, customPackage.id, eventLocation1.id, 201],
+                [tokenCustomer, 'Descripcion3', '2020-06-06T10:00:00', 3.5, 1000.0, customPackage.id, eventLocation1.id, 201],
 
                 #NEGATIVE TESTS
                 # Unauthenticated user
-                ['', 'Descripcion1', '2019-05-10T10:00:00', None, None, performancePackage.id, eventLocation1.id, 401],
+                ['', 'Descripcion1', '2020-05-10T10:00:00', None, None, performancePackage.id, eventLocation1.id, 401],
                 # User unauthorized
-                [tokenArtist, 'Descripcion1', '2019-05-10T10:00:00', None, None, performancePackage.id, eventLocation1.id, 403],
+                [tokenArtist, 'Descripcion1', '2020-05-10T10:00:00', None, None, performancePackage.id, eventLocation1.id, 403],
                 # Description not provided
                 [tokenCustomer, None, '2019-05-10T10:00:00', None, None, performancePackage.id, eventLocation1.id, 400],
                 # Date not provided
