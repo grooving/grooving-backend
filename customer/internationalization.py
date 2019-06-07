@@ -62,6 +62,7 @@ spanish = {
     "ERROR_USERNAME_TOO_LONG": "El usuario es demasiado largo.",
     "ERROR_PASSWORD_TOO_LONG": "La contraseña es demasiado larga.",
     "ERROR_PAYPAL_TOO_LONG": "La dirección de Paypal es demasiado larga.",
+    "ERROR_MUST_HAVE_DATA_AND_EXTENSION": "Imagen no valida.",
 }
 
 english = {
@@ -128,7 +129,8 @@ english = {
     "ERROR_NO_DATA_GIVEN": "The form has no data.",
     "ERROR_NO_MATCHING_LANGUAGE": "The language you want is not available.",
     "ERROR_ACTOR_NOT_FOUND": "The actor you are searching does not exist.",
-    "ERROR_NO_GIVEN_LANGUAGE": "You must give a language to switch to."
+    "ERROR_NO_GIVEN_LANGUAGE": "You must give a language to switch to.",
+    "ERROR_MUST_HAVE_DATA_AND_EXTENSION": "Image is not valid.",
 }
 
 

@@ -11,6 +11,8 @@ from utils.strings import Strings
 from customer.internationalization import translate
 from cdn.views import register_profile_photo_upload
 from utils.utils import check_accept_language, check_special_characters_and_numbers, check_is_number
+from utils.utils import check_is_imagen
+
 
 
 class CustomerInfoSerializer(serializers.HyperlinkedModelSerializer):
@@ -161,21 +163,30 @@ class CustomerSerializer(serializers.HyperlinkedModelSerializer):
                                         not password.isnumeric(), translate(language, "ERROR_PASSWORD_MUST_BE_COMPLEX"))
 
         Assertions.assert_true_raise400(len(password) > 7, translate(language, "ERROR_PASSWORD_IS_TOO_SHORT"))
-
+        image64 = json.get('image64')
+        ext = json.get('ext')
+        if ext:
+            Assertions.assert_true_raise400(check_is_imagen(str(ext)),
+                                            translate(language, 'ERROR_MUST_HAVE_DATA_AND_EXTENSION'))
         user = User.objects.create(username=json.get('username'),
                                     password=make_password(json.get('password')),
                                     first_name=json.get('first_name'),
                                     last_name=json.get('last_name'),
                                     email=json.get('email'))
 
-        image64 = json.get('image64')
-        ext = json.get('ext')
+
 
         customer = Customer.objects.create(phone=json.get('phone'), user=user)
 
         if image64 and ext:
-            photo = register_profile_photo_upload(image64, ext, user,language)
-            customer.photo = photo
+            try:
+                photo = register_profile_photo_upload(image64, ext, user, language)
+                customer.photo = photo
+            except:
+                user.delete()
+                Assertions.assert_true_raise400(False,
+                                                translate(language, 'ERROR_MUST_HAVE_DATA_AND_EXTENSION'))
+
 
         customer.save()
 

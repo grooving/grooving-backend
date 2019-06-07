@@ -13,6 +13,7 @@ from utils.notifications.notifications import Notifications
 from artist.internationalization import translate
 from cdn.views import register_profile_photo_upload
 from utils.utils import check_accept_language, check_special_characters_and_numbers, check_is_number
+from utils.utils import check_is_imagen
 
 from rest_framework.response import Response
 
@@ -124,6 +125,11 @@ class ArtistSerializer(serializers.ModelSerializer):
         user_names = User.objects.values_list('username', flat=True)
         Assertions.assert_true_raise400(username not in user_names, translate(language, "ERROR_USERNAME_IN_USE"))
 
+        image64 = json.get('image64')
+        ext = json.get('ext')
+        if ext:
+            Assertions.assert_true_raise400(check_is_imagen(str(ext)),
+                                            translate(language, 'ERROR_MUST_HAVE_DATA_AND_EXTENSION'))
         user = User.objects.create(username=json.get('username'), password=make_password(json.get('password')),
                                    first_name=json.get('first_name'), last_name=json.get('last_name'),
                                    email=json.get('email'))
@@ -131,8 +137,6 @@ class ArtistSerializer(serializers.ModelSerializer):
         Assertions.assert_true_raise400(Strings.check_max_length(request.data.get('artisticName'), 140),
                                         translate(language, "ERROR_ARTISTICNAME_TOO_LONG"))
 
-        image64 = json.get('image64')
-        ext = json.get('ext')
 
         artist = Artist.objects.create(phone=json.get('phone'), user=user)
 
