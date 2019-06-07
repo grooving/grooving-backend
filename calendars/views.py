@@ -86,7 +86,9 @@ class CalendarManager(generics.RetrieveUpdateDestroyAPIView):
         Assertions.assert_true_raise403(user_type == 'Artist', translate(language, "ERROR_NOT_AN_ARTIST"))
         Assertions.assert_true_raise403(loggedUser is not None and loggedUser.id == artist.id, translate(language, 'ERROR_CALENDAR_NOT_THE_OWNER'))
         serializer = CalendarSerializer(calendar, data=request.data, partial=True)
-        Assertions.assert_true_raise403(loggedUser.portfolio.id == request.data['portfolio'],translate(language, 'ERROR_CALENDAR_NOT_THE_OWNER'))
+        portfolio = loggedUser.portfolio.id
+        print(portfolio)
+        Assertions.assert_true_raise403(str(loggedUser.portfolio.id) == request.data['portfolio'], translate(language, 'ERROR_CALENDAR_NOT_THE_OWNER'))
         Assertions.assert_true_raise400(serializer.is_valid(), translate(language, 'ERROR_INVALID_DATA'))
         serializer.save(language, pk, loggedUser)
 
