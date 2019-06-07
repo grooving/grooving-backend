@@ -10,10 +10,6 @@ class Erro500Middleware:
 
         if 600 > response.status_code >= 500:
             response["Content-Type"] = "application/json"
-            response.status_code = 401
-            response.content= "{ \"error\":\"error!\""+"}"
-
-            response.status_code = 401
-            response['result'] = 'error'
-            response['message'] = 'Some error message'
+            response.status_code = 400
+            response.content = "{ \"error\":\"error!\""+"}"
         return response
