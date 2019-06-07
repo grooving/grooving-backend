@@ -2714,12 +2714,14 @@ def save_data():
     # Portfolio from teachers
 
     portfolio14_prof = Portfolio.objects.create(artisticName='The great magician', artist=artist10_prof)
+    portfolio14_prof.zone.add(zone0)
     portfolio14_prof.save()
 
     calendar14 = Calendar.objects.create(days=[], portfolio=portfolio14_prof)
     calendar14.save()
 
     portfolio15_prof = Portfolio.objects.create(artisticName='The pianist', artist=artist11_prof)
+    portfolio15_prof.zone.add(zone0)
     portfolio15_prof.save()
 
     calendar15 = Calendar.objects.create(days=[], portfolio=portfolio15_prof)
