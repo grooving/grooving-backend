@@ -2,7 +2,7 @@ from _json import make_encoder
 
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from Grooving.models import Artist, Portfolio, Calendar, ArtisticGender
+from Grooving.models import Artist, Portfolio, Calendar, ArtisticGender, Zone
 from user.serializers import UserSerializer
 from artistGender.serializers import ArtisticGenderSerializerOut
 from django.contrib.auth.hashers import make_password
@@ -146,7 +146,9 @@ class ArtistSerializer(serializers.ModelSerializer):
 
         artist.save()
         portfolio1 = Portfolio.objects.create(artisticName=json.get('artisticName'), artist=artist)
-
+        parentZone = Zone.objects.filter(parentZone=None).first()
+        portfolio1.zone.add(parentZone)
+        portfolio1.save()
         Calendar.objects.create(days=[], portfolio=portfolio1)
 
         return artist
