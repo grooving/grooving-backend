@@ -11,4 +11,5 @@ class Erro500Middleware:
         if 600 > response.status_code >= 500:
             response = JsonResponse({'error': 'error'})
             response.status_code = 400
+
         return response

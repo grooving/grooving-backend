@@ -209,6 +209,8 @@ class RegisterTestCase(APITransactionTestCase):
             self.template_register_user(data)
 
     def template_register_user(self, args):
+        zone1 = Zone.objects.create(name="zona")
+        zone1.save()
         status_expected = args[-1]
         language = args[-2]
 

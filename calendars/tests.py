@@ -150,15 +150,15 @@ class CalendarTestCase(APITransactionTestCase):
             #Test negativo 1, fecha equivocada
             [token3, ['2019/08/20'], portfolio2.id, artist2.id, 400],
             # Test negativo 2, id invalido
-            [token3, ['2019-08-20'], 'a', artist2.id, 400],
+            [token3, ['2019-08-20'], 'a', artist2.id, 403],
             # Test negativo 3, no se pasan días al calendar
             [token3, '', portfolio2.id, artist2.id, 400],
             # Test negativo 4, no se pasan días al calendar (ahora es un None)
             [token3, None, portfolio2.id, artist2.id, 400],
             # Test negativo 5, no se pasa un id de portfolio
-            [token3, [], None, artist2.id, 400],
+            [token3, [], None, artist2.id, 403],
             # Test negativo 6, se pasa un id 0 de portfolio
-            [token3, [], 0, artist2.id, 400],
+            [token3, [], 0, artist2.id, 403],
             # Test negativo 7, customer
             [token2, ['2019-09-20'], portfolio2.id, artist2.id, 403],
             # Test negativo 8, artist incorrecto
