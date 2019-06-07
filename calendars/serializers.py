@@ -60,7 +60,7 @@ class CalendarSerializer(serializers.ModelSerializer):
         if not calendar.days:
             calendar.days = []
 
-        Assertions.assert_true_raise400(portfolio_in_db.calendar.id == calendar.id, translate(language, 'ERROR_CALENDAR_NOT_THE_OWNER'))
+        Assertions.assert_true_raise400(portfolio_in_db.calendar == calendar, translate(language, 'ERROR_CALENDAR_NOT_THE_OWNER'))
 
         r = re.compile('^\d\d\d\d-(0?[1-9]|1[0-2])-(0?[1-9]|[12][0-9]|3[01])')
         Assertions.assert_true_raise400(json.get('days') is not None, translate(language, 'ERROR_NO_DAYS_GIVEN'))
