@@ -1,6 +1,6 @@
 from django.http import HttpResponseForbidden
 
-
+from django.http import JsonResponse
 class Erro500Middleware:
     def __init__(self, get_response):
         self.get_response = get_response
@@ -9,11 +9,6 @@ class Erro500Middleware:
         response = self.get_response(request)
 
         if 600 > response.status_code >= 500:
-            response["Content-Type"] = "application/json"
-            response.status_code = 401
-            response.content= "{ \"error\":\"error!\""+"}"
-
-            response.status_code = 401
-            response['result'] = 'error'
-            response['message'] = 'Some error message'
+            response = JsonResponse({'error': 'error'})
+            response.status_code = 400
         return response
