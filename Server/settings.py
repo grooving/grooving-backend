@@ -17,9 +17,6 @@ import django_heroku
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
 
-
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
@@ -27,11 +24,9 @@ PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
 SECRET_KEY = 'rw&&q!#o4d3pdrwaqp#(!7c7-9&y8p@nr9lduvslgc(oq$@75l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-#DEBUG_PROPAGATE_EXCEPTIONS = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -62,9 +57,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
     ),
-    # 'DEFAULT_RENDERER_CLASSES': (                          # Descomentar en despliegue
-    #     'rest_framework.renderers.JSONRenderer',
-    # ),
+    'DEFAULT_RENDERER_CLASSES': (  # Descomentar en despliegue
+        'rest_framework.renderers.JSONRenderer',
+    ),
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
 
@@ -77,7 +72,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
-    #'utils.Error500Middelware.Erro500Middleware',
+    'utils.Error500Middelware.Erro500Middleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -88,11 +83,9 @@ MIDDLEWARE = [
     'utils.CorsMiddleware.CorsMiddleware',
     'utils.CloseOldConnectionsMiddelware.CloseOldConnectionsMiddelware',
 
-
-    #whitenoise middleware for static files. #http://sayhelloworld.co/using-white-noise-to-server-django-static-files-on-heroku/
-    #https://stackoverflow.com/questions/43271275/django-restrict-static-folder-access-to-non-logged-in-users
+    # whitenoise middleware for static files. #http://sayhelloworld.co/using-white-noise-to-server-django-static-files-on-heroku/
+    # https://stackoverflow.com/questions/43271275/django-restrict-static-folder-access-to-non-logged-in-users
 ]
-
 
 ROOT_URLCONF = 'Server.urls'
 
@@ -126,7 +119,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 DATABASES = {
@@ -135,8 +127,8 @@ DATABASES = {
         'NAME': 'grooving',
         'HOST': '127.0.0.1',
         'PORT': '5432',
-        #'USER': 'grooving',
-        #'PASSWORD': 'grooving',
+        # 'USER': 'grooving',
+        # 'PASSWORD': 'grooving',
         'USER': 'root',
         'PASSWORD': 'root',
         'CONN_MAX_AGE': 0,
@@ -165,7 +157,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -189,8 +180,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'mail.grooving@gmail.com'   # groupgrooving@gmail.com
-EMAIL_HOST_PASSWORD = '94TDtF4zG2t4Cxy'       # 94TDtF4zG2t4Cxy
+EMAIL_HOST_USER = 'groupgrooving@gmail.com'  # mail.grooving@gmail.com
+EMAIL_HOST_PASSWORD = '94TDtF4zG2t4Cxy'      # 94TDtF4zG2t4Cxy
 
 django_heroku.settings(locals())
 
@@ -199,8 +190,7 @@ BRAINTREE_MERCHANT_ID = "2jr4z6qz4rf4n5xt"
 BRAINTREE_PUBLIC_KEY = "dqgwkcsmb7j68wf7"
 BRAINTREE_PRIVATE_KEY = "7d71536e5952a2a492855762b66ba75d"
 
-
-#cdn confi
+# cdn confi
 
 USE_S3 = True
 
@@ -216,7 +206,7 @@ if USE_S3:
     AWS_LOCATION = 'static'
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
     STATICFILES_STORAGE = 'cdn.storage_backends.PublicMediaStorage'
-    #Media location
+    # Media location
     PUBLIC_MEDIA_LOCATION = 'media'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
     DEFAULT_FILE_STORAGE = 'cdn.storage_backends.PublicMediaStorage'
