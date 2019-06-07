@@ -109,9 +109,9 @@ english = {
     "ERROR_PASSWORD_CANT_BE_INTEGER": "Password must be a string.",
     "ERROR_USERNAME_CANT_BE_INTEGER": "Username must be a string.",
     "ERROR_CONFIRM_PASSWORD_CANT_BE_INTEGER": "Confirm password must be a string.",
-    "ERROR_EMAIL_MANDATORY": "You must specified a email.",
-    "ERROR_PASSWORD_MANDATORY": "You must specified a password.",
-    "ERROR_CONFIRM_PASSWORD_MANDATORY": "You must specified a confirm password.",
+    "ERROR_EMAIL_MANDATORY": "You must specify a email.",
+    "ERROR_PASSWORD_MANDATORY": "You must specify a password.",
+    "ERROR_CONFIRM_PASSWORD_MANDATORY": "You must specify a confirm password.",
 
     "ERROR_MAX_LENGTH_FIRST_NAME": "First name's size can't be longer than 30 characters",
     "ERROR_MAX_LENGTH_LAST_NAME": "Las name's size can't be longer than 150 characters",
